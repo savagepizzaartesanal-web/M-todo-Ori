@@ -1,0 +1,10 @@
+{
+  "buildCommand": "cd metodo-ori && npm install && npm run build",
+  "outputDirectory": "metodo-ori/dist",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
