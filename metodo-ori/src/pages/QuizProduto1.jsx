@@ -1180,7 +1180,7 @@ function QuizQuestionView({
       initial={reduceMotion ? false : "hidden"}
       animate={reduceMotion ? undefined : "visible"}
       exit={reduceMotion ? undefined : "exit"}
-      className="relative overflow-hidden rounded-[22px] md:rounded-[32px] p-3 md:p-4 xl:p-5 mb-5 min-h-[330px] md:min-h-[380px] flex items-center"
+      className="relative overflow-hidden rounded-[22px] md:rounded-[32px] p-2.5 md:p-4 xl:p-5 mb-4 md:mb-5 min-h-[auto] md:min-h-[380px] flex items-center"
       style={{
         background: `${theme.aura}, radial-gradient(circle at 50% 42%, ${theme.glow}, transparent 32%), linear-gradient(135deg, rgba(18,9,10,0.74), rgba(5,2,2,0.94))`,
         border: "1px solid rgba(242,185,104,0.10)",
@@ -1223,33 +1223,35 @@ function QuizQuestionView({
       />
 
       <div className="relative z-10 w-full max-w-5xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-2 px-0">
+        <div className="flex flex-row items-start justify-between gap-2 mb-2 px-0">
           <div>
             <Eyebrow className="mb-1">Câmara de Leitura ORI</Eyebrow>
             <p
-              className="uppercase tracking-[0.22em] text-[8px] md:text-[9px]"
+              className="uppercase tracking-[0.16em] text-[7px] leading-relaxed md:text-[9px] md:tracking-[0.22em]"
               style={{ color: "rgba(255,245,235,0.50)" }}
             >
               Sinal {String(currentQuestion.id).padStart(2, "0")} de{" "}
               {String(totalQuestions).padStart(2, "0")}
-              <span
-                className="mx-2"
-                style={{ color: "rgba(255,245,235,0.18)" }}
-              >
-                ·
+              <span className="hidden md:inline">
+                <span
+                  className="mx-2"
+                  style={{ color: "rgba(255,245,235,0.18)" }}
+                >
+                  ·
+                </span>
+                {currentBlock}
+                <span
+                  className="mx-2"
+                  style={{ color: "rgba(255,245,235,0.18)" }}
+                >
+                  ·
+                </span>
+                Camada {String(blockIndex + 1).padStart(2, "0")}
               </span>
-              {currentBlock}
-              <span
-                className="mx-2"
-                style={{ color: "rgba(255,245,235,0.18)" }}
-              >
-                ·
-              </span>
-              Camada {String(blockIndex + 1).padStart(2, "0")}
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2">
             <div
               className="hidden sm:flex items-center gap-2 px-2 py-1.5 rounded-full text-[11px]"
               style={{
@@ -1263,7 +1265,7 @@ function QuizQuestionView({
             </div>
 
             <div
-              className="px-2 py-1.5 rounded-full text-[11px]"
+              className="px-2 py-1 rounded-full text-[10px] md:py-1.5 md:text-[11px]"
               style={{
                 background: captured
                   ? `linear-gradient(90deg, ${theme.glow}, rgba(255,255,255,0.014))`
@@ -1281,7 +1283,7 @@ function QuizQuestionView({
         </div>
 
         <div
-          className="relative overflow-hidden rounded-[20px] md:rounded-[28px] px-3.5 py-3.5 md:px-5 md:py-4 xl:px-7 xl:py-5 min-h-[310px] md:min-h-[360px] flex flex-col justify-between"
+          className="relative overflow-hidden rounded-[18px] md:rounded-[28px] px-3 py-3 md:px-5 md:py-4 xl:px-7 xl:py-5 min-h-[auto] md:min-h-[360px] flex flex-col justify-between"
           style={{
             background:
               "radial-gradient(circle at top, rgba(255,255,255,0.048), transparent 38%), linear-gradient(180deg, rgba(255,255,255,0.028), rgba(255,255,255,0.008))",
@@ -1294,10 +1296,10 @@ function QuizQuestionView({
             style={{ border: "1px solid rgba(242,185,104,0.035)" }}
           />
 
-          <div className="relative z-10 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
+          <div className="relative z-10 flex items-center justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-2.5 md:gap-3">
               <div
-                className="h-10 w-10 rounded-full flex items-center justify-center text-sm shrink-0"
+                className="h-8 w-8 rounded-full flex items-center justify-center text-xs shrink-0 md:h-10 md:w-10 md:text-sm"
                 style={{
                   background: "rgba(5,2,2,0.56)",
                   border: `1px solid ${theme.glow}`,
@@ -1311,14 +1313,14 @@ function QuizQuestionView({
 
               <div>
                 <p
-                  className="uppercase tracking-[0.22em] text-[8px] mb-1"
+                  className="uppercase tracking-[0.16em] text-[7px] mb-0.5 md:tracking-[0.22em] md:text-[8px] md:mb-1"
                   style={{ color: colors.goldSoft }}
                 >
                   {currentBlock}
                 </p>
 
                 <p
-                  className="text-xs md:text-sm"
+                  className="ori-mobile-preview hidden text-xs md:block md:text-sm"
                   style={{ color: "rgba(255,245,235,0.54)" }}
                 >
                   {blockDescriptions[currentBlock]}
@@ -1379,7 +1381,7 @@ function QuizQuestionView({
             >
               <div className="text-center max-w-4xl mx-auto py-3 md:py-4">
                 <p
-                  className="uppercase tracking-[0.26em] text-[8px] md:text-[9px] mb-4"
+                  className="uppercase tracking-[0.18em] text-[7px] md:tracking-[0.26em] md:text-[9px] mb-2 md:mb-4"
                   style={{ color: "rgba(255,245,235,0.45)" }}
                 >
                   Pergunta {questionIndexInBlock + 1} de{" "}
@@ -1387,7 +1389,7 @@ function QuizQuestionView({
                 </p>
 
                 <h3
-                  className="text-[23px] md:text-[34px] xl:text-[38px] leading-[1.04] max-w-[820px] mx-auto [text-wrap:balance]"
+                  className="text-[21px] md:text-[34px] xl:text-[38px] leading-[1.08] md:leading-[1.04] max-w-[820px] mx-auto [text-wrap:balance]"
                   style={{
                     color: theme.accent,
                     fontWeight: 690,
@@ -1399,7 +1401,7 @@ function QuizQuestionView({
                 </h3>
               </div>
 
-              <div className="max-w-3xl mx-auto mb-3">
+              <div className="max-w-3xl mx-auto mb-2 md:mb-3">
                 <AnimatePresence mode="wait">
                   <motion.p
                     key={captured ? `captured-${selectedValue}` : "empty"}
@@ -1407,7 +1409,7 @@ function QuizQuestionView({
                     animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
                     exit={reduceMotion ? undefined : { opacity: 0, y: -8 }}
                     transition={{ duration: 0.22 }}
-                    className="text-center text-xs md:text-sm mb-3"
+                    className="text-center text-[11px] md:text-sm mb-2 md:mb-3"
                     style={{
                       color: captured
                         ? "rgba(255,245,235,0.74)"
@@ -1420,7 +1422,7 @@ function QuizQuestionView({
                   </motion.p>
                 </AnimatePresence>
 
-                <div className="grid grid-cols-5 gap-1 md:gap-1.5 relative z-10">
+                <div className="grid grid-cols-5 gap-1.5 md:gap-1.5 relative z-10">
                   {scaleLabels.map((item) => {
                     const active = selectedValue === item.value;
 
@@ -1432,10 +1434,10 @@ function QuizQuestionView({
                         aria-pressed={active}
                         aria-label={`Responder ${item.value}: ${item.short}`}
                         whileHover={
-                          reduceMotion ? undefined : { y: -3, scale: 1.015 }
+                          reduceMotion ? undefined : { y: -2, scale: 1.01 }
                         }
                         whileTap={reduceMotion ? undefined : { scale: 0.96 }}
-                        className="group flex flex-col items-center gap-1 rounded-[14px] px-1 py-1 md:px-1 md:py-1.5 transition-colors duration-300"
+                        className="group flex min-h-[58px] flex-col items-center justify-center gap-1 rounded-[13px] px-1 py-1.5 md:min-h-[64px] md:rounded-[14px] md:px-1 md:py-1.5 transition-colors duration-300"
                         style={{
                           background: active
                             ? "linear-gradient(90deg, rgba(210,135,70,0.10), transparent), rgba(255,255,255,0.018)"
@@ -1463,10 +1465,10 @@ function QuizQuestionView({
                         }}
                       >
                         <motion.span
-                          className="h-8 w-8 rounded-full flex items-center justify-center text-sm"
+                          className="h-7 w-7 rounded-full flex items-center justify-center text-xs md:h-8 md:w-8 md:text-sm"
                           animate={
                             active && !reduceMotion
-                              ? { scale: [1, 1.1, 1] }
+                              ? { scale: [1, 1.04, 1] }
                               : { scale: 1 }
                           }
                           transition={{
@@ -1482,7 +1484,7 @@ function QuizQuestionView({
                               ? "1px solid var(--copper-primary)"
                               : "1px solid rgba(210,135,70,0.16)",
                             color: active ? "#090506" : "var(--copper-primary)",
-                            fontWeight: 800,
+                            fontWeight: 650,
                             boxShadow: active
                               ? "0 0 20px rgba(210,135,70,0.14)"
                               : "none",
@@ -1492,12 +1494,12 @@ function QuizQuestionView({
                         </motion.span>
 
                         <span
-                          className="text-[11px] md:text-xs leading-tight"
+                          className="text-[9px] md:text-xs leading-tight"
                           style={{
                             color: active
                               ? "var(--copper-primary)"
                               : colors.text,
-                            fontWeight: 700,
+                            fontWeight: active ? 600 : 500,
                           }}
                         >
                           {item.short}
@@ -1511,7 +1513,7 @@ function QuizQuestionView({
           </AnimatePresence>
 
           <div
-            className="relative z-10 max-w-3xl mx-auto rounded-[16px] px-3 py-2 flex flex-col md:flex-row md:items-center md:justify-between gap-3"
+            className="relative z-10 max-w-3xl mx-auto rounded-[14px] md:rounded-[16px] px-3 py-2 flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-3"
             style={{
               background: "rgba(5,2,2,0.22)",
               border: "1px solid rgba(242,185,104,0.06)",
@@ -1523,7 +1525,7 @@ function QuizQuestionView({
                 onClick={onBack}
                 whileHover={reduceMotion ? undefined : { x: -2 }}
                 whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-                className="px-4 py-2.5 rounded-full text-xs md:text-sm w-fit"
+                className="px-3.5 py-2 rounded-full text-xs md:px-4 md:py-2.5 md:text-sm w-fit"
                 style={{
                   background: "rgba(255,255,255,0.020)",
                   border: "1px solid rgba(242,185,104,0.12)",
@@ -1541,7 +1543,7 @@ function QuizQuestionView({
               </span>
             )}
 
-            <div className="grid grid-cols-2 gap-3 md:gap-4 flex-1">
+            <div className="grid grid-cols-2 gap-2.5 md:gap-4 flex-1">
               {[
                 { label: "Clareza do Espelho", value: progress },
                 { label: "Camada atual", value: blockProgress },
