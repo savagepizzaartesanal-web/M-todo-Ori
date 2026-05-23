@@ -33,6 +33,8 @@ function Produto2() {
         <img
           src="/images/heroes/dossie-ori.png"
           alt="Dossiê ORI"
+          loading="eager"
+          decoding="async"
           className="
             absolute
             inset-0
@@ -206,14 +208,19 @@ function Produto2() {
                 className="ori-type-reading-soft text-sm max-w-[480px]"
                 style={{ color: "var(--text-soft)" }}
               >
-                Esta etapa abre quando o Código das Deusas já nomeou sua base
-                arquetípica. O Dossiê não substitui a primeira leitura: ele
-                traduz essa força para imagem.
+                <span className="md:hidden">
+                  O Dossiê abre quando sua base arquetípica já foi nomeada.
+                </span>
+                <span className="hidden md:inline">
+                  Esta etapa abre quando o Código das Deusas já nomeou sua base
+                  arquetípica. O Dossiê não substitui a primeira leitura: ele
+                  traduz essa força para imagem.
+                </span>
               </p>
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-2.5 mb-4 max-w-[540px]">
+          <div className="hidden flex-wrap gap-2.5 mb-4 max-w-[540px] sm:flex">
             {[
               "Corpo e rosto",
               "Coloração",

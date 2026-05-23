@@ -384,6 +384,8 @@ function PortalCliente() {
           <img
             src="/images/heroes/atrio-ori.png"
             alt="Átrio ORI"
+            loading="eager"
+            decoding="async"
             className="
               absolute
               inset-0
@@ -940,9 +942,14 @@ function PortalCliente() {
                     className="ori-type-reading-soft text-sm mb-4 md:min-h-[96px]"
                     style={{ color: "var(--text-soft)" }}
                   >
-                    {card.active
-                      ? card.description
-                      : `${card.description.split(".")[0]}.`}
+                    <span className="md:hidden">
+                      {`${card.description.split(".")[0]}.`}
+                    </span>
+                    <span className="hidden md:inline">
+                      {card.active
+                        ? card.description
+                        : `${card.description.split(".")[0]}.`}
+                    </span>
                   </p>
 
                   <div className="mt-auto">{card.action}</div>

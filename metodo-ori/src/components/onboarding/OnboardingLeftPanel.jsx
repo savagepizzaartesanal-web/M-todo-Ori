@@ -32,13 +32,18 @@ export default function OnboardingLeftPanel({ formData }) {
     >
       <video
         className="absolute inset-0 h-full w-full object-cover opacity-30"
-        src="/videos/quizz/quizz-bg.mp4"
         autoPlay
         loop
         muted
         playsInline
-        preload="auto"
-      />
+        preload="none"
+      >
+        <source
+          src="/videos/quizz/quizz-bg.mp4"
+          type="video/mp4"
+          media="(min-width: 1024px)"
+        />
+      </video>
       <div className="absolute inset-0 bg-gradient-to-b from-[rgba(5,2,2,0.30)] via-[rgba(5,2,2,0.58)] to-[rgba(5,2,2,0.88)]" />
       <div className="absolute inset-0 opacity-[0.025]">
         <div className="h-full w-full bg-[radial-gradient(circle_at_center,rgba(242,185,104,0.18)_1px,transparent_1px)] [background-size:28px_28px]" />

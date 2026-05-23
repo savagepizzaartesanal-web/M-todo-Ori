@@ -173,6 +173,28 @@ const fadeUp = {
   },
 };
 
+function useMobileMotionOff() {
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window === "undefined"
+      ? false
+      : window.matchMedia("(max-width: 767px)").matches,
+  );
+
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
+    const media = window.matchMedia("(max-width: 767px)");
+    const handleChange = () => setIsMobile(media.matches);
+
+    handleChange();
+    media.addEventListener("change", handleChange);
+
+    return () => media.removeEventListener("change", handleChange);
+  }, []);
+
+  return isMobile;
+}
+
 function getGroupedQuestions() {
   return questions.reduce((groups, question) => {
     if (!groups[question.bloco]) groups[question.bloco] = [];
@@ -312,14 +334,20 @@ function LoadingDossie({ loadingRef, reduceMotion }) {
       />
 
       <video
+        aria-hidden="true"
         className="absolute inset-0 h-full w-full object-cover opacity-85 pointer-events-none"
-        src="/videos/quizz/quizz-bg.mp4"
         autoPlay
         loop
         muted
         playsInline
-        preload="auto"
-      />
+        preload="none"
+      >
+        <source
+          src="/videos/quizz/quizz-bg.mp4"
+          type="video/mp4"
+          media="(min-width: 768px)"
+        />
+      </video>
 
       <div
         className="absolute inset-0 pointer-events-none"
@@ -941,14 +969,20 @@ function LayerReveal({
       }}
     >
       <video
+        aria-hidden="true"
         className="absolute inset-0 h-full w-full object-cover opacity-30 pointer-events-none"
-        src="/videos/quizz/quizz-bg.mp4"
         autoPlay
         loop
         muted
         playsInline
-        preload="auto"
-      />
+        preload="none"
+      >
+        <source
+          src="/videos/quizz/quizz-bg.mp4"
+          type="video/mp4"
+          media="(min-width: 768px)"
+        />
+      </video>
 
       <div
         className="absolute inset-0 pointer-events-none"
@@ -1165,14 +1199,20 @@ function QuizQuestionView({
       />
 
       <video
+        aria-hidden="true"
         className="absolute inset-0 h-full w-full object-cover opacity-42 pointer-events-none"
-        src="/videos/quizz/quizz-bg.mp4"
         autoPlay
         loop
         muted
         playsInline
-        preload="auto"
-      />
+        preload="none"
+      >
+        <source
+          src="/videos/quizz/quizz-bg.mp4"
+          type="video/mp4"
+          media="(min-width: 768px)"
+        />
+      </video>
 
       <div
         className="absolute inset-0 pointer-events-none"
@@ -1621,6 +1661,8 @@ function ReadingLayerPanel({ layer }) {
         <img
           src={layer.image}
           alt={layer.eyebrow}
+          loading="lazy"
+          decoding="async"
           className="h-full w-full object-cover object-right opacity-[0.86] scale-[1.06]"
         />
       </div>
@@ -1960,7 +2002,9 @@ function LayerTabNavigation({ tabs, activeNumber, onSelect }) {
 }
 
 function QuizProduto1() {
-  const reduceMotion = useReducedMotion();
+  const prefersReducedMotion = useReducedMotion();
+  const mobileMotionOff = useMobileMotionOff();
+  const reduceMotion = prefersReducedMotion || mobileMotionOff;
   const location = useLocation();
   const navigate = useNavigate();
   const isReadingRoute =
@@ -2768,15 +2812,6 @@ function QuizProduto1() {
       className="ori-atmosphere ori-atmosphere-reading relative min-h-screen overflow-hidden px-4 py-5 md:px-7 md:py-6"
       style={{ color: colors.text }}
     >
-      <video
-        className="fixed inset-0 -z-30 h-full w-full object-cover opacity-[0.24]"
-        src="/videos/quiz/camara-leitura-ori.mp4"
-        autoPlay
-        loop
-        muted
-        playsInline
-      />
-
       <div
         className="fixed inset-0 -z-20"
         style={{

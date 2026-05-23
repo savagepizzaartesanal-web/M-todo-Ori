@@ -33,6 +33,8 @@ function Produto3() {
         <img
           src="/images/heroes/codigo-final.png"
           alt="Código Final"
+          loading="eager"
+          decoding="async"
           className="
             absolute
             inset-0
@@ -206,13 +208,18 @@ function Produto3() {
                 className="ori-type-reading-soft text-sm max-w-[480px]"
                 style={{ color: "var(--text-soft)" }}
               >
-                Esta etapa abre depois que sua força foi nomeada e traduzida em
-                imagem. O Código Final leva essa direção para o armário real.
+                <span className="md:hidden">
+                  O Código Final abre quando sua imagem já tem direção.
+                </span>
+                <span className="hidden md:inline">
+                  Esta etapa abre depois que sua força foi nomeada e traduzida em
+                  imagem. O Código Final leva essa direção para o armário real.
+                </span>
               </p>
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-2.5 mb-4 max-w-[540px]">
+          <div className="hidden flex-wrap gap-2.5 mb-4 max-w-[540px] sm:flex">
             {[
               "Inventário do armário",
               "Cápsula funcional",

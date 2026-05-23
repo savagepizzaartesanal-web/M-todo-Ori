@@ -285,11 +285,13 @@ function Login() {
 
       <div className="absolute inset-0">
         <video
+          aria-hidden="true"
           className="absolute inset-0 w-full h-full object-cover"
           autoPlay
           muted
           loop
           playsInline
+          preload="metadata"
         >
           <source src="/videos/login/login-bg.mp4" type="video/mp4" />
         </video>

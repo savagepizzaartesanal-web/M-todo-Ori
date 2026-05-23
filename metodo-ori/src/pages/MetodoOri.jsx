@@ -1065,6 +1065,8 @@ function MetodoOri() {
         <img
           src="/images/metodo-ori/hero-metodo-ori.png"
           alt=""
+          loading="eager"
+          decoding="async"
           className="absolute inset-0 h-full w-full object-cover opacity-55"
         />
 

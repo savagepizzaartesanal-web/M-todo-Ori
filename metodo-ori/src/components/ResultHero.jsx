@@ -46,6 +46,8 @@ function ResultHero({ nome, principal, secundario, frase, imagem }) {
         <img
           src={imagem}
           alt={nome}
+          loading="eager"
+          decoding="async"
           className="
             absolute
             inset-0

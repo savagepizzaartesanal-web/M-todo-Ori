@@ -954,6 +954,46 @@ body {
     background-attachment: scroll;
   }
 
+  html,
+  body,
+  #root {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  .fade-up,
+  .reveal-step,
+  [class*="animate-"] {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    will-change: auto !important;
+  }
+
+  .cinematic-card,
+  .cinematic-card:hover,
+  .ori-card-protagonist,
+  .ori-card-protagonist:hover,
+  .ori-card-secondary,
+  .ori-card-secondary:hover,
+  .ori-card-teaser,
+  .ori-card-sealed,
+  .ori-journey-action,
+  .ori-journey-action:hover {
+    transform: none !important;
+    filter: none !important;
+  }
+
   .ambient-orb {
     display: none;
   }

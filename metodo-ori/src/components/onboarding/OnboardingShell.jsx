@@ -45,13 +45,18 @@ export default function OnboardingShell({
 
       <video
         className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-45"
-        src="/videos/quizz/quizz-bg.mp4"
         autoPlay
         loop
         muted
         playsInline
-        preload="auto"
-      />
+        preload="none"
+      >
+        <source
+          src="/videos/quizz/quizz-bg.mp4"
+          type="video/mp4"
+          media="(min-width: 768px)"
+        />
+      </video>
 
       <div
         className="pointer-events-none absolute inset-0"

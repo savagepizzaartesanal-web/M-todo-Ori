@@ -46,48 +46,6 @@ const fallbackReflection = {
     "Sua presença será revelada conforme sua essência começar a ganhar linguagem visual, simbólica e estética.",
 };
 
-const sectionVariants = {
-  hidden: {
-    opacity: 0,
-    y: 28,
-    filter: "blur(10px)",
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: {
-      duration: 0.85,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  },
-};
-
-const softReveal = {
-  hidden: {
-    opacity: 0,
-    y: 16,
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  },
-};
-
-const staggerContainer = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.07,
-      delayChildren: 0.06,
-    },
-  },
-};
-
 function getPreview(text = "", maxLength = 360) {
   if (!text) return "";
 
@@ -294,27 +252,22 @@ function MotionSection({
   reduceMotion,
   ...props
 }) {
+  void reduceMotion;
+
   return (
-    <motion.section
+    <section
       className={className}
       style={style}
       {...props}
-      variants={reduceMotion ? undefined : sectionVariants}
-      initial={reduceMotion ? false : "hidden"}
-      whileInView={reduceMotion ? undefined : "visible"}
-      viewport={{ once: true, amount: 0.16 }}
     >
       {children}
-    </motion.section>
+    </section>
   );
 }
 
-function MirrorHero({ reduceMotion }) {
+function MirrorHero() {
   return (
-    <motion.section
-      initial={reduceMotion ? false : { opacity: 0, y: 18 }}
-      animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+    <section
       className="ori-main-frame ori-hero-panel cinematic-card relative mb-5 min-h-[520px] overflow-hidden rounded-[30px] md:rounded-[42px]"
       style={{
         backgroundColor: "rgba(5,2,2,0.94)",
@@ -334,6 +287,7 @@ function MirrorHero({ reduceMotion }) {
         alt=""
         className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover"
         loading="eager"
+        decoding="async"
         style={{ objectPosition: "58% center" }}
       />
 
@@ -425,7 +379,7 @@ function MirrorHero({ reduceMotion }) {
 
         <div className="hidden xl:block" aria-hidden="true" />
       </div>
-    </motion.section>
+    </section>
   );
 }
 
@@ -608,8 +562,32 @@ function buildOracleCards({
   ];
 }
 
+function useMobileMotionOff() {
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window === "undefined"
+      ? false
+      : window.matchMedia("(max-width: 767px)").matches,
+  );
+
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
+    const media = window.matchMedia("(max-width: 767px)");
+    const handleChange = () => setIsMobile(media.matches);
+
+    handleChange();
+    media.addEventListener("change", handleChange);
+
+    return () => media.removeEventListener("change", handleChange);
+  }, []);
+
+  return isMobile;
+}
+
 function EspelhoOri() {
-  const reduceMotion = useReducedMotion();
+  const prefersReducedMotion = useReducedMotion();
+  const mobileMotionOff = useMobileMotionOff();
+  const reduceMotion = prefersReducedMotion || mobileMotionOff;
 
   const [cliente, setCliente] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -1580,10 +1558,7 @@ function EspelhoOri() {
           color: colors.title,
         }}
       >
-        <motion.div
-          initial={reduceMotion ? false : { opacity: 0, y: 18 }}
-          animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        <div
           className="relative overflow-hidden rounded-[34px] p-8 md:p-10 max-w-xl w-full"
           style={{
             background:
@@ -1606,7 +1581,7 @@ function EspelhoOri() {
           >
             Preparando seu reflexo...
           </h1>
-        </motion.div>
+        </div>
       </main>
     );
   }
@@ -1639,10 +1614,7 @@ function EspelhoOri() {
       />
 
       <div className="relative z-10 w-full max-w-[1240px] mx-auto">
-        <motion.header
-          initial={reduceMotion ? false : { opacity: 0, y: -12 }}
-          animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        <header
           className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 mb-5"
         >
           <motion.div
@@ -1731,10 +1703,10 @@ function EspelhoOri() {
               </div>
             ))}
           </div>
-        </motion.header>
+        </header>
 
         <div id="espelho-hero" className="scroll-mt-6">
-          <MirrorHero reduceMotion={reduceMotion} />
+          <MirrorHero />
         </div>
 
         {SHOW_LEGACY_MIRROR_SECTIONS && (
@@ -2305,36 +2277,8 @@ function EspelhoOri() {
                                             "linear-gradient(90deg, transparent, rgba(242,185,104,0.36), transparent)",
                                         }}
                                       />
-                                      <motion.p
-                                        key={`archetype-${item.detailText}`}
+                                      <p
                                         className="whitespace-nowrap px-2 text-[26px] leading-none sm:text-[30px] md:text-[36px]"
-                                        initial={
-                                          reduceMotion
-                                            ? false
-                                            : {
-                                                opacity: 0,
-                                                filter: "blur(10px)",
-                                                y: 8,
-                                                scale: 0.98,
-                                                letterSpacing: "0.08em",
-                                              }
-                                        }
-                                        whileInView={
-                                          reduceMotion
-                                            ? undefined
-                                            : {
-                                                opacity: 1,
-                                                filter: "blur(0px)",
-                                                y: 0,
-                                                scale: 1,
-                                                letterSpacing: "-0.018em",
-                                              }
-                                        }
-                                        viewport={{ once: false, amount: 0.72 }}
-                                        transition={{
-                                          duration: 1.15,
-                                          ease: [0.16, 1, 0.3, 1],
-                                        }}
                                         style={{
                                           color: "rgba(242,185,104,0.82)",
                                           fontStyle: "normal",
@@ -2345,25 +2289,9 @@ function EspelhoOri() {
                                         }}
                                       >
                                         {formatArchetypeName(item.detailText)}
-                                      </motion.p>
-                                      <motion.div
+                                      </p>
+                                      <div
                                         className="relative mx-auto mt-4 h-px w-28 overflow-hidden"
-                                        initial={
-                                          reduceMotion
-                                            ? false
-                                            : { opacity: 0, scaleX: 0 }
-                                        }
-                                        whileInView={
-                                          reduceMotion
-                                            ? undefined
-                                            : { opacity: 1, scaleX: 1 }
-                                        }
-                                        viewport={{ once: false, amount: 0.72 }}
-                                        transition={{
-                                          duration: 0.95,
-                                          delay: 0.18,
-                                          ease: [0.16, 1, 0.3, 1],
-                                        }}
                                         style={{
                                           transformOrigin: "center",
                                           background: "transparent",
@@ -2378,27 +2306,7 @@ function EspelhoOri() {
                                               "0 0 14px rgba(242,185,104,0.16), 0 0 32px rgba(210,135,70,0.08)",
                                           }}
                                         />
-                                        {!reduceMotion && (
-                                          <motion.span
-                                            className="absolute inset-y-[-3px] w-[28%]"
-                                            initial={{ left: "-32%" }}
-                                            whileInView={{ left: "104%" }}
-                                            viewport={{
-                                              once: false,
-                                              amount: 0.72,
-                                            }}
-                                            transition={{
-                                              duration: 1.05,
-                                              delay: 0.32,
-                                              ease: [0.16, 1, 0.3, 1],
-                                            }}
-                                            style={{
-                                              background:
-                                                "linear-gradient(90deg, transparent, rgba(255,232,190,0.72), transparent)",
-                                            }}
-                                          />
-                                        )}
-                                      </motion.div>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -3398,7 +3306,7 @@ function EspelhoOri() {
                         : { opacity: 0, y: -10, filter: "blur(8px)" }
                     }
                     transition={{ duration: 0.36, ease: [0.22, 1, 0.36, 1] }}
-                    className="relative min-h-[500px] overflow-hidden rounded-[28px] p-4 md:p-5 lg:h-[510px]"
+                    className="relative min-h-[auto] overflow-hidden rounded-[28px] p-4 md:min-h-[500px] md:p-5 lg:h-[510px]"
                     style={{
                       background:
                         selectedMatrixItem.state === "revealed"
@@ -3432,7 +3340,7 @@ function EspelhoOri() {
 
                     <div className="relative z-10 grid h-full gap-5 lg:grid-cols-[0.88fr_1.12fr] lg:gap-7">
                       <div
-                        className="relative min-h-[260px] overflow-hidden rounded-[22px] md:min-h-[330px] lg:h-full lg:min-h-0"
+                        className="relative min-h-[190px] overflow-hidden rounded-[22px] md:min-h-[330px] lg:h-full lg:min-h-0"
                         style={{
                           border: "1px solid rgba(242,185,104,0.18)",
                           boxShadow:
@@ -3447,6 +3355,7 @@ function EspelhoOri() {
                             objectPosition: selectedMatrixItem.imagePosition,
                           }}
                           loading="lazy"
+                          decoding="async"
                         />
                         <div
                           className="absolute inset-0"
@@ -3606,7 +3515,7 @@ function EspelhoOri() {
                           </div>
 
                           <div
-                            className="pt-4 md:pl-4 md:pt-0"
+                            className="hidden pt-4 md:block md:pl-4 md:pt-0"
                           >
                             <p
                               className="mb-2.5 text-[7px] uppercase tracking-[0.24em]"
@@ -3625,7 +3534,7 @@ function EspelhoOri() {
                         </div>
 
                         <div
-                          className="shrink-0 rounded-[22px] px-4 py-3.5 text-center"
+                          className="hidden shrink-0 rounded-[22px] px-4 py-3.5 text-center md:block"
                           style={{
                             background:
                               "linear-gradient(135deg, rgba(242,185,104,0.060), rgba(255,255,255,0.012))",
@@ -3672,6 +3581,7 @@ function EspelhoOri() {
             alt=""
             className="absolute inset-0 h-full w-full object-cover"
             loading="lazy"
+            decoding="async"
             style={{
               filter: "saturate(1.04) contrast(1.06) brightness(1.06)",
               objectPosition: "center center",
@@ -4228,11 +4138,7 @@ function EspelhoOri() {
             </div>
 
             <div className="grid items-stretch gap-4 xl:grid-cols-[0.72fr_1.28fr]">
-              <motion.div
-                variants={reduceMotion ? undefined : staggerContainer}
-                initial={reduceMotion ? false : "hidden"}
-                whileInView={reduceMotion ? undefined : "visible"}
-                viewport={{ once: true, amount: 0.2 }}
+              <div
                 className="relative flex min-h-[348px] items-center justify-center px-3 py-3"
                 style={{
                   perspective: 1400,
@@ -4266,7 +4172,6 @@ function EspelhoOri() {
                       type="button"
                       disabled={!hasResult || oracleLockedToday}
                       onClick={handleDrawFromDeck}
-                      variants={softReveal}
                       whileHover={
                         reduceMotion || !hasResult || oracleLockedToday
                           ? undefined
@@ -4323,6 +4228,7 @@ function EspelhoOri() {
                               alt=""
                               className="absolute inset-0 h-full w-full object-cover"
                               loading="lazy"
+                              decoding="async"
                               style={{
                                 opacity: 0.82,
                                 filter: "saturate(1.08) contrast(1.08)",
@@ -4430,6 +4336,7 @@ function EspelhoOri() {
                             alt=""
                             className="absolute inset-0 h-full w-full object-cover"
                             loading="lazy"
+                            decoding="async"
                             style={{
                               opacity: 0.82,
                               filter: "saturate(1.08) contrast(1.1)",
@@ -4519,7 +4426,7 @@ function EspelhoOri() {
                     )}
                   </AnimatePresence>
                 </div>
-              </motion.div>
+              </div>
 
               <AnimatePresence mode="wait">
                 <motion.div
