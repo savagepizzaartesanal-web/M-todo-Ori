@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { questions } from "../data/questions";
 import { reports } from "../data/reports";
 import { calculateResult } from "../services/calculateResult";
+import { enrichReportWithSignals } from "../services/analyzeReadingSignals";
 import { archetypeImages } from "../data/archetypeImages";
 import { supabase } from "../lib/supabaseClient";
 
@@ -13,6 +14,8 @@ import ResultHero from "../components/ResultHero";
 import NextStepCard from "../components/NextStepCard";
 
 const LEGACY_STORAGE_KEY = "ori_produto_1_quiz";
+const ORACLE_PANEL_BACKGROUND =
+  "radial-gradient(circle at 88% 12%, rgba(242,185,104,0.09), transparent 34%), radial-gradient(circle at 8% 92%, rgba(183,140,255,0.05), transparent 34%), linear-gradient(90deg, rgba(5,2,2,0.88), rgba(5,2,2,0.68), rgba(5,2,2,0.92)), url('/images/espelho-ori/oraculo/fundo-oraculo-premium.png')";
 
 const getQuizStorageKey = (userId) => {
   return userId ? `ori_produto_1_quiz_${userId}` : "ori_produto_1_quiz_guest";
@@ -43,21 +46,9 @@ const getResultFromCliente = (cliente) => {
 };
 
 const loadingMessages = [
-  "Lendo padrões emocionais...",
-  "Interpretando dinâmica arquetípica...",
-  "Analisando presença simbólica...",
-  "Cruzando forças dominantes...",
-  "Traduzindo essência em imagem...",
-  "Finalizando sua revelação...",
-];
-
-const loadingNotes = [
-  "O espelho observa repetições, tensões e sinais de presença.",
-  "Cada resposta começa a desenhar uma direção simbólica.",
-  "Sua imagem interna está sendo cruzada com os arquétipos ativos.",
-  "O ORI procura a composição que mais se repete nas suas escolhas.",
-  "A leitura começa a sair do invisível e ganhar linguagem.",
-  "Sua revelação está sendo preparada para aparecer com clareza.",
+  "Tecendo sua essência...",
+  "Consultando os arquétipos...",
+  "Sua imagem está sendo revelada...",
 ];
 
 const scaleLabels = [
@@ -209,10 +200,20 @@ function getBlockProgress(blockQuestions, answers) {
   return blockQuestions.filter((question) => answers[question.id]).length;
 }
 
-function Eyebrow({ children, className = "" }) {
+function Eyebrow({ children, className = "", line = false }) {
+  if (line) {
+    return (
+      <div className={`ori-label-line ${className}`}>
+        <p className="ori-type-system ori-label-md" style={{ color: colors.goldSoft }}>
+          {children}
+        </p>
+      </div>
+    );
+  }
+
   return (
     <p
-      className={`uppercase tracking-[0.42em] text-[9px] md:text-[10px] ${className}`}
+      className={`ori-type-system ori-label-md ${className}`}
       style={{ color: colors.goldSoft }}
     >
       {children}
@@ -220,38 +221,68 @@ function Eyebrow({ children, className = "" }) {
   );
 }
 
-function LoadingDossie({ loadingStep, loadingRef, reduceMotion }) {
-  const progressWidth = Math.min(
-    ((loadingStep + 1) / loadingMessages.length) * 100,
-    100,
-  );
-
+function LoadingDossie({ loadingRef, reduceMotion }) {
   const analysisSteps = [
     {
       label: "Presença",
       detail: "primeiros sinais",
+      title: "Tecendo sua essência...",
+      note: "O espelho observa os primeiros sinais da sua presença.",
     },
     {
       label: "Imagem",
       detail: "forma simbólica",
+      title: "Consultando sua imagem...",
+      note: "Forma, desejo e linguagem visual começam a se organizar.",
     },
     {
       label: "Sombra",
       detail: "tensão ativa",
+      title: "Lendo tensões ativas...",
+      note: "O sistema reconhece padrões de proteção, força e repetição.",
     },
     {
       label: "Essência",
       detail: "núcleo interno",
+      title: "Cruzando seu núcleo...",
+      note: "As camadas internas começam a ganhar estrutura simbólica.",
     },
     {
       label: "Arquétipos",
       detail: "forças dominantes",
+      title: "Organizando arquétipos...",
+      note: "As forças dominantes se aproximam da composição final.",
     },
     {
       label: "Síntese",
       detail: "código final",
+      title: "Preparando sua revelação...",
+      note: "A leitura cruza os últimos sinais para revelar seu Código.",
     },
   ];
+  const [activeStationIndex, setActiveStationIndex] = useState(0);
+  const activeStation = analysisSteps[activeStationIndex] || analysisSteps[0];
+  const stationProgressWidth = Math.round(
+    ((activeStationIndex + 1) / analysisSteps.length) * 100,
+  );
+  const readingParticles = [
+    { left: "18%", top: "26%", size: 3, delay: 0 },
+    { left: "30%", top: "14%", size: 2, delay: 0.55 },
+    { left: "72%", top: "18%", size: 3, delay: 1.05 },
+    { left: "84%", top: "38%", size: 2, delay: 0.25 },
+    { left: "76%", top: "72%", size: 2, delay: 1.4 },
+    { left: "56%", top: "84%", size: 3, delay: 0.75 },
+    { left: "25%", top: "76%", size: 2, delay: 1.8 },
+    { left: "12%", top: "56%", size: 2, delay: 1.15 },
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveStationIndex((current) => (current + 1) % analysisSteps.length);
+    }, 1600);
+
+    return () => clearInterval(interval);
+  }, [analysisSteps.length]);
 
   return (
     <motion.div
@@ -263,13 +294,13 @@ function LoadingDossie({ loadingStep, loadingRef, reduceMotion }) {
         reduceMotion ? undefined : { opacity: 1, y: 0, filter: "blur(0px)" }
       }
       transition={{ duration: 0.62, ease: [0.22, 1, 0.36, 1] }}
-      className="mb-10 rounded-[32px] md:rounded-[44px] p-5 md:p-7 xl:p-8 text-center relative overflow-hidden scroll-mt-8 min-h-[calc(100vh-150px)] flex items-center justify-center"
+      className="mb-6 rounded-[28px] md:rounded-[38px] p-5 md:p-7 text-center relative overflow-hidden scroll-mt-8 min-h-[520px] flex items-center justify-center"
       style={{
         background:
-          "linear-gradient(135deg, rgba(18,9,10,0.88), rgba(5,2,2,0.96))",
-        border: "1px solid rgba(242,185,104,0.16)",
+          "radial-gradient(circle at center, rgba(210,135,70,0.12), transparent 34%), linear-gradient(135deg, var(--wine-deep), rgba(5,2,2,0.98))",
+        border: "1px solid var(--copper-soft)",
         boxShadow:
-          "0 0 110px rgba(242,185,104,0.065), inset 0 0 90px rgba(255,255,255,0.018)",
+          "0 0 110px rgba(210,135,70,0.10), inset 0 0 90px rgba(255,255,255,0.018)",
         backdropFilter: "blur(18px)",
         WebkitBackdropFilter: "blur(18px)",
       }}
@@ -277,14 +308,24 @@ function LoadingDossie({ loadingStep, loadingRef, reduceMotion }) {
       <img
         src="/images/heroes/loading-ori.png"
         alt="Processamento ORI"
-        className="absolute inset-0 w-full h-full object-cover object-center opacity-75 pointer-events-none select-none"
+        className="absolute inset-0 w-full h-full object-cover object-center opacity-70 pointer-events-none select-none"
+      />
+
+      <video
+        className="absolute inset-0 h-full w-full object-cover opacity-85 pointer-events-none"
+        src="/videos/quizz/quizz-bg.mp4"
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="auto"
       />
 
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "linear-gradient(180deg, rgba(5,2,2,0.48), rgba(5,2,2,0.86)), radial-gradient(circle at center, rgba(242,185,104,0.08), rgba(5,2,2,0.72) 62%, rgba(5,2,2,0.94) 100%)",
+            "linear-gradient(180deg, rgba(33,6,6,0.42), rgba(5,2,2,0.72)), radial-gradient(circle at center, rgba(210,135,70,0.10), rgba(33,6,6,0.20) 42%, rgba(5,2,2,0.82) 100%)",
         }}
       />
 
@@ -305,7 +346,7 @@ function LoadingDossie({ loadingStep, loadingRef, reduceMotion }) {
         }}
         style={{
           background:
-            "radial-gradient(circle at 50% 42%, rgba(242,185,104,0.24), transparent 26%), radial-gradient(circle at 50% 58%, rgba(183,140,255,0.12), transparent 34%)",
+            "radial-gradient(circle at 50% 45%, rgba(210,135,70,0.16), transparent 28%), radial-gradient(circle at 50% 58%, rgba(74,26,26,0.16), transparent 40%)",
         }}
       />
 
@@ -313,26 +354,26 @@ function LoadingDossie({ loadingStep, loadingRef, reduceMotion }) {
         className="absolute inset-0 pointer-events-none opacity-[0.035]"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(242,185,104,0.22) 1px, transparent 1px), linear-gradient(90deg, rgba(242,185,104,0.10) 1px, transparent 1px)",
+            "linear-gradient(rgba(210,135,70,0.22) 1px, transparent 1px), linear-gradient(90deg, rgba(210,135,70,0.10) 1px, transparent 1px)",
           backgroundSize: "70px 70px",
         }}
       />
 
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {[0, 1, 2, 3].map((item) => (
+        {[0, 1, 2].map((item) => (
           <motion.span
             key={item}
-            className="absolute h-px w-[42%]"
+            className="absolute h-px w-[34%]"
             animate={
               reduceMotion
                 ? undefined
                 : {
                     x: item % 2 === 0 ? ["-10%", "120%"] : ["120%", "-10%"],
-                    opacity: [0, 0.42, 0],
+                    opacity: [0, 0.30, 0],
                   }
             }
             transition={{
-              duration: 5.5 + item * 0.8,
+              duration: 6.8 + item * 0.9,
               repeat: Infinity,
               ease: "easeInOut",
               delay: item * 0.35,
@@ -341,107 +382,35 @@ function LoadingDossie({ loadingStep, loadingRef, reduceMotion }) {
               top: `${24 + item * 16}%`,
               left: item % 2 === 0 ? "-20%" : "78%",
               background:
-                "linear-gradient(90deg, transparent, rgba(242,185,104,0.32), transparent)",
+                "linear-gradient(90deg, transparent, rgba(210,135,70,0.34), transparent)",
             }}
           />
         ))}
       </div>
 
-      <div className="absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2 w-[min(58vw,520px)] h-[min(58vw,520px)] pointer-events-none">
-        <motion.div
-          className="absolute inset-0 rounded-full"
-          animate={reduceMotion ? undefined : { rotate: 360 }}
-          transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-          style={{
-            border: "1px solid rgba(242,185,104,0.10)",
-            boxShadow: "inset 0 0 70px rgba(242,185,104,0.020)",
-          }}
-        />
-
-        <motion.div
-          className="absolute inset-[12%] rounded-full"
-          animate={reduceMotion ? undefined : { rotate: -360 }}
-          transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
-          style={{
-            border: "1px solid rgba(183,140,255,0.12)",
-            boxShadow: "inset 0 0 58px rgba(183,140,255,0.018)",
-          }}
-        />
-
-        <motion.div
-          className="absolute inset-[27%] rounded-full"
-          animate={
-            reduceMotion
-              ? undefined
-              : {
-                  scale: [1, 1.08, 1],
-                  opacity: [0.45, 0.78, 0.52],
-                }
-          }
-          transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-          style={{
-            background:
-              "radial-gradient(circle, rgba(242,185,104,0.24), rgba(242,185,104,0.08) 44%, transparent 68%)",
-            border: "1px solid rgba(242,185,104,0.18)",
-            boxShadow:
-              "0 0 78px rgba(242,185,104,0.22), inset 0 0 44px rgba(255,255,255,0.06)",
-          }}
-        />
-
-        {analysisSteps.map((step, index) => {
-          const angle =
-            (index / analysisSteps.length) * Math.PI * 2 - Math.PI / 2;
-          const x = 50 + Math.cos(angle) * 43;
-          const y = 50 + Math.sin(angle) * 43;
-          const active = loadingStep >= index;
-
-          return (
-            <motion.div
-              key={step.label}
-              className="absolute -translate-x-1/2 -translate-y-1/2"
-              style={{
-                left: `${x}%`,
-                top: `${y}%`,
-              }}
-              animate={
-                reduceMotion
-                  ? undefined
-                  : {
-                      scale: active ? [1, 1.12, 1] : 1,
-                      opacity: active ? 1 : 0.36,
-                    }
-              }
-              transition={{
-                duration: 2,
-                repeat: active && !reduceMotion ? Infinity : 0,
-                ease: "easeInOut",
-              }}
-            >
-              <span
-                className="block w-3 h-3 rounded-full"
-                style={{
-                  background: active
-                    ? "rgba(242,185,104,0.95)"
-                    : "rgba(255,255,255,0.18)",
-                  border: active
-                    ? "1px solid rgba(242,185,104,0.70)"
-                    : "1px solid rgba(255,255,255,0.10)",
-                  boxShadow: active
-                    ? "0 0 26px rgba(242,185,104,0.38)"
-                    : "none",
-                }}
-              />
-            </motion.div>
-          );
-        })}
+      <div
+            className="ori-badge absolute right-5 top-5 z-20 px-3 py-1.5 text-[9px] md:right-7 md:top-7"
+            data-state="translating"
+        style={{
+          background:
+            "linear-gradient(90deg, rgba(242,185,104,0.090), rgba(255,255,255,0.018))",
+          border: "1px solid rgba(242,185,104,0.16)",
+          color: "rgba(255,245,235,0.72)",
+          boxShadow:
+            "0 0 22px rgba(242,185,104,0.075), inset 0 0 14px rgba(255,255,255,0.010)",
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)",
+        }}
+      >
+        Leitura ativa
       </div>
 
-      <div className="relative z-10 w-full max-w-4xl mx-auto pt-8">
-        <Eyebrow className="mb-4">Tecnologia ORI em análise</Eyebrow>
+      <div className="relative z-10 w-full max-w-4xl mx-auto py-3 md:py-4">
+        <Eyebrow className="mb-2">Tecnologia ORI em análise</Eyebrow>
 
         <AnimatePresence mode="wait">
           <motion.h2
-            key={loadingMessages[loadingStep]}
+            key={activeStation.title}
             initial={
               reduceMotion ? false : { opacity: 0, y: 12, filter: "blur(8px)" }
             }
@@ -456,7 +425,7 @@ function LoadingDossie({ loadingStep, loadingRef, reduceMotion }) {
                 : { opacity: 0, y: -10, filter: "blur(8px)" }
             }
             transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-            className="text-3xl md:text-5xl xl:text-[52px] leading-[0.98] mb-4"
+            className="ori-type-revelation text-3xl md:text-5xl xl:text-[48px] mb-2.5"
             style={{
               color: colors.gold,
               letterSpacing: "-0.065em",
@@ -464,57 +433,219 @@ function LoadingDossie({ loadingStep, loadingRef, reduceMotion }) {
               fontWeight: 680,
             }}
           >
-            {loadingMessages[loadingStep]}
+            {activeStation.title}
           </motion.h2>
         </AnimatePresence>
 
-        <p
-          className="text-sm md:text-base max-w-2xl mx-auto leading-relaxed mb-3"
-          style={{
-            color: colors.soft,
-            textShadow: "0 0 26px rgba(0,0,0,0.45)",
-          }}
-        >
-          Seus sinais estão sendo cruzados para revelar os padrões centrais da
-          sua presença, imagem, essência e dinâmica arquetípica.
-        </p>
-
         <AnimatePresence mode="wait">
           <motion.p
-            key={loadingNotes[loadingStep]}
+            key={activeStation.note}
             initial={reduceMotion ? false : { opacity: 0, y: 8 }}
             animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
             exit={reduceMotion ? undefined : { opacity: 0, y: -8 }}
             transition={{ duration: 0.34 }}
-            className="text-xs md:text-sm max-w-2xl mx-auto leading-relaxed mb-7"
+            className="ori-type-reading-soft text-xs md:text-sm max-w-xl mx-auto"
             style={{ color: "rgba(255,245,235,0.58)" }}
           >
-            {loadingNotes[loadingStep]}
+            {activeStation.note}
           </motion.p>
         </AnimatePresence>
 
+        <div className="relative mx-auto my-5 md:my-6 h-[196px] md:h-[220px] w-[min(72vw,430px)]">
+          <motion.div
+            className="absolute inset-0 rounded-full"
+            animate={reduceMotion ? undefined : { rotate: 360 }}
+            transition={{ duration: 34, repeat: Infinity, ease: "linear" }}
+            style={{
+              border: "1px solid rgba(242,185,104,0.13)",
+              boxShadow:
+                "inset 0 0 72px rgba(242,185,104,0.045), 0 0 58px rgba(210,135,70,0.070)",
+            }}
+          />
+
+          <motion.div
+            className="absolute inset-[10%] rounded-full"
+            animate={reduceMotion ? undefined : { rotate: -360 }}
+            transition={{ duration: 26, repeat: Infinity, ease: "linear" }}
+            style={{
+              border: "1px solid rgba(183,140,255,0.12)",
+              boxShadow: "inset 0 0 52px rgba(183,140,255,0.028)",
+            }}
+          />
+
+          <div
+            className="absolute inset-[22%] rounded-full"
+            style={{
+              border: "1px solid rgba(242,185,104,0.09)",
+              background:
+                "radial-gradient(circle, rgba(242,185,104,0.05), transparent 64%)",
+            }}
+          />
+
+          <motion.div
+            className="absolute left-1/2 top-1/2 h-[42%] w-[42%] -translate-x-1/2 -translate-y-1/2 rounded-full"
+            animate={
+              reduceMotion
+                ? undefined
+                : {
+                    scale: [1, 1.09, 1],
+                    opacity: [0.78, 1, 0.82],
+                  }
+            }
+            transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
+            style={{
+              background:
+                "radial-gradient(circle, rgba(255,213,143,0.30), rgba(210,135,70,0.10) 44%, transparent 70%)",
+              border: "1px solid rgba(242,185,104,0.24)",
+              boxShadow:
+                "0 0 86px rgba(242,185,104,0.28), inset 0 0 46px rgba(255,255,255,0.060)",
+            }}
+          />
+
+          <div
+            className="absolute left-1/2 top-1/2 h-px w-[88%] -translate-x-1/2"
+            style={{
+              background:
+                "linear-gradient(90deg, transparent, rgba(242,185,104,0.20), transparent)",
+            }}
+          />
+          <div
+            className="absolute left-1/2 top-1/2 h-[88%] w-px -translate-y-1/2"
+            style={{
+              background:
+                "linear-gradient(180deg, transparent, rgba(242,185,104,0.16), transparent)",
+            }}
+          />
+
+          <motion.div
+            className="absolute inset-[16%] rounded-full"
+            animate={reduceMotion ? undefined : { rotate: 360 }}
+            transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+          >
+            <span
+              className="absolute left-1/2 top-0 h-1.5 w-1.5 -translate-x-1/2 rounded-full"
+              style={{
+                background: "rgba(255,213,143,0.92)",
+                boxShadow: "0 0 24px rgba(242,185,104,0.44)",
+              }}
+            />
+          </motion.div>
+
+          {readingParticles.map((particle) => (
+            <motion.span
+              key={`${particle.left}-${particle.top}`}
+              className="absolute rounded-full"
+              animate={
+                reduceMotion
+                  ? undefined
+                  : {
+                      opacity: [0.20, 0.82, 0.28],
+                      y: [0, -10, 0],
+                    }
+              }
+              transition={{
+                duration: 3.8,
+                delay: particle.delay,
+                repeat: Infinity,
+                repeatType: "mirror",
+                ease: "easeInOut",
+              }}
+              style={{
+                left: particle.left,
+                top: particle.top,
+                width: particle.size,
+                height: particle.size,
+                background: "rgba(242,185,104,0.78)",
+                boxShadow: "0 0 20px rgba(242,185,104,0.44)",
+              }}
+            />
+          ))}
+
+          {analysisSteps.map((step, index) => {
+            const angle =
+              (index / analysisSteps.length) * Math.PI * 2 - Math.PI / 2;
+            const x = 50 + Math.cos(angle) * 43;
+            const y = 50 + Math.sin(angle) * 43;
+            const active = index <= activeStationIndex;
+
+            return (
+              <motion.span
+                key={step.label}
+                className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full"
+                animate={
+                  reduceMotion
+                    ? undefined
+                    : {
+                        scale: active ? [1, 1.18, 1] : 1,
+                        opacity: active ? [0.72, 1, 0.82] : 0.26,
+                      }
+                }
+                transition={{
+                  duration: 2.4,
+                  repeat: active && !reduceMotion ? Infinity : 0,
+                  ease: "easeInOut",
+                }}
+                style={{
+                  left: `${x}%`,
+                  top: `${y}%`,
+                  width: active ? 8 : 6,
+                  height: active ? 8 : 6,
+                  background: active
+                    ? "rgba(255,213,143,0.94)"
+                    : "rgba(255,245,235,0.18)",
+                  border: active
+                    ? "1px solid rgba(242,185,104,0.70)"
+                    : "1px solid rgba(255,255,255,0.10)",
+                  boxShadow: active
+                    ? "0 0 30px rgba(242,185,104,0.50)"
+                    : "none",
+                }}
+              />
+            );
+          })}
+
+          <div className="absolute inset-0 flex items-center justify-center">
+            <img
+              src="/images/logo/logo-ori.png"
+              alt="Método ORI"
+              className="w-28 md:w-36 opacity-95"
+              style={{
+                filter:
+                  "drop-shadow(0 0 22px rgba(242,185,104,0.34)) drop-shadow(0 0 44px rgba(210,135,70,0.20))",
+              }}
+            />
+          </div>
+        </div>
+
         <div
-          className="relative overflow-hidden rounded-full h-2 max-w-xl mx-auto mb-5"
+          className="ori-progress relative h-1.5 max-w-xl mx-auto mb-4"
           style={{
-            background: "rgba(255,255,255,0.05)",
-            border: "1px solid rgba(242,185,104,0.10)",
+            background: "rgba(255,255,255,0.035)",
+            border: "1px solid rgba(242,185,104,0.08)",
+            boxShadow: "inset 0 0 16px rgba(0,0,0,0.24)",
           }}
         >
           <motion.div
             className="absolute top-0 left-0 h-full rounded-full"
-            animate={{ width: `${progressWidth}%` }}
+            animate={{ width: `${stationProgressWidth}%` }}
             transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
             style={{
               background:
-                "linear-gradient(to right, rgba(242,185,104,0.55), rgba(255,213,143,1))",
-              boxShadow: "0 0 38px rgba(242,185,104,0.42)",
+                "linear-gradient(90deg, rgba(210,135,70,0.58), rgba(255,213,143,0.96), rgba(242,185,104,0.72))",
+              boxShadow: "0 0 28px rgba(242,185,104,0.36)",
             }}
           />
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 max-w-4xl mx-auto">
           {analysisSteps.map((item, index) => {
-            const active = loadingStep >= index;
+            const completed = index < activeStationIndex;
+            const active = index === activeStationIndex;
+            const status = completed
+              ? "Concluído"
+              : active
+                ? "Em leitura"
+                : "Em espera";
 
             return (
               <motion.div
@@ -523,40 +654,80 @@ function LoadingDossie({ loadingStep, loadingRef, reduceMotion }) {
                   reduceMotion
                     ? undefined
                     : {
-                        opacity: active ? 1 : 0.42,
-                        y: active ? 0 : 2,
+                        opacity: completed || active ? 1 : 0.42,
+                        y: active ? -2 : 0,
                       }
                 }
-                className="rounded-[18px] px-3 py-3"
+                transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+                className={`ori-step relative overflow-hidden rounded-full px-3 py-2`}
                 style={{
                   background: active
-                    ? "rgba(242,185,104,0.080)"
-                    : "rgba(255,255,255,0.026)",
+                    ? "linear-gradient(90deg, rgba(242,185,104,0.14), rgba(255,255,255,0.020))"
+                    : completed
+                      ? "linear-gradient(90deg, rgba(242,185,104,0.070), rgba(255,255,255,0.012))"
+                      : "rgba(255,255,255,0.014)",
                   border: active
-                    ? "1px solid rgba(242,185,104,0.18)"
-                    : "1px solid rgba(242,185,104,0.08)",
-                  color: active
-                    ? "rgba(255,245,235,0.84)"
-                    : "rgba(255,245,235,0.42)",
+                    ? "1px solid rgba(242,185,104,0.32)"
+                    : completed
+                      ? "1px solid rgba(242,185,104,0.16)"
+                      : "1px solid rgba(242,185,104,0.060)",
+                  color:
+                    completed || active
+                      ? "rgba(255,245,235,0.82)"
+                      : "rgba(255,245,235,0.42)",
                   boxShadow: active
-                    ? "0 0 22px rgba(242,185,104,0.06)"
+                    ? "0 0 28px rgba(242,185,104,0.12), inset 0 0 18px rgba(242,185,104,0.025)"
                     : "none",
                 }}
               >
                 <span
-                  className="block text-[9px] uppercase tracking-[0.20em] mb-1"
-                  style={{ color: active ? colors.goldSoft : colors.muted }}
-                >
-                  {active ? "Analisado" : "Em espera"}
-                </span>
-                <span className="block text-xs font-semibold">
-                  {item.label}
+                  className="absolute inset-x-4 top-0 h-px"
+                  style={{
+                    background:
+                      completed || active
+                        ? "linear-gradient(90deg, transparent, rgba(242,185,104,0.38), transparent)"
+                        : "linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent)",
+                  }}
+                />
+                <span className="flex items-center justify-center gap-2">
+                  <span
+                    className="h-1.5 w-1.5 rounded-full"
+                    style={{
+                      background: active
+                        ? "rgba(255,213,143,0.96)"
+                        : completed
+                          ? "rgba(242,185,104,0.72)"
+                          : "rgba(255,255,255,0.18)",
+                      boxShadow: active
+                        ? "0 0 18px rgba(242,185,104,0.58)"
+                        : completed
+                          ? "0 0 10px rgba(242,185,104,0.24)"
+                          : "none",
+                    }}
+                  />
+                  <span
+                    className="ori-type-system text-[8px]"
+                    style={{
+                      color:
+                        completed || active
+                          ? "rgba(242,185,104,0.82)"
+                          : "rgba(255,245,235,0.30)",
+                    }}
+                  >
+                    {status}
+                  </span>
                 </span>
                 <span
-                  className="block text-[10px] mt-1"
-                  style={{ color: "rgba(255,245,235,0.45)" }}
+                  className="block text-xs font-semibold mt-1"
+                  style={{
+                    color:
+                      completed || active
+                        ? "rgba(255,245,235,0.82)"
+                        : "rgba(255,245,235,0.38)",
+                    letterSpacing: "-0.01em",
+                  }}
                 >
-                  {item.detail}
+                  {item.label}
                 </span>
               </motion.div>
             );
@@ -594,23 +765,23 @@ function QuizIntro({
       variants={fadeUp}
       initial={reduceMotion ? false : "hidden"}
       animate={reduceMotion ? undefined : "visible"}
-      className="relative overflow-hidden rounded-[34px] md:rounded-[46px] p-7 md:p-10 mb-10"
+      className="relative overflow-hidden rounded-[28px] md:rounded-[38px] p-5 md:p-7 mb-6"
       style={{
         background:
-          "radial-gradient(circle at top right, rgba(242,185,104,0.13), transparent 34%), radial-gradient(circle at bottom left, rgba(183,140,255,0.09), transparent 38%), linear-gradient(135deg, rgba(18,9,10,0.76), rgba(5,2,2,0.94))",
-        border: "1px solid rgba(242,185,104,0.14)",
+          "radial-gradient(circle at top right, rgba(242,185,104,0.11), transparent 34%), radial-gradient(circle at bottom left, rgba(183,140,255,0.06), transparent 38%), linear-gradient(135deg, rgba(18,9,10,0.72), rgba(5,2,2,0.92))",
+        border: "1px solid rgba(242,185,104,0.10)",
         boxShadow:
-          "0 0 90px rgba(242,185,104,0.050), inset 0 0 64px rgba(255,255,255,0.012)",
-        backdropFilter: "blur(18px)",
-        WebkitBackdropFilter: "blur(18px)",
+          "0 0 48px rgba(242,185,104,0.036), inset 0 0 36px rgba(255,255,255,0.010)",
+        backdropFilter: "blur(14px)",
+        WebkitBackdropFilter: "blur(14px)",
       }}
     >
-      <div className="relative z-10 grid lg:grid-cols-[0.82fr_1.18fr] gap-8 items-center">
+      <div className="relative z-10 grid lg:grid-cols-[0.9fr_1.1fr] gap-6 items-center">
         <div>
-          <Eyebrow className="mb-5">Código das Deusas</Eyebrow>
+          <Eyebrow className="mb-4">Código das Deusas</Eyebrow>
 
           <h1
-            className="text-4xl md:text-6xl leading-[0.92] mb-6"
+            className="ori-type-revelation text-3xl md:text-5xl mb-4"
             style={{
               color: colors.gold,
               letterSpacing: "-0.075em",
@@ -622,7 +793,7 @@ function QuizIntro({
           </h1>
 
           <p
-            className="text-base md:text-lg leading-relaxed max-w-2xl mb-7"
+            className="ori-type-reading text-base md:text-lg max-w-2xl mb-4"
             style={{ color: colors.soft }}
           >
             Responda intuitivamente. Quando você não racionaliza demais as
@@ -632,7 +803,7 @@ function QuizIntro({
           </p>
 
           <p
-            className="text-sm md:text-base leading-relaxed max-w-2xl mb-7"
+            className="ori-type-reading-soft text-sm md:text-base max-w-2xl mb-4"
             style={{ color: "rgba(255,245,235,0.66)" }}
           >
             Esta primeira etapa não entrega uma consultoria visual completa. Ela
@@ -643,15 +814,26 @@ function QuizIntro({
           <motion.button
             type="button"
             onClick={onStart}
-            whileHover={reduceMotion ? undefined : { scale: 1.025, y: -2 }}
+            whileHover={
+              reduceMotion
+                ? undefined
+                : {
+                    scale: 1.025,
+                    y: -2,
+                    letterSpacing: "0.035em",
+                    boxShadow:
+                      "0 0 42px rgba(210,135,70,0.24), inset 0 0 16px rgba(255,255,255,0.16)",
+                  }
+            }
             whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-            className="px-8 py-4 rounded-full text-sm md:text-base"
+            className="ori-journey-action px-6 py-3 rounded-full text-sm md:text-base"
             style={{
-              background: colors.gold,
+              background:
+                "linear-gradient(90deg, var(--copper-primary), var(--gold-primary))",
               color: "#090506",
               fontWeight: 700,
               boxShadow:
-                "0 0 42px rgba(242,185,104,0.18), inset 0 0 16px rgba(255,255,255,0.18)",
+                "0 0 24px rgba(210,135,70,0.12), inset 0 0 10px rgba(255,255,255,0.12)",
             }}
           >
             {hasProgress ? "Continuar minha leitura" : "Começar minha leitura"}
@@ -659,12 +841,12 @@ function QuizIntro({
         </div>
 
         <div
-          className="relative overflow-hidden rounded-[30px] p-6 md:p-7"
+          className="relative overflow-hidden rounded-[22px] p-4 md:p-5"
           style={{
             background:
-              "linear-gradient(180deg, rgba(255,255,255,0.032), rgba(255,255,255,0.010))",
-            border: "1px solid rgba(242,185,104,0.12)",
-            boxShadow: "inset 0 0 40px rgba(255,255,255,0.012)",
+              "linear-gradient(180deg, rgba(255,255,255,0.028), rgba(255,255,255,0.008))",
+            border: "1px solid rgba(242,185,104,0.09)",
+            boxShadow: "inset 0 0 28px rgba(255,255,255,0.010)",
           }}
         >
           <Eyebrow className="mb-4">Travessia ORI</Eyebrow>
@@ -673,14 +855,14 @@ function QuizIntro({
             {methodSteps.map((item) => (
               <div
                 key={item.title}
-                className="rounded-[22px] p-4"
+                className="rounded-[16px] p-3"
                 style={{
-                  background: "rgba(255,255,255,0.024)",
-                  border: "1px solid rgba(242,185,104,0.08)",
+                  background: "rgba(255,255,255,0.02)",
+                  border: "1px solid rgba(242,185,104,0.06)",
                 }}
               >
                 <h3
-                  className="text-lg mb-1"
+                  className="ori-type-revelation text-lg mb-1"
                   style={{
                     color: colors.text,
                     fontWeight: 620,
@@ -691,7 +873,7 @@ function QuizIntro({
                 </h3>
 
                 <p
-                  className="text-sm leading-relaxed"
+                  className="ori-type-reading-soft text-sm"
                   style={{ color: colors.soft }}
                 >
                   {item.text}
@@ -701,13 +883,13 @@ function QuizIntro({
           </div>
 
           {hasProgress && (
-            <div className="mt-6">
-              <p className="text-sm mb-2" style={{ color: colors.soft }}>
+            <div className="mt-4">
+              <p className="ori-type-reading-soft text-sm mb-2" style={{ color: colors.soft }}>
                 Você já revelou {answeredQuestions} de {totalQuestions} sinais.
               </p>
 
               <div
-                className="h-2 rounded-full overflow-hidden"
+                className="ori-progress h-2"
                 style={{ background: "rgba(255,255,255,0.04)" }}
               >
                 <div
@@ -728,7 +910,13 @@ function QuizIntro({
   );
 }
 
-function LayerReveal({ bloco, onContinue, isFinalBlock, reduceMotion }) {
+function LayerReveal({
+  bloco,
+  onContinue,
+  onBack,
+  isFinalBlock,
+  reduceMotion,
+}) {
   const reveal = blockRevealTexts[bloco] || {
     title: "Camada revelada",
     text: "O espelho captou mais um fragmento da sua leitura. Continue para tornar sua composição mais nítida.",
@@ -742,12 +930,12 @@ function LayerReveal({ bloco, onContinue, isFinalBlock, reduceMotion }) {
       initial={reduceMotion ? false : "hidden"}
       animate={reduceMotion ? undefined : "visible"}
       exit={reduceMotion ? undefined : "exit"}
-      className="relative overflow-hidden rounded-[28px] md:rounded-[36px] px-5 py-6 md:px-8 md:py-7 mb-6 text-center min-h-[calc(100vh-120px)] flex items-center justify-center"
+      className="relative overflow-hidden rounded-[28px] md:rounded-[38px] p-5 md:p-7 mb-6 min-h-[520px]"
       style={{
-        background: `${theme.aura}, linear-gradient(135deg, rgba(18,9,10,0.68), rgba(5,2,2,0.92))`,
-        border: "1px solid rgba(242,185,104,0.14)",
+        background: `${theme.aura}, linear-gradient(135deg, rgba(18,9,10,0.72), rgba(5,2,2,0.92))`,
+        border: "1px solid rgba(242,185,104,0.10)",
         boxShadow:
-          "0 0 72px rgba(242,185,104,0.04), inset 0 0 40px rgba(255,255,255,0.01)",
+          "0 0 48px rgba(242,185,104,0.036), inset 0 0 36px rgba(255,255,255,0.010)",
         backdropFilter: "blur(14px)",
         WebkitBackdropFilter: "blur(14px)",
       }}
@@ -766,107 +954,153 @@ function LayerReveal({ bloco, onContinue, isFinalBlock, reduceMotion }) {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "linear-gradient(180deg, rgba(5,2,2,0.28), rgba(5,2,2,0.48)), radial-gradient(circle at center, rgba(5,2,2,0.04), rgba(5,2,2,0.42) 72%)",
+            "linear-gradient(180deg, rgba(5,2,2,0.34), rgba(5,2,2,0.64)), radial-gradient(circle at 20% 18%, rgba(242,185,104,0.10), transparent 32%), radial-gradient(circle at 85% 90%, rgba(183,140,255,0.06), transparent 34%), linear-gradient(180deg, rgba(5,2,2,0.10), rgba(5,2,2,0.88))",
         }}
       />
 
-      <div className="relative z-10 max-w-3xl mx-auto">
-        <motion.div
-          initial={reduceMotion ? false : { scale: 0.94, opacity: 0 }}
-          animate={reduceMotion ? undefined : { scale: 1, opacity: 1 }}
-          transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
-          className="mx-auto mb-5 h-14 w-14 rounded-full flex items-center justify-center text-lg"
-          style={{
-            background: "rgba(5,2,2,0.54)",
-            border: `1px solid ${theme.glow}`,
-            color: theme.accent,
-            boxShadow: `0 0 28px ${theme.glow}, inset 0 0 18px rgba(255,255,255,0.014)`,
-            fontWeight: 650,
-          }}
-        >
-          {theme.symbol}
-        </motion.div>
+      <div className="relative z-10 min-h-[466px] flex items-center justify-center">
+        <div className="w-full max-w-3xl mx-auto text-center">
+          <motion.div
+            initial={reduceMotion ? false : { scale: 0.94, opacity: 0 }}
+            animate={reduceMotion ? undefined : { scale: 1, opacity: 1 }}
+            transition={{ duration: 0.46, ease: [0.22, 1, 0.36, 1] }}
+            className="mx-auto mb-3 h-12 w-12 rounded-full flex items-center justify-center text-base"
+            style={{
+              background:
+                "radial-gradient(circle at 50% 35%, rgba(242,185,104,0.13), rgba(6,3,3,0.72) 64%)",
+              border: `1px solid rgba(242,185,104,0.16)`,
+              color: theme.accent,
+              boxShadow: `0 0 22px ${theme.glow}, inset 0 0 16px rgba(255,255,255,0.035)`,
+              fontWeight: 650,
+            }}
+          >
+            {theme.symbol}
+          </motion.div>
 
-        <div
-          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-5"
-          style={{
-            background: "rgba(120,255,160,0.06)",
-            border: "1px solid rgba(120,255,160,0.12)",
-            color: "#9BE7AE",
-          }}
-        >
-          <span>✓</span>
-          <span className="text-[11px] uppercase tracking-[0.18em]">
-            Camada registrada
-          </span>
-        </div>
-
-        <Eyebrow className="mb-4">{bloco}</Eyebrow>
-
-        <h2
-          className="text-3xl md:text-5xl leading-[0.96] mb-4"
-          style={{
-            color: colors.gold,
-            fontWeight: 680,
-            letterSpacing: "-0.07em",
-            textShadow: "0 0 36px rgba(242,185,104,0.14)",
-          }}
-        >
-          {reveal.title}
-        </h2>
-
-        <p
-          className="text-base md:text-lg leading-relaxed max-w-[760px] mx-auto mb-5"
-          style={{ color: colors.soft }}
-        >
-          {reveal.text}
-        </p>
-
-        <p
-          className="text-sm md:text-base leading-relaxed max-w-[760px] mx-auto mb-6"
-          style={{ color: "rgba(255,245,235,0.62)" }}
-        >
-          {theme.reward} Esta etapa não define sua imagem inteira, mas aproxima
-          o método da estrutura que sustenta suas escolhas, seus gestos e a
-          forma como sua presença é percebida.
-        </p>
-
-        <div className="flex flex-wrap justify-center gap-2 mb-6">
-          {[
-            `Camada ${String(blockRevealTexts[bloco] ? Object.keys(blockRevealTexts).indexOf(bloco) + 1 : 1).padStart(2, "0")} concluída`,
-            "+1 fragmento desbloqueado",
-            "Espelho mais nítido",
-          ].map((item) => (
+          <div
+            className="inline-flex items-center gap-2 rounded-full ori-reveal-badge px-3.5 py-1 mb-5"
+            style={{
+              background:
+                "linear-gradient(90deg, rgba(242,185,104,0.060), rgba(255,255,255,0.010))",
+              border: "1px solid rgba(242,185,104,0.12)",
+              color: "rgba(255,245,235,0.70)",
+              boxShadow: "inset 0 0 14px rgba(255,255,255,0.010)",
+            }}
+          >
             <span
-              key={item}
-              className="px-4 py-2 rounded-full text-xs"
+              className="text-[10px]"
+              style={{ color: "rgba(242,185,104,0.88)" }}
+            >
+              ✓
+            </span>
+            <span className="ori-type-system text-[9px]">
+              Camada registrada
+            </span>
+          </div>
+
+          <Eyebrow className="mb-4">{bloco}</Eyebrow>
+
+          <h2
+            className="ori-type-revelation text-3xl md:text-5xl mb-5"
+            style={{
+              color: theme.accent,
+              fontWeight: 680,
+              letterSpacing: "-0.07em",
+              textShadow: `0 0 34px ${theme.glow}`,
+            }}
+          >
+            {reveal.title}
+          </h2>
+
+          <p
+            className="ori-type-reading max-w-[680px] mx-auto mb-6 text-sm md:text-base"
+            style={{
+              color: "rgba(255,245,235,0.70)",
+              fontWeight: 520,
+              textShadow: "0 0 18px rgba(0,0,0,0.24)",
+            }}
+          >
+            {reveal.text}
+          </p>
+
+          <div className="flex flex-wrap justify-center gap-2.5 mb-7">
+            {[
+              `Camada ${String(blockRevealTexts[bloco] ? Object.keys(blockRevealTexts).indexOf(bloco) + 1 : 1).padStart(2, "0")} concluída`,
+              "+1 fragmento desbloqueado",
+              "Espelho mais nítido",
+            ].map((item) => (
+              <span
+                key={item}
+                className="ori-reveal-chip ori-chip"
+                style={{
+                  background:
+                    `linear-gradient(90deg, rgba(255,255,255,0.014), ${theme.glow}, rgba(255,255,255,0.008))`,
+                  border: `1px solid ${theme.glow}`,
+                  color: theme.accent,
+                  padding: "0.42rem 0.74rem",
+                  fontWeight: 600,
+                  boxShadow: `0 0 14px ${theme.glow}, inset 0 0 12px rgba(255,255,255,0.006)`,
+                }}
+              >
+                <span
+                  className="h-1.5 w-1.5 rounded-full"
+                  style={{
+                    background: theme.accent,
+                    boxShadow: `0 0 10px ${theme.glow}`,
+                  }}
+                />
+                {item}
+              </span>
+            ))}
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <motion.button
+              type="button"
+              onClick={onBack}
+              whileHover={reduceMotion ? undefined : { x: -2 }}
+              whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+              className="ori-button-secondary min-w-[190px] px-6 py-3 text-sm md:text-[15px]"
               style={{
-                background: "rgba(242,185,104,0.06)",
-                border: "1px solid rgba(242,185,104,0.12)",
-                color: "rgba(255,245,235,0.74)",
+                background: "rgba(255,255,255,0.024)",
+                color: "rgba(255,245,235,0.70)",
+                fontWeight: 650,
+                letterSpacing: "0.004em",
+                border: "1px solid rgba(255,245,235,0.10)",
+                boxShadow: "inset 0 0 14px rgba(255,255,255,0.008)",
               }}
             >
-              {item}
-            </span>
-          ))}
-        </div>
+              ← Voltar sinal anterior
+            </motion.button>
 
-        <motion.button
-          type="button"
-          onClick={onContinue}
-          whileHover={reduceMotion ? undefined : { scale: 1.025, y: -2 }}
-          whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-          className="px-7 py-3.5 rounded-full text-sm md:text-base"
-          style={{
-            background: colors.gold,
-            color: "#090506",
-            fontWeight: 700,
-            boxShadow:
-              "0 0 32px rgba(242,185,104,0.14), inset 0 0 12px rgba(255,255,255,0.16)",
-          }}
-        >
-          {isFinalBlock ? "Preparar revelação" : "Continuar leitura"}
-        </motion.button>
+            <motion.button
+              type="button"
+              onClick={onContinue}
+              whileHover={
+                reduceMotion
+                  ? undefined
+                  : {
+                      scale: 1.018,
+                      y: -2,
+                      boxShadow:
+                        "0 0 34px rgba(210,135,70,0.22), inset 0 0 16px rgba(255,255,255,0.14)",
+                    }
+              }
+              whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+              className="ori-journey-action min-w-[190px] px-6 py-3 rounded-full text-sm md:text-[15px]"
+              style={{
+                background: `linear-gradient(90deg, ${theme.accent}, rgba(255,245,235,0.92))`,
+                color: "#090506",
+                fontWeight: 700,
+                letterSpacing: "0.012em",
+                border: `1px solid ${theme.glow}`,
+                boxShadow: `0 0 24px ${theme.glow}, inset 0 0 12px rgba(255,255,255,0.10)`,
+              }}
+            >
+              {isFinalBlock ? "Preparar revelação" : "Continuar leitura"}
+            </motion.button>
+          </div>
+        </div>
       </div>
     </motion.section>
   );
@@ -912,20 +1146,20 @@ function QuizQuestionView({
       initial={reduceMotion ? false : "hidden"}
       animate={reduceMotion ? undefined : "visible"}
       exit={reduceMotion ? undefined : "exit"}
-      className="relative overflow-hidden rounded-[32px] md:rounded-[46px] p-4 md:p-6 xl:p-7 mb-7 min-h-[calc(100vh-132px)] flex items-center"
+      className="relative overflow-hidden rounded-[24px] md:rounded-[32px] p-3 md:p-4 xl:p-5 mb-5 min-h-[360px] md:min-h-[380px] flex items-center"
       style={{
-        background: `${theme.aura}, radial-gradient(circle at 50% 42%, ${theme.glow}, transparent 32%), linear-gradient(135deg, rgba(18,9,10,0.78), rgba(5,2,2,0.96))`,
-        border: "1px solid rgba(242,185,104,0.15)",
-        boxShadow: `0 0 96px ${theme.glow}, inset 0 0 70px rgba(255,255,255,0.012)`,
-        backdropFilter: "blur(18px)",
-        WebkitBackdropFilter: "blur(18px)",
+        background: `${theme.aura}, radial-gradient(circle at 50% 42%, ${theme.glow}, transparent 32%), linear-gradient(135deg, rgba(18,9,10,0.74), rgba(5,2,2,0.94))`,
+        border: "1px solid rgba(242,185,104,0.10)",
+        boxShadow: `0 0 58px ${theme.glow}, inset 0 0 40px rgba(255,255,255,0.010)`,
+        backdropFilter: "blur(14px)",
+        WebkitBackdropFilter: "blur(14px)",
       }}
     >
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.025]"
+        className="absolute inset-0 pointer-events-none opacity-[0.02]"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(242,185,104,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(242,185,104,0.08) 1px, transparent 1px)",
+            "linear-gradient(rgba(242,185,104,0.14) 1px, transparent 1px), linear-gradient(90deg, rgba(242,185,104,0.06) 1px, transparent 1px)",
           backgroundSize: "86px 86px",
         }}
       />
@@ -949,25 +1183,25 @@ function QuizQuestionView({
       />
 
       <div className="relative z-10 w-full max-w-5xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4 px-1">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-2 px-0">
           <div>
-            <Eyebrow className="mb-2">Câmara de Leitura ORI</Eyebrow>
+            <Eyebrow className="mb-1">Câmara de Leitura ORI</Eyebrow>
             <p
-              className="uppercase tracking-[0.24em] text-[8px] md:text-[9px]"
-              style={{ color: "rgba(255,245,235,0.54)" }}
+              className="uppercase tracking-[0.22em] text-[8px] md:text-[9px]"
+              style={{ color: "rgba(255,245,235,0.50)" }}
             >
               Sinal {String(currentQuestion.id).padStart(2, "0")} de{" "}
               {String(totalQuestions).padStart(2, "0")}
               <span
                 className="mx-2"
-                style={{ color: "rgba(255,245,235,0.20)" }}
+                style={{ color: "rgba(255,245,235,0.18)" }}
               >
                 ·
               </span>
               {currentBlock}
               <span
                 className="mx-2"
-                style={{ color: "rgba(255,245,235,0.20)" }}
+                style={{ color: "rgba(255,245,235,0.18)" }}
               >
                 ·
               </span>
@@ -977,25 +1211,28 @@ function QuizQuestionView({
 
           <div className="flex items-center gap-2">
             <div
-              className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-full text-[11px]"
+              className="hidden sm:flex items-center gap-2 px-2 py-1.5 rounded-full text-[11px]"
               style={{
-                background: "rgba(255,255,255,0.026)",
-                border: "1px solid rgba(242,185,104,0.10)",
-                color: "rgba(255,245,235,0.62)",
+                background: "rgba(255,255,255,0.02)",
+                border: "1px solid rgba(242,185,104,0.08)",
+                color: "rgba(255,245,235,0.58)",
               }}
             >
               <span style={{ color: theme.accent }}>◇</span>
-              {answeredQuestions} sinais registrados
+              {answeredQuestions} sinais
             </div>
 
             <div
-              className="px-3 py-2 rounded-full text-[11px]"
+              className="px-2 py-1.5 rounded-full text-[11px]"
               style={{
-                background: captured ? "rgba(120,255,160,0.075)" : theme.glow,
+                background: captured
+                  ? `linear-gradient(90deg, ${theme.glow}, rgba(255,255,255,0.014))`
+                  : "rgba(255,255,255,0.018)",
                 border: captured
-                  ? "1px solid rgba(120,255,160,0.16)"
-                  : `1px solid ${theme.glow}`,
-                color: captured ? "#9BE7AE" : theme.accent,
+                  ? `1px solid ${theme.glow}`
+                  : `1px solid rgba(242,185,104,0.08)`,
+                color: theme.accent,
+                boxShadow: captured ? `0 0 12px ${theme.glow}` : "none",
               }}
             >
               {captured ? "Sinal capturado" : `${blockProgress}% da camada`}
@@ -1003,133 +1240,139 @@ function QuizQuestionView({
           </div>
         </div>
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentQuestion.id}
-            initial={
-              reduceMotion
-                ? false
-                : {
-                    opacity: 0,
-                    y: 18,
-                    filter: "blur(10px)",
-                  }
-            }
-            animate={
-              reduceMotion
-                ? undefined
-                : {
-                    opacity: 1,
-                    y: 0,
-                    filter: "blur(0px)",
-                  }
-            }
-            exit={
-              reduceMotion
-                ? undefined
-                : {
-                    opacity: 0,
-                    y: -14,
-                    filter: "blur(8px)",
-                  }
-            }
-            transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-            className="relative overflow-hidden rounded-[34px] md:rounded-[46px] px-5 py-6 md:px-8 md:py-7 xl:px-10 xl:py-8 min-h-[500px] flex flex-col justify-between"
-            style={{
-              background:
-                "radial-gradient(circle at top, rgba(255,255,255,0.052), transparent 38%), linear-gradient(180deg, rgba(255,255,255,0.032), rgba(255,255,255,0.010))",
-              border: `1px solid ${theme.glow}`,
-              boxShadow: `0 0 64px ${theme.glow}, inset 0 0 54px rgba(255,255,255,0.012)`,
-            }}
-          >
-            <div
-              className="absolute inset-[14px] rounded-[26px] md:rounded-[36px] pointer-events-none"
-              style={{ border: "1px solid rgba(242,185,104,0.055)" }}
-            />
+        <div
+          className="relative overflow-hidden rounded-[22px] md:rounded-[28px] px-4 py-4 md:px-5 md:py-4 xl:px-7 xl:py-5 min-h-[340px] md:min-h-[360px] flex flex-col justify-between"
+          style={{
+            background:
+              "radial-gradient(circle at top, rgba(255,255,255,0.048), transparent 38%), linear-gradient(180deg, rgba(255,255,255,0.028), rgba(255,255,255,0.008))",
+            border: `1px solid ${theme.glow}`,
+            boxShadow: `0 0 48px ${theme.glow}, inset 0 0 38px rgba(255,255,255,0.010)`,
+          }}
+        >
+          <div
+            className="absolute inset-[8px] rounded-[18px] md:rounded-[26px] pointer-events-none"
+            style={{ border: "1px solid rgba(242,185,104,0.035)" }}
+          />
 
-            <div className="relative z-10 flex items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div
-                  className="h-12 w-12 rounded-full flex items-center justify-center text-sm shrink-0"
-                  style={{
-                    background: "rgba(5,2,2,0.54)",
-                    border: `1px solid ${theme.glow}`,
-                    color: theme.accent,
-                    boxShadow: `0 0 28px ${theme.glow}, inset 0 0 18px rgba(255,255,255,0.018)`,
-                    fontWeight: 700,
-                  }}
-                >
-                  {theme.symbol}
-                </div>
-
-                <div>
-                  <p
-                    className="uppercase tracking-[0.24em] text-[8px] mb-1"
-                    style={{ color: colors.goldSoft }}
-                  >
-                    {currentBlock}
-                  </p>
-
-                  <p
-                    className="text-xs md:text-sm"
-                    style={{ color: "rgba(255,245,235,0.58)" }}
-                  >
-                    {blockDescriptions[currentBlock]}
-                  </p>
-                </div>
-              </div>
-
-              <div className="hidden md:flex items-center gap-1.5">
-                {progressDots.map((dot) => (
-                  <span
-                    key={dot.id}
-                    className="h-2 w-2 rounded-full"
-                    style={{
-                      background: dot.answered
-                        ? theme.accent
-                        : dot.active
-                          ? "rgba(255,245,235,0.46)"
-                          : "rgba(255,255,255,0.13)",
-                      boxShadow: dot.active ? `0 0 18px ${theme.glow}` : "none",
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-
-            <div className="relative z-10 text-center max-w-4xl mx-auto py-5 md:py-7">
-              <p
-                className="uppercase tracking-[0.28em] text-[8px] md:text-[9px] mb-5"
-                style={{ color: "rgba(255,245,235,0.45)" }}
-              >
-                Pergunta {questionIndexInBlock + 1} de{" "}
-                {currentBlockQuestions.length}
-              </p>
-
-              <h3
-                className="text-[30px] md:text-5xl xl:text-[48px] leading-[1.04] max-w-[860px] mx-auto [text-wrap:balance]"
+          <div className="relative z-10 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div
+                className="h-10 w-10 rounded-full flex items-center justify-center text-sm shrink-0"
                 style={{
-                  color: colors.text,
-                  fontWeight: 690,
-                  letterSpacing: "-0.072em",
-                  textShadow: `0 0 42px ${theme.glow}`,
+                  background: "rgba(5,2,2,0.56)",
+                  border: `1px solid ${theme.glow}`,
+                  color: theme.accent,
+                  boxShadow: `0 0 20px ${theme.glow}, inset 0 0 12px rgba(255,255,255,0.014)`,
+                  fontWeight: 700,
                 }}
               >
-                {currentQuestion.pergunta}
-              </h3>
+                {theme.symbol}
+              </div>
+
+              <div>
+                <p
+                  className="uppercase tracking-[0.22em] text-[8px] mb-1"
+                  style={{ color: colors.goldSoft }}
+                >
+                  {currentBlock}
+                </p>
+
+                <p
+                  className="text-xs md:text-sm"
+                  style={{ color: "rgba(255,245,235,0.54)" }}
+                >
+                  {blockDescriptions[currentBlock]}
+                </p>
+              </div>
             </div>
 
-            <div className="relative z-10">
-              <div className="max-w-3xl mx-auto mb-5">
+            <div className="hidden md:flex items-center gap-1.5">
+              {progressDots.map((dot) => (
+                <span
+                  key={dot.id}
+                  className="h-1.5 w-1.5 rounded-full"
+                  style={{
+                    background: dot.answered
+                      ? theme.accent
+                      : dot.active
+                        ? "rgba(255,245,235,0.42)"
+                        : "rgba(255,255,255,0.12)",
+                    boxShadow: dot.active ? `0 0 14px ${theme.glow}` : "none",
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentQuestion.id}
+              initial={
+                reduceMotion
+                  ? false
+                  : {
+                      opacity: 0,
+                      y: 16,
+                      filter: "blur(8px)",
+                    }
+              }
+              animate={
+                reduceMotion
+                  ? undefined
+                  : {
+                      opacity: 1,
+                      y: 0,
+                      filter: "blur(0px)",
+                    }
+              }
+              exit={
+                reduceMotion
+                  ? undefined
+                  : {
+                      opacity: 0,
+                      y: -16,
+                      filter: "blur(6px)",
+                    }
+              }
+              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+              className="relative z-10"
+            >
+              <div className="text-center max-w-4xl mx-auto py-3 md:py-4">
+                <p
+                  className="uppercase tracking-[0.26em] text-[8px] md:text-[9px] mb-4"
+                  style={{ color: "rgba(255,245,235,0.45)" }}
+                >
+                  Pergunta {questionIndexInBlock + 1} de{" "}
+                  {currentBlockQuestions.length}
+                </p>
+
+                <h3
+                  className="text-[23px] md:text-[34px] xl:text-[38px] leading-[1.04] max-w-[820px] mx-auto [text-wrap:balance]"
+                  style={{
+                    color: theme.accent,
+                    fontWeight: 690,
+                    letterSpacing: "-0.072em",
+                    textShadow: `0 0 38px ${theme.glow}`,
+                  }}
+                >
+                  {currentQuestion.pergunta}
+                </h3>
+              </div>
+
+              <div className="max-w-3xl mx-auto mb-3">
                 <AnimatePresence mode="wait">
                   <motion.p
                     key={captured ? `captured-${selectedValue}` : "empty"}
                     initial={reduceMotion ? false : { opacity: 0, y: 8 }}
                     animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
                     exit={reduceMotion ? undefined : { opacity: 0, y: -8 }}
-                    transition={{ duration: 0.24 }}
-                    className="text-center text-xs md:text-sm mb-4"
-                    style={{ color: captured ? "#9BE7AE" : colors.muted }}
+                    transition={{ duration: 0.22 }}
+                    className="text-center text-xs md:text-sm mb-3"
+                    style={{
+                      color: captured
+                        ? "rgba(255,245,235,0.74)"
+                        : colors.muted,
+                    }}
                   >
                     {captured
                       ? "Sinal registrado. O espelho avança para a próxima leitura..."
@@ -1137,7 +1380,7 @@ function QuizQuestionView({
                   </motion.p>
                 </AnimatePresence>
 
-                <div className="grid grid-cols-5 gap-2 md:gap-3 relative z-10">
+                <div className="grid grid-cols-5 gap-1 md:gap-1.5 relative z-10">
                   {scaleLabels.map((item) => {
                     const active = selectedValue === item.value;
 
@@ -1150,21 +1393,35 @@ function QuizQuestionView({
                           reduceMotion ? undefined : { y: -3, scale: 1.015 }
                         }
                         whileTap={reduceMotion ? undefined : { scale: 0.96 }}
-                        className="group flex flex-col items-center gap-2 rounded-[18px] px-1 py-2 md:px-2 md:py-3 transition-colors duration-300"
+                        className="group flex flex-col items-center gap-1 rounded-[14px] px-1 py-1 md:px-1 md:py-1.5 transition-colors duration-300"
                         style={{
                           background: active
-                            ? `radial-gradient(circle at top, ${theme.glow}, transparent 62%), rgba(255,255,255,0.026)`
+                            ? "linear-gradient(90deg, rgba(210,135,70,0.10), transparent), rgba(255,255,255,0.018)"
                             : "rgba(255,255,255,0.008)",
                           border: active
-                            ? `1px solid ${theme.accent}`
-                            : "1px solid rgba(242,185,104,0.055)",
+                            ? "1px solid var(--copper-primary)"
+                            : "1px solid rgba(210,135,70,0.15)",
                           boxShadow: active
-                            ? `0 0 30px ${theme.glow}, inset 0 0 18px rgba(255,255,255,0.012)`
+                            ? "0 0 30px rgba(210,135,70,0.15), inset 0 0 18px rgba(255,255,255,0.012)"
                             : "inset 0 0 12px rgba(255,255,255,0.004)",
+                        }}
+                        onMouseEnter={(event) => {
+                          if (active) return;
+                          event.currentTarget.style.boxShadow =
+                            "0 0 24px rgba(210,135,70,0.15), inset 0 0 12px rgba(255,255,255,0.006)";
+                          event.currentTarget.style.border =
+                            "1px solid rgba(210,135,70,0.28)";
+                        }}
+                        onMouseLeave={(event) => {
+                          if (active) return;
+                          event.currentTarget.style.boxShadow =
+                            "inset 0 0 12px rgba(255,255,255,0.004)";
+                          event.currentTarget.style.border =
+                            "1px solid rgba(210,135,70,0.15)";
                         }}
                       >
                         <motion.span
-                          className="h-11 w-11 rounded-full flex items-center justify-center text-sm"
+                          className="h-8 w-8 rounded-full flex items-center justify-center text-sm"
                           animate={
                             active && !reduceMotion
                               ? { scale: [1, 1.1, 1] }
@@ -1177,15 +1434,15 @@ function QuizQuestionView({
                           }}
                           style={{
                             background: active
-                              ? theme.accent
-                              : "rgba(242,185,104,0.090)",
+                              ? "var(--copper-primary)"
+                              : "rgba(210,135,70,0.10)",
                             border: active
-                              ? `1px solid ${theme.accent}`
-                              : "1px solid rgba(242,185,104,0.16)",
-                            color: active ? "#090506" : theme.accent,
+                              ? "1px solid var(--copper-primary)"
+                              : "1px solid rgba(210,135,70,0.16)",
+                            color: active ? "#090506" : "var(--copper-primary)",
                             fontWeight: 800,
                             boxShadow: active
-                              ? `0 0 30px ${theme.glow}`
+                              ? "0 0 20px rgba(210,135,70,0.14)"
                               : "none",
                           }}
                         >
@@ -1195,7 +1452,9 @@ function QuizQuestionView({
                         <span
                           className="text-[11px] md:text-xs leading-tight"
                           style={{
-                            color: active ? theme.accent : colors.text,
+                            color: active
+                              ? "var(--copper-primary)"
+                              : colors.text,
                             fontWeight: 700,
                           }}
                         >
@@ -1206,89 +1465,120 @@ function QuizQuestionView({
                   })}
                 </div>
               </div>
+            </motion.div>
+          </AnimatePresence>
 
-              <div
-                className="max-w-3xl mx-auto rounded-[24px] px-4 py-3 md:px-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+          <div
+            className="relative z-10 max-w-3xl mx-auto rounded-[16px] px-3 py-2 flex flex-col md:flex-row md:items-center md:justify-between gap-3"
+            style={{
+              background: "rgba(5,2,2,0.22)",
+              border: "1px solid rgba(242,185,104,0.06)",
+            }}
+          >
+            {canGoBack ? (
+              <motion.button
+                type="button"
+                onClick={onBack}
+                whileHover={reduceMotion ? undefined : { x: -2 }}
+                whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                className="px-4 py-2.5 rounded-full text-xs md:text-sm w-fit"
                 style={{
-                  background: "rgba(5,2,2,0.30)",
-                  border: "1px solid rgba(242,185,104,0.08)",
+                  background: "rgba(255,255,255,0.020)",
+                  border: "1px solid rgba(242,185,104,0.12)",
+                  color: "rgba(255,245,235,0.66)",
                 }}
               >
-                {canGoBack ? (
-                  <motion.button
-                    type="button"
-                    onClick={onBack}
-                    whileHover={reduceMotion ? undefined : { x: -2 }}
-                    whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-                    className="px-4 py-2.5 rounded-full text-xs md:text-sm w-fit"
-                    style={{
-                      background: "rgba(255,255,255,0.020)",
-                      border: "1px solid rgba(242,185,104,0.12)",
-                      color: "rgba(255,245,235,0.66)",
-                    }}
-                  >
-                    ← Voltar sinal anterior
-                  </motion.button>
-                ) : (
-                  <span
-                    className="hidden md:block text-xs"
-                    style={{ color: "rgba(255,245,235,0.28)" }}
-                  >
-                    Primeiro sinal desta leitura
-                  </span>
-                )}
+                ← Voltar sinal anterior
+              </motion.button>
+            ) : (
+              <span
+                className="hidden md:block text-xs"
+                style={{ color: "rgba(255,245,235,0.28)" }}
+              >
+                Primeiro sinal desta leitura
+              </span>
+            )}
 
-                <div className="grid grid-cols-2 gap-4 md:gap-6 flex-1">
-                  {[
-                    { label: "Clareza do Espelho", value: progress },
-                    { label: "Camada atual", value: blockProgress },
-                  ].map((item) => (
-                    <div key={item.label}>
-                      <div className="flex justify-between gap-3 mb-1.5">
-                        <span
-                          className="text-[10px] md:text-[11px]"
-                          style={{ color: "rgba(255,245,235,0.52)" }}
-                        >
-                          {item.label}
-                        </span>
-                        <span
-                          className="text-[10px] md:text-[11px]"
-                          style={{ color: theme.accent }}
-                        >
-                          {item.value}%
-                        </span>
-                      </div>
+            <div className="grid grid-cols-2 gap-3 md:gap-4 flex-1">
+              {[
+                { label: "Clareza do Espelho", value: progress },
+                { label: "Camada atual", value: blockProgress },
+              ].map((item) => (
+                <div key={item.label}>
+                  <div className="flex justify-between gap-3 mb-1.5">
+                    <span
+                      className="text-[10px] md:text-[11px]"
+                      style={{ color: "rgba(255,245,235,0.52)" }}
+                    >
+                      {item.label}
+                    </span>
+                    <span
+                      className="text-[10px] md:text-[11px]"
+                      style={{ color: theme.accent }}
+                    >
+                      {item.value}%
+                    </span>
+                  </div>
 
-                      <div
-                        className="relative overflow-hidden h-1.5 rounded-full"
-                        style={{ background: "rgba(255,255,255,0.045)" }}
-                      >
-                        <motion.div
-                          className="absolute left-0 top-0 h-full rounded-full"
-                          animate={{ width: `${item.value}%` }}
-                          transition={{
-                            duration: 0.5,
-                            ease: [0.22, 1, 0.36, 1],
-                          }}
-                          style={{
-                            background: `linear-gradient(90deg, ${theme.glow}, ${theme.accent})`,
-                            boxShadow: `0 0 22px ${theme.glow}`,
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
+                  <div
+                    className="relative overflow-hidden h-1 rounded-full"
+                    style={{ background: "rgba(255,255,255,0.04)" }}
+                  >
+                    <motion.div
+                      className="absolute left-0 top-0 h-full rounded-full"
+                      animate={{ width: `${item.value}%` }}
+                      transition={{
+                        duration: 0.45,
+                        ease: [0.22, 1, 0.36, 1],
+                      }}
+                      style={{
+                        background: `linear-gradient(90deg, ${theme.glow}, ${theme.accent})`,
+                        boxShadow: `0 0 14px ${theme.glow}`,
+                      }}
+                    />
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
-          </motion.div>
-        </AnimatePresence>
+          </div>
+        </div>
       </div>
     </motion.section>
   );
 }
 
+function createGuidedReadingBlocks(paragraphs) {
+  const labels = [
+    "O que isso revela",
+    "Como isso aparece",
+    "O que observar agora",
+  ];
+
+  if (!paragraphs.length) return [];
+
+  const blockCount = Math.min(labels.length, paragraphs.length);
+  const chunkSize = Math.ceil(paragraphs.length / blockCount);
+
+  return labels.slice(0, blockCount).map((label, index) => {
+    const start = index * chunkSize;
+    const end = index === blockCount - 1 ? paragraphs.length : start + chunkSize;
+
+    return {
+      label,
+      paragraphs: paragraphs.slice(start, end),
+    };
+  });
+}
+
+function getReadingAxisLabel(index) {
+  const labels = ["Revelação", "Manifestação", "Direção", "Aprofundamento"];
+
+  return labels[index] || `Camada ${String(index + 1).padStart(2, "0")}`;
+}
+
 function ReadingLayerPanel({ layer }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
   if (!layer) return null;
 
   const paragraphs = String(layer.content || "")
@@ -1296,6 +1586,7 @@ function ReadingLayerPanel({ layer }) {
     .map((paragraph) => paragraph.trim())
     .filter(Boolean);
   const [leadParagraph, ...bodyParagraphs] = paragraphs;
+  const guidedBlocks = createGuidedReadingBlocks(bodyParagraphs);
 
   return (
     <motion.article
@@ -1304,7 +1595,9 @@ function ReadingLayerPanel({ layer }) {
       animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       exit={{ opacity: 0, y: -10, filter: "blur(6px)" }}
       transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-      className="relative overflow-hidden rounded-[24px] md:rounded-[30px] min-h-[350px] lg:h-[430px]"
+      className={`relative overflow-hidden rounded-[20px] md:rounded-[26px] min-h-[280px] ${
+        isExpanded ? "lg:min-h-[560px]" : "lg:h-[350px]"
+      }`}
       style={{
         background:
           "radial-gradient(circle at top right, rgba(242,185,104,0.10), transparent 34%), linear-gradient(135deg, rgba(18,9,10,0.56), rgba(5,2,2,0.70))",
@@ -1324,7 +1617,7 @@ function ReadingLayerPanel({ layer }) {
         }}
       />
 
-      <div className="absolute inset-y-0 right-0 hidden h-full w-[46%] lg:block">
+      <div className="absolute right-0 top-0 hidden h-[350px] w-[46%] lg:block">
         <img
           src={layer.image}
           alt={layer.eyebrow}
@@ -1348,11 +1641,19 @@ function ReadingLayerPanel({ layer }) {
         }}
       />
 
-      <div className="relative z-10 min-h-[350px] lg:h-[430px]">
-        <div className="p-5 md:p-6 xl:p-7 flex min-h-[350px] lg:h-[430px] max-w-full min-h-0 flex-col justify-center lg:max-w-[54%]">
-          <div className="flex flex-wrap items-center gap-3 mb-4">
+      <div
+        className={`relative z-10 min-h-[280px] ${
+          isExpanded ? "lg:min-h-[560px]" : "lg:h-[350px]"
+        }`}
+      >
+        <div
+          className={`p-4 md:p-5 flex min-h-[280px] max-w-full min-h-0 flex-col lg:max-w-[54%] ${
+            isExpanded ? "justify-center lg:h-[350px]" : "justify-center lg:h-[350px]"
+          }`}
+        >
+          <div className="flex flex-wrap items-center gap-2 mb-2">
             <span
-              className="w-10 h-10 rounded-full flex items-center justify-center text-xs"
+              className="w-8 h-8 rounded-full flex items-center justify-center text-[11px]"
               style={{
                 background: "rgba(242,185,104,0.09)",
                 border: "1px solid rgba(242,185,104,0.16)",
@@ -1364,21 +1665,24 @@ function ReadingLayerPanel({ layer }) {
               {layer.number}
             </span>
 
-            <div>
+            <div className="min-w-0">
               <p
-                className="uppercase tracking-[0.34em] text-[9px] mb-1"
+                className="ori-type-system text-[8px] mb-0.5"
                 style={{ color: "var(--gold-soft)" }}
               >
                 {layer.eyebrow}
               </p>
-              <p className="text-xs" style={{ color: "rgba(255,245,235,0.48)" }}>
+              <p
+                className="ori-type-reading-soft text-xs"
+                style={{ color: "rgba(255,245,235,0.48)" }}
+              >
                 Camada ativa da leitura
               </p>
             </div>
           </div>
 
           <h3
-            className="text-3xl md:text-4xl xl:text-[44px] leading-[0.98] mb-4 whitespace-pre-line max-w-3xl"
+            className="ori-type-revelation text-2xl md:text-[30px] xl:text-[34px] mb-2 whitespace-pre-line max-w-3xl"
             style={{
               color: "var(--gold-primary)",
               fontWeight: 650,
@@ -1390,52 +1694,153 @@ function ReadingLayerPanel({ layer }) {
           </h3>
 
           <p
-            className="text-sm leading-relaxed max-w-2xl mb-4"
+            className="ori-type-reading-soft text-sm max-w-2xl mb-2"
             style={{ color: "rgba(255,245,235,0.66)" }}
           >
             {layer.description}
           </p>
 
-          <div
-            className="max-w-3xl min-h-0 max-h-[176px] md:max-h-[188px] lg:max-h-[190px] overflow-y-auto pr-2"
-            style={{
-              scrollbarWidth: "thin",
-              scrollbarColor: "rgba(242,185,104,0.22) transparent",
-            }}
-          >
-            {leadParagraph && (
+          {guidedBlocks.length > 0 && !isExpanded && (
+            <>
               <div
-                className="rounded-[18px] p-4 mb-3"
+                className="grid max-h-[120px] gap-2 overflow-y-auto pr-1 transition-[max-height] duration-500 md:max-h-[132px]"
                 style={{
-                  background:
-                    "linear-gradient(90deg, rgba(242,185,104,0.052), rgba(255,255,255,0.010))",
-                  border: "1px solid rgba(242,185,104,0.09)",
-                  backdropFilter: "blur(8px)",
-                  WebkitBackdropFilter: "blur(8px)",
+                  scrollbarWidth: "thin",
+                  scrollbarColor: "rgba(242,185,104,0.16) transparent",
                 }}
               >
-                <p
-                  className="text-sm md:text-base leading-relaxed"
-                  style={{ color: "var(--text-primary)" }}
-                >
-                  {leadParagraph}
-                </p>
-              </div>
-            )}
+                {guidedBlocks.map((block) => (
+                  <div
+                    key={`${layer.number}-${block.label}`}
+                    className="rounded-[14px] px-3 py-2.5"
+                    style={{
+                      background:
+                        "linear-gradient(180deg, rgba(255,255,255,0.024), rgba(255,255,255,0.007))",
+                      border: "1px solid rgba(242,185,104,0.065)",
+                    }}
+                  >
+                    <p
+                      className="ori-type-system mb-1.5 text-[8px]"
+                      style={{ color: "var(--gold-soft)" }}
+                    >
+                      {block.label}
+                    </p>
 
-            <div className="space-y-3">
-            {bodyParagraphs.map((paragraph, index) => (
-              <p
-                key={`${layer.number}-${index}`}
-                className="text-sm leading-[1.72]"
-                style={{ color: "rgba(255,245,235,0.70)" }}
-              >
-                {paragraph}
-              </p>
-            ))}
+                    <div className="space-y-1.5">
+                      {block.paragraphs.map((paragraph, index) => (
+                        <p
+                          key={`${layer.number}-${block.label}-${index}`}
+                          className="ori-type-reading-soft text-xs md:text-[13px] leading-relaxed"
+                          style={{ color: "rgba(255,245,235,0.68)" }}
+                        >
+                          {paragraph}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          {paragraphs.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setIsExpanded((current) => !current)}
+              className="mt-2 w-fit rounded-full px-3 py-1.5 text-[11px] transition-all hover:translate-y-[-1px]"
+              style={{
+                background: "rgba(242,185,104,0.055)",
+                border: "1px solid rgba(242,185,104,0.10)",
+                color: "var(--gold-soft)",
+              }}
+            >
+              {isExpanded ? "Recolher leitura" : "Aprofundar leitura"}
+            </button>
+          )}
+        </div>
+
+        {paragraphs.length > 0 && isExpanded && (
+          <div className="px-4 pb-4 md:px-5 md:pb-5">
+            <div
+              className="grid gap-2.5"
+              style={{
+                borderTop: "1px solid rgba(242,185,104,0.075)",
+                paddingTop: "1rem",
+              }}
+            >
+              <div className="flex items-center justify-between gap-3">
+                <p
+                  className="ori-type-system ori-label-sm"
+                  style={{ color: "var(--gold-soft)" }}
+                >
+                  Leitura completa da camada
+                </p>
+                <span
+                  className="text-[10px]"
+                  style={{ color: "rgba(255,245,235,0.42)" }}
+                >
+                  {bodyParagraphs.length} trechos
+                </span>
+              </div>
+
+              {leadParagraph && (
+                <div
+                  className="rounded-[16px] px-3.5 py-3"
+                  style={{
+                    background:
+                      "linear-gradient(90deg, rgba(242,185,104,0.060), rgba(255,255,255,0.010))",
+                    border: "1px solid rgba(242,185,104,0.10)",
+                    backdropFilter: "blur(8px)",
+                    WebkitBackdropFilter: "blur(8px)",
+                  }}
+                >
+                  <p
+                    className="ori-type-system ori-label-sm mb-2"
+                    style={{ color: "var(--gold-soft)" }}
+                  >
+                    Síntese principal
+                  </p>
+
+                  <p
+                    className="ori-type-reading text-sm md:text-[15px] leading-relaxed"
+                    style={{ color: "var(--text-primary)" }}
+                  >
+                    {leadParagraph}
+                  </p>
+                </div>
+              )}
+
+              <div className="grid gap-2.5 lg:grid-cols-2">
+                {bodyParagraphs.map((paragraph, index) => (
+                <div
+                  key={`${layer.number}-full-${index}`}
+                  className="rounded-[16px] px-3.5 py-3"
+                  style={{
+                    background:
+                      "linear-gradient(180deg, rgba(255,255,255,0.026), rgba(255,255,255,0.008))",
+                    border: "1px solid rgba(242,185,104,0.075)",
+                    boxShadow: "inset 0 0 18px rgba(255,255,255,0.006)",
+                  }}
+                >
+                  <p
+                    className="ori-type-system ori-label-sm mb-2"
+                    style={{ color: "var(--gold-soft)" }}
+                  >
+                    {getReadingAxisLabel(index)}
+                  </p>
+
+                  <p
+                    className="ori-type-reading-soft text-xs md:text-[13px] leading-relaxed"
+                    style={{ color: "rgba(255,245,235,0.70)" }}
+                  >
+                    {paragraph}
+                  </p>
+                </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </motion.article>
   );
@@ -1451,20 +1856,14 @@ function LayerTabNavigation({ tabs, activeNumber, onSelect }) {
 
   return (
     <div className="relative z-10 mb-4">
-      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-3">
+      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-2.5">
         <div>
-          <p
-            className="uppercase tracking-[0.30em] text-[8px] md:text-[9px] mb-1"
-            style={{ color: "var(--gold-soft)" }}
-          >
-            Trilha ativa
-          </p>
-          <p className="text-xs" style={{ color: "rgba(255,245,235,0.54)" }}>
+          <p className="ori-type-reading-soft text-xs" style={{ color: "rgba(255,245,235,0.54)" }}>
             Camada {activeIndex + 1} de {tabs.length}
           </p>
         </div>
 
-        <div className="w-full md:w-56">
+        <div className="w-full md:w-48">
           <div className="flex items-center justify-between mb-1.5">
             <span
               className="text-[10px]"
@@ -1477,7 +1876,7 @@ function LayerTabNavigation({ tabs, activeNumber, onSelect }) {
             </span>
           </div>
           <div
-            className="h-1.5 rounded-full overflow-hidden"
+            className="ori-progress h-1.5"
             style={{ background: "rgba(255,255,255,0.045)" }}
           >
             <motion.div
@@ -1494,7 +1893,7 @@ function LayerTabNavigation({ tabs, activeNumber, onSelect }) {
         </div>
       </div>
 
-      <div className="relative grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-2">
+      <div className="relative flex gap-2 overflow-x-auto pb-1">
         {tabs.map((item, index) => {
           const isActive = activeNumber === item.number;
           const isPast = index < activeIndex;
@@ -1506,10 +1905,11 @@ function LayerTabNavigation({ tabs, activeNumber, onSelect }) {
               onClick={() => onSelect(item.number)}
               whileHover={{ y: -2 }}
               whileTap={{ scale: 0.98 }}
-              className="group relative overflow-hidden rounded-[18px] p-3 text-left transition-all duration-300"
+              className="ori-tab group relative flex min-h-[48px] w-[154px] shrink-0 items-center gap-2.5 overflow-hidden rounded-[16px] px-3 py-2 text-left transition-all duration-300"
+              data-state={isActive ? "active" : isPast ? "done" : "sealed"}
               style={{
                 background: isActive
-                  ? "linear-gradient(180deg, rgba(242,185,104,0.13), rgba(242,185,104,0.04))"
+                  ? "linear-gradient(90deg, rgba(242,185,104,0.13), rgba(242,185,104,0.035))"
                   : "rgba(255,255,255,0.022)",
                 border: isActive
                   ? "1px solid rgba(242,185,104,0.28)"
@@ -1519,42 +1919,34 @@ function LayerTabNavigation({ tabs, activeNumber, onSelect }) {
                   : "inset 0 0 16px rgba(255,255,255,0.006)",
               }}
             >
-              <div className="flex items-center gap-2 mb-2">
-                <span
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-[11px] shrink-0"
-                  style={{
-                    background: isActive
-                      ? "var(--gold-primary)"
-                      : isPast
-                        ? "rgba(242,185,104,0.16)"
-                        : "rgba(255,255,255,0.026)",
-                    border: isActive
-                      ? "1px solid rgba(242,185,104,0.42)"
-                      : "1px solid rgba(242,185,104,0.12)",
-                    color: isActive ? "#0a0505" : "var(--gold-soft)",
-                    fontWeight: 700,
-                  }}
-                >
-                  {item.number}
-                </span>
-                <span
-                  className="text-[9px] uppercase tracking-[0.22em]"
-                  style={{
-                    color: isActive
-                      ? "var(--gold-primary)"
-                      : "rgba(255,245,235,0.42)",
-                  }}
-                >
-                  {isActive ? "Ativa" : isPast ? "Lida" : "Selada"}
-                </span>
-              </div>
+              <span
+                className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] shrink-0"
+                style={{
+                  background: isActive
+                    ? "var(--gold-primary)"
+                    : isPast
+                      ? "rgba(242,185,104,0.16)"
+                      : "rgba(255,255,255,0.026)",
+                  border: isActive
+                    ? "1px solid rgba(242,185,104,0.42)"
+                    : "1px solid rgba(242,185,104,0.12)",
+                  color: isActive ? "#0a0505" : "var(--gold-soft)",
+                  fontWeight: 700,
+                  boxShadow: isActive
+                    ? "0 0 14px rgba(242,185,104,0.18)"
+                    : "inset 0 0 10px rgba(255,255,255,0.006)",
+                }}
+              >
+                {item.number}
+              </span>
+
               <p
-                className="text-xs md:text-sm leading-tight"
+                className="ori-type-reading-soft text-xs leading-tight"
                 style={{
                   color: isActive
                     ? "var(--text-primary)"
                     : "rgba(255,245,235,0.62)",
-                  fontWeight: 600,
+                  fontWeight: isActive ? 650 : 520,
                 }}
               >
                 {item.label}
@@ -1574,6 +1966,9 @@ function QuizProduto1() {
   const isReadingRoute =
     location.pathname.includes("/leitura") ||
     location.pathname === "/quiz-produto-1";
+  const isLoadingPreview =
+    import.meta.env.DEV &&
+    new URLSearchParams(location.search).get("preview") === "loading";
 
   const [answers, setAnswers] = useState({});
   const [result, setResult] = useState(null);
@@ -1665,20 +2060,17 @@ function QuizProduto1() {
   }, [answers, result, hasLoadedStorage, storageKey]);
 
   useEffect(() => {
-    if (!isLoadingResult) return;
+    if (!isLoadingResult && !isLoadingPreview) return;
 
     let currentStep = 0;
 
     const interval = setInterval(() => {
-      currentStep++;
-
-      if (currentStep < loadingMessages.length) {
-        setLoadingStep(currentStep);
-      }
-    }, 1350);
+      currentStep = (currentStep + 1) % loadingMessages.length;
+      setLoadingStep(currentStep);
+    }, 2000);
 
     return () => clearInterval(interval);
-  }, [isLoadingResult]);
+  }, [isLoadingResult, isLoadingPreview]);
 
   const totalQuestions = questions.length;
   const answeredQuestions = getAnsweredCount(answers);
@@ -1802,13 +2194,6 @@ function QuizProduto1() {
     }
 
     setCurrentQuestionIndex(nextIndex);
-
-    setTimeout(() => {
-      quizRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }, 80);
   };
 
   const handleAnswer = (questionId, value) => {
@@ -1822,15 +2207,46 @@ function QuizProduto1() {
 
     setTimeout(() => {
       advanceFromQuestion(nextAnswers);
-    }, 620);
+    }, 360);
+  };
+
+  const clearAnswersFromIndex = (questionIndex) => {
+    setAnswers((currentAnswers) => {
+      const nextAnswers = { ...currentAnswers };
+
+      questions.slice(questionIndex).forEach((question) => {
+        delete nextAnswers[question.id];
+      });
+
+      return nextAnswers;
+    });
+    setResult(null);
   };
 
   const handlePreviousQuestion = () => {
     if (currentQuestionIndex <= 0) return;
 
+    const previousIndex = Math.max(currentQuestionIndex - 1, 0);
+
+    clearAnswersFromIndex(previousIndex);
     setCompletedLayer(null);
     setPendingNextIndex(null);
-    setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0));
+    setCurrentQuestionIndex(previousIndex);
+
+    setTimeout(() => {
+      quizRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 80);
+  };
+
+  const handleBackFromLayerReveal = () => {
+    clearAnswersFromIndex(currentQuestionIndex);
+    setCompletedLayer(null);
+    setPendingNextIndex(null);
+    setShowQuiz(true);
+    setHasStarted(true);
 
     setTimeout(() => {
       quizRef.current?.scrollIntoView({
@@ -1941,7 +2357,17 @@ function QuizProduto1() {
     }
   };
 
-  const report = result ? reports[result.nomeComposto] : null;
+  const baseReport = result ? reports[result.nomeComposto] : null;
+  const report = useMemo(
+    () =>
+      enrichReportWithSignals({
+        report: baseReport,
+        questions,
+        answers,
+        result,
+      }),
+    [answers, baseReport, result],
+  );
   const archetypeVisual = result ? archetypeImages[result.nomeComposto] : null;
   const estruturaInternaTabs = report
     ? [
@@ -2138,8 +2564,9 @@ function QuizProduto1() {
       ]
     : [];
   const activeEstruturaInternaTab =
-    estruturaInternaTabs.find((item) => item.number === activeEstruturaInterna) ||
-    estruturaInternaTabs[0];
+    estruturaInternaTabs.find(
+      (item) => item.number === activeEstruturaInterna,
+    ) || estruturaInternaTabs[0];
   const activeSombraVinculosTab =
     sombraVinculosTabs.find((item) => item.number === activeSombraVinculos) ||
     sombraVinculosTabs[0];
@@ -2178,6 +2605,9 @@ function QuizProduto1() {
   const activeResultCoreIndex = resultCoreTabs.findIndex(
     (item) => item.id === activeResultCore,
   );
+  const activeResultCoreTab =
+    resultCoreTabs.find((item) => item.id === activeResultCore) ||
+    resultCoreTabs[0];
   const previousResultCore = resultCoreTabs[activeResultCoreIndex - 1] || null;
   const nextResultCore = resultCoreTabs[activeResultCoreIndex + 1] || null;
   const resultCoreLayerState = {
@@ -2264,19 +2694,22 @@ function QuizProduto1() {
 
         {result && (
           <section
-            className="mt-8 mb-10 rounded-[30px] md:rounded-[42px] p-6 md:p-8"
+            className="ori-main-frame ori-card-protagonist mt-8 mb-10 rounded-[30px] md:rounded-[42px] p-6 md:p-8"
+            data-state="revealed"
             style={{
-              background:
-                "radial-gradient(circle at top right, rgba(242,185,104,0.10), transparent 34%), linear-gradient(180deg, rgba(18,9,10,0.72), rgba(5,2,2,0.92))",
+              backgroundColor: "rgba(5,2,2,0.92)",
+              backgroundImage: ORACLE_PANEL_BACKGROUND,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
               border: "1px solid rgba(242,185,104,0.13)",
               boxShadow:
                 "0 0 70px rgba(242,185,104,0.035), inset 0 0 44px rgba(255,255,255,0.010)",
             }}
           >
-            <Eyebrow className="mb-4">Leitura já revelada</Eyebrow>
+            <Eyebrow line className="mb-4">Leitura já revelada</Eyebrow>
 
             <h2
-              className="text-3xl md:text-5xl leading-[0.98] mb-4"
+              className="ori-type-revelation text-3xl md:text-5xl mb-4"
               style={{
                 color: colors.gold,
                 fontWeight: 680,
@@ -2287,7 +2720,7 @@ function QuizProduto1() {
             </h2>
 
             <p
-              className="text-sm md:text-base leading-relaxed max-w-3xl mb-6"
+              className="ori-type-reading-soft text-sm md:text-base max-w-3xl mb-6"
               style={{ color: colors.soft }}
             >
               Sua primeira camada já está salva no Portal ORI. Você pode acessar
@@ -2298,7 +2731,7 @@ function QuizProduto1() {
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 to="/espelho-ori"
-                className="inline-flex justify-center px-7 py-3.5 rounded-full text-sm"
+                className="ori-journey-action inline-flex justify-center px-7 py-3.5 rounded-full text-sm"
                 style={{
                   background: colors.gold,
                   color: "#090506",
@@ -2314,7 +2747,7 @@ function QuizProduto1() {
                 type="button"
                 onClick={handleReset}
                 disabled={isResettingQuiz}
-                className="inline-flex justify-center px-7 py-3.5 rounded-full text-sm disabled:opacity-60 disabled:cursor-not-allowed"
+                className="ori-button-secondary inline-flex justify-center px-7 py-3.5 text-sm disabled:opacity-60 disabled:cursor-not-allowed"
                 style={{
                   background: "rgba(255,255,255,0.026)",
                   border: "1px solid rgba(242,185,104,0.14)",
@@ -2332,7 +2765,7 @@ function QuizProduto1() {
 
   return (
     <main
-      className="relative min-h-screen overflow-hidden px-4 py-5 md:px-7 md:py-6"
+      className="ori-atmosphere ori-atmosphere-reading relative min-h-screen overflow-hidden px-4 py-5 md:px-7 md:py-6"
       style={{ color: colors.text }}
     >
       <video
@@ -2360,6 +2793,21 @@ function QuizProduto1() {
           backgroundSize: "82px 82px",
         }}
       />
+
+      {showQuiz && hasStarted && !result && (
+        <div className="fixed left-0 right-0 top-0 z-50 h-px bg-transparent">
+          <motion.div
+            className="h-px"
+            initial={false}
+            animate={{ width: `${progress}%` }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            style={{
+              background: "var(--gold-primary)",
+              boxShadow: "0 0 10px var(--gold-primary)",
+            }}
+          />
+        </div>
+      )}
 
       <div className="relative z-10 w-full max-w-6xl mx-auto">
         <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-5">
@@ -2392,7 +2840,7 @@ function QuizProduto1() {
           </div>
         </header>
 
-        {isLoadingResult && (
+        {(isLoadingResult || isLoadingPreview) && (
           <LoadingDossie
             loadingStep={loadingStep}
             loadingRef={loadingRef}
@@ -2400,7 +2848,7 @@ function QuizProduto1() {
           />
         )}
 
-        {showQuiz && !result && (
+        {showQuiz && !result && !isLoadingPreview && (
           <div ref={quizRef} className="scroll-mt-8">
             {!hasStarted && (
               <QuizIntro
@@ -2418,13 +2866,13 @@ function QuizProduto1() {
                   bloco={completedLayer}
                   isFinalBlock={pendingNextIndex === null}
                   onContinue={handleContinueAfterLayer}
+                  onBack={handleBackFromLayerReveal}
                   reduceMotion={reduceMotion}
                 />
               )}
 
               {hasStarted && !completedLayer && currentQuestion && (
                 <QuizQuestionView
-                  key={currentQuestion.id}
                   currentQuestion={currentQuestion}
                   currentQuestionIndex={currentQuestionIndex}
                   totalQuestions={totalQuestions}
@@ -2442,7 +2890,7 @@ function QuizProduto1() {
           </div>
         )}
 
-        {result && (
+        {result && !isLoadingPreview && (
           <>
             <div className="mt-4 fade-up">
               <div ref={resultRef} className="scroll-mt-10">
@@ -2456,239 +2904,227 @@ function QuizProduto1() {
               </div>
 
               {report ? (
-                <div className="flex flex-col gap-5 md:gap-6">
-                  <section
-                    className="relative overflow-hidden rounded-[22px] md:rounded-[26px] mb-4 p-3 md:p-4"
+                <div
+                  className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[24px] p-3 md:rounded-[30px] md:p-4"
+                  style={{
+                    background:
+                      "radial-gradient(circle at top right, rgba(242,185,104,0.09), transparent 34%), linear-gradient(180deg, rgba(18,9,10,0.64), rgba(5,2,2,0.88))",
+                    border: "1px solid rgba(242,185,104,0.10)",
+                    boxShadow:
+                      "0 0 48px rgba(242,185,104,0.032), inset 0 0 28px rgba(255,255,255,0.010)",
+                    backdropFilter: "blur(12px)",
+                    WebkitBackdropFilter: "blur(12px)",
+                  }}
+                >
+                  <div
+                    className="absolute inset-0 pointer-events-none opacity-[0.02]"
                     style={{
-                      background:
-                        "linear-gradient(135deg, rgba(18,9,10,0.68), rgba(5,2,2,0.88))",
-                      border: "1px solid rgba(242,185,104,0.10)",
-                      boxShadow:
-                        "0 0 42px rgba(242,185,104,0.03), inset 0 0 24px rgba(255,255,255,0.01)",
-                      backdropFilter: "blur(12px)",
-                      WebkitBackdropFilter: "blur(12px)",
+                      backgroundImage:
+                        "linear-gradient(rgba(242,185,104,0.14) 1px, transparent 1px), linear-gradient(90deg, rgba(242,185,104,0.06) 1px, transparent 1px)",
+                      backgroundSize: "52px 52px",
                     }}
-                  >
-                    <div
-                      className="absolute inset-0 pointer-events-none opacity-[0.02]"
-                      style={{
-                        backgroundImage:
-                          "linear-gradient(rgba(242,185,104,0.14) 1px, transparent 1px), linear-gradient(90deg, rgba(242,185,104,0.06) 1px, transparent 1px)",
-                        backgroundSize: "52px 52px",
-                      }}
-                    />
+                  />
 
+                  <section className="relative z-10 pb-3">
                     <div className="relative z-10">
-                      <p
-                        className="uppercase tracking-[0.32em] text-[9px] md:text-[10px] mb-3"
-                        style={{ color: "var(--gold-soft)" }}
-                      >
-                        Navegação da Leitura
-                      </p>
+                      <div className="ori-label-line mb-3">
+                        <p
+                          className="ori-type-system text-[9px] md:text-[10px]"
+                          style={{ color: "var(--gold-soft)" }}
+                        >
+                          Navegação da Leitura
+                        </p>
+                      </div>
 
-                      <div className="grid md:grid-cols-4 gap-2.5">
+                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-4">
                         {resultCoreTabs.map((item) => {
                           const isActive = activeResultCore === item.id;
 
                           return (
-                          <button
-                            key={item.number}
-                            type="button"
-                            onClick={() => setActiveResultCore(item.id)}
-                            className="text-left rounded-[18px] p-3 transition-all duration-500 hover:-translate-y-0.5"
-                            style={{
-                              background: isActive
-                                ? "rgba(242,185,104,0.085)"
-                                : "rgba(255,255,255,0.022)",
-                              border: isActive
-                                ? "1px solid rgba(242,185,104,0.22)"
-                                : "1px solid rgba(242,185,104,0.08)",
-                              boxShadow: isActive
-                                ? "0 0 28px rgba(242,185,104,0.060), inset 0 0 18px rgba(242,185,104,0.018)"
-                                : "inset 0 0 18px rgba(242,185,104,0.012), 0 0 18px rgba(0,0,0,0.14)",
-                            }}
-                          >
-                            <div className="flex items-center gap-3 mb-2">
-                              <div
-                                className="w-9 h-9 rounded-[13px] flex items-center justify-center shrink-0"
-                                style={{
-                                  background:
-                                    "linear-gradient(180deg, rgba(255,255,255,0.026), rgba(255,255,255,0.008))",
-                                  border: isActive
-                                    ? "1px solid rgba(242,185,104,0.22)"
-                                    : "1px solid rgba(242,185,104,0.08)",
-                                  color: isActive
-                                    ? "var(--gold-primary)"
-                                    : "rgba(242,185,104,0.88)",
-                                  boxShadow: isActive
-                                    ? "0 0 18px rgba(242,185,104,0.10)"
-                                    : "0 0 14px rgba(242,185,104,0.03)",
-                                }}
-                              >
-                                <span className="text-sm font-medium tracking-[-0.06em]">
-                                  {item.number}
-                                </span>
-                              </div>
-
-                              <div
-                                className="h-px flex-1"
-                                style={{
-                                  background:
-                                    "linear-gradient(90deg, rgba(242,185,104,0.28), transparent)",
-                                }}
-                              />
-                            </div>
-
-                            <h3
-                              className="text-sm md:text-[15px] mb-1"
+                            <button
+                              key={item.number}
+                              type="button"
+                              onClick={() => setActiveResultCore(item.id)}
+                              className="ori-tab text-left rounded-[16px] px-3 py-2.5 transition-all duration-500 hover:-translate-y-0.5"
+                              data-state={isActive ? "active" : "sealed"}
                               style={{
-                                color: "var(--text-primary)",
-                                fontWeight: 600,
-                                letterSpacing: "-0.03em",
+                                background: isActive
+                                  ? "rgba(242,185,104,0.085)"
+                                  : "rgba(255,255,255,0.022)",
+                                border: isActive
+                                  ? "1px solid rgba(242,185,104,0.22)"
+                                  : "1px solid rgba(242,185,104,0.08)",
+                                boxShadow: isActive
+                                  ? "0 0 28px rgba(242,185,104,0.060), inset 0 0 18px rgba(242,185,104,0.018)"
+                                  : "inset 0 0 18px rgba(242,185,104,0.012), 0 0 18px rgba(0,0,0,0.14)",
                               }}
                             >
-                              {item.title}
-                            </h3>
+                              <div className="flex min-w-0 items-center gap-2.5">
+                                <div
+                                  className="w-8 h-8 rounded-[12px] flex items-center justify-center shrink-0"
+                                  style={{
+                                    background:
+                                      "linear-gradient(180deg, rgba(255,255,255,0.026), rgba(255,255,255,0.008))",
+                                    border: isActive
+                                      ? "1px solid rgba(242,185,104,0.22)"
+                                      : "1px solid rgba(242,185,104,0.08)",
+                                    color: isActive
+                                      ? "var(--gold-primary)"
+                                      : "rgba(242,185,104,0.88)",
+                                    boxShadow: isActive
+                                      ? "0 0 18px rgba(242,185,104,0.10)"
+                                      : "0 0 14px rgba(242,185,104,0.03)",
+                                  }}
+                                >
+                                  <span className="text-sm font-medium tracking-[-0.06em]">
+                                    {item.number}
+                                  </span>
+                                </div>
 
-                            <p
-                              className="text-xs leading-relaxed"
-                              style={{ color: "rgba(255,245,235,0.60)" }}
-                            >
-                              {item.text}
-                            </p>
-                          </button>
+                                <h3
+                                  className="ori-type-revelation min-w-0 text-sm md:text-[15px]"
+                                  style={{
+                                    color: "var(--text-primary)",
+                                    fontWeight: isActive ? 650 : 540,
+                                    letterSpacing: "-0.025em",
+                                  }}
+                                >
+                                  {item.title}
+                                </h3>
+                              </div>
+                            </button>
                           );
                         })}
+                      </div>
+
+                      <div
+                        className="mt-3 rounded-[16px] px-3.5 py-3"
+                        style={{
+                          background:
+                            "linear-gradient(90deg, rgba(242,185,104,0.050), rgba(255,255,255,0.012))",
+                          border: "1px solid rgba(242,185,104,0.075)",
+                        }}
+                      >
+                        <p
+                          className="ori-type-reading-soft text-xs md:text-sm"
+                          style={{ color: "rgba(255,245,235,0.66)" }}
+                        >
+                          {activeResultCoreTab.text}
+                        </p>
                       </div>
                     </div>
                   </section>
 
                   {activeResultCore === "estrutura" && (
                     <>
-                  <section
-                    id="nucleo-estrutura-interna"
-                    className="relative overflow-hidden rounded-[24px] md:rounded-[30px] p-3 md:p-4"
-                    style={{
-                      background:
-                        "radial-gradient(circle at top right, rgba(242,185,104,0.09), transparent 34%), linear-gradient(180deg, rgba(18,9,10,0.62), rgba(5,2,2,0.86))",
-                      border: "1px solid rgba(242,185,104,0.10)",
-                      boxShadow:
-                        "0 0 48px rgba(242,185,104,0.032), inset 0 0 28px rgba(255,255,255,0.010)",
-                    }}
-                  >
-                    <LayerTabNavigation
-                      tabs={estruturaInternaTabs}
-                      activeNumber={activeEstruturaInterna}
-                      onSelect={setActiveEstruturaInterna}
-                    />
-
-                    <AnimatePresence mode="wait">
-                      {activeEstruturaInternaTab && (
-                        <ReadingLayerPanel
-                          key={activeEstruturaInternaTab.number}
-                          layer={activeEstruturaInternaTab}
+                      <section
+                        id="nucleo-estrutura-interna"
+                        className="relative z-10 overflow-hidden pt-3"
+                        style={{
+                          background: "transparent",
+                        }}
+                      >
+                        <LayerTabNavigation
+                          tabs={estruturaInternaTabs}
+                          activeNumber={activeEstruturaInterna}
+                          onSelect={setActiveEstruturaInterna}
                         />
-                      )}
-                    </AnimatePresence>
-                    </section>
+
+                        <AnimatePresence mode="wait">
+                          {activeEstruturaInternaTab && (
+                            <ReadingLayerPanel
+                              key={activeEstruturaInternaTab.number}
+                              layer={activeEstruturaInternaTab}
+                            />
+                          )}
+                        </AnimatePresence>
+                      </section>
                     </>
                   )}
 
                   {activeResultCore === "sombra" && (
                     <>
-                  <section
-                    id="nucleo-sombra-vinculos"
-                    className="relative overflow-hidden rounded-[24px] md:rounded-[30px] p-3 md:p-4"
-                    style={{
-                      background:
-                        "radial-gradient(circle at top right, rgba(242,185,104,0.09), transparent 34%), linear-gradient(180deg, rgba(18,9,10,0.62), rgba(5,2,2,0.86))",
-                      border: "1px solid rgba(242,185,104,0.10)",
-                      boxShadow:
-                        "0 0 48px rgba(242,185,104,0.032), inset 0 0 28px rgba(255,255,255,0.010)",
-                    }}
-                  >
-                    <LayerTabNavigation
-                      tabs={sombraVinculosTabs}
-                      activeNumber={activeSombraVinculos}
-                      onSelect={setActiveSombraVinculos}
-                    />
-
-                    <AnimatePresence mode="wait">
-                      {activeSombraVinculosTab && (
-                        <ReadingLayerPanel
-                          key={activeSombraVinculosTab.number}
-                          layer={activeSombraVinculosTab}
+                      <section
+                        id="nucleo-sombra-vinculos"
+                        className="relative z-10 overflow-hidden pt-3"
+                        style={{
+                          background: "transparent",
+                        }}
+                      >
+                        <LayerTabNavigation
+                          tabs={sombraVinculosTabs}
+                          activeNumber={activeSombraVinculos}
+                          onSelect={setActiveSombraVinculos}
                         />
-                      )}
-                    </AnimatePresence>
-                    </section>
+
+                        <AnimatePresence mode="wait">
+                          {activeSombraVinculosTab && (
+                            <ReadingLayerPanel
+                              key={activeSombraVinculosTab.number}
+                              layer={activeSombraVinculosTab}
+                            />
+                          )}
+                        </AnimatePresence>
+                      </section>
                     </>
                   )}
 
                   {activeResultCore === "imagem" && (
                     <>
-                  <section
-                    id="nucleo-imagem-presenca"
-                    className="relative overflow-hidden rounded-[24px] md:rounded-[30px] p-3 md:p-4"
-                    style={{
-                      background:
-                        "radial-gradient(circle at top right, rgba(242,185,104,0.09), transparent 34%), linear-gradient(180deg, rgba(18,9,10,0.62), rgba(5,2,2,0.86))",
-                      border: "1px solid rgba(242,185,104,0.10)",
-                      boxShadow:
-                        "0 0 48px rgba(242,185,104,0.032), inset 0 0 28px rgba(255,255,255,0.010)",
-                    }}
-                  >
-                    <LayerTabNavigation
-                      tabs={imagemPresencaTabs}
-                      activeNumber={activeImagemPresenca}
-                      onSelect={setActiveImagemPresenca}
-                    />
-
-                    <AnimatePresence mode="wait">
-                      {activeImagemPresencaTab && (
-                        <ReadingLayerPanel
-                          key={activeImagemPresencaTab.number}
-                          layer={activeImagemPresencaTab}
+                      <section
+                        id="nucleo-imagem-presenca"
+                        className="relative z-10 overflow-hidden pt-3"
+                        style={{
+                          background: "transparent",
+                        }}
+                      >
+                        <LayerTabNavigation
+                          tabs={imagemPresencaTabs}
+                          activeNumber={activeImagemPresenca}
+                          onSelect={setActiveImagemPresenca}
                         />
-                      )}
-                    </AnimatePresence>
-                    </section>
+
+                        <AnimatePresence mode="wait">
+                          {activeImagemPresencaTab && (
+                            <ReadingLayerPanel
+                              key={activeImagemPresencaTab.number}
+                              layer={activeImagemPresencaTab}
+                            />
+                          )}
+                        </AnimatePresence>
+                      </section>
                     </>
                   )}
 
                   {activeResultCore === "sintese" && (
                     <>
-                  <section
-                    id="nucleo-sintese-final"
-                    className="relative overflow-hidden rounded-[24px] md:rounded-[30px] p-3 md:p-4"
-                    style={{
-                      background:
-                        "radial-gradient(circle at top right, rgba(242,185,104,0.09), transparent 34%), linear-gradient(180deg, rgba(18,9,10,0.62), rgba(5,2,2,0.86))",
-                      border: "1px solid rgba(242,185,104,0.10)",
-                      boxShadow:
-                        "0 0 48px rgba(242,185,104,0.032), inset 0 0 28px rgba(255,255,255,0.010)",
-                    }}
-                  >
-                    <LayerTabNavigation
-                      tabs={sinteseFinalTabs}
-                      activeNumber={activeSinteseFinal}
-                      onSelect={setActiveSinteseFinal}
-                    />
-
-                    <AnimatePresence mode="wait">
-                      {activeSinteseFinalTab && (
-                        <ReadingLayerPanel
-                          key={activeSinteseFinalTab.number}
-                          layer={activeSinteseFinalTab}
+                      <section
+                        id="nucleo-sintese-final"
+                        className="relative z-10 overflow-hidden pt-3"
+                        style={{
+                          background: "transparent",
+                        }}
+                      >
+                        <LayerTabNavigation
+                          tabs={sinteseFinalTabs}
+                          activeNumber={activeSinteseFinal}
+                          onSelect={setActiveSinteseFinal}
                         />
-                      )}
-                    </AnimatePresence>
-                    </section>
+
+                        <AnimatePresence mode="wait">
+                          {activeSinteseFinalTab && (
+                            <ReadingLayerPanel
+                              key={activeSinteseFinalTab.number}
+                              layer={activeSinteseFinalTab}
+                            />
+                          )}
+                        </AnimatePresence>
+                      </section>
                     </>
                   )}
 
                   <section
-                    className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 rounded-[26px] p-5"
+                    className="mt-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4 rounded-[22px] p-4 md:mt-5"
                     style={{
                       background:
                         "linear-gradient(180deg, rgba(18,9,10,0.58), rgba(5,2,2,0.82))",
@@ -2715,7 +3151,9 @@ function QuizProduto1() {
                       {previousResultCore && (
                         <button
                           type="button"
-                          onClick={() => setActiveResultCore(previousResultCore.id)}
+                          onClick={() =>
+                            setActiveResultCore(previousResultCore.id)
+                          }
                           className="px-5 py-3 rounded-full text-sm"
                           style={{
                             background: "rgba(255,255,255,0.026)",
@@ -2730,13 +3168,14 @@ function QuizProduto1() {
                       <button
                         type="button"
                         onClick={handleResultFlowNext}
-                        className="px-6 py-3 rounded-full text-sm"
+                        className="ori-journey-action px-6 py-3 rounded-full text-sm"
                         style={{
-                          background: "var(--gold-primary)",
+                          background:
+                            "linear-gradient(90deg, var(--copper-primary), var(--gold-primary))",
                           color: "#090506",
                           fontWeight: 700,
                           boxShadow:
-                            "0 0 34px rgba(242,185,104,0.14), inset 0 0 14px rgba(255,255,255,0.16)",
+                            "0 0 34px rgba(210,135,70,0.16), inset 0 0 14px rgba(255,255,255,0.16)",
                         }}
                       >
                         {resultFlowLabel}

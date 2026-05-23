@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { supabase } from "../lib/supabaseClient";
@@ -10,11 +10,7 @@ function AdminClientes() {
   const [busca, setBusca] = useState("");
   const [filtro, setFiltro] = useState("todos");
 
-  useEffect(() => {
-    fetchClientes();
-  }, []);
-
-  const fetchClientes = async () => {
+  const fetchClientes = useCallback(async () => {
     setLoading(true);
 
     const { data, error } = await supabase
@@ -30,7 +26,11 @@ function AdminClientes() {
     }
 
     setLoading(false);
-  };
+  }, []);
+
+  useEffect(() => {
+    Promise.resolve().then(fetchClientes);
+  }, [fetchClientes]);
 
   const updateCliente = async (cliente, updates) => {
     setUpdatingId(cliente.id);
@@ -142,7 +142,7 @@ function AdminClientes() {
   if (loading) {
     return (
       <div
-        className="relative overflow-hidden rounded-[34px] md:rounded-[42px] p-8 md:p-10 cinematic-card"
+        className="ori-main-frame ori-card-protagonist relative overflow-hidden rounded-[34px] md:rounded-[42px] p-8 md:p-10 cinematic-card"
         style={{
           background:
             "linear-gradient(135deg, rgba(18,9,10,0.88), rgba(5,2,2,0.96))",
@@ -152,14 +152,14 @@ function AdminClientes() {
         }}
       >
         <p
-          className="uppercase tracking-[0.45em] text-[10px] md:text-xs mb-5"
+          className="ori-type-system text-[10px] md:text-xs mb-5"
           style={{ color: "var(--gold-soft)" }}
         >
           Painel Administrativo
         </p>
 
         <h1
-          className="text-4xl md:text-5xl font-semibold"
+          className="ori-type-hero text-4xl md:text-5xl font-semibold"
           style={{
             color: "var(--gold-primary)",
             letterSpacing: "-0.05em",
@@ -172,7 +172,7 @@ function AdminClientes() {
   }
 
   return (
-    <div className="relative overflow-hidden max-w-7xl">
+    <div className="ori-atmosphere ori-atmosphere-method relative overflow-hidden max-w-7xl">
       <div
         className="absolute top-[-220px] right-[-160px] w-[620px] h-[620px] rounded-full blur-3xl opacity-[0.08] pointer-events-none"
         style={{ background: "var(--gold-primary)" }}
@@ -180,7 +180,7 @@ function AdminClientes() {
 
       <div className="relative z-10">
         <section
-          className="relative overflow-hidden rounded-[34px] md:rounded-[42px] p-7 md:p-9 xl:p-10 mb-8 cinematic-card"
+          className="ori-main-frame ori-hero-panel relative overflow-hidden rounded-[34px] md:rounded-[42px] p-7 md:p-9 xl:p-10 mb-8 cinematic-card"
           style={{
             background:
               "radial-gradient(circle at top right, rgba(242,185,104,0.12), transparent 34%), linear-gradient(135deg, rgba(18,9,10,0.88), rgba(5,2,2,0.96))",
@@ -211,7 +211,7 @@ function AdminClientes() {
               />
 
               <p
-                className="uppercase tracking-[0.52em] text-[10px] md:text-xs"
+                className="ori-type-system text-[10px] md:text-xs"
                 style={{ color: "var(--gold-soft)" }}
               >
                 Painel Administrativo
@@ -221,7 +221,7 @@ function AdminClientes() {
             <div className="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-6">
               <div>
                 <h1
-                  className="text-4xl md:text-5xl xl:text-[64px] leading-[0.94] mb-5"
+                  className="ori-type-hero text-4xl md:text-5xl xl:text-[64px] mb-5"
                   style={{
                     color: "var(--gold-primary)",
                     fontWeight: 600,
@@ -233,7 +233,7 @@ function AdminClientes() {
                 </h1>
 
                 <p
-                  className="text-base md:text-lg leading-relaxed max-w-2xl"
+                  className="ori-type-reading-soft text-base md:text-lg max-w-2xl"
                   style={{ color: "var(--text-soft)" }}
                 >
                   Gestão de leads, acessos, liberações e jornadas simbólicas do
@@ -243,7 +243,7 @@ function AdminClientes() {
 
               <button
                 onClick={fetchClientes}
-                className="w-fit px-5 py-3 rounded-full text-sm font-medium transition-all hover:translate-x-1"
+                className="ori-button-secondary w-fit px-5 py-3 rounded-full text-sm font-medium"
                 style={{
                   background: "rgba(242,185,104,0.08)",
                   border: "1px solid rgba(242,185,104,0.14)",
@@ -266,7 +266,7 @@ function AdminClientes() {
           ].map(([label, value]) => (
             <div
               key={label}
-              className="relative overflow-hidden rounded-[26px] p-5 cinematic-card"
+              className="ori-card-secondary relative overflow-hidden rounded-[24px] p-5 cinematic-card"
               style={{
                 background:
                   "linear-gradient(180deg, rgba(18,9,10,0.72), rgba(7,3,4,0.88))",
@@ -275,14 +275,14 @@ function AdminClientes() {
               }}
             >
               <p
-                className="uppercase tracking-[0.32em] text-[9px] mb-3"
+                className="ori-type-system text-[9px] mb-3"
                 style={{ color: "var(--gold-soft)" }}
               >
                 {label}
               </p>
 
               <h2
-                className="text-3xl md:text-4xl leading-none"
+                className="ori-type-revelation text-3xl md:text-4xl"
                 style={{
                   color: "var(--gold-primary)",
                   fontWeight: 600,
@@ -296,7 +296,7 @@ function AdminClientes() {
         </div>
 
         <div
-          className="relative overflow-hidden rounded-[30px] p-5 md:p-6 mb-7 cinematic-card"
+          className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[26px] p-4 md:p-5 mb-7 cinematic-card"
           style={{
             background:
               "linear-gradient(180deg, rgba(18,9,10,0.66), rgba(7,3,4,0.82))",
@@ -326,7 +326,8 @@ function AdminClientes() {
                   <button
                     key={value}
                     onClick={() => setFiltro(value)}
-                    className="px-4 py-2 rounded-full text-xs transition-all hover:translate-y-[-1px]"
+                    className="ori-tab px-4 py-2 rounded-full text-xs"
+                    data-state={active ? "active" : "sealed"}
                     style={{
                       background: active
                         ? "rgba(242,185,104,0.12)"
@@ -349,7 +350,8 @@ function AdminClientes() {
 
         {clientesFiltrados.length === 0 ? (
           <div
-            className="rounded-[34px] p-8 cinematic-card"
+            className="ori-card-teaser rounded-[30px] p-8 cinematic-card"
+            data-state="sealed"
             style={{
               background:
                 "linear-gradient(180deg, rgba(18,9,10,0.72), rgba(7,3,4,0.88))",
@@ -369,7 +371,7 @@ function AdminClientes() {
               return (
                 <div
                   key={cliente.id}
-                  className="group relative overflow-hidden rounded-[30px] p-6 md:p-7 cinematic-card"
+                  className="ori-card-secondary group relative overflow-hidden rounded-[26px] p-5 md:p-6 cinematic-card"
                   style={{
                     background:
                       "linear-gradient(180deg, rgba(18,9,10,0.72), rgba(7,3,4,0.88))",
@@ -403,14 +405,14 @@ function AdminClientes() {
                     <div>
                       <div className="flex flex-wrap items-center gap-3 mb-4">
                         <p
-                          className="uppercase tracking-[0.35em] text-[9px]"
+                          className="ori-type-system text-[9px]"
                           style={{ color: "var(--gold-soft)" }}
                         >
                           Cliente
                         </p>
 
                         <span
-                          className="px-3 py-1 rounded-full text-[11px]"
+                          className="ori-pill px-3 py-1 text-[11px]"
                           style={{
                             background: "rgba(255,255,255,0.026)",
                             border: "1px solid rgba(255,255,255,0.06)",
@@ -422,7 +424,8 @@ function AdminClientes() {
 
                         {cliente.admin && (
                           <span
-                            className="px-3 py-1 rounded-full text-[11px]"
+                            className="ori-pill px-3 py-1 text-[11px]"
+                            data-state="revealed"
                             style={{
                               background: "rgba(183,140,255,0.10)",
                               border: "1px solid rgba(183,140,255,0.16)",
@@ -435,7 +438,7 @@ function AdminClientes() {
                       </div>
 
                       <h2
-                        className="text-2xl md:text-3xl mb-2 leading-tight"
+                        className="ori-type-revelation text-2xl md:text-3xl mb-2"
                         style={{
                           color: "var(--gold-primary)",
                           fontWeight: 600,
@@ -446,7 +449,7 @@ function AdminClientes() {
                       </h2>
 
                       <p
-                        className="text-sm md:text-base mb-5"
+                        className="ori-type-reading-soft text-sm md:text-base mb-5"
                         style={{ color: "var(--text-soft)" }}
                       >
                         {cliente.email}
@@ -454,7 +457,8 @@ function AdminClientes() {
 
                       <div className="flex flex-wrap gap-2.5">
                         <div
-                          className="px-4 py-2 rounded-full text-xs"
+                          className="ori-chip px-4 py-2 text-xs"
+                          data-state={cliente.resultado ? "revealed" : "sealed"}
                           style={{
                             background: "rgba(242,185,104,0.08)",
                             border: "1px solid rgba(242,185,104,0.14)",
@@ -465,7 +469,8 @@ function AdminClientes() {
                         </div>
 
                         <div
-                          className="px-4 py-2 rounded-full text-xs"
+                          className="ori-chip px-4 py-2 text-xs"
+                          data-state="active"
                           style={{
                             background: "rgba(255,255,255,0.035)",
                             border: "1px solid rgba(255,255,255,0.07)",
@@ -476,7 +481,8 @@ function AdminClientes() {
                         </div>
 
                         <div
-                          className="px-4 py-2 rounded-full text-xs"
+                          className="ori-chip px-4 py-2 text-xs"
+                          data-state={cliente.produto_2_liberado ? "done" : "sealed"}
                           style={{
                             background: cliente.produto_2_liberado
                               ? "rgba(120,255,160,0.08)"
@@ -497,7 +503,7 @@ function AdminClientes() {
                     <div className="flex flex-col md:flex-row xl:flex-col gap-3 xl:min-w-[220px]">
                       <Link
                         to={`/admin/clientes/${cliente.id}`}
-                        className="inline-flex justify-center px-5 py-3 rounded-full text-sm font-medium transition-all hover:translate-x-1"
+                        className="ori-button-secondary inline-flex justify-center px-5 py-3 rounded-full text-sm font-medium"
                         style={{
                           background: "rgba(183,140,255,0.08)",
                           border: "1px solid rgba(183,140,255,0.16)",
@@ -510,7 +516,7 @@ function AdminClientes() {
                       <button
                         disabled={isUpdating}
                         onClick={() => toggleProduto2(cliente)}
-                        className="inline-flex justify-center px-5 py-3 rounded-full text-sm font-medium transition-all hover:translate-x-1 disabled:opacity-60"
+                        className="ori-button-secondary inline-flex justify-center px-5 py-3 rounded-full text-sm font-medium disabled:opacity-60"
                         style={{
                           background: cliente.produto_2_liberado
                             ? "rgba(120,255,160,0.10)"
@@ -531,7 +537,7 @@ function AdminClientes() {
                       <button
                         disabled={isUpdating}
                         onClick={() => toggleProduto3(cliente)}
-                        className="inline-flex justify-center px-5 py-3 rounded-full text-sm font-medium transition-all hover:translate-x-1 disabled:opacity-60"
+                        className="ori-button-secondary inline-flex justify-center px-5 py-3 rounded-full text-sm font-medium disabled:opacity-60"
                         style={{
                           background: cliente.produto_3_liberado
                             ? "rgba(120,255,160,0.10)"

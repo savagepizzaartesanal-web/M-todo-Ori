@@ -1,7 +1,7 @@
 function ReportSection({ eyebrow, title, content }) {
   return (
     <section
-      className="group cinematic-card relative overflow-hidden rounded-4xl md:rounded-[44px] p-8 md:p-12 fade-up"
+      className="ori-main-frame cinematic-card relative overflow-hidden rounded-4xl md:rounded-[44px] p-8 md:p-12 fade-up"
       style={{
         background:
           "radial-gradient(circle at top right, rgba(242,185,104,0.055), transparent 34%), linear-gradient(180deg, rgba(18,9,10,0.98), rgba(7,3,4,1))",

@@ -1,33 +1,8 @@
-import { useEffect } from "react";
-import {
-  AnimatePresence,
-  motion,
-  useMotionTemplate,
-  useMotionValue,
-  useSpring,
-} from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 export function AmbientMirrorField({ reduceMotion, intensity = "warm" }) {
-  const pointerX = useMotionValue(50);
-  const pointerY = useMotionValue(28);
-  const smoothX = useSpring(pointerX, { stiffness: 70, damping: 24, mass: 0.4 });
-  const smoothY = useSpring(pointerY, { stiffness: 70, damping: 24, mass: 0.4 });
-  const glow = useMotionTemplate`radial-gradient(circle at ${smoothX}% ${smoothY}%, rgba(242,185,104,0.18), transparent 24%), radial-gradient(circle at ${smoothY}% ${smoothX}%, rgba(183,140,255,0.11), transparent 28%)`;
-
-  useEffect(() => {
-    if (reduceMotion) return undefined;
-
-    function handlePointerMove(event) {
-      pointerX.set((event.clientX / window.innerWidth) * 100);
-      pointerY.set((event.clientY / window.innerHeight) * 100);
-    }
-
-    window.addEventListener("pointermove", handlePointerMove, { passive: true });
-
-    return () => {
-      window.removeEventListener("pointermove", handlePointerMove);
-    };
-  }, [pointerX, pointerY, reduceMotion]);
+  const staticGlow =
+    "radial-gradient(circle at 64% 18%, rgba(210,135,70,0.095), transparent 34%), radial-gradient(circle at 18% 74%, rgba(107,90,110,0.08), transparent 38%), linear-gradient(180deg, rgba(5,2,2,0.14), rgba(5,2,2,0.32))";
 
   return (
     <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
@@ -36,8 +11,8 @@ export function AmbientMirrorField({ reduceMotion, intensity = "warm" }) {
         style={{
           background: reduceMotion
             ? "radial-gradient(circle at 50% 24%, rgba(242,185,104,0.10), transparent 30%)"
-            : glow,
-          opacity: intensity === "deep" ? 0.85 : 0.72,
+            : staticGlow,
+          opacity: intensity === "deep" ? 0.58 : 0.46,
         }}
       />
 

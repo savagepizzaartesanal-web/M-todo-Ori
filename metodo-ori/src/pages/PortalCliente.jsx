@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 
 const LEGACY_STORAGE_KEY = "ori_produto_1_quiz";
+const ORACLE_PANEL_BACKGROUND =
+  "radial-gradient(circle at 88% 12%, rgba(242,185,104,0.09), transparent 34%), radial-gradient(circle at 8% 92%, rgba(183,140,255,0.05), transparent 34%), linear-gradient(90deg, rgba(5,2,2,0.88), rgba(5,2,2,0.68), rgba(5,2,2,0.92)), url('/images/espelho-ori/oraculo/fundo-oraculo-premium.png')";
 
 const getQuizStorageKey = (userId) => {
   return userId ? `ori_produto_1_quiz_${userId}` : null;
@@ -140,7 +142,7 @@ function PortalCliente() {
   if (loadingCliente) {
     return (
       <div
-        className="relative overflow-hidden rounded-[34px] md:rounded-[42px] p-8 md:p-10 cinematic-card"
+        className="ori-main-frame ori-card-protagonist relative overflow-hidden rounded-[34px] md:rounded-[42px] p-8 md:p-10 cinematic-card"
         style={{
           background:
             "linear-gradient(135deg, rgba(18,9,10,0.88), rgba(5,2,2,0.96))",
@@ -152,14 +154,14 @@ function PortalCliente() {
         }}
       >
         <p
-          className="uppercase tracking-[0.45em] text-[10px] md:text-xs mb-5"
+          className="ori-type-system mb-5"
           style={{ color: "var(--gold-soft)" }}
         >
           Carregando Átrio
         </p>
 
         <h1
-          className="text-4xl md:text-5xl font-semibold"
+          className="ori-type-hero text-4xl md:text-5xl"
           style={{
             color: "var(--gold-primary)",
             letterSpacing: "-0.05em",
@@ -182,11 +184,13 @@ function PortalCliente() {
       status: statusProduto1,
       released: produto1Liberado,
       active: hasResult,
-      color: "gold",
+      tone: "copper",
+      aura:
+        "radial-gradient(circle at top right, rgba(210,135,70,0.34), transparent 38%)",
       action: produto1Liberado ? (
         <Link
           to="/produto-1"
-          className="inline-flex justify-center px-5 py-3 rounded-full text-sm font-medium transition-all hover:translate-x-1 w-full md:w-fit"
+          className="inline-flex justify-center px-5 py-3 rounded-full text-sm font-medium w-full md:w-fit"
           style={{
             background: hasResult
               ? "rgba(242,185,104,0.075)"
@@ -219,7 +223,9 @@ function PortalCliente() {
       status: produto2Liberado ? "Liberado" : "Próxima camada",
       released: produto2Liberado,
       active: produto2Liberado,
-      color: "purple",
+      tone: "lavender",
+      aura:
+        "radial-gradient(circle at top right, rgba(107,90,110,0.36), transparent 38%)",
       action: (
         <button
           disabled={!produto2Liberado}
@@ -246,7 +252,9 @@ function PortalCliente() {
       status: produto3Liberado ? "Liberado" : "Aplicação final",
       released: produto3Liberado,
       active: produto3Liberado,
-      color: "gold",
+      tone: "wine",
+      aura:
+        "radial-gradient(circle at top right, rgba(74,26,26,0.42), transparent 40%)",
       action: (
         <button
           disabled={!produto3Liberado}
@@ -269,8 +277,87 @@ function PortalCliente() {
     },
   ];
 
+  const themeNavigation = [
+    {
+      title: "Direção",
+      text: "O próximo movimento da sua jornada ORI.",
+      active: true,
+    },
+    {
+      title: "Essência",
+      text: "A força simbólica que sustenta sua presença.",
+      active: hasResult,
+    },
+    {
+      title: "Presença",
+      text: "O modo como sua imagem chega antes da fala.",
+      active: hasResult,
+    },
+    {
+      title: "Sombra",
+      text: "O ponto onde tentativa, ruído e desejo se misturam.",
+      active: hasResult,
+    },
+    {
+      title: "Imagem",
+      text: "A tradução visual da força que já foi nomeada.",
+      active: produto2Liberado,
+    },
+    {
+      title: "Corpo",
+      text: "Forma, proporção, gesto e sustentação estética.",
+      active: produto2Liberado,
+    },
+    {
+      title: "Beleza",
+      text: "Cabelo, cor, rosto e acabamento de presença.",
+      active: produto2Liberado,
+    },
+    {
+      title: "Guarda-roupa",
+      text: "Aplicação real em peças, looks e escolhas.",
+      active: produto3Liberado,
+    },
+  ];
+
+  const quickEntry = hasResult
+    ? {
+        eyebrow: "Seu espelho inicial já abriu",
+        title: "Continue pela camada que pede direção agora.",
+        text: `${resultadoFinal} já foi nomeada. O próximo passo é observar onde essa força precisa virar imagem, escolha e presença no cotidiano.`,
+        primaryLabel: "Abrir Espelho ORI",
+        primaryTo: "/espelho-ori",
+        secondaryLabel: "Ver Método ORI",
+        secondaryTo: "/metodo-ori",
+      }
+    : {
+        eyebrow: "Primeiro gesto",
+        title: "Revele a força que sua imagem tenta sustentar.",
+        text: "Antes de pensar em roupa, cor ou cabelo, o ORI começa nomeando a sua base simbólica. Essa leitura abre o mapa das próximas camadas.",
+        primaryLabel: "Começar leitura",
+        primaryTo: "/produto-1",
+        secondaryLabel: "Conhecer método",
+        secondaryTo: "/metodo-ori",
+      };
+
+  const recommendation = hasResult
+    ? {
+        label: "Recomendação personalizada",
+        title: "Sua próxima leitura deve transformar força em direção.",
+        text: "Entre pelo Espelho ORI para ver o ponto de tensão atual, a camada ativa e o que sua imagem precisa sustentar com mais precisão.",
+        action: "Ir para o espelho",
+        to: "/espelho-ori",
+      }
+    : {
+        label: "Recomendação de entrada",
+        title: "Comece pelo Código das Deusas.",
+        text: "Ele funciona como a porta de entrada do sistema: primeiro nomeia sua força, depois prepara o Dossiê, o Espelho e a aplicação no guarda-roupa.",
+        action: "Iniciar agora",
+        to: "/produto-1",
+      };
+
   return (
-    <div className="relative overflow-hidden">
+    <div className="ori-atmosphere ori-atmosphere-portal relative overflow-hidden">
       <div
         className="absolute top-[-260px] right-[-160px] w-[680px] h-[680px] rounded-full blur-3xl opacity-[0.08] pointer-events-none"
         style={{ background: "var(--gold-primary)" }}
@@ -283,7 +370,7 @@ function PortalCliente() {
 
       <div className="relative z-10 max-w-7xl">
         <section
-          className="relative overflow-hidden rounded-[34px] md:rounded-[42px] p-7 md:p-8 xl:p-9 mb-10 cinematic-card min-h-[430px] flex items-center"
+          className="ori-main-frame ori-hero-panel ori-card-protagonist relative overflow-hidden rounded-[28px] md:rounded-[42px] p-5 md:p-8 xl:p-9 mb-6 md:mb-10 cinematic-card min-h-[440px] sm:min-h-[460px] md:min-h-[430px] flex items-center"
           style={{
             background:
               "linear-gradient(135deg, rgba(18,9,10,0.88), rgba(5,2,2,0.96))",
@@ -303,7 +390,8 @@ function PortalCliente() {
               w-full
               h-full
               object-cover
-              object-[78%_center]
+              object-[74%_center]
+              md:object-[78%_center]
               opacity-95
               pointer-events-none
               select-none
@@ -361,17 +449,9 @@ function PortalCliente() {
           />
 
           <div className="relative z-10 max-w-[560px]">
-            <div className="inline-flex items-center gap-4 mb-4">
-              <div
-                className="w-8 h-px"
-                style={{
-                  background:
-                    "linear-gradient(90deg, var(--gold-primary), transparent)",
-                }}
-              />
-
+            <div className="ori-label-line mb-4">
               <p
-                className="uppercase tracking-[0.52em] text-[10px] md:text-xs reveal-step"
+                className="ori-type-system reveal-step"
                 style={{
                   color: "var(--gold-soft)",
                   "--delay": "0.05s",
@@ -382,7 +462,7 @@ function PortalCliente() {
             </div>
 
             <h1
-              className="text-4xl md:text-5xl xl:text-[56px] leading-[0.94] mb-5 reveal-step"
+              className="ori-type-hero text-3xl md:text-5xl xl:text-[56px] mb-4 md:mb-5 reveal-step"
               style={{
                 color: "var(--gold-primary)",
                 fontWeight: 600,
@@ -395,20 +475,20 @@ function PortalCliente() {
             </h1>
 
             <div
-              className="max-w-[520px] mb-6 reveal-step"
+              className="max-w-[520px] mb-5 md:mb-6 reveal-step"
               style={{
                 "--delay": "0.32s",
               }}
             >
               <div
-                className="max-h-[176px] overflow-y-auto pr-2 mb-5"
+                className="max-h-none overflow-visible pr-0 mb-5 md:max-h-[176px] md:overflow-y-auto md:pr-2"
                 style={{
                   scrollbarWidth: "thin",
                   scrollbarColor: "rgba(242,185,104,0.24) transparent",
                 }}
               >
                 <p
-                  className="text-base md:text-lg leading-relaxed mb-5"
+                  className="ori-type-reading text-base md:text-lg mb-4 md:mb-5"
                   style={{
                     color: "var(--text-primary)",
                     textShadow: "0 0 28px rgba(0,0,0,0.45)",
@@ -420,7 +500,7 @@ function PortalCliente() {
                 </p>
 
                 <p
-                  className="text-sm md:text-base leading-relaxed mb-5"
+                  className="ori-type-reading-soft text-sm md:text-base mb-4 md:mb-5"
                   style={{ color: "var(--text-soft)" }}
                 >
                   O Método ORI acontece em três movimentos: primeiro você
@@ -429,7 +509,7 @@ function PortalCliente() {
                 </p>
 
                 <p
-                  className="text-sm md:text-base leading-relaxed"
+                  className="ori-type-reading-soft text-sm md:text-base"
                   style={{ color: "rgba(247,234,216,0.72)" }}
                 >
                   Ele organiza o que pode estar fragmentado entre corpo, roupa,
@@ -438,11 +518,12 @@ function PortalCliente() {
                 </p>
               </div>
 
-              <div className="flex flex-wrap gap-3">
+              <div className="ori-premium-scroll flex gap-2 overflow-x-auto pb-1 md:flex-wrap md:gap-3 md:overflow-visible md:pb-0">
                 {["Nomear", "Integrar", "Aplicar", "Sustentar"].map((item) => (
                   <div
                     key={item}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs"
+                    className="ori-chip shrink-0"
+                    data-state="revealed"
                     style={{
                       background: "rgba(255,255,255,0.028)",
                       border: "1px solid rgba(242,185,104,0.18)",
@@ -467,7 +548,7 @@ function PortalCliente() {
             </div>
 
             <div
-              className="w-24 h-px mb-6"
+              className="w-20 md:w-24 h-px mb-5 md:mb-6"
               style={{
                 background:
                   "linear-gradient(to right, var(--gold-primary), transparent)",
@@ -476,7 +557,8 @@ function PortalCliente() {
 
             {resultadoFinal ? (
               <div
-                className="reveal-step relative overflow-hidden rounded-[24px] p-5 max-w-[500px]"
+                className="ori-card-secondary reveal-step relative overflow-hidden rounded-[22px] md:rounded-[24px] p-4 md:p-5 max-w-[500px]"
+                data-state="revealed"
                 style={{
                   background:
                     "linear-gradient(90deg, rgba(242,185,104,0.075), rgba(255,255,255,0.016))",
@@ -500,14 +582,14 @@ function PortalCliente() {
                 <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
                   <div>
                     <p
-                      className="uppercase tracking-[0.38em] text-[9px] mb-2"
+                      className="ori-type-system mb-2"
                       style={{ color: "var(--gold-soft)" }}
                     >
                       Resultado ativo
                     </p>
 
                     <h2
-                      className="text-2xl md:text-3xl leading-tight"
+                      className="ori-type-revelation text-xl md:text-3xl"
                       style={{
                         color: "var(--gold-primary)",
                         fontWeight: 600,
@@ -519,7 +601,7 @@ function PortalCliente() {
                   </div>
 
                   <div
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs w-fit"
+                    className="ori-badge ori-state-done ori-state-surface w-fit"
                     style={{
                       background: "rgba(242,185,104,0.08)",
                       border: "1px solid rgba(242,185,104,0.16)",
@@ -539,7 +621,8 @@ function PortalCliente() {
               </div>
             ) : (
               <div
-                className="reveal-step rounded-[24px] p-5 max-w-[500px]"
+                className="ori-card-teaser reveal-step rounded-[22px] md:rounded-[24px] p-4 md:p-5 max-w-[500px]"
+                data-state="sealed"
                 style={{
                   background:
                     "linear-gradient(90deg, rgba(242,185,104,0.055), rgba(255,255,255,0.018))",
@@ -550,7 +633,7 @@ function PortalCliente() {
                 }}
               >
                 <p
-                  className="text-sm md:text-base leading-relaxed"
+                  className="ori-type-reading-soft text-sm md:text-base"
                   style={{ color: "var(--text-soft)" }}
                 >
                   Sua primeira etapa ainda está selada. Comece pelo Código das
@@ -561,7 +644,7 @@ function PortalCliente() {
                 {produto1Liberado && (
                   <Link
                     to="/produto-1"
-                    className="mt-5 inline-flex justify-center px-5 py-3 rounded-full text-sm font-medium transition-all hover:translate-x-1"
+                    className="ori-journey-action mt-5 inline-flex w-full justify-center rounded-full px-5 py-3 text-sm font-medium sm:w-auto"
                     style={{
                       background: "var(--gold-primary)",
                       color: "#090506",
@@ -577,26 +660,131 @@ function PortalCliente() {
           </div>
         </section>
 
-        <div className="mb-7">
-          <div className="inline-flex items-center gap-4 mb-4">
+        <section
+          className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[24px] md:rounded-[28px] p-4 md:p-5 mb-7 md:mb-8 cinematic-card"
+          style={{
+            backgroundColor: "rgba(5,2,2,0.92)",
+            backgroundImage: ORACLE_PANEL_BACKGROUND,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            border: "1px solid rgba(242,185,104,0.12)",
+            boxShadow:
+              "0 0 58px rgba(242,185,104,0.028), inset 0 0 32px rgba(255,255,255,0.010)",
+            backdropFilter: "blur(14px)",
+            WebkitBackdropFilter: "blur(14px)",
+          }}
+        >
+          <div
+            className="absolute inset-0 pointer-events-none opacity-[0.018]"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(242,185,104,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(242,185,104,0.08) 1px, transparent 1px)",
+              backgroundSize: "54px 54px",
+            }}
+          />
+
+          <div className="relative z-10">
+            <div className="grid gap-4 xl:grid-cols-[1fr_auto] xl:items-center">
+            <div>
+              <p
+                className="ori-type-system mb-2"
+                style={{ color: "var(--gold-soft)" }}
+              >
+                {quickEntry.eyebrow}
+              </p>
+
+              <h2
+                className="ori-type-revelation text-lg md:text-2xl mb-2"
+                style={{
+                  color: "var(--gold-primary)",
+                  fontWeight: 620,
+                  letterSpacing: "-0.045em",
+                }}
+              >
+                {quickEntry.title}
+              </h2>
+
+              <p
+                className="ori-type-reading-soft max-w-2xl text-sm"
+                style={{ color: "var(--text-soft)" }}
+              >
+                {quickEntry.text}
+              </p>
+            </div>
+
+              <div className="flex flex-col gap-2.5 sm:flex-row xl:justify-end">
+                <Link
+                  to={quickEntry.primaryTo}
+              className="ori-journey-action inline-flex min-h-11 w-full items-center justify-center rounded-full px-5 py-2.5 text-center text-sm sm:w-auto"
+                  style={{
+                    background:
+                      "linear-gradient(90deg, var(--copper-primary), var(--gold-primary))",
+                    color: "#090506",
+                    fontWeight: 750,
+                    boxShadow:
+                      "0 0 30px rgba(210,135,70,0.14), inset 0 0 12px rgba(255,255,255,0.14)",
+                  }}
+                >
+                  {quickEntry.primaryLabel}
+                </Link>
+
+                <Link
+                  to={recommendation.to}
+                  className="ori-button-secondary inline-flex min-h-11 w-full items-center justify-center px-5 py-2.5 text-center text-sm sm:w-auto"
+                  style={{
+                    background: "rgba(255,255,255,0.024)",
+                    border: "1px solid rgba(242,185,104,0.12)",
+                    color: "var(--gold-primary)",
+                    fontWeight: 620,
+                  }}
+                >
+                  {recommendation.action}
+                </Link>
+              </div>
+            </div>
+
             <div
-              className="w-8 h-px"
-              style={{
-                background:
-                  "linear-gradient(90deg, var(--gold-primary), transparent)",
-              }}
+              className="mt-4 h-px w-full"
+              style={{ background: "rgba(242,185,104,0.08)" }}
             />
 
+            <div className="ori-premium-scroll mt-3 flex gap-2 overflow-x-auto pb-1">
+              {themeNavigation.map((theme) => (
+                <span
+                  key={theme.title}
+                  className={`ori-chip shrink-0 ${theme.active ? "ori-state-active ori-state-surface" : "ori-state-sealed ori-state-surface"}`}
+                  data-state={theme.active ? "active" : "sealed"}
+                  style={{
+                    background: theme.active
+                      ? "rgba(242,185,104,0.070)"
+                      : "rgba(255,255,255,0.020)",
+                    border: theme.active
+                      ? "1px solid rgba(242,185,104,0.14)"
+                      : "1px solid rgba(255,255,255,0.055)",
+                    color: theme.active
+                      ? "var(--gold-primary)"
+                      : "rgba(247,234,216,0.46)",
+                  }}
+                >
+                  {theme.title}
+                </span>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <div className="mb-4 md:mb-5">
+          <div className="ori-label-line mb-2">
             <p
-              className="uppercase tracking-[0.45em] text-[10px] md:text-xs"
+              className="ori-type-system text-[9px] md:text-[10px]"
               style={{ color: "var(--gold-soft)" }}
             >
-              Jornada ORI
+              Jornada ativa
             </p>
           </div>
 
           <h2
-            className="text-3xl md:text-4xl font-semibold"
+            className="ori-type-revelation text-2xl md:text-4xl"
             style={{
               color: "var(--gold-primary)",
               letterSpacing: "-0.055em",
@@ -606,28 +794,52 @@ function PortalCliente() {
           </h2>
         </div>
 
-        <div className="grid xl:grid-cols-3 gap-6">
+        <div className="grid gap-3 md:gap-4 xl:grid-cols-3">
           {portalCards.map((card) => {
-            const isPurple = card.color === "purple";
+            const isLavender = card.tone === "lavender";
+            const isWine = card.tone === "wine";
+            const activeBorder = isLavender
+              ? "1px solid var(--lavender-muted)"
+              : isWine
+                ? "1px solid rgba(74,26,26,0.72)"
+                : "1px solid var(--copper-soft)";
+            const activeGlow = isLavender
+              ? "0 0 70px rgba(107,90,110,0.075), inset 0 0 34px rgba(107,90,110,0.030)"
+              : isWine
+                ? "0 0 70px rgba(74,26,26,0.085), inset 0 0 34px rgba(74,26,26,0.035)"
+                : "0 0 70px rgba(210,135,70,0.055), inset 0 0 34px rgba(210,135,70,0.030)";
+            const accentColor = isLavender
+              ? "var(--lavender-muted)"
+              : isWine
+                ? "var(--wine-muted)"
+                : "var(--copper-primary)";
+            const accentSoft = isLavender
+              ? "rgba(107,90,110,0.16)"
+              : isWine
+                ? "rgba(74,26,26,0.20)"
+                : "rgba(210,135,70,0.14)";
 
             return (
               <div
                 key={card.number}
-                className="group cinematic-card relative overflow-hidden rounded-[30px] p-7"
+                className={`group cinematic-card relative overflow-hidden rounded-[22px] md:rounded-[26px] p-4 md:p-5 ${
+                  card.released
+                    ? card.active
+                      ? "ori-card-protagonist"
+                      : "ori-card-secondary"
+                    : "ori-card-teaser"
+                }`}
+                data-state={
+                  card.active ? "active" : card.released ? "next" : "sealed"
+                }
                 style={{
                   background:
                     "linear-gradient(180deg, rgba(18,9,10,0.70), rgba(7,3,4,0.84))",
-                  border: card.active
-                    ? isPurple
-                      ? "1px solid rgba(183,140,255,0.20)"
-                      : "1px solid rgba(242,185,104,0.18)"
-                    : "1px solid rgba(255,255,255,0.055)",
+                  border: card.active ? activeBorder : "1px solid rgba(255,255,255,0.055)",
                   boxShadow: card.active
-                    ? isPurple
-                      ? "0 0 70px rgba(183,140,255,0.055), inset 0 0 34px rgba(183,140,255,0.025)"
-                      : "0 0 70px rgba(242,185,104,0.045), inset 0 0 34px rgba(242,185,104,0.025)"
+                    ? activeGlow
                     : "inset 0 0 34px rgba(255,255,255,0.012)",
-                  opacity: card.released ? 1 : 0.62,
+                  opacity: card.released ? 1 : 0.72,
                   backdropFilter: "blur(14px)",
                   WebkitBackdropFilter: "blur(14px)",
                 }}
@@ -644,21 +856,34 @@ function PortalCliente() {
                 <div
                   className="absolute -top-24 -right-20 w-56 h-56 rounded-full blur-3xl opacity-[0.12] pointer-events-none"
                   style={{
-                    background: isPurple
-                      ? "rgba(183,140,255,0.42)"
-                      : "rgba(242,185,104,0.38)",
+                    background: card.aura,
                   }}
                 />
 
-                <div className="relative z-10">
-                  <div className="flex items-center justify-between gap-4 mb-7">
+                {!card.released && (
+                  <div
+                    className="pointer-events-none absolute bottom-4 right-4 z-20 text-lg leading-none md:bottom-5 md:right-5"
+                    style={{
+                      color: "rgba(242,185,104,0.58)",
+                      textShadow: "0 0 18px rgba(242,185,104,0.10)",
+                    }}
+                    aria-hidden="true"
+                  >
+                    🔒
+                  </div>
+                )}
+
+                <div className="relative z-10 flex min-h-full flex-col">
+                  <div className="flex items-center justify-between gap-4 mb-4">
                     <div>
                       <p
-                        className="uppercase tracking-[0.35em] text-[9px] mb-2"
+                        className="ori-type-system mb-2"
                         style={{
-                          color: isPurple
-                            ? "rgba(217,189,255,0.76)"
-                            : "var(--gold-soft)",
+                          color: isLavender
+                            ? "var(--lavender-muted)"
+                            : isWine
+                              ? "rgba(190,126,105,0.74)"
+                              : "var(--copper-primary)",
                         }}
                       >
                         Portal {card.number}
@@ -667,30 +892,26 @@ function PortalCliente() {
                       <div
                         className="w-10 h-px"
                         style={{
-                          background: isPurple
-                            ? "linear-gradient(90deg, rgba(183,140,255,0.8), transparent)"
-                            : "linear-gradient(90deg, var(--gold-primary), transparent)",
+                          background: isLavender
+                            ? "linear-gradient(90deg, var(--lavender-muted), transparent)"
+                            : isWine
+                              ? "linear-gradient(90deg, var(--wine-muted), transparent)"
+                              : "linear-gradient(90deg, var(--copper-primary), transparent)",
                         }}
                       />
                     </div>
 
                     <div
-                      className="w-10 h-10 rounded-full flex items-center justify-center text-sm"
+                      className="flex h-9 w-9 items-center justify-center rounded-full text-xs md:h-10 md:w-10 md:text-sm"
                       style={{
                         background: card.active
-                          ? isPurple
-                            ? "rgba(183,140,255,0.10)"
-                            : "rgba(242,185,104,0.10)"
+                          ? accentSoft
                           : "rgba(255,255,255,0.035)",
                         border: card.active
-                          ? isPurple
-                            ? "1px solid rgba(183,140,255,0.18)"
-                            : "1px solid rgba(242,185,104,0.16)"
+                          ? activeBorder
                           : "1px solid rgba(255,255,255,0.06)",
                         color: card.active
-                          ? isPurple
-                            ? "#d9bdff"
-                            : "var(--gold-primary)"
+                          ? accentColor
                           : "var(--text-muted)",
                       }}
                     >
@@ -699,12 +920,14 @@ function PortalCliente() {
                   </div>
 
                   <h3
-                    className="text-2xl md:text-3xl mb-5 leading-tight"
+                    className="ori-type-revelation text-xl md:text-2xl mb-3"
                     style={{
                       color: card.active
-                        ? isPurple
-                          ? "#d9bdff"
-                          : "var(--gold-primary)"
+                        ? isLavender
+                          ? "rgba(215,194,220,0.92)"
+                          : isWine
+                            ? "rgba(230,170,138,0.92)"
+                            : "var(--copper-primary)"
                         : "rgba(247,234,216,0.82)",
                       fontWeight: 600,
                       letterSpacing: "-0.045em",
@@ -714,54 +937,15 @@ function PortalCliente() {
                   </h3>
 
                   <p
-                    className="text-sm md:text-base leading-relaxed mb-7 min-h-[96px]"
+                    className="ori-type-reading-soft text-sm mb-4 md:min-h-[96px]"
                     style={{ color: "var(--text-soft)" }}
                   >
-                    {card.description}
+                    {card.active
+                      ? card.description
+                      : `${card.description.split(".")[0]}.`}
                   </p>
 
-                  <div
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs mb-7"
-                    style={{
-                      background: card.active
-                        ? isPurple
-                          ? "rgba(183,140,255,0.08)"
-                          : hasResult && card.number === "01"
-                            ? "rgba(242,185,104,0.08)"
-                            : "rgba(242,185,104,0.08)"
-                        : "rgba(255,255,255,0.035)",
-                      border: card.active
-                        ? isPurple
-                          ? "1px solid rgba(183,140,255,0.14)"
-                          : hasResult && card.number === "01"
-                            ? "1px solid rgba(242,185,104,0.14)"
-                            : "1px solid rgba(242,185,104,0.14)"
-                        : "1px solid rgba(255,255,255,0.07)",
-                      color: card.active
-                        ? isPurple
-                          ? "#d9bdff"
-                          : hasResult && card.number === "01"
-                            ? "var(--gold-primary)"
-                            : "var(--gold-primary)"
-                        : "var(--text-muted)",
-                    }}
-                  >
-                    <span
-                      className="w-1.5 h-1.5 rounded-full"
-                      style={{
-                        background: card.active
-                          ? isPurple
-                            ? "#d9bdff"
-                            : hasResult && card.number === "01"
-                              ? "var(--gold-primary)"
-                              : "var(--gold-primary)"
-                          : "rgba(255,255,255,0.28)",
-                      }}
-                    />
-                    {card.status}
-                  </div>
-
-                  <div>{card.action}</div>
+                  <div className="mt-auto">{card.action}</div>
                 </div>
               </div>
             );

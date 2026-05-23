@@ -38,7 +38,7 @@ function Dashboard() {
 
       <div className="max-w-7xl">
         <section
-          className="relative overflow-hidden rounded-[40px] md:rounded-[56px] p-8 md:p-14 mb-12 md:mb-16 cinematic-card"
+          className="ori-main-frame ori-hero-panel relative overflow-hidden rounded-[30px] md:rounded-[42px] p-6 md:p-10 mb-7 md:mb-9 cinematic-card"
           style={{
             background:
               "radial-gradient(circle at top right, rgba(242,185,104,0.12), transparent 34%), radial-gradient(circle at bottom left, rgba(140,111,145,0.12), transparent 42%), linear-gradient(180deg, rgba(18,9,10,0.98), rgba(5,2,2,1))",
@@ -57,7 +57,7 @@ function Dashboard() {
 
           <div className="relative z-10">
             <p
-              className="uppercase tracking-[0.55em] text-[10px] md:text-xs mb-6 reveal-step"
+              className="ori-type-system text-[10px] md:text-xs mb-4 reveal-step"
               style={{
                 color: "var(--gold-soft)",
                 "--delay": "0.05s",
@@ -67,7 +67,7 @@ function Dashboard() {
             </p>
 
             <h1
-              className="text-5xl md:text-7xl xl:text-8xl leading-[0.9] mb-10 reveal-step"
+              className="ori-type-hero text-4xl md:text-6xl xl:text-7xl mb-6 reveal-step"
               style={{
                 color: "var(--gold-primary)",
                 fontWeight: 600,
@@ -82,7 +82,7 @@ function Dashboard() {
             </h1>
 
             <p
-              className="text-2xl md:text-3xl leading-relaxed max-w-4xl mb-10 reveal-step"
+              className="ori-type-revelation text-xl md:text-2xl max-w-4xl mb-5 reveal-step"
               style={{
                 color: "var(--text-primary)",
                 "--delay": "0.32s",
@@ -94,7 +94,7 @@ function Dashboard() {
             </p>
 
             <p
-              className="text-lg md:text-xl leading-relaxed max-w-3xl mb-12 reveal-step"
+              className="ori-type-reading-soft text-sm md:text-base max-w-3xl mb-7 reveal-step"
               style={{
                 color: "var(--text-soft)",
                 "--delay": "0.46s",
@@ -107,7 +107,7 @@ function Dashboard() {
 
             <Link
               to="/produto-1"
-              className="reveal-step inline-flex justify-center px-8 md:px-10 py-5 rounded-full font-medium transition-all hover:scale-[1.03] w-full md:w-fit"
+              className="reveal-step inline-flex justify-center px-7 py-3.5 rounded-full font-medium transition-all hover:scale-[1.03] w-full md:w-fit"
               style={{
                 background: "var(--gold-primary)",
                 color: "#090506",
@@ -120,16 +120,16 @@ function Dashboard() {
           </div>
         </section>
 
-        <div className="mb-8">
+        <div className="mb-5">
           <p
-            className="uppercase tracking-[0.45em] text-[10px] md:text-xs mb-4"
+            className="ori-type-system text-[10px] md:text-xs mb-2"
             style={{ color: "var(--gold-soft)" }}
           >
             Mapa dos Portais
           </p>
 
           <h2
-            className="text-3xl md:text-5xl font-semibold"
+            className="ori-type-revelation text-2xl md:text-4xl font-semibold"
             style={{
               color: "var(--gold-primary)",
               letterSpacing: "-0.04em",
@@ -139,9 +139,9 @@ function Dashboard() {
           </h2>
         </div>
 
-        <div className="grid xl:grid-cols-3 gap-8">
+        <div className="grid xl:grid-cols-3 gap-4">
           <div
-            className="group cinematic-card relative overflow-hidden rounded-[36px] md:rounded-[44px] p-8 md:p-10"
+            className="ori-card-protagonist group cinematic-card relative overflow-hidden rounded-[24px] md:rounded-[30px] p-5 md:p-6"
             style={{
               background:
                 "radial-gradient(circle at top right, rgba(242,185,104,0.1), transparent 36%), linear-gradient(180deg, rgba(18,9,10,0.98), rgba(7,3,4,1))",
@@ -170,9 +170,9 @@ function Dashboard() {
             />
 
             <div className="relative z-10">
-              <div className="flex items-center justify-between gap-4 mb-8">
+              <div className="flex items-center justify-between gap-4 mb-5">
                 <p
-                  className="uppercase tracking-[0.35em] text-xs"
+                  className="ori-type-system text-xs"
                   style={{ color: "var(--gold-soft)" }}
                 >
                   Portal 01
@@ -196,14 +196,14 @@ function Dashboard() {
               </div>
 
               <h2
-                className="text-3xl md:text-4xl mb-6 leading-tight"
+                className="ori-type-revelation text-2xl md:text-3xl mb-4"
                 style={{ color: "var(--gold-primary)", fontWeight: 600 }}
               >
                 Código das Deusas
               </h2>
 
               <p
-                className="text-lg leading-relaxed mb-8"
+                className="ori-type-reading-soft text-sm mb-5"
                 style={{ color: "var(--text-soft)" }}
               >
                 Revelação simbólica da sua essência arquetípica, padrões
@@ -212,21 +212,21 @@ function Dashboard() {
 
               {hasResult && (
                 <div
-                  className="rounded-[28px] p-5 mb-8"
+                  className="ori-card-secondary rounded-[18px] p-4 mb-5"
                   style={{
                     background: "rgba(242,185,104,0.045)",
                     border: "1px solid rgba(242,185,104,0.12)",
                   }}
                 >
                   <p
-                    className="uppercase tracking-[0.35em] text-[10px] mb-3"
+                    className="ori-type-system text-[10px] mb-3"
                     style={{ color: "var(--gold-soft)" }}
                   >
                     Código revelado
                   </p>
 
                   <p
-                    className="text-2xl leading-tight"
+                    className="ori-type-revelation text-xl"
                     style={{ color: "var(--gold-primary)", fontWeight: 600 }}
                   >
                     {result.nomeComposto}
@@ -234,7 +234,7 @@ function Dashboard() {
                 </div>
               )}
 
-              <div className="flex flex-col gap-4 items-start">
+              <div className="flex flex-col gap-3 items-start">
                 <div
                   className="inline-flex px-5 py-2 rounded-full text-sm"
                   style={{
@@ -260,7 +260,7 @@ function Dashboard() {
 
                 <Link
                   to="/produto-1"
-                  className="inline-flex justify-center px-6 py-3 rounded-full font-medium transition-all hover:scale-[1.03] w-full md:w-fit"
+                  className="inline-flex justify-center px-5 py-2.5 rounded-full font-medium transition-all hover:scale-[1.03] w-full md:w-fit"
                   style={{
                     background: hasResult
                       ? "rgba(242,185,104,0.08)"
@@ -278,7 +278,7 @@ function Dashboard() {
           </div>
 
           <div
-            className="group cinematic-card relative overflow-hidden rounded-[36px] md:rounded-[44px] p-8 md:p-10 opacity-75"
+            className="ori-card-secondary group cinematic-card relative overflow-hidden rounded-[24px] md:rounded-[30px] p-5 md:p-6 opacity-75"
             style={{
               background:
                 "radial-gradient(circle at top right, rgba(140,111,145,0.09), transparent 36%), linear-gradient(180deg, rgba(18,9,10,0.96), rgba(7,3,4,1))",
@@ -287,21 +287,21 @@ function Dashboard() {
           >
             <div className="relative z-10">
               <p
-                className="uppercase tracking-[0.35em] text-xs mb-8"
+                className="ori-type-system text-xs mb-5"
                 style={{ color: "var(--gold-soft)" }}
               >
                 Portal 02
               </p>
 
               <h2
-                className="text-3xl md:text-4xl mb-6 leading-tight"
+                className="ori-type-revelation text-2xl md:text-3xl mb-4"
                 style={{ color: "var(--gold-primary)", fontWeight: 600 }}
               >
                 Dossiê Ori
               </h2>
 
               <p
-                className="text-lg leading-relaxed mb-10"
+                className="ori-type-reading-soft text-sm mb-6"
                 style={{ color: "var(--text-soft)" }}
               >
                 Estrutura facial, imagem, estética, presença visual, cabelo,
@@ -322,7 +322,8 @@ function Dashboard() {
           </div>
 
           <div
-            className="group cinematic-card relative overflow-hidden rounded-[36px] md:rounded-[44px] p-8 md:p-10 opacity-60"
+            className="ori-card-teaser group cinematic-card relative overflow-hidden rounded-[24px] md:rounded-[30px] p-5 md:p-6 opacity-65"
+            data-state="sealed"
             style={{
               background:
                 "radial-gradient(circle at top right, rgba(242,185,104,0.06), transparent 36%), linear-gradient(180deg, rgba(18,9,10,0.94), rgba(7,3,4,1))",
@@ -331,21 +332,21 @@ function Dashboard() {
           >
             <div className="relative z-10">
               <p
-                className="uppercase tracking-[0.35em] text-xs mb-8"
+                className="ori-type-system text-xs mb-5"
                 style={{ color: "var(--gold-soft)" }}
               >
                 Portal 03
               </p>
 
               <h2
-                className="text-3xl md:text-4xl mb-6 leading-tight"
+                className="ori-type-revelation text-2xl md:text-3xl mb-4"
                 style={{ color: "var(--gold-primary)", fontWeight: 600 }}
               >
                 O Código Final
               </h2>
 
               <p
-                className="text-lg leading-relaxed mb-10"
+                className="ori-type-reading-soft text-sm mb-6"
                 style={{ color: "var(--text-soft)" }}
               >
                 Integração total entre identidade simbólica, presença estética,

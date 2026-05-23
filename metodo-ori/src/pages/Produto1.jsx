@@ -53,7 +53,7 @@ function QuizProduto1() {
   return (
     <div className="max-w-6xl">
       <section
-        className="relative overflow-hidden rounded-[30px] md:rounded-[40px] mb-16 min-h-[520px]"
+        className="ori-hero-panel relative overflow-hidden rounded-[30px] md:rounded-[40px] mb-16 min-h-[520px]"
         style={{
           background:
             "radial-gradient(circle at 78% 18%, rgba(242,185,104,0.13), transparent 32%), linear-gradient(135deg, rgba(18,9,10,0.62), rgba(5,2,2,0.82))",
@@ -84,14 +84,14 @@ function QuizProduto1() {
         <div className="relative z-10 grid min-h-[520px] lg:grid-cols-[0.95fr_0.72fr]">
           <div className="flex min-h-[520px] flex-col justify-center p-6 md:p-8 xl:p-10">
             <p
-              className="uppercase tracking-[0.45em] text-[10px] md:text-xs mb-5"
+              className="ori-type-system text-[10px] md:text-xs mb-5"
               style={{ color: "var(--gold-soft)" }}
             >
               Código das Deusas
             </p>
 
             <h1
-              className="text-4xl md:text-6xl leading-[0.95] font-semibold mb-6 max-w-4xl"
+              className="ori-type-hero text-4xl md:text-6xl font-semibold mb-6 max-w-4xl"
               style={{
                 color: "var(--gold-primary)",
                 letterSpacing: "-0.065em",
@@ -102,7 +102,7 @@ function QuizProduto1() {
             </h1>
 
             <p
-              className="text-lg md:text-xl leading-relaxed max-w-3xl mb-5"
+              className="ori-type-reading text-lg md:text-xl max-w-3xl mb-5"
               style={{ color: "var(--text-primary)" }}
             >
               Sua imagem não começa na aparência. Ela começa nos padrões que
@@ -117,7 +117,7 @@ function QuizProduto1() {
               }}
             >
               <p
-                className="text-sm md:text-base leading-[1.75]"
+                className="ori-type-reading-soft text-sm md:text-base"
                 style={{ color: "rgba(255,245,235,0.70)" }}
               >
                 Nesta primeira etapa, o ORI identifica sua composição
@@ -136,7 +136,8 @@ function QuizProduto1() {
               ].map((item) => (
                 <span
                   key={item}
-                  className="px-4 py-2 rounded-full text-xs"
+                  className="ori-chip px-4 py-2 text-xs"
+                  data-state="revealed"
                   style={{
                     background: "rgba(255,255,255,0.025)",
                     border: "1px solid rgba(242,185,104,0.10)",
@@ -164,7 +165,7 @@ function QuizProduto1() {
 
           <div className="relative hidden lg:flex min-h-[520px] items-end p-8">
             <div
-              className="w-full rounded-[28px] p-5"
+              className="ori-card-secondary w-full rounded-[28px] p-5"
               style={{
                 background: "rgba(5,2,2,0.36)",
                 border: "1px solid rgba(242,185,104,0.10)",
@@ -173,13 +174,13 @@ function QuizProduto1() {
               }}
             >
               <p
-                className="uppercase tracking-[0.28em] text-[8px] mb-3"
+                className="ori-type-system text-[8px] mb-3"
                 style={{ color: "var(--gold-soft)" }}
               >
                 Escala de leitura
               </p>
               <p
-                className="text-sm leading-relaxed"
+                className="ori-type-reading-soft text-sm"
                 style={{ color: "rgba(255,245,235,0.66)" }}
               >
                 1 = nada a ver comigo · 5 = totalmente eu
@@ -194,14 +195,14 @@ function QuizProduto1() {
           <section key={bloco}>
             <div className="mb-8">
               <p
-                className="uppercase tracking-[0.4em] text-xs mb-4"
+                className="ori-type-system text-xs mb-4"
                 style={{ color: "var(--gold-soft)" }}
               >
                 Bloco de leitura
               </p>
 
               <h2
-                className="text-4xl font-semibold"
+                className="ori-type-revelation text-4xl font-semibold"
                 style={{ color: "var(--gold-primary)" }}
               >
                 {bloco}
@@ -212,7 +213,7 @@ function QuizProduto1() {
               {blocoQuestions.map((question) => (
                 <div
                   key={question.id}
-                  className="relative overflow-hidden p-8 rounded-[36px]"
+                  className="ori-card-secondary relative overflow-hidden p-8 rounded-[36px]"
                   style={{
                     background:
                       "linear-gradient(180deg, rgba(18,9,10,0.96), rgba(8,4,5,1))",
@@ -229,14 +230,14 @@ function QuizProduto1() {
                   />
 
                   <p
-                    className="uppercase tracking-[0.3em] text-xs mb-5"
+                    className="ori-type-system text-xs mb-5"
                     style={{ color: "var(--gold-muted)" }}
                   >
                     Pergunta {question.id}
                   </p>
 
                   <h3
-                    className="text-2xl leading-relaxed mb-10"
+                    className="ori-type-reading text-2xl mb-10"
                     style={{ color: "var(--text-primary)" }}
                   >
                     {question.pergunta}
@@ -356,7 +357,7 @@ function QuizProduto1() {
             </div>
           ) : (
             <div
-              className="rounded-[40px] p-10"
+              className="ori-card-secondary rounded-[40px] p-10"
               style={{
                 background:
                   "linear-gradient(180deg, rgba(18,9,10,0.98), rgba(7,3,4,1))",

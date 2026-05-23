@@ -17,9 +17,9 @@ function Produto3() {
   ];
 
   return (
-    <div className="relative overflow-hidden max-w-[1320px]">
+    <div className="ori-atmosphere ori-atmosphere-final relative overflow-hidden max-w-[1320px]">
       <section
-        className="relative overflow-hidden rounded-[30px] md:rounded-[38px] p-6 md:p-7 xl:p-8 mb-6 cinematic-card min-h-[clamp(500px,calc(100vh-96px),620px)] flex items-center"
+        className="ori-main-frame ori-hero-panel relative overflow-hidden rounded-[28px] md:rounded-[36px] p-5 md:p-7 mb-5 cinematic-card min-h-[430px] md:min-h-[clamp(460px,calc(100vh-120px),580px)] flex items-center"
         style={{
           background:
             "linear-gradient(135deg, rgba(18,9,10,0.88), rgba(5,2,2,0.96))",
@@ -39,7 +39,8 @@ function Produto3() {
             w-full
             h-full
             object-cover
-            object-[82%_center]
+            object-[76%_center]
+            md:object-[82%_center]
             opacity-95
             pointer-events-none
             select-none
@@ -107,15 +108,15 @@ function Produto3() {
             />
 
             <p
-              className="uppercase tracking-[0.46em] text-[9px] md:text-[10px]"
+              className="ori-type-system"
               style={{ color: "var(--gold-soft)" }}
             >
-              Produto 3 · Aplicação
+              Aplicação
             </p>
           </div>
 
           <h1
-            className="text-4xl md:text-5xl xl:text-[50px] leading-[0.94] mb-3"
+            className="ori-type-hero text-[38px] md:text-5xl xl:text-[50px] mb-3"
             style={{
               color: "var(--gold-primary)",
               fontWeight: 600,
@@ -127,7 +128,7 @@ function Produto3() {
           </h1>
 
           <p
-            className="text-sm leading-relaxed max-w-[500px] mb-4"
+            className="ori-type-reading text-sm max-w-[500px] mb-4"
             style={{
               color: "var(--text-primary)",
               textShadow: "0 0 28px rgba(0,0,0,0.45)",
@@ -140,7 +141,7 @@ function Produto3() {
           </p>
 
           <p
-            className="text-sm md:text-[15px] leading-relaxed max-w-[520px] mb-4"
+            className="ori-type-reading-soft text-sm md:text-[15px] max-w-[520px] mb-4"
             style={{ color: "var(--text-soft)" }}
           >
             Depois da nomeação e da integração, o Código Final aplica sua
@@ -157,7 +158,8 @@ function Produto3() {
           />
 
           <div
-            className="relative overflow-hidden rounded-[22px] p-4 max-w-[520px] mb-4"
+            className="ori-card-teaser relative overflow-hidden rounded-[20px] p-4 max-w-[520px] mb-4"
+            data-state="sealed"
             style={{
               background:
                 "linear-gradient(90deg, rgba(242,185,104,0.075), rgba(255,255,255,0.016))",
@@ -177,16 +179,20 @@ function Produto3() {
               }}
             />
 
-            <div className="relative z-10">
-              <p
-                className="uppercase tracking-[0.32em] text-[8px] mb-2"
-                style={{ color: "var(--gold-soft)" }}
+            <div className="relative z-10 min-h-[132px] pr-8 flex flex-col justify-center">
+              <div
+                className="absolute right-0 top-0 text-lg leading-none"
+                style={{
+                  color: "rgba(242,185,104,0.58)",
+                  textShadow: "0 0 18px rgba(242,185,104,0.10)",
+                }}
+                aria-hidden="true"
               >
-                Camada final ainda selada
-              </p>
+                🔒
+              </div>
 
               <h2
-                className="text-lg md:text-xl leading-tight mb-2"
+                className="ori-type-revelation text-lg md:text-xl mb-2"
                 style={{
                   color: "var(--gold-primary)",
                   fontWeight: 600,
@@ -197,7 +203,7 @@ function Produto3() {
               </h2>
 
               <p
-                className="text-sm leading-relaxed max-w-[480px]"
+                className="ori-type-reading-soft text-sm max-w-[480px]"
                 style={{ color: "var(--text-soft)" }}
               >
                 Esta etapa abre depois que sua força foi nomeada e traduzida em
@@ -215,7 +221,8 @@ function Produto3() {
             ].map((item) => (
               <div
                 key={item}
-                className="px-3.5 py-1.5 rounded-full text-[11px]"
+                className="ori-chip px-3.5 py-1.5 text-[11px]"
+                data-state="soon"
                 style={{
                   background: "rgba(255,255,255,0.028)",
                   border: "1px solid rgba(242,185,104,0.11)",
@@ -231,7 +238,7 @@ function Produto3() {
 
           <Link
             to="/produto-1"
-            className="inline-flex justify-center px-5 py-2.5 rounded-full text-sm font-medium transition-all hover:translate-x-1"
+            className="ori-journey-action inline-flex justify-center px-5 py-2.5 rounded-full text-sm font-medium"
             style={{
               background: "var(--gold-primary)",
               color: "#090506",
@@ -243,47 +250,101 @@ function Produto3() {
         </div>
       </section>
 
-      <section className="grid md:grid-cols-3 gap-4">
-        {finalLayers.map((item) => (
+      <section
+        className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[24px] md:rounded-[30px] p-4 md:p-5"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(18,9,10,0.70), rgba(5,2,2,0.90))",
+          border: "1px solid rgba(242,185,104,0.10)",
+          boxShadow:
+            "inset 0 0 34px rgba(255,255,255,0.010), 0 0 44px rgba(242,185,104,0.024)",
+          backdropFilter: "blur(14px)",
+          WebkitBackdropFilter: "blur(14px)",
+        }}
+      >
+        <div className="ori-label-line mb-4">
+          <p
+            className="ori-type-system text-[9px] md:text-[10px]"
+            style={{ color: "var(--gold-soft)" }}
+          >
+            Preview do Código Final
+          </p>
+        </div>
+
+        <div className="grid gap-3 lg:grid-cols-[1.1fr_0.9fr]">
           <article
-            key={item.title}
-            className="relative overflow-hidden rounded-[24px] p-5"
+            className="ori-card-protagonist relative overflow-hidden rounded-[20px] p-4 md:p-5"
             style={{
               background:
-                "linear-gradient(180deg, rgba(18,9,10,0.72), rgba(5,2,2,0.90))",
-              border: "1px solid rgba(242,185,104,0.11)",
-              boxShadow:
-                "inset 0 0 34px rgba(255,255,255,0.012), 0 0 44px rgba(242,185,104,0.028)",
-              backdropFilter: "blur(14px)",
-              WebkitBackdropFilter: "blur(14px)",
+                "linear-gradient(90deg, rgba(242,185,104,0.080), rgba(255,255,255,0.012))",
+              border: "1px solid rgba(242,185,104,0.14)",
             }}
           >
             <p
-              className="uppercase tracking-[0.28em] text-[8px] mb-3"
+              className="ori-type-system mb-3"
               style={{ color: "var(--gold-soft)" }}
             >
-              Código Final
+              Aplicação final
             </p>
 
             <h2
-              className="text-xl leading-tight mb-3"
+              className="ori-type-revelation text-xl md:text-2xl mb-3"
               style={{
                 color: "var(--gold-primary)",
-                fontWeight: 600,
+                fontWeight: 620,
                 letterSpacing: "-0.045em",
+              }}
+            >
+              {finalLayers[0].title}
+            </h2>
+
+            <p
+              className="ori-type-reading-soft text-sm"
+              style={{ color: "var(--text-soft)" }}
+            >
+              {finalLayers[0].text}
+            </p>
+          </article>
+
+          <div className="grid gap-2">
+            {finalLayers.slice(1).map((item) => (
+          <article
+            key={item.title}
+                className="ori-card-teaser relative overflow-hidden rounded-[18px] p-3.5"
+            style={{
+              background:
+                    "linear-gradient(180deg, rgba(255,255,255,0.024), rgba(255,255,255,0.008))",
+                  border: "1px solid rgba(242,185,104,0.075)",
+            }}
+          >
+            <p
+                  className="ori-type-system mb-2"
+              style={{ color: "var(--gold-soft)" }}
+            >
+                  Preview selado
+            </p>
+
+            <h2
+                  className="ori-type-revelation text-base mb-2"
+              style={{
+                    color: "rgba(247,234,216,0.82)",
+                fontWeight: 600,
+                    letterSpacing: "-0.030em",
               }}
             >
               {item.title}
             </h2>
 
             <p
-              className="text-sm leading-relaxed"
-              style={{ color: "var(--text-soft)" }}
+                  className="ori-type-reading-soft text-xs"
+                  style={{ color: "rgba(247,234,216,0.54)" }}
             >
               {item.text}
             </p>
           </article>
-        ))}
+            ))}
+          </div>
+        </div>
       </section>
     </div>
   );

@@ -29,25 +29,25 @@ function Login() {
   );
 
   const getInputStyle = (active) => ({
-    background: active ? "rgba(242,185,104,0.05)" : "rgba(255,255,255,0.028)",
+    background: active ? "rgba(210,135,70,0.055)" : "rgba(255,255,255,0.028)",
     border: active
-      ? "1px solid rgba(242,185,104,0.28)"
-      : "1px solid rgba(242,185,104,0.11)",
+      ? "1px solid var(--copper-soft)"
+      : "1px solid rgba(210,135,70,0.16)",
     color: "var(--text-primary)",
     boxShadow: active
-      ? "0 0 26px rgba(242,185,104,0.07), inset 0 0 18px rgba(242,185,104,0.02)"
+      ? "0 0 26px rgba(210,135,70,0.08), inset 0 0 18px rgba(210,135,70,0.024)"
       : "inset 0 0 14px rgba(255,255,255,0.008)",
-    caretColor: "var(--gold-primary)",
+    caretColor: "var(--copper-primary)",
   });
 
   const getToggleButtonStyle = (active) => ({
-    background: active ? "rgba(242,185,104,0.12)" : "rgba(255,255,255,0.015)",
+    background: active ? "rgba(210,135,70,0.13)" : "rgba(255,255,255,0.015)",
     border: active
-      ? "1px solid rgba(242,185,104,0.16)"
-      : "1px solid rgba(242,185,104,0.06)",
-    color: active ? "var(--gold-primary)" : "rgba(255,245,235,0.60)",
+      ? "1px solid var(--copper-soft)"
+      : "1px solid rgba(210,135,70,0.10)",
+    color: active ? "var(--copper-primary)" : "rgba(255,245,235,0.60)",
     boxShadow: active
-      ? "0 0 18px rgba(242,185,104,0.08), inset 0 0 16px rgba(242,185,104,0.02)"
+      ? "0 0 18px rgba(210,135,70,0.10), inset 0 0 16px rgba(210,135,70,0.025)"
       : "inset 0 0 10px rgba(255,255,255,0.006)",
   });
 
@@ -306,7 +306,7 @@ function Login() {
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "radial-gradient(circle at 16% 34%, rgba(242,185,104,0.12), transparent 22%), radial-gradient(circle at 84% 72%, rgba(183,140,255,0.07), transparent 28%)",
+              "radial-gradient(circle at 16% 34%, rgba(210,135,70,0.13), transparent 22%), radial-gradient(circle at 84% 72%, rgba(33,6,6,0.25), transparent 32%), radial-gradient(circle at 78% 18%, rgba(183,140,255,0.06), transparent 28%)",
           }}
         />
 
@@ -324,7 +324,7 @@ function Login() {
         className="absolute left-[6%] top-[10%] w-[340px] h-[340px] rounded-full blur-3xl opacity-[0.11] pointer-events-none ori-glow-breath"
         style={{
           background:
-            "radial-gradient(circle, rgba(242,185,104,0.24), transparent 68%)",
+            "radial-gradient(circle, rgba(210,135,70,0.24), rgba(33,6,6,0.25) 42%, transparent 68%)",
         }}
       />
 
@@ -332,7 +332,7 @@ function Login() {
         className="absolute top-[-260px] right-[-180px] w-[760px] h-[760px] rounded-full blur-3xl opacity-[0.08] pointer-events-none"
         style={{
           background:
-            "radial-gradient(circle, rgba(242,185,104,0.24), transparent 68%)",
+            "radial-gradient(circle, rgba(210,135,70,0.22), rgba(33,6,6,0.25) 44%, transparent 68%)",
         }}
       />
 
@@ -349,8 +349,8 @@ function Login() {
           className="h-full w-full"
           style={{
             background:
-              "linear-gradient(180deg, transparent 0%, rgba(242,185,104,0.00) 16%, rgba(242,185,104,0.18) 50%, rgba(242,185,104,0.00) 84%, transparent 100%)",
-            boxShadow: "0 0 18px rgba(242,185,104,0.18)",
+              "linear-gradient(180deg, transparent 0%, rgba(210,135,70,0.00) 16%, rgba(210,135,70,0.18) 50%, rgba(210,135,70,0.00) 84%, transparent 100%)",
+            boxShadow: "0 0 18px rgba(210,135,70,0.18)",
           }}
         />
       </div>
@@ -420,7 +420,7 @@ function Login() {
               />
 
               <p
-                className="uppercase tracking-[0.46em] text-[10px]"
+                className="ori-type-system text-[10px]"
                 style={{ color: "var(--gold-soft)" }}
               >
                 Método ORI by Telúrica
@@ -428,7 +428,7 @@ function Login() {
             </div>
 
             <h1
-              className="text-[56px] xl:text-[68px] leading-[0.90] mb-4"
+              className="ori-type-hero text-[56px] xl:text-[68px] mb-4"
               style={{
                 color: "var(--gold-primary)",
                 fontWeight: 600,
@@ -440,7 +440,7 @@ function Login() {
             </h1>
 
             <p
-              className="text-[26px] xl:text-[30px] leading-[1.06] max-w-[430px] mb-5"
+              className="ori-type-revelation text-[26px] xl:text-[30px] max-w-[430px] mb-5"
               style={{
                 color: "rgba(255,245,235,0.92)",
                 letterSpacing: "-0.04em",
@@ -451,7 +451,7 @@ function Login() {
             </p>
 
             <p
-              className="text-base xl:text-lg leading-relaxed max-w-[410px] mb-7"
+              className="ori-type-reading-soft text-base xl:text-lg max-w-[410px] mb-7"
               style={{ color: "var(--text-soft)" }}
             >
               Acesse o ambiente em que sua leitura simbólica começa a se
@@ -462,7 +462,8 @@ function Login() {
               {chips.map((item, index) => (
                 <motion.span
                   key={item}
-                  className="px-4 py-2 rounded-full text-xs cursor-default"
+                  className="ori-chip px-4 py-2 text-xs cursor-default"
+                  data-state="revealed"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 + index * 0.08, duration: 0.45 }}
@@ -514,10 +515,10 @@ function Login() {
             "
             style={{
               background:
-                "radial-gradient(circle at top right, rgba(242,185,104,0.10), transparent 34%), linear-gradient(180deg, rgba(18,9,10,0.66), rgba(5,2,2,0.86))",
-              border: "1px solid rgba(242,185,104,0.13)",
+                "radial-gradient(circle at top right, rgba(210,135,70,0.12), transparent 34%), radial-gradient(circle at bottom left, rgba(33,6,6,0.25), transparent 42%), linear-gradient(180deg, rgba(18,9,10,0.66), rgba(5,2,2,0.86))",
+              border: "1px solid rgba(210,135,70,0.16)",
               boxShadow:
-                "0 0 70px rgba(242,185,104,0.050), inset 0 0 62px rgba(255,255,255,0.012)",
+                "0 0 70px rgba(210,135,70,0.055), inset 0 0 62px rgba(255,255,255,0.012)",
               backdropFilter: "blur(18px)",
               WebkitBackdropFilter: "blur(18px)",
             }}
@@ -526,14 +527,14 @@ function Login() {
               className="absolute inset-0 pointer-events-none opacity-[0.024]"
               style={{
                 backgroundImage:
-                  "linear-gradient(rgba(242,185,104,0.22) 1px, transparent 1px), linear-gradient(90deg, rgba(242,185,104,0.10) 1px, transparent 1px)",
+                  "linear-gradient(rgba(210,135,70,0.22) 1px, transparent 1px), linear-gradient(90deg, rgba(210,135,70,0.10) 1px, transparent 1px)",
                 backgroundSize: "64px 64px",
               }}
             />
 
             <div
               className="absolute -top-24 -right-24 w-[280px] h-[280px] rounded-full blur-3xl opacity-[0.10] pointer-events-none"
-              style={{ background: "var(--gold-primary)" }}
+              style={{ background: "var(--copper-primary)" }}
             />
 
             <div className="relative z-10">
@@ -548,14 +549,14 @@ function Login() {
                 />
 
                 <p
-                  className="uppercase tracking-[0.40em] text-[10px] mb-3"
+                  className="ori-type-system text-[10px] mb-3"
                   style={{ color: "var(--gold-soft)" }}
                 >
                   Método ORI by Telúrica
                 </p>
 
                 <h1
-                  className="text-[38px] leading-none mb-3"
+                  className="ori-type-hero text-[38px] mb-3"
                   style={{
                     color: "var(--gold-primary)",
                     fontWeight: 600,
@@ -566,7 +567,7 @@ function Login() {
                 </h1>
 
                 <p
-                  className="text-base leading-tight max-w-[290px] mb-3"
+                  className="ori-type-revelation text-base max-w-[290px] mb-3"
                   style={{
                     color: "rgba(255,245,235,0.92)",
                     letterSpacing: "-0.03em",
@@ -577,7 +578,7 @@ function Login() {
                 </p>
 
                 <p
-                  className="text-sm leading-relaxed max-w-[280px]"
+                  className="ori-type-reading-soft text-sm max-w-[280px]"
                   style={{ color: "var(--text-soft)" }}
                 >
                   Acesse o ambiente em que sua leitura simbólica começa a se
@@ -595,7 +596,7 @@ function Login() {
                 />
 
                 <p
-                  className="uppercase tracking-[0.42em] text-[10px]"
+                  className="ori-type-system text-[10px]"
                   style={{ color: "var(--gold-soft)" }}
                 >
                   Portal de Acesso
@@ -603,7 +604,7 @@ function Login() {
               </div>
 
               <h2
-                className="text-3xl md:text-[40px] leading-none mb-3"
+                className="ori-type-revelation text-3xl md:text-[40px] mb-3"
                 style={{
                   color: "var(--gold-primary)",
                   fontWeight: 600,
@@ -615,7 +616,7 @@ function Login() {
               </h2>
 
               <p
-                className="text-sm leading-relaxed mb-5"
+                className="ori-type-reading-soft text-sm mb-5"
                 style={{ color: "var(--text-soft)" }}
               >
                 {isCadastro
@@ -627,7 +628,7 @@ function Login() {
                 className="grid grid-cols-2 gap-2 p-1.5 rounded-full mb-5"
                 style={{
                   background: "rgba(255,255,255,0.024)",
-                  border: "1px solid rgba(242,185,104,0.08)",
+                  border: "1px solid rgba(210,135,70,0.12)",
                 }}
               >
                 <motion.button
@@ -639,8 +640,8 @@ function Login() {
                   whileHover={{
                     y: -1,
                     scale: 1.01,
-                    backgroundColor: "rgba(242,185,104,0.085)",
-                    boxShadow: "0 0 22px rgba(242,185,104,0.10)",
+                    backgroundColor: "rgba(210,135,70,0.10)",
+                    boxShadow: "0 0 22px rgba(210,135,70,0.12)",
                   }}
                   whileTap={{ scale: 0.992, y: 0 }}
                   transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
@@ -659,8 +660,8 @@ function Login() {
                   whileHover={{
                     y: -1,
                     scale: 1.01,
-                    backgroundColor: "rgba(242,185,104,0.085)",
-                    boxShadow: "0 0 22px rgba(242,185,104,0.10)",
+                    backgroundColor: "rgba(210,135,70,0.10)",
+                    boxShadow: "0 0 22px rgba(210,135,70,0.12)",
                   }}
                   whileTap={{ scale: 0.992, y: 0 }}
                   transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
@@ -680,7 +681,7 @@ function Login() {
                       transition={{ duration: 0.3 }}
                     >
                       <label
-                        className="block text-[10px] uppercase tracking-[0.24em] mb-2"
+                        className="ori-type-system block text-[10px] mb-2"
                         style={{ color: "var(--gold-soft)" }}
                       >
                         Nome
@@ -700,7 +701,7 @@ function Login() {
 
                   <div>
                     <label
-                      className="block text-[10px] uppercase tracking-[0.24em] mb-2"
+                      className="ori-type-system block text-[10px] mb-2"
                       style={{ color: "var(--gold-soft)" }}
                     >
                       E-mail
@@ -719,7 +720,7 @@ function Login() {
 
                   <div>
                     <label
-                      className="block text-[10px] uppercase tracking-[0.24em] mb-2"
+                      className="ori-type-system block text-[10px] mb-2"
                       style={{ color: "var(--gold-soft)" }}
                     >
                       Senha
@@ -778,7 +779,7 @@ function Login() {
                             y: -1,
                             scale: 1.008,
                             boxShadow:
-                              "0 0 44px rgba(242,185,104,0.22), inset 0 0 18px rgba(255,255,255,0.18)",
+                              "0 0 44px rgba(210,135,70,0.24), inset 0 0 18px rgba(255,255,255,0.18)",
                             filter: "brightness(1.03)",
                           }
                     }
@@ -787,13 +788,13 @@ function Login() {
                     className="relative mt-2 px-8 py-4 rounded-full transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed overflow-hidden"
                     style={{
                       background: formReady
-                        ? "linear-gradient(90deg, rgba(242,185,104,0.96), rgba(246,192,110,1))"
-                        : "linear-gradient(90deg, rgba(242,185,104,0.74), rgba(242,185,104,0.92))",
+                        ? "linear-gradient(90deg, rgba(210,135,70,0.96), rgba(242,185,104,0.92))"
+                        : "linear-gradient(90deg, rgba(210,135,70,0.72), rgba(210,135,70,0.90))",
                       color: "#090506",
                       fontWeight: 600,
                       boxShadow: formReady
-                        ? "0 0 36px rgba(242,185,104,0.16), inset 0 0 18px rgba(255,255,255,0.18)"
-                        : "0 0 22px rgba(242,185,104,0.10), inset 0 0 18px rgba(255,255,255,0.14)",
+                        ? "0 0 36px rgba(210,135,70,0.18), inset 0 0 18px rgba(255,255,255,0.18)"
+                        : "0 0 22px rgba(210,135,70,0.12), inset 0 0 18px rgba(255,255,255,0.14)",
                     }}
                   >
                     {loading
@@ -817,7 +818,7 @@ function Login() {
                   }}
                 >
                   <p
-                    className="text-xs leading-relaxed"
+                    className="ori-type-reading-soft text-xs"
                     style={{ color: "var(--text-muted)" }}
                   >
                     {isCadastro

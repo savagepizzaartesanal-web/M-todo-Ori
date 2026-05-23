@@ -13,7 +13,9 @@ function NextStepCard() {
         xl:p-10
         mt-10
         mb-8
+        ori-main-frame
         cinematic-card
+        ori-hero-panel
         fade-up
         min-h-[390px]
         flex
@@ -114,7 +116,7 @@ function NextStepCard() {
           />
 
           <p
-            className="uppercase tracking-[0.52em] text-[10px] md:text-xs"
+            className="ori-type-system text-[10px] md:text-xs"
             style={{ color: "var(--gold-soft)" }}
           >
             Próxima Camada
@@ -122,7 +124,7 @@ function NextStepCard() {
         </div>
 
         <h2
-          className="text-4xl md:text-5xl xl:text-[56px] leading-[0.94] mb-3"
+          className="ori-type-hero text-4xl md:text-5xl xl:text-[56px] mb-3"
           style={{
             color: "var(--gold-primary)",
             fontWeight: 600,
@@ -134,7 +136,7 @@ function NextStepCard() {
         </h2>
 
         <p
-          className="text-xl md:text-2xl leading-tight mb-5"
+          className="ori-type-revelation text-xl md:text-2xl mb-5"
           style={{
             color: "var(--text-primary)",
             fontWeight: 400,
@@ -146,7 +148,7 @@ function NextStepCard() {
         </p>
 
         <p
-          className="text-sm md:text-base leading-relaxed max-w-[540px] mb-6"
+          className="ori-type-reading-soft text-sm md:text-base max-w-[540px] mb-6"
           style={{
             color: "var(--text-soft)",
             textShadow: "0 0 28px rgba(0,0,0,0.45)",
@@ -162,7 +164,8 @@ function NextStepCard() {
             (item) => (
               <div
                 key={item}
-                className="px-4 py-2 rounded-full text-xs"
+                className="ori-chip px-4 py-2 text-xs"
+                data-state="next"
                 style={{
                   background: "rgba(255,255,255,0.028)",
                   border: "1px solid rgba(242,185,104,0.11)",
@@ -181,6 +184,7 @@ function NextStepCard() {
           <Link
             to="/produto-2"
             className="
+              ori-journey-action
               inline-flex
               justify-center
               px-6
@@ -205,7 +209,7 @@ function NextStepCard() {
           </Link>
 
           <p
-            className="text-xs md:text-sm leading-relaxed max-w-[340px]"
+            className="ori-type-reading-soft text-xs md:text-sm max-w-[340px]"
             style={{ color: "rgba(255,245,235,0.58)" }}
           >
             A liberação segue a sua jornada no Portal ORI.

@@ -1,7 +1,7 @@
 function StatusCard({ status, progresso, onIniciar }) {
   return (
     <div
-      className="relative overflow-hidden rounded-[40px] p-10 mb-12"
+      className="ori-card-protagonist relative overflow-hidden rounded-[40px] p-10 mb-12"
       style={{
         background:
           "linear-gradient(180deg, rgba(18,9,10,0.98), rgba(7,3,4,1))",
@@ -22,21 +22,21 @@ function StatusCard({ status, progresso, onIniciar }) {
       <div className="flex items-start justify-between gap-10">
         <div className="max-w-2xl">
           <p
-            className="uppercase tracking-[0.4em] text-xs mb-5"
+            className="ori-type-system ori-label-lg mb-5"
             style={{ color: "var(--gold-soft)" }}
           >
             Ritual de Diagnóstico
           </p>
 
           <h2
-            className="text-5xl leading-none mb-6"
+            className="ori-type-revelation text-5xl mb-6"
             style={{ color: "var(--gold-primary)" }}
           >
             {status}
           </h2>
 
           <p
-            className="text-xl leading-relaxed"
+            className="ori-type-reading-soft text-xl"
             style={{ color: "var(--text-soft)" }}
           >
             Sua leitura arquetípica está sendo construída a partir da interseção
@@ -71,7 +71,7 @@ function StatusCard({ status, progresso, onIniciar }) {
       </div>
 
       <div
-        className="w-full h-3 rounded-full overflow-hidden mt-12"
+        className="ori-progress w-full h-3 mt-12"
         style={{
           background: "#1a0d0e",
         }}
@@ -88,7 +88,7 @@ function StatusCard({ status, progresso, onIniciar }) {
 
       <button
         onClick={onIniciar}
-        className="mt-10 px-8 py-4 rounded-full font-medium transition-all hover:scale-[1.02]"
+        className="ori-journey-action mt-10 px-8 py-4 rounded-full font-medium"
         style={{
           background: "var(--gold-primary)",
           color: "#090506",

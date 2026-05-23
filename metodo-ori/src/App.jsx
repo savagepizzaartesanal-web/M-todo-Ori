@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
 import DashboardLayout from "./layouts/DashboardLayout";
 
@@ -10,6 +11,7 @@ import EspelhoOri from "./pages/EspelhoOri";
 import MetodoOri from "./pages/MetodoOri";
 
 import Login from "./pages/Login";
+import OnboardingOri from "./pages/OnboardingOri";
 import PortalCliente from "./pages/PortalCliente";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminClientes from "./pages/AdminClientes";
@@ -18,11 +20,31 @@ import AdminClienteDetalhe from "./pages/AdminClienteDetalhe";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [pathname]);
+
+  return null;
+}
+
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/entrar" element={<Login />} />
+
+        <Route
+          path="/entrada-ori"
+          element={
+            <ProtectedRoute>
+              <OnboardingOri />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/portal"

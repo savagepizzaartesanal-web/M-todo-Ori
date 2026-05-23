@@ -4,7 +4,7 @@ function QuizHero({
 }) {
   return (
     <section
-      className="relative overflow-hidden rounded-[28px] md:rounded-[36px] p-5 md:p-6 xl:p-7 mb-5 cinematic-card min-h-[clamp(400px,calc(100vh-160px),500px)] flex items-center"
+      className="ori-main-frame ori-hero-panel relative overflow-hidden rounded-[28px] md:rounded-[36px] p-5 md:p-6 xl:p-7 mb-5 cinematic-card min-h-[clamp(400px,calc(100vh-160px),500px)] flex items-center"
       style={{
         background:
           "linear-gradient(135deg, rgba(18,9,10,0.88), rgba(5,2,2,0.96))",
@@ -101,15 +101,15 @@ function QuizHero({
           />
 
           <p
-            className="uppercase tracking-[0.46em] text-[9px] md:text-[10px]"
+            className="ori-type-system"
             style={{ color: "var(--gold-soft)" }}
           >
-            Produto 1 · Nomeação
+            Nomeação
           </p>
         </div>
 
         <h1
-          className="text-4xl md:text-5xl xl:text-[48px] leading-[0.92] mb-3 max-w-[560px]"
+          className="ori-type-hero text-4xl md:text-5xl xl:text-[48px] mb-3 max-w-[560px]"
           style={{
             color: "var(--gold-primary)",
             fontWeight: 600,
@@ -133,7 +133,7 @@ function QuizHero({
         </h1>
 
         <p
-          className="text-base md:text-[17px] leading-relaxed max-w-[560px] mb-4"
+          className="ori-type-reading text-base md:text-[17px] max-w-[560px] mb-4"
           style={{
             color: "var(--text-primary)",
           }}
@@ -169,7 +169,7 @@ function QuizHero({
             }}
           >
             <p
-              className="text-sm leading-relaxed mb-3"
+              className="ori-type-reading-soft text-sm mb-3"
               style={{
                 color: "var(--text-soft)",
               }}
@@ -181,7 +181,7 @@ function QuizHero({
             </p>
 
             <p
-              className="text-sm leading-relaxed"
+              className="ori-type-reading-soft text-sm"
               style={{
                 color: "rgba(255,245,235,0.68)",
               }}
@@ -211,7 +211,8 @@ function QuizHero({
           ].map((item) => (
             <div
               key={item}
-              className="px-3 py-1.5 rounded-full text-[10px]"
+              className="ori-chip px-3 py-1.5 text-[10px]"
+              data-state="revealed"
               style={{
                 background: "rgba(255,255,255,0.025)",
                 border: "1px solid rgba(242,185,104,0.10)",
@@ -228,7 +229,7 @@ function QuizHero({
           <button
             type="button"
             onClick={onPrimaryAction}
-            className="px-7 py-3 rounded-full text-sm md:text-[15px] transition-all hover:scale-[1.03]"
+            className="ori-journey-action px-7 py-3 rounded-full text-sm md:text-[15px]"
             style={{
               background: "var(--gold-primary)",
               color: "#090506",

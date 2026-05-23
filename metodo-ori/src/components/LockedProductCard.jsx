@@ -9,7 +9,8 @@ function LockedProductCard({
 }) {
   return (
     <section
-      className="relative overflow-hidden rounded-[44px] p-12"
+      className="ori-card-teaser relative overflow-hidden rounded-[44px] p-12"
+      data-state="sealed"
       style={{
         background:
           "radial-gradient(circle at top right, rgba(242,185,104,0.08), transparent 35%), linear-gradient(180deg, rgba(18,9,10,0.98), rgba(5,2,2,1))",
@@ -18,32 +19,32 @@ function LockedProductCard({
       }}
     >
       <p
-        className="uppercase tracking-[0.45em] text-xs mb-5"
+        className="ori-type-system text-xs mb-5"
         style={{ color: "var(--gold-soft)" }}
       >
         Acesso Bloqueado
       </p>
 
       <h1
-        className="text-5xl font-semibold mb-5"
+        className="ori-type-hero text-5xl font-semibold mb-5"
         style={{ color: "var(--gold-primary)" }}
       >
         {titulo}
       </h1>
 
-      <p className="text-2xl mb-8" style={{ color: "var(--text-primary)" }}>
+      <p className="ori-type-revelation text-2xl mb-8" style={{ color: "var(--text-primary)" }}>
         {subtitulo}
       </p>
 
       <p
-        className="text-xl leading-relaxed max-w-4xl mb-10"
+        className="ori-type-reading-soft text-xl max-w-4xl mb-10"
         style={{ color: "var(--text-soft)" }}
       >
         {descricao}
       </p>
 
       <div
-        className="p-6 rounded-[28px] mb-10"
+        className="ori-card-secondary p-6 rounded-[28px] mb-10"
         style={{
           background: "rgba(242,185,104,0.05)",
           border: "1px solid rgba(242,185,104,0.12)",
@@ -54,7 +55,7 @@ function LockedProductCard({
 
       <Link
         to={link}
-        className="inline-flex px-8 py-4 rounded-full font-medium transition-all hover:scale-[1.03]"
+        className="ori-journey-action inline-flex px-8 py-4 rounded-full font-medium"
         style={{
           background: "var(--gold-primary)",
           color: "#090506",

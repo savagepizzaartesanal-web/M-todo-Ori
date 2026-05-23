@@ -23,42 +23,19 @@ function SectionTitle({ children, variant = "gold" }) {
 
   return (
     <div className="mb-3 px-2">
-      <div className="flex items-center gap-3">
-        <div
-          className="w-6 h-px shrink-0"
-          style={{
-            background: isGreen
-              ? "linear-gradient(90deg, rgba(120,255,160,0.62), transparent)"
-              : isPurple
-                ? "linear-gradient(90deg, rgba(183,140,255,0.68), transparent)"
-                : "linear-gradient(90deg, rgba(242,185,104,0.72), transparent)",
-            boxShadow: isGreen
-              ? "0 0 12px rgba(120,255,160,0.14)"
-              : isPurple
-                ? "0 0 12px rgba(183,140,255,0.16)"
-                : "0 0 12px rgba(242,185,104,0.16)",
-          }}
-        />
-
-        <p
-          className="uppercase text-[9px]"
-          style={{
-            color: isGreen
-              ? "rgba(120,255,160,0.70)"
-              : isPurple
-                ? "rgba(183,140,255,0.78)"
-                : "rgba(242,185,104,0.72)",
-            letterSpacing: "0.28em",
-            textShadow: isGreen
-              ? "0 0 16px rgba(120,255,160,0.10)"
-              : isPurple
-                ? "0 0 16px rgba(183,140,255,0.10)"
-                : "0 0 16px rgba(242,185,104,0.10)",
-          }}
-        >
-          {children}
-        </p>
-      </div>
+      <p
+        className="ori-type-system"
+        style={{
+          color: isGreen
+            ? "rgba(120,255,160,0.58)"
+            : isPurple
+              ? "var(--lavender-muted)"
+              : "var(--copper-soft)",
+          letterSpacing: "0.35em",
+        }}
+      >
+        {children}
+      </p>
     </div>
   );
 }
@@ -66,6 +43,7 @@ function SectionTitle({ children, variant = "gold" }) {
 function Sidebar() {
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     async function checkAdmin() {
@@ -73,12 +51,12 @@ function Sidebar() {
         data: { user },
       } = await supabase.auth.getUser();
 
-      if (!user?.email) return;
+      if (!user?.id) return;
 
       const { data, error } = await supabase
         .from("clientes")
         .select("admin")
-        .eq("email", user.email)
+        .eq("user_id", user.id)
         .maybeSingle();
 
       if (error) {
@@ -94,46 +72,51 @@ function Sidebar() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
+    setMobileOpen(false);
     navigate("/entrar");
   };
 
   const renderLink = ([label, path], variant = "gold") => {
     const isPurple = variant === "purple";
+    const activeColor = isPurple ? "var(--lavender-muted)" : "var(--copper-primary)";
+    const activeBorder = isPurple ? "rgba(107,90,110,0.34)" : "rgba(210,135,70,0.28)";
+    const activeBackground = isPurple
+      ? "linear-gradient(90deg, rgba(107,90,110,0.16), rgba(107,90,110,0.045) 48%, transparent 100%)"
+      : "linear-gradient(90deg, rgba(210,135,70,0.12), rgba(210,135,70,0.035) 48%, transparent 100%)";
 
     return (
       <NavLink
         key={path}
         to={path}
+        onClick={() => setMobileOpen(false)}
         className={({ isActive }) =>
-          `group relative overflow-hidden rounded-full px-4 py-3 text-[13px] transition-all duration-500 ${
-            isActive ? "scale-[1.01]" : "hover:scale-[1.01]"
+          `ori-sidebar-link ori-type-system group relative overflow-hidden rounded-[14px] px-3.5 py-2.5 text-[12.5px] normal-case transition-all duration-500 ${
+            isActive ? "ori-state-active ori-state-surface" : "hover:translate-x-0.5"
           }`
         }
         style={({ isActive }) => ({
           transformOrigin: "center",
+          fontSize: "12.5px",
+          fontWeight: 500,
+          lineHeight: 1.22,
+          textTransform: "none",
           color: isActive
-            ? isPurple
-              ? "#d9bdff"
-              : "var(--gold-primary)"
+            ? activeColor
             : isPurple
-              ? "rgba(255,255,255,0.74)"
-              : "var(--text-soft)",
+              ? "rgba(255,255,255,0.64)"
+              : "rgba(215,194,170,0.76)",
           background: isActive
-            ? isPurple
-              ? "linear-gradient(90deg, rgba(183,140,255,0.13), rgba(255,255,255,0.025))"
-              : "linear-gradient(90deg, rgba(242,185,104,0.12), rgba(255,255,255,0.025))"
-            : "rgba(255,255,255,0.018)",
-          border: isActive
-            ? isPurple
-              ? "1px solid rgba(183,140,255,0.18)"
-              : "1px solid rgba(242,185,104,0.18)"
-            : "1px solid rgba(255,255,255,0.035)",
-          letterSpacing: "0.045em",
+            ? activeBackground
+            : "linear-gradient(90deg, rgba(255,255,255,0.018), rgba(255,255,255,0.006))",
+          border: isActive ? `1px solid ${activeBorder}` : "1px solid rgba(255,255,255,0.026)",
+          letterSpacing: "0.035em",
           boxShadow: isActive
             ? isPurple
-              ? "0 0 42px rgba(183,140,255,0.08), inset 0 0 28px rgba(183,140,255,0.035)"
-              : "0 0 42px rgba(242,185,104,0.08), inset 0 0 28px rgba(242,185,104,0.035)"
-            : "inset 0 0 24px rgba(255,255,255,0.012)",
+              ? "0 0 24px rgba(107,90,110,0.055), inset 0 0 18px rgba(107,90,110,0.020)"
+              : "0 0 24px rgba(210,135,70,0.045), inset 0 0 18px rgba(210,135,70,0.018)"
+            : "inset 0 0 14px rgba(255,255,255,0.006)",
+          backdropFilter: "blur(14px)",
+          WebkitBackdropFilter: "blur(14px)",
         })}
       >
         {({ isActive }) => (
@@ -142,28 +125,28 @@ function Sidebar() {
               className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
               style={{
                 background: isPurple
-                  ? "linear-gradient(90deg, rgba(183,140,255,0.09), transparent)"
-                  : "linear-gradient(90deg, rgba(242,185,104,0.09), transparent)",
+                  ? "linear-gradient(90deg, rgba(107,90,110,0.10), transparent)"
+                  : "linear-gradient(90deg, rgba(210,135,70,0.08), transparent)",
               }}
             />
 
             <span
-              className="absolute left-3.5 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full transition-all duration-500"
+              className="absolute left-0 top-2 bottom-2 w-px rounded-full transition-all duration-500"
               style={{
                 background: isActive
-                  ? isPurple
-                    ? "#d9bdff"
-                    : "var(--gold-primary)"
+                  ? `linear-gradient(180deg, transparent, ${activeColor}, transparent)`
                   : "transparent",
                 boxShadow: isActive
                   ? isPurple
-                    ? "0 0 16px rgba(183,140,255,0.7)"
-                    : "0 0 16px rgba(242,185,104,0.7)"
+                    ? "0 0 14px rgba(107,90,110,0.58)"
+                    : "0 0 14px rgba(210,135,70,0.55)"
                   : "none",
               }}
             />
 
-            <span className="relative z-10 pl-2.5">{label}</span>
+            <span className="relative z-10 pl-2 tracking-[0.035em] normal-case">
+              {label}
+            </span>
           </>
         )}
       </NavLink>
@@ -171,7 +154,151 @@ function Sidebar() {
   };
 
   return (
-    <aside
+    <>
+      <div className="fixed left-3 right-3 top-3 z-50 flex items-center justify-between gap-3 lg:hidden">
+        <button
+          type="button"
+          onClick={() => setMobileOpen(true)}
+          className="ori-button-secondary inline-flex min-h-11 items-center gap-3 rounded-full px-4 py-2 text-sm"
+          style={{
+            background: "rgba(5,2,2,0.72)",
+            border: "1px solid rgba(242,185,104,0.16)",
+            color: "rgba(247,234,216,0.82)",
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
+            boxShadow: "0 10px 34px rgba(0,0,0,0.28)",
+          }}
+          aria-expanded={mobileOpen}
+          aria-controls="ori-mobile-menu"
+        >
+          <span
+            className="h-px w-5"
+            style={{
+              background:
+                "linear-gradient(90deg, var(--gold-primary), transparent)",
+            }}
+          />
+          Menu ORI
+        </button>
+
+        <span
+          className="ori-type-system rounded-full px-3 py-2 text-[9px]"
+          style={{
+            background: "rgba(5,2,2,0.58)",
+            border: "1px solid rgba(242,185,104,0.10)",
+            color: "rgba(242,185,104,0.72)",
+            backdropFilter: "blur(14px)",
+            WebkitBackdropFilter: "blur(14px)",
+          }}
+        >
+          Portal
+        </span>
+      </div>
+
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-[60] lg:hidden"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menu ORI"
+        >
+          <button
+            type="button"
+            className="absolute inset-0 h-full w-full bg-black/62"
+            onClick={() => setMobileOpen(false)}
+            aria-label="Fechar menu"
+          />
+
+          <div
+            id="ori-mobile-menu"
+            className="absolute bottom-0 left-0 right-0 max-h-[86svh] overflow-hidden rounded-t-[28px] border px-5 pb-5 pt-4"
+            style={{
+              backgroundColor: "rgba(5,2,2,0.94)",
+              borderColor: "rgba(242,185,104,0.14)",
+              boxShadow:
+                "0 -18px 70px rgba(0,0,0,0.54), inset 0 1px 0 rgba(255,255,255,0.04)",
+              backdropFilter: "blur(22px)",
+              WebkitBackdropFilter: "blur(22px)",
+            }}
+          >
+            <div className="relative z-10">
+              <div className="mb-4 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <img
+                    src="/images/logo/logo-ori.png"
+                    alt="Método ORI"
+                    className="h-12 w-12 object-contain"
+                  />
+                  <div>
+                    <p
+                      className="ori-type-system text-[9px]"
+                      style={{ color: "var(--gold-soft)" }}
+                    >
+                      Jornada ORI
+                    </p>
+                    <p
+                      className="ori-type-reading-soft text-sm"
+                      style={{ color: "rgba(255,245,235,0.70)" }}
+                    >
+                      Escolha sua próxima camada.
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setMobileOpen(false)}
+                  className="ori-button-secondary grid h-10 w-10 place-items-center rounded-full text-lg"
+                  style={{
+                    background: "rgba(255,255,255,0.026)",
+                    border: "1px solid rgba(242,185,104,0.12)",
+                    color: "rgba(247,234,216,0.78)",
+                  }}
+                  aria-label="Fechar menu"
+                >
+                  ×
+                </button>
+              </div>
+
+              <div className="ori-premium-scroll max-h-[calc(86svh-112px)] overflow-y-auto pr-1">
+                <div className="mb-5">
+                  <SectionTitle>Jornada ORI</SectionTitle>
+                  <nav className="grid gap-2">
+                    {mainLinks.map((link) => renderLink(link, "gold"))}
+                  </nav>
+                </div>
+
+                {isAdmin && (
+                  <div className="mb-5">
+                    <SectionTitle variant="purple">
+                      Painel Administrativo
+                    </SectionTitle>
+                    <nav className="grid gap-2">
+                      {adminLinks.map((link) => renderLink(link, "purple"))}
+                    </nav>
+                  </div>
+                )}
+
+                <button
+                  onClick={handleLogout}
+                  className="ori-button-secondary ori-type-system w-full rounded-[14px] px-3.5 py-3 text-[12px]"
+                  style={{
+                    background: "rgba(255,255,255,0.020)",
+                    border: "1px solid rgba(120,255,160,0.10)",
+                    color: "rgba(120,255,160,0.74)",
+                    fontWeight: 500,
+                    letterSpacing: "0.035em",
+                  }}
+                >
+                  Sair do portal
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <aside
       className="
         hidden
         lg:flex
@@ -309,7 +436,7 @@ function Sidebar() {
           <div className="mb-5 pl-4 pr-1">
             <SectionTitle>Jornada ORI</SectionTitle>
 
-            <nav className="flex flex-col gap-2">
+            <nav className="flex flex-col gap-1.5">
               {mainLinks.map((link) => renderLink(link, "gold"))}
             </nav>
           </div>
@@ -328,7 +455,7 @@ function Sidebar() {
                 Painel Administrativo
               </SectionTitle>
 
-              <nav className="flex flex-col gap-2">
+              <nav className="flex flex-col gap-1.5">
                 {adminLinks.map((link) => renderLink(link, "purple"))}
               </nav>
             </div>
@@ -346,7 +473,7 @@ function Sidebar() {
             <SectionTitle variant="green">Sessão ORI</SectionTitle>
 
             <div
-              className="relative overflow-hidden rounded-[22px] p-3.5 mb-3"
+              className="ori-card-secondary relative overflow-hidden rounded-[22px] p-3.5 mb-3"
               style={{
                 background:
                   "linear-gradient(90deg, rgba(120,255,160,0.045), rgba(255,255,255,0.016))",
@@ -369,14 +496,14 @@ function Sidebar() {
               <div className="relative z-10 flex items-center justify-between gap-3">
                 <div>
                   <p
-                    className="uppercase tracking-[0.28em] text-[8px] mb-1"
+                    className="ori-type-system mb-1"
                     style={{ color: "rgba(120,255,160,0.70)" }}
                   >
                     Status
                   </p>
 
                   <p
-                    className="text-sm"
+                    className="ori-type-reading-soft text-sm"
                     style={{ color: "rgba(255,245,235,0.72)" }}
                   >
                     Portal conectado
@@ -395,13 +522,19 @@ function Sidebar() {
 
             <button
               onClick={handleLogout}
-              className="group relative overflow-hidden w-full rounded-full px-4 py-2.5 text-[11px] transition-all duration-500 hover:scale-[1.01]"
+              className="ori-button-secondary ori-type-system group relative overflow-hidden w-full rounded-[14px] px-3.5 py-2.5 text-[12px] transition-all duration-500 hover:translate-x-0.5"
               style={{
                 transformOrigin: "center",
-                background: "rgba(255,255,255,0.018)",
-                border: "1px solid rgba(242,185,104,0.075)",
-                color: "rgba(255,245,235,0.66)",
-                letterSpacing: "0.12em",
+                background:
+                  "linear-gradient(90deg, rgba(255,255,255,0.018), rgba(255,255,255,0.006))",
+                border: "1px solid rgba(255,255,255,0.026)",
+                color: "rgba(215,194,170,0.68)",
+                fontSize: "12px",
+                fontWeight: 500,
+                letterSpacing: "0.035em",
+                lineHeight: 1.22,
+                textTransform: "none",
+                boxShadow: "inset 0 0 14px rgba(255,255,255,0.006)",
               }}
             >
               <span
@@ -412,12 +545,13 @@ function Sidebar() {
                 }}
               />
 
-              <span className="relative z-10 uppercase">Sair do Portal</span>
+              <span className="relative z-10 normal-case">Sair do Portal</span>
             </button>
           </div>
         </div>
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }
 

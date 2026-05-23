@@ -7,11 +7,7 @@ function AdminRoute({ children }) {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
 
-  useEffect(() => {
-    checkAdmin();
-  }, []);
-
-  const checkAdmin = async () => {
+  async function checkAdmin() {
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -24,7 +20,7 @@ function AdminRoute({ children }) {
     const { data, error } = await supabase
       .from("clientes")
       .select("admin")
-      .eq("email", user.email)
+      .eq("user_id", user.id)
       .maybeSingle();
 
     if (error) {
@@ -33,7 +29,11 @@ function AdminRoute({ children }) {
 
     setIsAdmin(Boolean(data?.admin));
     setLoading(false);
-  };
+  }
+
+  useEffect(() => {
+    Promise.resolve().then(checkAdmin);
+  }, []);
 
   if (loading) {
     return (

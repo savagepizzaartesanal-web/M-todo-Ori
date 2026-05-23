@@ -4,11 +4,6 @@ function ResultHero({ nome, principal, secundario, frase, imagem }) {
   const fraseFinal =
     frase || "Sua imagem revela aquilo que sua essência já sabe.";
 
-  const formula =
-    principal && secundario
-      ? `${principal} + ${secundario}`
-      : principal || nome;
-
   const fraseFormatada =
     fraseFinal ===
     "Você segue aquilo que sente antes mesmo de conseguir explicar."
@@ -26,6 +21,7 @@ function ResultHero({ nome, principal, secundario, frase, imagem }) {
   return (
     <section
       className="
+        ori-main-frame
         cinematic-card
         relative
         overflow-hidden
@@ -137,19 +133,11 @@ function ResultHero({ nome, principal, secundario, frase, imagem }) {
         "
       >
         <div
-          className="reveal-step inline-flex w-fit px-4 py-2 rounded-full mb-5"
-          style={{
-            background: "rgba(255,255,255,0.022)",
-            border: "1px solid rgba(242,185,104,0.10)",
-            boxShadow:
-              "inset 0 0 14px rgba(242,185,104,0.014), 0 0 14px rgba(242,185,104,0.02)",
-            backdropFilter: "blur(8px)",
-            WebkitBackdropFilter: "blur(8px)",
-            "--delay": "0.1s",
-          }}
+          className="ori-label-line reveal-step mb-5"
+          style={{ "--delay": "0.1s" }}
         >
           <p
-            className="uppercase tracking-[0.34em] text-[9px]"
+            className="ori-type-system text-[9px]"
             style={{
               color: "var(--gold-soft)",
               textShadow: "0 0 14px rgba(242,185,104,0.10)",
@@ -162,6 +150,7 @@ function ResultHero({ nome, principal, secundario, frase, imagem }) {
         <h1
           className="
             reveal-step
+            ori-type-hero
             text-[42px]
             md:text-[54px]
             xl:text-[64px]
@@ -182,6 +171,7 @@ function ResultHero({ nome, principal, secundario, frase, imagem }) {
         <p
           className="
             reveal-step
+            ori-type-reading
             text-lg
             md:text-[25px]
             leading-[1.28]
@@ -199,11 +189,11 @@ function ResultHero({ nome, principal, secundario, frase, imagem }) {
         </p>
 
         <div
-          className="reveal-step grid sm:grid-cols-3 gap-2.5 mb-4"
+          className="reveal-step grid sm:grid-cols-2 gap-2.5 mb-4 max-w-lg"
           style={{ "--delay": "0.68s" }}
         >
           <div
-            className="px-3.5 py-3 rounded-[18px]"
+            className="ori-card-secondary px-3.5 py-3 rounded-[18px]"
             style={{
               background: "rgba(255,255,255,0.020)",
               border: "1px solid rgba(242,185,104,0.09)",
@@ -215,7 +205,7 @@ function ResultHero({ nome, principal, secundario, frase, imagem }) {
             }}
           >
             <span
-              className="block text-[8px] uppercase tracking-[0.22em] mb-1"
+              className="ori-type-system block text-[8px] mb-1"
               style={{ color: "rgba(242,185,104,0.78)" }}
             >
               Arquétipo principal
@@ -225,7 +215,7 @@ function ResultHero({ nome, principal, secundario, frase, imagem }) {
           </div>
 
           <div
-            className="px-3.5 py-3 rounded-[18px]"
+            className="ori-card-secondary px-3.5 py-3 rounded-[18px]"
             style={{
               background: "rgba(255,255,255,0.020)",
               border: "1px solid rgba(242,185,104,0.09)",
@@ -237,7 +227,7 @@ function ResultHero({ nome, principal, secundario, frase, imagem }) {
             }}
           >
             <span
-              className="block text-[8px] uppercase tracking-[0.22em] mb-1"
+              className="ori-type-system block text-[8px] mb-1"
               style={{ color: "rgba(242,185,104,0.78)" }}
             >
               Arquétipo secundário
@@ -248,32 +238,12 @@ function ResultHero({ nome, principal, secundario, frase, imagem }) {
             </p>
           </div>
 
-          <div
-            className="px-3.5 py-3 rounded-[18px]"
-            style={{
-              background: "rgba(242,185,104,0.045)",
-              border: "1px solid rgba(242,185,104,0.12)",
-              color: "rgba(255,245,235,0.80)",
-              boxShadow:
-                "inset 0 0 14px rgba(242,185,104,0.018), 0 0 14px rgba(242,185,104,0.014)",
-              backdropFilter: "blur(10px)",
-              WebkitBackdropFilter: "blur(10px)",
-            }}
-          >
-            <span
-              className="block text-[8px] uppercase tracking-[0.22em] mb-1"
-              style={{ color: "rgba(242,185,104,0.78)" }}
-            >
-              Fórmula simbólica
-            </span>
-
-            <p className="text-[15px] md:text-base leading-snug">{formula}</p>
-          </div>
         </div>
 
         <div
           className="
             reveal-step
+            ori-card-secondary
             inline-flex
             items-start
             gap-3
@@ -302,7 +272,7 @@ function ResultHero({ nome, principal, secundario, frase, imagem }) {
           />
 
           <p
-            className="text-sm md:text-[15px] leading-relaxed"
+            className="ori-type-reading-soft text-sm md:text-[15px]"
             style={{ color: "rgba(255,245,235,0.72)" }}
           >
             Esta é sua base arquetípica inicial: a força que sustenta sua
