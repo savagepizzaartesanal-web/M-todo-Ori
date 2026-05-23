@@ -958,7 +958,7 @@ function LayerReveal({
       initial={reduceMotion ? false : "hidden"}
       animate={reduceMotion ? undefined : "visible"}
       exit={reduceMotion ? undefined : "exit"}
-      className="relative overflow-hidden rounded-[24px] md:rounded-[38px] p-4 md:p-7 mb-5 md:mb-6 min-h-[430px] md:min-h-[520px]"
+      className="relative mb-4 min-h-[360px] overflow-hidden rounded-[22px] p-3.5 md:mb-6 md:min-h-[520px] md:rounded-[38px] md:p-7"
       style={{
         background: `${theme.aura}, linear-gradient(135deg, rgba(18,9,10,0.72), rgba(5,2,2,0.92))`,
         border: "1px solid rgba(242,185,104,0.10)",
@@ -992,13 +992,13 @@ function LayerReveal({
         }}
       />
 
-      <div className="relative z-10 min-h-[380px] md:min-h-[466px] flex items-center justify-center">
+      <div className="relative z-10 flex min-h-[324px] items-center justify-center md:min-h-[466px]">
         <div className="w-full max-w-3xl mx-auto text-center">
           <motion.div
             initial={reduceMotion ? false : { scale: 0.94, opacity: 0 }}
             animate={reduceMotion ? undefined : { scale: 1, opacity: 1 }}
             transition={{ duration: 0.46, ease: [0.22, 1, 0.36, 1] }}
-            className="mx-auto mb-3 h-12 w-12 rounded-full flex items-center justify-center text-base"
+            className="mx-auto mb-2.5 flex h-11 w-11 items-center justify-center rounded-full text-sm md:mb-3 md:h-12 md:w-12 md:text-base"
             style={{
               background:
                 "radial-gradient(circle at 50% 35%, rgba(242,185,104,0.13), rgba(6,3,3,0.72) 64%)",
@@ -1012,7 +1012,7 @@ function LayerReveal({
           </motion.div>
 
           <div
-            className="inline-flex items-center gap-2 rounded-full ori-reveal-badge px-3.5 py-1 mb-5"
+            className="ori-reveal-badge mb-3 inline-flex items-center gap-2 rounded-full px-3 py-1 md:mb-5 md:px-3.5"
             style={{
               background:
                 "linear-gradient(90deg, rgba(242,185,104,0.060), rgba(255,255,255,0.010))",
@@ -1032,10 +1032,10 @@ function LayerReveal({
             </span>
           </div>
 
-          <Eyebrow className="mb-4">{bloco}</Eyebrow>
+          <Eyebrow className="mb-3 md:mb-4">{bloco}</Eyebrow>
 
           <h2
-            className="ori-type-revelation text-3xl md:text-5xl mb-5"
+            className="ori-type-revelation mb-3 text-[28px] md:mb-5 md:text-5xl"
             style={{
               color: theme.accent,
               fontWeight: 680,
@@ -1047,7 +1047,7 @@ function LayerReveal({
           </h2>
 
           <p
-            className="ori-type-reading max-w-[680px] mx-auto mb-6 text-sm md:text-base"
+            className="ori-type-reading mx-auto mb-5 max-w-[680px] text-sm md:mb-6 md:text-base"
             style={{
               color: "rgba(255,245,235,0.70)",
               fontWeight: 520,
@@ -1057,7 +1057,7 @@ function LayerReveal({
             {reveal.text}
           </p>
 
-          <div className="flex flex-wrap justify-center gap-2.5 mb-7">
+          <div className="mb-6 hidden flex-wrap justify-center gap-2.5 md:flex md:mb-7">
             {[
               `Camada ${String(blockRevealTexts[bloco] ? Object.keys(blockRevealTexts).indexOf(bloco) + 1 : 1).padStart(2, "0")} concluída`,
               "+1 fragmento desbloqueado",
@@ -1088,13 +1088,13 @@ function LayerReveal({
             ))}
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <div className="flex flex-col items-center justify-center gap-2.5 sm:flex-row md:gap-3">
             <motion.button
               type="button"
               onClick={onBack}
               whileHover={reduceMotion ? undefined : { x: -2 }}
               whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-              className="ori-button-secondary min-w-[190px] px-6 py-3 text-sm md:text-[15px]"
+              className="ori-button-secondary w-full min-w-[190px] px-6 py-3 text-sm sm:w-auto md:text-[15px]"
               style={{
                 background: "rgba(255,255,255,0.024)",
                 color: "rgba(255,245,235,0.70)",
@@ -1121,7 +1121,7 @@ function LayerReveal({
                     }
               }
               whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-              className="ori-journey-action min-w-[190px] px-6 py-3 rounded-full text-sm md:text-[15px]"
+              className="ori-journey-action w-full min-w-[190px] rounded-full px-6 py-3 text-sm sm:w-auto md:text-[15px]"
               style={{
                 background: `linear-gradient(90deg, ${theme.accent}, rgba(255,245,235,0.92))`,
                 color: "#090506",
@@ -1622,6 +1622,9 @@ function getReadingAxisLabel(index) {
 
 function ReadingLayerPanel({ layer }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
+  const mobileMotionOff = useMobileMotionOff();
+  const reduceMotion = prefersReducedMotion || mobileMotionOff;
 
   if (!layer) return null;
 
@@ -1635,11 +1638,11 @@ function ReadingLayerPanel({ layer }) {
   return (
     <motion.article
       key={layer.number}
-      initial={{ opacity: 0, y: 16, filter: "blur(8px)" }}
-      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      exit={{ opacity: 0, y: -10, filter: "blur(6px)" }}
+      initial={reduceMotion ? false : { opacity: 0, y: 16, filter: "blur(8px)" }}
+      animate={reduceMotion ? undefined : { opacity: 1, y: 0, filter: "blur(0px)" }}
+      exit={reduceMotion ? undefined : { opacity: 0, y: -10, filter: "blur(6px)" }}
       transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-      className={`relative overflow-hidden rounded-[18px] md:rounded-[26px] min-h-[250px] md:min-h-[280px] ${
+      className={`relative overflow-hidden rounded-[18px] md:rounded-[26px] ${
         isExpanded ? "lg:min-h-[560px]" : "lg:h-[350px]"
       }`}
       style={{
@@ -1688,24 +1691,24 @@ function ReadingLayerPanel({ layer }) {
       />
 
       <div
-        className={`relative z-10 min-h-[280px] ${
+        className={`relative z-10 ${
           isExpanded ? "lg:min-h-[560px]" : "lg:h-[350px]"
         }`}
       >
         <div
-          className={`p-3.5 md:p-5 flex min-h-[250px] md:min-h-[280px] max-w-full min-h-0 flex-col lg:max-w-[54%] ${
+          className={`flex min-h-0 max-w-full flex-col p-3 md:p-5 lg:max-w-[54%] ${
             isExpanded ? "justify-center lg:h-[350px]" : "justify-center lg:h-[350px]"
           }`}
         >
-          <div className="flex flex-wrap items-center gap-2 mb-2">
+          <div className="mb-2 flex flex-wrap items-center gap-2 md:mb-2.5">
             <span
-              className="w-8 h-8 rounded-full flex items-center justify-center text-[11px]"
+              className="flex h-7 w-7 items-center justify-center rounded-full text-[10px] md:h-8 md:w-8 md:text-[11px]"
               style={{
                 background: "rgba(242,185,104,0.09)",
                 border: "1px solid rgba(242,185,104,0.16)",
                 color: "var(--gold-primary)",
                 boxShadow: "0 0 26px rgba(242,185,104,0.07)",
-                fontWeight: 700,
+                fontWeight: 650,
               }}
             >
               {layer.number}
@@ -1713,13 +1716,13 @@ function ReadingLayerPanel({ layer }) {
 
             <div className="min-w-0">
               <p
-                className="ori-type-system text-[8px] mb-0.5"
+                className="ori-type-system mb-0.5 text-[8px]"
                 style={{ color: "var(--gold-soft)" }}
               >
                 {layer.eyebrow}
               </p>
               <p
-                className="ori-type-reading-soft text-xs"
+                className="ori-type-reading-soft text-[11px] md:text-xs"
                 style={{ color: "rgba(255,245,235,0.48)" }}
               >
                 Camada ativa da leitura
@@ -1728,7 +1731,7 @@ function ReadingLayerPanel({ layer }) {
           </div>
 
           <h3
-            className="ori-type-revelation text-2xl md:text-[30px] xl:text-[34px] mb-2 whitespace-pre-line max-w-3xl"
+            className="ori-type-revelation mb-2 max-w-3xl whitespace-pre-line text-[22px] md:text-[30px] xl:text-[34px]"
             style={{
               color: "var(--gold-primary)",
               fontWeight: 650,
@@ -1740,60 +1743,85 @@ function ReadingLayerPanel({ layer }) {
           </h3>
 
           <p
-            className="ori-type-reading-soft text-sm max-w-2xl mb-2"
+            className="ori-type-reading-soft mb-2.5 max-w-2xl text-[13px] md:mb-3 md:text-sm"
             style={{ color: "rgba(255,245,235,0.66)" }}
           >
             {layer.description}
           </p>
 
-          {guidedBlocks.length > 0 && !isExpanded && (
-            <>
-              <div
-                className="grid max-h-[104px] gap-2 overflow-y-auto pr-1 transition-[max-height] duration-500 md:max-h-[132px]"
-                style={{
-                  scrollbarWidth: "thin",
-                  scrollbarColor: "rgba(242,185,104,0.16) transparent",
-                }}
+          {leadParagraph && !isExpanded && (
+            <div
+              className="mb-2 rounded-[15px] px-3 py-2.5 md:mb-2.5 md:px-3.5 md:py-3"
+              style={{
+                background:
+                  "linear-gradient(90deg, rgba(242,185,104,0.060), rgba(255,255,255,0.010))",
+                border: "1px solid rgba(242,185,104,0.10)",
+                backdropFilter: "blur(8px)",
+                WebkitBackdropFilter: "blur(8px)",
+              }}
+            >
+              <p
+                className="ori-type-system ori-label-sm mb-1.5"
+                style={{ color: "var(--gold-soft)" }}
               >
-                {guidedBlocks.map((block) => (
-                  <div
-                    key={`${layer.number}-${block.label}`}
-                    className="rounded-[14px] px-3 py-2 md:py-2.5"
-                    style={{
-                      background:
-                        "linear-gradient(180deg, rgba(255,255,255,0.024), rgba(255,255,255,0.007))",
-                      border: "1px solid rgba(242,185,104,0.065)",
-                    }}
-                  >
-                    <p
-                      className="ori-type-system mb-1.5 text-[8px]"
-                      style={{ color: "var(--gold-soft)" }}
-                    >
-                      {block.label}
-                    </p>
+                Síntese principal
+              </p>
 
-                    <div className="space-y-1.5">
-                      {block.paragraphs.map((paragraph, index) => (
-                        <p
-                          key={`${layer.number}-${block.label}-${index}`}
-                          className="ori-type-reading-soft text-xs md:text-[13px] leading-relaxed"
-                          style={{ color: "rgba(255,245,235,0.68)" }}
-                        >
-                          {paragraph}
-                        </p>
-                      ))}
-                    </div>
+              <p
+                className="ori-type-reading text-[13px] leading-relaxed md:text-sm"
+                style={{ color: "var(--text-primary)" }}
+              >
+                {leadParagraph}
+              </p>
+            </div>
+          )}
+
+          {guidedBlocks.length > 0 && !isExpanded && (
+            <div className="grid gap-2 md:gap-2.5">
+              {guidedBlocks.slice(0, 2).map((block) => (
+                <div
+                  key={`${layer.number}-${block.label}`}
+                  className="rounded-[14px] px-3 py-2 md:py-2.5"
+                  style={{
+                    background:
+                      "linear-gradient(180deg, rgba(255,255,255,0.024), rgba(255,255,255,0.007))",
+                    border: "1px solid rgba(242,185,104,0.065)",
+                  }}
+                >
+                  <p
+                    className="ori-type-system ori-label-sm mb-1.5"
+                    style={{ color: "var(--gold-soft)" }}
+                  >
+                    {block.label}
+                  </p>
+
+                  <div className="space-y-1.5">
+                    {block.paragraphs.slice(0, 1).map((paragraph, index) => (
+                      <p
+                        key={`${layer.number}-${block.label}-${index}`}
+                        className="ori-type-reading-soft text-xs leading-relaxed md:text-[13px]"
+                        style={{
+                          color: "rgba(255,245,235,0.68)",
+                          display: "-webkit-box",
+                          WebkitBoxOrient: "vertical",
+                          WebkitLineClamp: 3,
+                          overflow: "hidden",
+                        }}
+                      >
+                        {paragraph}
+                      </p>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </>
+                </div>
+              ))}
+            </div>
           )}
 
           {paragraphs.length > 0 && (
             <button
               type="button"
               onClick={() => setIsExpanded((current) => !current)}
-            className="mt-2 w-fit rounded-full px-3 py-1.5 text-[11px] transition-all hover:translate-y-[-1px]"
+              className="mt-2.5 w-fit rounded-full px-3 py-1.5 text-[11px] transition-all hover:translate-y-[-1px] md:mt-3"
               style={{
                 background: "rgba(242,185,104,0.055)",
                 border: "1px solid rgba(242,185,104,0.10)",
@@ -1858,30 +1886,30 @@ function ReadingLayerPanel({ layer }) {
 
               <div className="grid gap-2.5 lg:grid-cols-2">
                 {bodyParagraphs.map((paragraph, index) => (
-                <div
-                  key={`${layer.number}-full-${index}`}
-                  className="rounded-[16px] px-3.5 py-3"
-                  style={{
-                    background:
-                      "linear-gradient(180deg, rgba(255,255,255,0.026), rgba(255,255,255,0.008))",
-                    border: "1px solid rgba(242,185,104,0.075)",
-                    boxShadow: "inset 0 0 18px rgba(255,255,255,0.006)",
-                  }}
-                >
-                  <p
-                    className="ori-type-system ori-label-sm mb-2"
-                    style={{ color: "var(--gold-soft)" }}
+                  <div
+                    key={`${layer.number}-full-${index}`}
+                    className="rounded-[16px] px-3.5 py-3"
+                    style={{
+                      background:
+                        "linear-gradient(180deg, rgba(255,255,255,0.026), rgba(255,255,255,0.008))",
+                      border: "1px solid rgba(242,185,104,0.075)",
+                      boxShadow: "inset 0 0 18px rgba(255,255,255,0.006)",
+                    }}
                   >
-                    {getReadingAxisLabel(index)}
-                  </p>
+                    <p
+                      className="ori-type-system ori-label-sm mb-2"
+                      style={{ color: "var(--gold-soft)" }}
+                    >
+                      {getReadingAxisLabel(index)}
+                    </p>
 
-                  <p
-                    className="ori-type-reading-soft text-xs md:text-[13px] leading-relaxed"
-                    style={{ color: "rgba(255,245,235,0.70)" }}
-                  >
-                    {paragraph}
-                  </p>
-                </div>
+                    <p
+                      className="ori-type-reading-soft text-xs leading-relaxed md:text-[13px]"
+                      style={{ color: "rgba(255,245,235,0.70)" }}
+                    >
+                      {paragraph}
+                    </p>
+                  </div>
                 ))}
               </div>
             </div>
@@ -1897,25 +1925,35 @@ function LayerTabNavigation({ tabs, activeNumber, onSelect }) {
     tabs.findIndex((item) => item.number === activeNumber),
     0,
   );
+  const activeTab = tabs[activeIndex] || tabs[0];
   const progress =
     tabs.length > 0 ? Math.round(((activeIndex + 1) / tabs.length) * 100) : 0;
 
   return (
-    <div className="relative z-10 mb-4">
-      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-2.5">
+    <div className="relative z-10 mb-3 md:mb-4">
+      <div className="mb-2.5 flex flex-col gap-2.5 md:flex-row md:items-end md:justify-between md:gap-3">
         <div>
-          <p className="ori-type-reading-soft text-xs" style={{ color: "rgba(255,245,235,0.54)" }}>
-            Camada {activeIndex + 1} de {tabs.length}
+          <p
+            className="ori-type-system ori-label-sm mb-1"
+            style={{ color: "var(--gold-soft)" }}
+          >
+            Camada atual
+          </p>
+          <p
+            className="ori-type-reading-soft text-xs md:text-sm"
+            style={{ color: "rgba(255,245,235,0.58)" }}
+          >
+            {activeTab?.number} · {activeTab?.label}
           </p>
         </div>
 
         <div className="w-full md:w-48">
-          <div className="flex items-center justify-between mb-1.5">
+          <div className="mb-1.5 flex items-center justify-between">
             <span
               className="text-[10px]"
               style={{ color: "rgba(255,245,235,0.45)" }}
             >
-              Progresso do núcleo
+              Progresso
             </span>
             <span className="text-[10px]" style={{ color: "var(--gold-soft)" }}>
               {progress}%
@@ -1953,7 +1991,7 @@ function LayerTabNavigation({ tabs, activeNumber, onSelect }) {
               aria-label={`Abrir camada ${item.number}: ${item.label}`}
               whileHover={{ y: -2 }}
               whileTap={{ scale: 0.98 }}
-              className="ori-tab group relative flex min-h-[42px] w-[124px] shrink-0 items-center gap-2 overflow-hidden rounded-[14px] px-2.5 py-1.5 text-left transition-all duration-300 md:min-h-[48px] md:w-[154px] md:gap-2.5 md:rounded-[16px] md:px-3 md:py-2"
+              className="ori-tab group relative flex min-h-[38px] w-[102px] shrink-0 items-center gap-1.5 overflow-hidden rounded-[13px] px-2 py-1.5 text-left transition-all duration-300 md:min-h-[48px] md:w-[154px] md:gap-2.5 md:rounded-[16px] md:px-3 md:py-2"
               data-state={isActive ? "active" : isPast ? "done" : "sealed"}
               style={{
                 background: isActive
@@ -1968,7 +2006,7 @@ function LayerTabNavigation({ tabs, activeNumber, onSelect }) {
               }}
             >
               <span
-                className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[9px] md:h-7 md:w-7 md:text-[10px]"
+                className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[8px] md:h-7 md:w-7 md:text-[10px]"
                 style={{
                   background: isActive
                     ? "var(--gold-primary)"
@@ -1979,7 +2017,7 @@ function LayerTabNavigation({ tabs, activeNumber, onSelect }) {
                     ? "1px solid rgba(242,185,104,0.42)"
                     : "1px solid rgba(242,185,104,0.12)",
                   color: isActive ? "#0a0505" : "var(--gold-soft)",
-                  fontWeight: 700,
+                  fontWeight: 650,
                   boxShadow: isActive
                     ? "0 0 14px rgba(242,185,104,0.18)"
                     : "inset 0 0 10px rgba(255,255,255,0.006)",
@@ -1989,12 +2027,16 @@ function LayerTabNavigation({ tabs, activeNumber, onSelect }) {
               </span>
 
               <p
-                className="ori-type-reading-soft text-[11px] leading-tight md:text-xs"
+                className="ori-type-reading-soft text-[10px] leading-tight md:text-xs"
                 style={{
                   color: isActive
                     ? "var(--text-primary)"
                     : "rgba(255,245,235,0.62)",
-                  fontWeight: isActive ? 650 : 520,
+                  fontWeight: isActive ? 620 : 440,
+                  display: "-webkit-box",
+                  WebkitBoxOrient: "vertical",
+                  WebkitLineClamp: 2,
+                  overflow: "hidden",
                 }}
               >
                 {item.label}
@@ -2968,7 +3010,7 @@ function QuizProduto1() {
 
                   <section className="relative z-10 pb-3">
                     <div className="relative z-10">
-                      <div className="ori-label-line mb-3">
+                      <div className="ori-label-line mb-2.5 md:mb-3">
                         <p
                           className="ori-type-system text-[9px] md:text-[10px]"
                           style={{ color: "var(--gold-soft)" }}
@@ -2977,7 +3019,7 @@ function QuizProduto1() {
                         </p>
                       </div>
 
-                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-4">
+                      <div className="ori-premium-scroll flex gap-2 overflow-x-auto pb-1 md:grid md:grid-cols-4 md:overflow-visible md:pb-0">
                         {resultCoreTabs.map((item) => {
                           const isActive = activeResultCore === item.id;
 
@@ -2986,7 +3028,7 @@ function QuizProduto1() {
                               key={item.number}
                               type="button"
                               onClick={() => setActiveResultCore(item.id)}
-                              className="ori-tab text-left rounded-[16px] px-3 py-2.5 transition-all duration-500 hover:-translate-y-0.5"
+                              className="ori-tab min-w-[136px] shrink-0 rounded-[15px] px-2.5 py-2 text-left transition-all duration-500 hover:-translate-y-0.5 md:min-w-0 md:rounded-[16px] md:px-3 md:py-2.5"
                               data-state={isActive ? "active" : "sealed"}
                               style={{
                                 background: isActive
@@ -3000,9 +3042,9 @@ function QuizProduto1() {
                                   : "inset 0 0 18px rgba(242,185,104,0.012), 0 0 18px rgba(0,0,0,0.14)",
                               }}
                             >
-                              <div className="flex min-w-0 items-center gap-2.5">
+                              <div className="flex min-w-0 items-center gap-2 md:gap-2.5">
                                 <div
-                                  className="w-8 h-8 rounded-[12px] flex items-center justify-center shrink-0"
+                                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[11px] md:h-8 md:w-8 md:rounded-[12px]"
                                   style={{
                                     background:
                                       "linear-gradient(180deg, rgba(255,255,255,0.026), rgba(255,255,255,0.008))",
@@ -3017,16 +3059,16 @@ function QuizProduto1() {
                                       : "0 0 14px rgba(242,185,104,0.03)",
                                   }}
                                 >
-                                  <span className="text-sm font-medium tracking-[-0.06em]">
+                                  <span className="text-xs font-medium tracking-[-0.02em] md:text-sm md:tracking-[-0.06em]">
                                     {item.number}
                                   </span>
                                 </div>
 
                                 <h3
-                                  className="ori-type-revelation min-w-0 text-sm md:text-[15px]"
+                                  className="ori-type-revelation min-w-0 text-xs md:text-[15px]"
                                   style={{
                                     color: "var(--text-primary)",
-                                    fontWeight: isActive ? 650 : 540,
+                                    fontWeight: isActive ? 620 : 440,
                                     letterSpacing: "-0.025em",
                                   }}
                                 >
@@ -3039,7 +3081,7 @@ function QuizProduto1() {
                       </div>
 
                       <div
-                        className="mt-3 rounded-[16px] px-3.5 py-3"
+                        className="mt-2.5 rounded-[15px] px-3 py-2.5 md:mt-3 md:rounded-[16px] md:px-3.5 md:py-3"
                         style={{
                           background:
                             "linear-gradient(90deg, rgba(242,185,104,0.050), rgba(255,255,255,0.012))",
@@ -3047,7 +3089,7 @@ function QuizProduto1() {
                         }}
                       >
                         <p
-                          className="ori-type-reading-soft text-xs md:text-sm"
+                          className="ori-mobile-preview-3 ori-type-reading-soft text-xs md:text-sm"
                           style={{ color: "rgba(255,245,235,0.66)" }}
                         >
                           {activeResultCoreTab.text}
@@ -3165,7 +3207,7 @@ function QuizProduto1() {
                   )}
 
                   <section
-                    className="mt-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4 rounded-[22px] p-4 md:mt-5"
+                    className="mt-3 flex flex-col gap-3 rounded-[18px] p-3 md:mt-5 md:flex-row md:items-center md:justify-between md:gap-4 md:rounded-[22px] md:p-4"
                     style={{
                       background:
                         "linear-gradient(180deg, rgba(18,9,10,0.58), rgba(5,2,2,0.82))",
@@ -3175,27 +3217,27 @@ function QuizProduto1() {
                   >
                     <div>
                       <p
-                        className="uppercase tracking-[0.28em] text-[9px] mb-2"
+                        className="mb-1.5 text-[9px] uppercase tracking-[0.22em] md:mb-2 md:tracking-[0.28em]"
                         style={{ color: "var(--gold-soft)" }}
                       >
                         Fluxo da leitura
                       </p>
                       <p
-                        className="text-sm md:text-base leading-relaxed"
+                        className="ori-mobile-preview-3 text-[13px] leading-relaxed md:text-base"
                         style={{ color: "rgba(255,245,235,0.68)" }}
                       >
                         {resultFlowText}
                       </p>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-3">
+                    <div className="flex flex-col gap-2.5 sm:flex-row md:gap-3">
                       {previousResultCore && (
                         <button
                           type="button"
                           onClick={() =>
                             setActiveResultCore(previousResultCore.id)
                           }
-                          className="px-5 py-3 rounded-full text-sm"
+                          className="rounded-full px-5 py-2.5 text-sm md:py-3"
                           style={{
                             background: "rgba(255,255,255,0.026)",
                             border: "1px solid rgba(242,185,104,0.10)",
@@ -3209,7 +3251,7 @@ function QuizProduto1() {
                       <button
                         type="button"
                         onClick={handleResultFlowNext}
-                        className="ori-journey-action px-6 py-3 rounded-full text-sm"
+                        className="ori-journey-action rounded-full px-6 py-2.5 text-sm md:py-3"
                         style={{
                           background:
                             "linear-gradient(90deg, var(--copper-primary), var(--gold-primary))",
