@@ -973,12 +973,33 @@ select:focus-visible,
 @media (max-width: 767px) {
   body {
     background-attachment: scroll;
+    overflow-x: clip;
   }
 
   html,
   body,
   #root {
+    max-width: 100%;
+    overflow-x: clip;
     scroll-behavior: auto;
+  }
+
+  #root,
+  main,
+  section,
+  article,
+  aside,
+  header,
+  footer,
+  nav {
+    max-width: 100%;
+  }
+
+  img,
+  video,
+  canvas,
+  svg {
+    max-width: 100%;
   }
 
   *,
@@ -1022,6 +1043,42 @@ select:focus-visible,
   .ori-main-frame,
   .ori-hero-panel {
     border-radius: 24px;
+    max-width: 100%;
+  }
+
+  .ori-main-frame,
+  .ori-hero-panel,
+  .ori-card-protagonist,
+  .ori-card-secondary,
+  .ori-card-teaser,
+  .ori-card-sealed,
+  .ori-reveal-badge,
+  .ori-reveal-subtitle,
+  .ori-sidebar-link,
+  .ori-button-secondary {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  [class*="blur-2xl"],
+  [class*="blur-3xl"] {
+    filter: none !important;
+    opacity: 0.045 !important;
+  }
+
+  button,
+  a[role="button"],
+  .ori-button-secondary,
+  .ori-journey-action,
+  .ori-cta-slim,
+  .ori-tab,
+  .ori-step {
+    font-weight: 500 !important;
+  }
+
+  .ori-journey-action,
+  .ori-cta-slim {
+    letter-spacing: 0.01em;
   }
 
   .ori-label-line {

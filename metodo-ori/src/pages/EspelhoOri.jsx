@@ -3572,7 +3572,7 @@ function EspelhoOri() {
 
         <MotionSection
           reduceMotion={reduceMotion}
-          className="relative left-1/2 mb-5 h-[48vh] min-h-[340px] w-screen -translate-x-1/2 overflow-hidden md:h-[50vh]"
+          className="relative left-1/2 mb-5 h-[48vh] min-h-[340px] w-[100dvw] max-w-[100dvw] -translate-x-1/2 overflow-hidden md:h-[50vh]"
           style={{
             background: "var(--bg-primary)",
           }}

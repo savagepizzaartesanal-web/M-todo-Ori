@@ -75,9 +75,12 @@ export default function OnboardingQuestionStep({
 }
 
 function FieldRenderer({ field, value, onFieldChange, onCheckboxChange }) {
+  const fieldId = `ori-entry-${field.name}`;
+
   return (
     <div className="relative">
       <label
+        htmlFor={fieldId}
         className="ori-type-system mb-1.5 block text-[10px]"
         style={{ color: "rgba(242,185,104,0.68)" }}
       >
@@ -86,6 +89,7 @@ function FieldRenderer({ field, value, onFieldChange, onCheckboxChange }) {
 
       {field.type === "text" || field.type === "date" ? (
         <input
+          id={fieldId}
           type={field.type}
           value={value || ""}
           onChange={(e) => onFieldChange(field.name, e.target.value)}
@@ -105,6 +109,7 @@ function FieldRenderer({ field, value, onFieldChange, onCheckboxChange }) {
 
       {field.type === "textarea" ? (
         <textarea
+          id={fieldId}
           value={value || ""}
           onChange={(e) => onFieldChange(field.name, e.target.value)}
           placeholder={field.placeholder}
@@ -136,6 +141,7 @@ function FieldRenderer({ field, value, onFieldChange, onCheckboxChange }) {
                 key={option}
                 type="button"
                 onClick={() => onFieldChange(field.name, option)}
+                aria-pressed={active}
                 className="ori-step group relative flex min-h-[38px] items-center gap-2.5 overflow-hidden rounded-[15px] border px-3 py-2 text-left text-[12.5px] leading-snug transition duration-300 hover:-translate-y-0.5"
                 data-state={active ? "active" : "sealed"}
                 style={{
@@ -204,6 +210,7 @@ function FieldRenderer({ field, value, onFieldChange, onCheckboxChange }) {
                 onClick={() =>
                   onCheckboxChange(field.name, option, field.maxSelections || 2)
                 }
+                aria-pressed={checked}
                 className="ori-step group relative flex min-h-[38px] items-center gap-2.5 overflow-hidden rounded-[15px] border px-3 py-2 text-left text-[12.5px] leading-snug transition duration-300 hover:-translate-y-0.5"
                 data-state={checked ? "active" : "sealed"}
                 style={{

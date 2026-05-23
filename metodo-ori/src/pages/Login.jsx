@@ -88,7 +88,9 @@ function Login() {
         return;
       }
 
-      setErro(`Não foi possível acessar agora. Detalhe: ${error.message}`);
+      setErro(
+        "Não foi possível acessar agora. Verifique sua conexão e tente novamente em instantes.",
+      );
       return;
     }
 
@@ -148,7 +150,7 @@ function Login() {
 
       if (message.includes("database")) {
         setErro(
-          `O cadastro foi bloqueado por uma regra do banco de dados. Detalhe: ${error.message}`,
+          "Seu acesso foi criado, mas ainda não conseguimos preparar o perfil da jornada. Tente entrar novamente em instantes ou fale com a equipe ORI.",
         );
         return;
       }
@@ -160,13 +162,13 @@ function Login() {
 
       if (message.includes("email")) {
         setErro(
-          `Verifique se o e-mail foi digitado corretamente. Detalhe: ${error.message}`,
+          "Verifique se o e-mail foi digitado corretamente e tente novamente.",
         );
         return;
       }
 
       setErro(
-        `Não foi possível criar seu acesso agora. Detalhe: ${error.message}`,
+        "Não foi possível criar seu acesso agora. Tente novamente em instantes.",
       );
       return;
     }
@@ -205,7 +207,7 @@ function Login() {
       setLoading(false);
 
       setErro(
-        `Usuário criado no Auth, mas o perfil não foi salvo em clientes. Detalhe: ${clienteError.message}`,
+        "Seu acesso foi criado, mas o perfil da jornada ainda não ficou pronto. Tente entrar novamente em instantes ou fale com a equipe ORI.",
       );
       return;
     }

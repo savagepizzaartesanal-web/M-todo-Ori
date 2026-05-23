@@ -143,6 +143,8 @@ function PortalCliente() {
     return (
       <div
         className="ori-main-frame ori-card-protagonist relative overflow-hidden rounded-[34px] md:rounded-[42px] p-8 md:p-10 cinematic-card"
+        role="status"
+        aria-live="polite"
         style={{
           background:
             "linear-gradient(135deg, rgba(18,9,10,0.88), rgba(5,2,2,0.96))",
@@ -169,6 +171,13 @@ function PortalCliente() {
         >
           Preparando seu Átrio ORI...
         </h1>
+
+        <p
+          className="ori-type-reading-soft mt-4 max-w-md text-sm"
+          style={{ color: "rgba(255,245,235,0.58)" }}
+        >
+          Estamos buscando sua leitura e suas próximas camadas.
+        </p>
       </div>
     );
   }

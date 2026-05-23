@@ -18,7 +18,7 @@ export default function OnboardingShell({
   const portalIntensity = Math.max(0.12, progress / 100);
 
   return (
-    <div className="relative min-h-[100svh] overflow-hidden bg-[#050202] text-[#f7ead8] md:h-screen">
+    <div className="relative min-h-[100svh] overflow-x-hidden bg-[#050202] text-[#f7ead8] md:h-screen md:overflow-hidden">
       <style>{`
         @keyframes oriOnboardingBreath {
           0%, 100% { opacity: 0.36; transform: translate3d(0, 0, 0) scale(1); }
@@ -66,13 +66,13 @@ export default function OnboardingShell({
         }}
       />
 
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[720px] w-[720px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[rgba(242,185,104,0.055)]" />
+      <div className="pointer-events-none absolute left-1/2 top-1/2 hidden h-[720px] w-[720px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[rgba(242,185,104,0.055)] md:block" />
       <div
-        className="pointer-events-none absolute left-1/2 top-1/2 h-[520px] w-[520px] rounded-full border border-[rgba(210,135,70,0.07)]"
+        className="pointer-events-none absolute left-1/2 top-1/2 hidden h-[520px] w-[520px] rounded-full border border-[rgba(210,135,70,0.07)] md:block"
         style={{ animation: "oriOnboardingOrbit 42s linear infinite" }}
       />
       <div
-        className="pointer-events-none absolute left-1/2 top-1/2 h-[340px] w-[340px] rounded-full border border-[rgba(242,185,104,0.09)]"
+        className="pointer-events-none absolute left-1/2 top-1/2 hidden h-[340px] w-[340px] rounded-full border border-[rgba(242,185,104,0.09)] md:block"
         style={{ animation: "oriOnboardingBreath 7s ease-in-out infinite" }}
       />
       <div className="pointer-events-none absolute inset-0 opacity-[0.035] [background-image:radial-gradient(circle_at_center,rgba(255,245,235,0.55)_1px,transparent_1px)] [background-size:26px_26px]" />
@@ -101,9 +101,9 @@ export default function OnboardingShell({
         }}
       />
 
-      <div className="relative z-10 flex min-h-[100svh] items-center justify-center overflow-hidden px-3 py-3 md:h-screen md:px-6 md:py-4">
+      <div className="relative z-10 flex min-h-[100svh] items-center justify-center overflow-x-hidden px-3 py-3 md:h-screen md:overflow-hidden md:px-6 md:py-4">
         <div
-          className="relative grid h-[calc(100svh-24px)] max-h-[760px] min-h-[620px] w-full max-w-[1180px] overflow-hidden rounded-[24px] border md:h-[calc(100vh-32px)] md:min-h-0 md:rounded-[30px] lg:grid-cols-[0.48fr_0.52fr]"
+          className="relative grid min-h-[calc(100svh-24px)] w-full max-w-[1180px] overflow-hidden rounded-[24px] border md:h-[calc(100vh-32px)] md:max-h-[760px] md:min-h-0 md:rounded-[30px] lg:grid-cols-[0.48fr_0.52fr]"
           style={{
             borderColor: "rgba(242,185,104,0.18)",
             background:
@@ -125,7 +125,7 @@ export default function OnboardingShell({
           </div>
 
           <section
-            className="relative flex h-full min-h-0 flex-col overflow-hidden px-4 py-4 md:px-10 md:py-6 lg:px-12"
+            className="relative flex min-h-0 flex-col overflow-hidden px-4 py-4 md:h-full md:px-10 md:py-6 lg:px-12"
             style={{
               background:
                 `radial-gradient(circle at 92% 52%, rgba(242,185,104,${0.06 + portalIntensity * 0.08}), transparent 27%), radial-gradient(circle at 82% 52%, rgba(210,135,70,${0.03 + portalIntensity * 0.05}), transparent 18%), linear-gradient(145deg, rgba(13,6,7,0.90), rgba(5,2,2,0.96))`,

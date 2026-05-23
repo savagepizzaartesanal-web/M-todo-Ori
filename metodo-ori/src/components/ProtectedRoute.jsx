@@ -20,6 +20,8 @@ function AuthLoading() {
         background: "transparent",
         color: "var(--text-primary)",
       }}
+      role="status"
+      aria-live="polite"
     >
       <div
         className="ori-card-protagonist w-full max-w-xl rounded-[34px] p-8 md:p-10 text-center"
@@ -49,6 +51,13 @@ function AuthLoading() {
         >
           Preparando seu portal ORI...
         </h1>
+
+        <p
+          className="ori-type-reading-soft mt-4 text-sm"
+          style={{ color: "rgba(255,245,235,0.58)" }}
+        >
+          Estamos confirmando sua sessão e carregando suas camadas.
+        </p>
       </div>
     </div>
   );
