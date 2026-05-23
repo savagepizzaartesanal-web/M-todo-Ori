@@ -25,10 +25,10 @@ function ResultHero({ nome, principal, secundario, frase, imagem }) {
         cinematic-card
         relative
         overflow-hidden
-        rounded-[28px]
+        rounded-[24px]
         md:rounded-[36px]
         mb-5
-        min-h-[380px]
+        min-h-[340px]
         md:min-h-[420px]
         xl:min-h-[430px]
       "
@@ -126,7 +126,7 @@ function ResultHero({ nome, principal, secundario, frase, imagem }) {
           max-w-[94%]
           md:max-w-[56%]
           lg:max-w-[50%]
-          min-h-[380px]
+          min-h-[340px]
           md:min-h-[420px]
           xl:min-h-[430px]
           flex

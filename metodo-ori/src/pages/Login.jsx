@@ -276,6 +276,40 @@ function Login() {
           color: rgba(255, 245, 235, 0.34);
         }
 
+        .ori-login-bg-video {
+          opacity: 0.82;
+        }
+
+        .ori-login-bg-overlay {
+          background:
+            linear-gradient(90deg, rgba(5,2,2,0.97) 0%, rgba(5,2,2,0.92) 16%, rgba(5,2,2,0.78) 30%, rgba(5,2,2,0.52) 52%, rgba(5,2,2,0.80) 100%),
+            linear-gradient(180deg, rgba(0,0,0,0.22), rgba(0,0,0,0.62));
+        }
+
+        @media (max-width: 767px) {
+          .ori-login-bg-video {
+            opacity: 0.98;
+          }
+
+          .ori-login-bg-overlay {
+            background:
+              linear-gradient(180deg, rgba(5,2,2,0.22), rgba(5,2,2,0.72)),
+              linear-gradient(90deg, rgba(5,2,2,0.66), rgba(5,2,2,0.28) 52%, rgba(5,2,2,0.78));
+          }
+
+          .ori-login-card {
+            background:
+              radial-gradient(circle at top right, rgba(210,135,70,0.10), transparent 34%),
+              linear-gradient(180deg, rgba(18,9,10,0.42), rgba(5,2,2,0.58)) !important;
+            border-color: rgba(210,135,70,0.13) !important;
+            box-shadow:
+              0 0 42px rgba(0,0,0,0.20),
+              inset 0 0 42px rgba(255,255,255,0.010) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+          }
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .ori-glow-breath,
           .ori-scanner,
@@ -288,7 +322,7 @@ function Login() {
       <div className="absolute inset-0">
         <video
           aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover"
+          className="ori-login-bg-video absolute inset-0 w-full h-full object-cover"
           autoPlay
           muted
           loop
@@ -298,13 +332,7 @@ function Login() {
           <source src="/videos/login/login-bg.mp4" type="video/mp4" />
         </video>
 
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(90deg, rgba(5,2,2,0.97) 0%, rgba(5,2,2,0.92) 16%, rgba(5,2,2,0.78) 30%, rgba(5,2,2,0.52) 52%, rgba(5,2,2,0.80) 100%), linear-gradient(180deg, rgba(0,0,0,0.22), rgba(0,0,0,0.62))",
-          }}
-        />
+        <div className="ori-login-bg-overlay absolute inset-0" />
 
         <div
           className="absolute inset-0 pointer-events-none"
@@ -510,6 +538,7 @@ function Login() {
                 "0 0 84px rgba(242,185,104,0.07), inset 0 0 62px rgba(255,255,255,0.014)",
             }}
             className="
+              ori-login-card
               relative
               z-10
               w-full

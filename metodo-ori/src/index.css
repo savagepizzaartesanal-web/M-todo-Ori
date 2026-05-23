@@ -1046,6 +1046,46 @@ select:focus-visible,
     max-width: 100%;
   }
 
+  .ori-mobile-section {
+    margin-bottom: 1rem !important;
+  }
+
+  .ori-mobile-compact {
+    border-radius: 18px !important;
+    padding: 0.875rem !important;
+  }
+
+  .ori-mobile-compact-sm {
+    border-radius: 16px !important;
+    padding: 0.75rem !important;
+  }
+
+  .ori-mobile-preview {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+  }
+
+  .ori-mobile-preview-3 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -webkit-line-clamp: 3;
+  }
+
+  .ori-mobile-soft {
+    opacity: 0.64 !important;
+  }
+
+  .ori-mobile-hide {
+    display: none !important;
+  }
+
+  .ori-mobile-flow {
+    gap: 0.75rem !important;
+  }
+
   .ori-main-frame,
   .ori-hero-panel,
   .ori-card-protagonist,
@@ -1128,6 +1168,12 @@ select:focus-visible,
   .ori-type-hero {
     line-height: 0.98;
     letter-spacing: -0.058em;
+  }
+
+  .ori-card-secondary p,
+  .ori-card-teaser p,
+  .ori-card-sealed p {
+    line-height: 1.5;
   }
 }
 

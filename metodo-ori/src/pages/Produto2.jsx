@@ -19,7 +19,7 @@ function Produto2() {
   return (
     <div className="ori-atmosphere ori-atmosphere-dossie relative overflow-hidden max-w-[1320px]">
       <section
-        className="ori-main-frame ori-hero-panel relative overflow-hidden rounded-[28px] md:rounded-[36px] p-5 md:p-7 mb-5 cinematic-card min-h-[430px] md:min-h-[clamp(460px,calc(100vh-120px),580px)] flex items-center"
+        className="ori-main-frame ori-hero-panel relative overflow-hidden rounded-[24px] md:rounded-[36px] p-4 pt-7 md:p-7 mb-5 cinematic-card min-h-[360px] md:min-h-[clamp(460px,calc(100vh-120px),580px)] flex items-center"
         style={{
           background:
             "linear-gradient(135deg, rgba(18,9,10,0.88), rgba(5,2,2,0.96))",
@@ -143,7 +143,7 @@ function Produto2() {
           </p>
 
           <p
-            className="ori-type-reading-soft text-sm md:text-[15px] max-w-[520px] mb-4"
+            className="ori-type-reading-soft hidden text-sm md:mb-4 md:block md:text-[15px] max-w-[520px]"
             style={{ color: "var(--text-soft)" }}
           >
             Depois que sua força é nomeada, o Dossiê ORI mostra como ela se
@@ -160,7 +160,7 @@ function Produto2() {
           />
 
           <div
-            className="ori-card-teaser relative overflow-hidden rounded-[20px] p-4 max-w-[520px] mb-4"
+            className="ori-card-teaser relative overflow-hidden rounded-[18px] p-3.5 md:rounded-[20px] md:p-4 max-w-[520px] mb-4"
             data-state="sealed"
             style={{
               background:
@@ -181,7 +181,7 @@ function Produto2() {
               }}
             />
 
-            <div className="relative z-10 min-h-[132px] pr-8 flex flex-col justify-center">
+            <div className="relative z-10 min-h-[96px] pr-8 flex flex-col justify-center md:min-h-[132px]">
               <div
                 className="absolute right-0 top-0 text-lg leading-none"
                 style={{
@@ -260,7 +260,7 @@ function Produto2() {
       </section>
 
       <section
-        className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[24px] md:rounded-[30px] p-4 md:p-5"
+        className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[20px] md:rounded-[30px] p-3.5 md:p-5"
         style={{
           background:
             "linear-gradient(180deg, rgba(18,9,10,0.70), rgba(5,2,2,0.90))",
@@ -282,7 +282,7 @@ function Produto2() {
 
         <div className="grid gap-3 lg:grid-cols-[1.1fr_0.9fr]">
           <article
-            className="ori-card-protagonist relative overflow-hidden rounded-[20px] p-4 md:p-5"
+            className="ori-card-protagonist relative overflow-hidden rounded-[18px] p-3.5 md:rounded-[20px] md:p-5"
             style={{
               background:
                 "linear-gradient(90deg, rgba(242,185,104,0.080), rgba(255,255,255,0.012))",
@@ -308,7 +308,7 @@ function Produto2() {
             </h2>
 
             <p
-              className="ori-type-reading-soft text-sm"
+              className="ori-mobile-preview-3 ori-type-reading-soft text-sm"
               style={{ color: "var(--text-soft)" }}
             >
               {dossieLayers[0].text}
@@ -319,7 +319,7 @@ function Produto2() {
             {dossieLayers.slice(1).map((item) => (
           <article
             key={item.title}
-                className="ori-card-teaser relative overflow-hidden rounded-[18px] p-3.5"
+                className="ori-card-teaser relative overflow-hidden rounded-[16px] p-3 md:rounded-[18px] md:p-3.5"
             style={{
               background:
                     "linear-gradient(180deg, rgba(255,255,255,0.024), rgba(255,255,255,0.008))",

@@ -6,18 +6,21 @@ function NextStepCard() {
       className="
         relative
         overflow-hidden
-        rounded-[34px]
+        rounded-[24px]
         md:rounded-[42px]
-        p-7
+        p-4
         md:p-8
         xl:p-10
-        mt-10
-        mb-8
+        mt-6
+        mb-5
+        md:mt-10
+        md:mb-8
         ori-main-frame
         cinematic-card
         ori-hero-panel
         fade-up
-        min-h-[390px]
+        min-h-[330px]
+        md:min-h-[390px]
         flex
         items-center
       "

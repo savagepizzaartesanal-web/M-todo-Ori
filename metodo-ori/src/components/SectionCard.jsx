@@ -1,7 +1,7 @@
 function SectionCard({ numero, titulo, descricao }) {
   return (
     <div
-      className="ori-card-secondary relative overflow-hidden rounded-[36px] p-10 transition-all duration-500 hover:-translate-y-1"
+      className="ori-card-secondary relative overflow-hidden rounded-[22px] p-4 transition-all duration-500 hover:-translate-y-1 md:rounded-[36px] md:p-10"
       style={{
         background:
           "linear-gradient(180deg, rgba(18,9,10,0.96), rgba(10,5,6,0.98))",
@@ -20,7 +20,7 @@ function SectionCard({ numero, titulo, descricao }) {
       />
 
       <p
-        className="ori-type-system ori-label-lg mb-6"
+        className="ori-type-system ori-label-lg mb-3 md:mb-6"
         style={{
           color: "var(--gold-soft)",
         }}
@@ -29,7 +29,7 @@ function SectionCard({ numero, titulo, descricao }) {
       </p>
 
       <h2
-        className="ori-type-revelation text-3xl mb-6"
+        className="ori-type-revelation text-2xl mb-3 md:text-3xl md:mb-6"
         style={{
           color: "var(--gold-primary)",
         }}
@@ -38,7 +38,7 @@ function SectionCard({ numero, titulo, descricao }) {
       </h2>
 
       <p
-        className="ori-type-reading-soft text-lg"
+        className="ori-mobile-preview-3 ori-type-reading-soft text-sm md:text-lg"
         style={{
           color: "var(--text-soft)",
         }}
@@ -46,7 +46,7 @@ function SectionCard({ numero, titulo, descricao }) {
         {descricao}
       </p>
 
-      <div className="mt-10 flex items-center gap-3">
+      <div className="mt-5 flex items-center gap-3 md:mt-10">
         <div
           className="w-2 h-2 rounded-full"
           style={{

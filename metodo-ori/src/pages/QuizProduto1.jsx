@@ -316,7 +316,7 @@ function LoadingDossie({ loadingRef, reduceMotion }) {
         reduceMotion ? undefined : { opacity: 1, y: 0, filter: "blur(0px)" }
       }
       transition={{ duration: 0.62, ease: [0.22, 1, 0.36, 1] }}
-      className="mb-6 rounded-[28px] md:rounded-[38px] p-5 md:p-7 text-center relative overflow-hidden scroll-mt-8 min-h-[520px] flex items-center justify-center"
+      className="mb-5 rounded-[24px] md:rounded-[38px] p-4 md:p-7 text-center relative overflow-hidden scroll-mt-8 min-h-[430px] md:min-h-[520px] flex items-center justify-center"
       style={{
         background:
           "radial-gradient(circle at center, rgba(210,135,70,0.12), transparent 34%), linear-gradient(135deg, var(--wine-deep), rgba(5,2,2,0.98))",
@@ -793,7 +793,7 @@ function QuizIntro({
       variants={fadeUp}
       initial={reduceMotion ? false : "hidden"}
       animate={reduceMotion ? undefined : "visible"}
-      className="relative overflow-hidden rounded-[28px] md:rounded-[38px] p-5 md:p-7 mb-6"
+      className="relative overflow-hidden rounded-[24px] md:rounded-[38px] p-4 md:p-7 mb-5 md:mb-6"
       style={{
         background:
           "radial-gradient(circle at top right, rgba(242,185,104,0.11), transparent 34%), radial-gradient(circle at bottom left, rgba(183,140,255,0.06), transparent 38%), linear-gradient(135deg, rgba(18,9,10,0.72), rgba(5,2,2,0.92))",
@@ -821,7 +821,7 @@ function QuizIntro({
           </h1>
 
           <p
-            className="ori-type-reading text-base md:text-lg max-w-2xl mb-4"
+            className="ori-mobile-preview-3 ori-type-reading text-base md:text-lg max-w-2xl mb-4"
             style={{ color: colors.soft }}
           >
             Responda intuitivamente. Quando você não racionaliza demais as
@@ -958,7 +958,7 @@ function LayerReveal({
       initial={reduceMotion ? false : "hidden"}
       animate={reduceMotion ? undefined : "visible"}
       exit={reduceMotion ? undefined : "exit"}
-      className="relative overflow-hidden rounded-[28px] md:rounded-[38px] p-5 md:p-7 mb-6 min-h-[520px]"
+      className="relative overflow-hidden rounded-[24px] md:rounded-[38px] p-4 md:p-7 mb-5 md:mb-6 min-h-[430px] md:min-h-[520px]"
       style={{
         background: `${theme.aura}, linear-gradient(135deg, rgba(18,9,10,0.72), rgba(5,2,2,0.92))`,
         border: "1px solid rgba(242,185,104,0.10)",
@@ -992,7 +992,7 @@ function LayerReveal({
         }}
       />
 
-      <div className="relative z-10 min-h-[466px] flex items-center justify-center">
+      <div className="relative z-10 min-h-[380px] md:min-h-[466px] flex items-center justify-center">
         <div className="w-full max-w-3xl mx-auto text-center">
           <motion.div
             initial={reduceMotion ? false : { scale: 0.94, opacity: 0 }}
@@ -1180,7 +1180,7 @@ function QuizQuestionView({
       initial={reduceMotion ? false : "hidden"}
       animate={reduceMotion ? undefined : "visible"}
       exit={reduceMotion ? undefined : "exit"}
-      className="relative overflow-hidden rounded-[24px] md:rounded-[32px] p-3 md:p-4 xl:p-5 mb-5 min-h-[360px] md:min-h-[380px] flex items-center"
+      className="relative overflow-hidden rounded-[22px] md:rounded-[32px] p-3 md:p-4 xl:p-5 mb-5 min-h-[330px] md:min-h-[380px] flex items-center"
       style={{
         background: `${theme.aura}, radial-gradient(circle at 50% 42%, ${theme.glow}, transparent 32%), linear-gradient(135deg, rgba(18,9,10,0.74), rgba(5,2,2,0.94))`,
         border: "1px solid rgba(242,185,104,0.10)",
@@ -1281,7 +1281,7 @@ function QuizQuestionView({
         </div>
 
         <div
-          className="relative overflow-hidden rounded-[22px] md:rounded-[28px] px-4 py-4 md:px-5 md:py-4 xl:px-7 xl:py-5 min-h-[340px] md:min-h-[360px] flex flex-col justify-between"
+          className="relative overflow-hidden rounded-[20px] md:rounded-[28px] px-3.5 py-3.5 md:px-5 md:py-4 xl:px-7 xl:py-5 min-h-[310px] md:min-h-[360px] flex flex-col justify-between"
           style={{
             background:
               "radial-gradient(circle at top, rgba(255,255,255,0.048), transparent 38%), linear-gradient(180deg, rgba(255,255,255,0.028), rgba(255,255,255,0.008))",
@@ -1637,7 +1637,7 @@ function ReadingLayerPanel({ layer }) {
       animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       exit={{ opacity: 0, y: -10, filter: "blur(6px)" }}
       transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-      className={`relative overflow-hidden rounded-[20px] md:rounded-[26px] min-h-[280px] ${
+      className={`relative overflow-hidden rounded-[18px] md:rounded-[26px] min-h-[250px] md:min-h-[280px] ${
         isExpanded ? "lg:min-h-[560px]" : "lg:h-[350px]"
       }`}
       style={{
@@ -1691,7 +1691,7 @@ function ReadingLayerPanel({ layer }) {
         }`}
       >
         <div
-          className={`p-4 md:p-5 flex min-h-[280px] max-w-full min-h-0 flex-col lg:max-w-[54%] ${
+          className={`p-3.5 md:p-5 flex min-h-[250px] md:min-h-[280px] max-w-full min-h-0 flex-col lg:max-w-[54%] ${
             isExpanded ? "justify-center lg:h-[350px]" : "justify-center lg:h-[350px]"
           }`}
         >
@@ -1747,7 +1747,7 @@ function ReadingLayerPanel({ layer }) {
           {guidedBlocks.length > 0 && !isExpanded && (
             <>
               <div
-                className="grid max-h-[120px] gap-2 overflow-y-auto pr-1 transition-[max-height] duration-500 md:max-h-[132px]"
+                className="grid max-h-[104px] gap-2 overflow-y-auto pr-1 transition-[max-height] duration-500 md:max-h-[132px]"
                 style={{
                   scrollbarWidth: "thin",
                   scrollbarColor: "rgba(242,185,104,0.16) transparent",
@@ -1756,7 +1756,7 @@ function ReadingLayerPanel({ layer }) {
                 {guidedBlocks.map((block) => (
                   <div
                     key={`${layer.number}-${block.label}`}
-                    className="rounded-[14px] px-3 py-2.5"
+                    className="rounded-[14px] px-3 py-2 md:py-2.5"
                     style={{
                       background:
                         "linear-gradient(180deg, rgba(255,255,255,0.024), rgba(255,255,255,0.007))",
@@ -1791,7 +1791,7 @@ function ReadingLayerPanel({ layer }) {
             <button
               type="button"
               onClick={() => setIsExpanded((current) => !current)}
-              className="mt-2 w-fit rounded-full px-3 py-1.5 text-[11px] transition-all hover:translate-y-[-1px]"
+            className="mt-2 w-fit rounded-full px-3 py-1.5 text-[11px] transition-all hover:translate-y-[-1px]"
               style={{
                 background: "rgba(242,185,104,0.055)",
                 border: "1px solid rgba(242,185,104,0.10)",
@@ -1804,7 +1804,7 @@ function ReadingLayerPanel({ layer }) {
         </div>
 
         {paragraphs.length > 0 && isExpanded && (
-          <div className="px-4 pb-4 md:px-5 md:pb-5">
+          <div className="px-3.5 pb-3.5 md:px-5 md:pb-5">
             <div
               className="grid gap-2.5"
               style={{
@@ -1829,7 +1829,7 @@ function ReadingLayerPanel({ layer }) {
 
               {leadParagraph && (
                 <div
-                  className="rounded-[16px] px-3.5 py-3"
+                  className="rounded-[16px] px-3.5 py-2.5 md:py-3"
                   style={{
                     background:
                       "linear-gradient(90deg, rgba(242,185,104,0.060), rgba(255,255,255,0.010))",
@@ -2742,7 +2742,7 @@ function QuizProduto1() {
 
         {result && (
           <section
-            className="ori-main-frame ori-card-protagonist mt-8 mb-10 rounded-[30px] md:rounded-[42px] p-6 md:p-8"
+            className="ori-main-frame ori-card-protagonist mt-5 mb-6 rounded-[24px] md:mt-8 md:mb-10 md:rounded-[42px] p-4 md:p-8"
             data-state="revealed"
             style={{
               backgroundColor: "rgba(5,2,2,0.92)",
@@ -2768,7 +2768,7 @@ function QuizProduto1() {
             </h2>
 
             <p
-              className="ori-type-reading-soft text-sm md:text-base max-w-3xl mb-6"
+              className="ori-mobile-preview-3 ori-type-reading-soft text-sm md:text-base max-w-3xl mb-5 md:mb-6"
               style={{ color: colors.soft }}
             >
               Sua primeira camada já está salva no Portal ORI. Você pode acessar

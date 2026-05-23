@@ -1059,7 +1059,7 @@ function MetodoOri() {
   return (
     <div className="ori-atmosphere ori-atmosphere-method relative overflow-hidden">
       <section
-        className="ori-main-frame ori-hero-panel relative overflow-hidden rounded-[24px] md:rounded-[40px] p-4 pt-7 md:p-8 mb-5 min-h-[390px] md:min-h-[460px] flex items-center cinematic-card"
+        className="ori-main-frame ori-hero-panel relative overflow-hidden rounded-[24px] md:rounded-[40px] p-4 pt-7 md:p-8 mb-5 min-h-[350px] md:min-h-[460px] flex items-center cinematic-card"
         style={{
           background:
             "linear-gradient(135deg, rgba(18,9,10,0.88), rgba(5,2,2,0.96))",
@@ -1165,7 +1165,7 @@ function MetodoOri() {
       </section>
 
       <div
-        className="relative overflow-hidden rounded-[26px] md:rounded-[34px]"
+        className="ori-mobile-section relative overflow-hidden rounded-[22px] md:rounded-[34px]"
         style={{
           backgroundColor: "rgba(5,2,2,0.92)",
           backgroundImage:
@@ -1204,7 +1204,7 @@ function MetodoOri() {
           </AnimatePresence>
 
           <div
-            className="mt-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 rounded-[20px] px-3.5 py-3"
+            className="mt-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 rounded-[18px] px-3 py-2.5 md:rounded-[20px] md:px-3.5 md:py-3"
             style={{
               background:
                 "linear-gradient(90deg, rgba(255,255,255,0.020), rgba(255,255,255,0.010))",

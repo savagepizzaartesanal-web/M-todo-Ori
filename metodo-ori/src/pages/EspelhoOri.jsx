@@ -268,7 +268,7 @@ function MotionSection({
 function MirrorHero() {
   return (
     <section
-      className="ori-main-frame ori-hero-panel cinematic-card relative mb-5 min-h-[430px] overflow-hidden rounded-[24px] md:min-h-[520px] md:rounded-[42px]"
+      className="ori-main-frame ori-hero-panel cinematic-card relative mb-5 min-h-[370px] overflow-hidden rounded-[24px] md:min-h-[520px] md:rounded-[42px]"
       style={{
         backgroundColor: "rgba(5,2,2,0.94)",
         backgroundImage:
@@ -299,12 +299,12 @@ function MirrorHero() {
         }}
       />
 
-      <div className="relative z-10 grid min-h-[430px] gap-5 px-4 py-7 md:min-h-[520px] md:gap-7 md:px-8 md:py-8 xl:grid-cols-[0.58fr_0.42fr] xl:px-11 xl:py-9">
+      <div className="relative z-10 grid min-h-[370px] gap-4 px-4 py-7 md:min-h-[520px] md:gap-7 md:px-8 md:py-8 xl:grid-cols-[0.58fr_0.42fr] xl:px-11 xl:py-9">
         <div className="flex max-w-2xl flex-col justify-center">
           <AtrioLineLabel className="mb-3 md:mb-6">Espelho ORI</AtrioLineLabel>
 
           <h1
-            className="ori-type-hero mb-3 max-w-3xl text-[36px] md:mb-6 md:text-[60px] xl:text-[66px]"
+            className="ori-type-hero mb-3 max-w-3xl text-[34px] md:mb-6 md:text-[60px] xl:text-[66px]"
             style={{
               color: "var(--gold-primary)",
               fontWeight: 540,
@@ -324,7 +324,7 @@ function MirrorHero() {
           />
 
           <p
-            className="ori-type-reading mb-5 max-w-xl text-[15px] md:text-lg"
+            className="ori-type-reading mb-4 max-w-xl text-[15px] md:mb-5 md:text-lg"
             style={{ color: "rgba(255,245,235,0.64)" }}
           >
             Aqui você acompanha o que já foi revelado, o que está em tradução e
@@ -970,7 +970,7 @@ function EspelhoOri() {
     {
       label: "Arquétipo",
       caption: "Base simbólica",
-      image: "/images/espelho-ori/assinatura-visual.png",
+      image: "/images/panels/formula.png",
       imagePosition: "center 32%",
       imageHeight: 140,
       value: hasResult ? resultadoFinal : "Aguardando primeira leitura",
@@ -987,7 +987,7 @@ function EspelhoOri() {
     {
       label: "Presença",
       caption: "Gestual e percepção",
-      image: "/images/espelho-ori/presenca.png",
+      image: "/images/panels/presenca.png",
       imagePosition: "center 22%",
       imageHeight: 140,
       value: hasResult ? "Primeira leitura ativa" : "Selada",
@@ -1004,7 +1004,7 @@ function EspelhoOri() {
     {
       label: "Dor central",
       caption: "Ponto de tensão",
-      image: "/images/espelho-ori/beleza.png",
+      image: "/images/panels/beleza.png",
       imageHeight: 140,
       value: mainPain || "Em consciência",
       text: getPreview(centralPainValue, 96),
@@ -1016,7 +1016,7 @@ function EspelhoOri() {
     {
       label: "Corpo",
       caption: "Forma e proporção",
-      image: "/images/espelho-ori/corpo.png",
+      image: "/images/panels/modelagem.png",
       imagePosition: "center 8%",
       imageHeight: 140,
       value: bodyType || "Em tradução",
@@ -1033,7 +1033,7 @@ function EspelhoOri() {
     {
       label: "Cor",
       caption: "Sazonal e Patton",
-      image: "/images/espelho-ori/paleta.png",
+      image: "/images/panels/paleta.png",
       imageHeight: 140,
       value:
         seasonalColor ||
@@ -1054,7 +1054,7 @@ function EspelhoOri() {
     {
       label: "Cabelo",
       caption: "Textura e acabamento",
-      image: "/images/espelho-ori/cabelo.png",
+      image: "/images/panels/beleza.png",
       imageHeight: 140,
       value: hairDiagnosis || "Em tradução",
       text: hairDiagnosis
@@ -1073,7 +1073,7 @@ function EspelhoOri() {
     beleza: {
       label: "Beleza",
       caption: "Rosto e acabamento",
-      image: "/images/espelho-ori/beleza.png",
+      image: "/images/panels/beleza.png",
       imageHeight: 140,
       value: "Em tradução",
       text: "Maquiagem, acabamento e presença do rosto.",
@@ -1085,7 +1085,7 @@ function EspelhoOri() {
     assinaturaVisual: {
       label: "Assinatura visual",
       caption: "Síntese estética",
-      image: "/images/espelho-ori/assinatura-visual.png",
+      image: "/images/panels/formula.png",
       imagePosition: "center 32%",
       imageHeight: 140,
       value: "Em síntese",
@@ -1098,7 +1098,7 @@ function EspelhoOri() {
     armario: {
       label: "Armário",
       caption: "Aplicação real",
-      image: "/images/espelho-ori/assinatura-visual.png",
+      image: "/images/panels/modelagem.png",
       imagePosition: "center 32%",
       imageHeight: 140,
       value: "Próxima aplicação",
@@ -1111,7 +1111,7 @@ function EspelhoOri() {
     formulas: {
       label: "Fórmulas",
       caption: "Looks e repetição",
-      image: "/images/espelho-ori/presenca.png",
+      image: "/images/panels/presenca.png",
       imagePosition: "center 22%",
       imageHeight: 140,
       value: "Próxima aplicação",
@@ -1124,7 +1124,7 @@ function EspelhoOri() {
     compras: {
       label: "Compras",
       caption: "Escolhas e prioridade",
-      image: "/images/espelho-ori/paleta.png",
+      image: "/images/panels/paleta.png",
       imageHeight: 140,
       value: "Próxima aplicação",
       text: "O que entra, o que sai e o que deixa de dispersar.",
@@ -2122,7 +2122,7 @@ function EspelhoOri() {
                 return (
                   <div
                     key={group.id}
-                    className={`rounded-[20px] md:rounded-[26px] p-3 md:p-4 ${
+                    className={`ori-mobile-section rounded-[20px] md:rounded-[26px] p-3 md:p-4 ${
                       isLocked ? "ori-card-sealed" : "ori-card-secondary"
                     }`}
                     style={{
@@ -2176,7 +2176,7 @@ function EspelhoOri() {
                             <article
                               key={item.targetId}
                               id={item.targetId}
-                              className="ori-card-secondary flex min-h-[300px] scroll-mt-24 flex-col rounded-[22px] p-4 md:p-5"
+                              className="ori-card-secondary flex min-h-[220px] scroll-mt-24 flex-col rounded-[20px] p-3.5 md:min-h-[300px] md:rounded-[22px] md:p-5"
                               style={{
                                 background:
                                   item.targetId === "resultado-formula"
@@ -2219,7 +2219,7 @@ function EspelhoOri() {
                                         }}
                                       />
                                       <p
-                                        className="whitespace-nowrap px-2 text-[12px] uppercase leading-tight sm:text-[13px] md:text-[15px] xl:text-[16px]"
+                                        className="px-2 text-[11px] uppercase leading-tight sm:whitespace-nowrap sm:text-[13px] md:text-[15px] xl:text-[16px]"
                                         style={{
                                           color: "rgba(242,185,104,0.82)",
                                           fontStyle: "normal",
@@ -2278,7 +2278,7 @@ function EspelhoOri() {
                                         }}
                                       />
                                       <p
-                                        className="whitespace-nowrap px-2 text-[26px] leading-none sm:text-[30px] md:text-[36px]"
+                                        className="px-2 text-[24px] leading-none sm:whitespace-nowrap sm:text-[30px] md:text-[36px]"
                                         style={{
                                           color: "rgba(242,185,104,0.82)",
                                           fontStyle: "normal",
@@ -2631,7 +2631,7 @@ function EspelhoOri() {
                         ) : (
                           <div className="grid gap-3 lg:grid-cols-[0.9fr_1.1fr]">
                             <div
-                              className="rounded-[22px] p-5"
+                              className="ori-mobile-compact rounded-[22px] p-5"
                               style={{
                                 background:
                                   "radial-gradient(circle at top right, rgba(242,185,104,0.12), transparent 34%), linear-gradient(135deg, rgba(255,255,255,0.034), rgba(255,255,255,0.010))",
@@ -2669,7 +2669,7 @@ function EspelhoOri() {
                                 <div
                                   key={item.targetId}
                                   id={item.targetId}
-                                  className="scroll-mt-24 rounded-[18px] p-4 transition duration-300 hover:-translate-y-0.5"
+                                    className="ori-mobile-compact-sm scroll-mt-24 rounded-[18px] p-4 transition duration-300 hover:-translate-y-0.5"
                                   style={{
                                     background: "rgba(255,255,255,0.022)",
                                     border:
@@ -2688,7 +2688,7 @@ function EspelhoOri() {
                                     </span>
                                   </div>
                                   <p
-                                    className="text-sm leading-relaxed"
+                                    className="ori-mobile-preview-3 text-sm leading-relaxed"
                                     style={{ color: "rgba(255,245,235,0.62)" }}
                                   >
                                     {item.summary}
@@ -2703,7 +2703,7 @@ function EspelhoOri() {
 
                     {group.id === "aplicacao" && (
                       <div
-                        className="rounded-[22px] p-5"
+                        className="ori-mobile-compact rounded-[22px] p-5"
                         style={{
                           background: codigoFinalRevelado
                             ? "radial-gradient(circle at top right, rgba(242,185,104,0.10), transparent 34%), linear-gradient(135deg, rgba(255,255,255,0.032), rgba(255,255,255,0.010))"
@@ -2734,7 +2734,7 @@ function EspelhoOri() {
                         </h4>
 
                         <p
-                          className="mb-4 max-w-2xl text-sm leading-relaxed md:text-base"
+                          className="ori-mobile-preview-3 mb-4 max-w-2xl text-sm leading-relaxed md:text-base"
                           style={{ color: "rgba(255,245,235,0.58)" }}
                         >
                           {codigoFinalRevelado
@@ -3578,7 +3578,7 @@ function EspelhoOri() {
           }}
         >
           <img
-            src="/images/espelho-ori/espelho-respiro.png"
+            src="/images/espelho-ori/oraculo/fundo-oraculo-premium.png"
             alt=""
             className="absolute inset-0 h-full w-full object-cover"
             loading="lazy"
@@ -3965,7 +3965,7 @@ function EspelhoOri() {
         <MotionSection
           id="espelho-proxima"
           reduceMotion={reduceMotion}
-          className="relative overflow-hidden rounded-[28px] md:rounded-[38px] p-6 md:p-8 mb-5"
+          className="ori-mobile-section relative overflow-hidden rounded-[24px] md:rounded-[38px] p-4 md:p-8 mb-5"
           style={{
             backgroundColor: "rgba(5,2,2,0.92)",
             backgroundImage: ORACLE_PANEL_BACKGROUND,
@@ -3996,7 +3996,7 @@ function EspelhoOri() {
               </h2>
 
               <p
-                className="max-w-2xl text-base leading-relaxed md:text-lg"
+                className="ori-mobile-preview-3 max-w-2xl text-base leading-relaxed md:text-lg"
                 style={{ color: "rgba(255,245,235,0.66)" }}
               >
                 Agora que sua base foi revelada, está na hora de entender como
@@ -4053,7 +4053,7 @@ function EspelhoOri() {
           <MotionSection
             id="espelho-carta"
             reduceMotion={reduceMotion}
-            className="relative overflow-hidden rounded-[24px] md:rounded-[30px] p-4 md:p-5 mb-5"
+            className="ori-mobile-section relative overflow-hidden rounded-[22px] md:rounded-[30px] p-3.5 md:p-5 mb-5"
           style={{
             backgroundColor: "rgba(5,2,2,0.92)",
             backgroundImage: ORACLE_PANEL_BACKGROUND,
@@ -4101,7 +4101,7 @@ function EspelhoOri() {
               </h2>
 
               <p
-                className="mx-auto mb-4 max-w-md text-sm leading-relaxed xl:mx-0"
+                className="mx-auto mb-3 max-w-md text-sm leading-relaxed xl:mx-0"
                 style={{ color: colors.muted }}
               >
                 {!hasResult
@@ -4140,7 +4140,7 @@ function EspelhoOri() {
 
             <div className="grid items-stretch gap-4 xl:grid-cols-[0.72fr_1.28fr]">
               <div
-                className="relative flex min-h-[348px] items-center justify-center px-3 py-3"
+                className="relative flex min-h-[286px] items-center justify-center px-3 py-2 md:min-h-[348px] md:py-3"
                 style={{
                   perspective: 1400,
                 }}
@@ -4159,9 +4159,9 @@ function EspelhoOri() {
                       "linear-gradient(90deg, transparent, rgba(242,185,104,0.34), transparent)",
                   }}
                 />
-                <div className="relative z-10 flex min-h-[324px] flex-col items-center justify-center gap-4">
+                <div className="relative z-10 flex min-h-[266px] flex-col items-center justify-center gap-3 md:min-h-[324px] md:gap-4">
                   <div
-                    className="relative h-[248px] w-[168px] md:h-[278px] md:w-[188px]"
+                    className="relative h-[210px] w-[142px] md:h-[278px] md:w-[188px]"
                     style={{
                       opacity: !hasResult ? 0.42 : 1,
                       isolation: "isolate",
@@ -4463,7 +4463,7 @@ function EspelhoOri() {
                         }
                   }
                   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                  className="relative self-center overflow-hidden rounded-[22px] px-4 py-5 md:px-5 md:py-5"
+                  className="relative self-center overflow-hidden rounded-[20px] px-3.5 py-4 md:rounded-[22px] md:px-5 md:py-5"
                   style={{
                     transformStyle: "preserve-3d",
                     background:
@@ -4495,7 +4495,7 @@ function EspelhoOri() {
                     </AtrioLineLabel>
 
                     <h3
-                      className="mb-3 max-w-2xl text-xl leading-[1.08] md:text-2xl"
+                      className="mb-2 max-w-2xl text-lg leading-[1.08] md:mb-3 md:text-2xl"
                       style={{
                         color: selectedCard
                           ? colors.headingActive
@@ -4534,7 +4534,7 @@ function EspelhoOri() {
                     </AnimatePresence>
 
                     <blockquote
-                      className="max-w-2xl rounded-[18px] px-4 py-3.5 text-base leading-relaxed md:text-lg md:leading-[1.48]"
+                      className="max-w-2xl rounded-[16px] px-3.5 py-3 text-sm leading-relaxed md:rounded-[18px] md:px-4 md:py-3.5 md:text-lg md:leading-[1.48]"
                       style={{
                         background:
                           "linear-gradient(90deg, rgba(255,255,255,0.026), rgba(255,255,255,0.010))",
@@ -4558,7 +4558,7 @@ function EspelhoOri() {
                     className="relative z-10 mt-4"
                   >
                     <p
-                      className="max-w-xl text-xs leading-relaxed md:text-sm"
+                      className="ori-mobile-preview max-w-xl text-xs leading-relaxed md:text-sm"
                       style={{ color: "rgba(255,245,235,0.44)" }}
                     >
                       {selectedCard

@@ -4,7 +4,7 @@ function QuizHero({
 }) {
   return (
     <section
-      className="ori-main-frame ori-hero-panel relative overflow-hidden rounded-[24px] md:rounded-[36px] p-4 pt-7 md:p-6 xl:p-7 mb-5 cinematic-card min-h-[390px] md:min-h-[clamp(400px,calc(100vh-160px),500px)] flex items-center"
+      className="ori-main-frame ori-hero-panel relative overflow-hidden rounded-[24px] md:rounded-[36px] p-4 pt-7 md:p-6 xl:p-7 mb-5 cinematic-card min-h-[350px] md:min-h-[clamp(400px,calc(100vh-160px),500px)] flex items-center"
       style={{
         background:
           "linear-gradient(135deg, rgba(18,9,10,0.88), rgba(5,2,2,0.96))",

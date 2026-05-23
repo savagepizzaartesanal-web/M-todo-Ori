@@ -393,7 +393,7 @@ function PortalCliente() {
 
       <div className="relative z-10 max-w-7xl">
         <section
-          className="ori-main-frame ori-hero-panel ori-card-protagonist relative overflow-hidden rounded-[24px] md:rounded-[42px] p-4 pt-7 md:p-8 xl:p-9 mb-5 md:mb-10 cinematic-card min-h-[390px] sm:min-h-[430px] md:min-h-[430px] flex items-center"
+          className="ori-main-frame ori-hero-panel ori-card-protagonist relative overflow-hidden rounded-[24px] md:rounded-[42px] p-4 pt-7 md:p-8 xl:p-9 mb-5 md:mb-10 cinematic-card min-h-[350px] sm:min-h-[390px] md:min-h-[430px] flex items-center"
           style={{
             background:
               "linear-gradient(135deg, rgba(18,9,10,0.88), rgba(5,2,2,0.96))",
@@ -691,7 +691,7 @@ function PortalCliente() {
         </section>
 
         <section
-          className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[20px] md:rounded-[28px] p-3.5 md:p-5 mb-5 md:mb-8 cinematic-card"
+          className="ori-mobile-section ori-main-frame ori-card-secondary relative overflow-hidden rounded-[20px] md:rounded-[28px] p-3.5 md:p-5 mb-5 md:mb-8 cinematic-card"
           style={{
             backgroundColor: "rgba(5,2,2,0.92)",
             backgroundImage: ORACLE_PANEL_BACKGROUND,
@@ -855,7 +855,7 @@ function PortalCliente() {
             return (
               <div
                 key={card.number}
-                className={`group cinematic-card relative overflow-hidden rounded-[18px] md:rounded-[26px] p-3.5 md:p-5 ${
+                className={`group cinematic-card relative overflow-hidden rounded-[18px] md:rounded-[26px] p-3 md:p-5 ${
                   card.released
                     ? card.active
                       ? "ori-card-protagonist"

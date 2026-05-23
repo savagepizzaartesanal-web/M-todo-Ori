@@ -24,7 +24,7 @@ function AuthLoading() {
       aria-live="polite"
     >
       <div
-        className="ori-card-protagonist w-full max-w-xl rounded-[34px] p-8 md:p-10 text-center"
+        className="ori-card-protagonist w-full max-w-xl rounded-[24px] md:rounded-[34px] p-4 md:p-10 text-center"
         style={{
           background:
             "linear-gradient(135deg, rgba(18,9,10,0.88), rgba(5,2,2,0.96))",
@@ -36,14 +36,14 @@ function AuthLoading() {
         }}
       >
         <p
-          className="ori-type-system text-[10px] md:text-xs mb-5"
+          className="ori-type-system text-[9px] md:text-xs mb-3 md:mb-5"
           style={{ color: "var(--gold-soft)" }}
         >
           Validando acesso
         </p>
 
         <h1
-          className="ori-type-revelation text-3xl md:text-4xl font-semibold"
+          className="ori-type-revelation text-2xl md:text-4xl font-semibold"
           style={{
             color: "var(--gold-primary)",
             letterSpacing: "-0.05em",

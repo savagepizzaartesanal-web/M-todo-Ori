@@ -38,7 +38,7 @@ function Dashboard() {
 
       <div className="max-w-7xl">
         <section
-          className="ori-main-frame ori-hero-panel relative overflow-hidden rounded-[30px] md:rounded-[42px] p-6 md:p-10 mb-7 md:mb-9 cinematic-card"
+          className="ori-main-frame ori-hero-panel relative overflow-hidden rounded-[24px] md:rounded-[42px] p-4 md:p-10 mb-5 md:mb-9 cinematic-card"
           style={{
             background:
               "radial-gradient(circle at top right, rgba(242,185,104,0.12), transparent 34%), radial-gradient(circle at bottom left, rgba(140,111,145,0.12), transparent 42%), linear-gradient(180deg, rgba(18,9,10,0.98), rgba(5,2,2,1))",
@@ -67,7 +67,7 @@ function Dashboard() {
             </p>
 
             <h1
-              className="ori-type-hero text-4xl md:text-6xl xl:text-7xl mb-6 reveal-step"
+              className="ori-type-hero text-[34px] md:text-6xl xl:text-7xl mb-3 md:mb-6 reveal-step"
               style={{
                 color: "var(--gold-primary)",
                 fontWeight: 600,
@@ -82,7 +82,7 @@ function Dashboard() {
             </h1>
 
             <p
-              className="ori-type-revelation text-xl md:text-2xl max-w-4xl mb-5 reveal-step"
+              className="ori-type-revelation text-lg md:text-2xl max-w-4xl mb-3 md:mb-5 reveal-step"
               style={{
                 color: "var(--text-primary)",
                 "--delay": "0.32s",
@@ -94,7 +94,7 @@ function Dashboard() {
             </p>
 
             <p
-              className="ori-type-reading-soft text-sm md:text-base max-w-3xl mb-7 reveal-step"
+              className="ori-mobile-preview-3 ori-type-reading-soft text-sm md:text-base max-w-3xl mb-5 md:mb-7 reveal-step"
               style={{
                 color: "var(--text-soft)",
                 "--delay": "0.46s",
@@ -141,7 +141,7 @@ function Dashboard() {
 
         <div className="grid xl:grid-cols-3 gap-4">
           <div
-            className="ori-card-protagonist group cinematic-card relative overflow-hidden rounded-[24px] md:rounded-[30px] p-5 md:p-6"
+            className="ori-card-protagonist group cinematic-card relative overflow-hidden rounded-[20px] md:rounded-[30px] p-3.5 md:p-6"
             style={{
               background:
                 "radial-gradient(circle at top right, rgba(242,185,104,0.1), transparent 36%), linear-gradient(180deg, rgba(18,9,10,0.98), rgba(7,3,4,1))",
@@ -203,7 +203,7 @@ function Dashboard() {
               </h2>
 
               <p
-                className="ori-type-reading-soft text-sm mb-5"
+                className="ori-mobile-preview-3 ori-type-reading-soft text-sm mb-4 md:mb-5"
                 style={{ color: "var(--text-soft)" }}
               >
                 Revelação simbólica da sua essência arquetípica, padrões
@@ -278,7 +278,7 @@ function Dashboard() {
           </div>
 
           <div
-            className="ori-card-secondary group cinematic-card relative overflow-hidden rounded-[24px] md:rounded-[30px] p-5 md:p-6 opacity-75"
+            className="ori-card-secondary group cinematic-card relative overflow-hidden rounded-[20px] md:rounded-[30px] p-3.5 md:p-6 opacity-75"
             style={{
               background:
                 "radial-gradient(circle at top right, rgba(140,111,145,0.09), transparent 36%), linear-gradient(180deg, rgba(18,9,10,0.96), rgba(7,3,4,1))",
@@ -301,7 +301,7 @@ function Dashboard() {
               </h2>
 
               <p
-                className="ori-type-reading-soft text-sm mb-6"
+                className="ori-mobile-preview-3 ori-type-reading-soft text-sm mb-4 md:mb-6"
                 style={{ color: "var(--text-soft)" }}
               >
                 Estrutura facial, imagem, estética, presença visual, cabelo,
@@ -322,7 +322,7 @@ function Dashboard() {
           </div>
 
           <div
-            className="ori-card-teaser group cinematic-card relative overflow-hidden rounded-[24px] md:rounded-[30px] p-5 md:p-6 opacity-65"
+            className="ori-card-teaser group cinematic-card relative overflow-hidden rounded-[20px] md:rounded-[30px] p-3.5 md:p-6 opacity-65"
             data-state="sealed"
             style={{
               background:

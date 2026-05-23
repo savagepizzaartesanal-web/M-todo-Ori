@@ -1,7 +1,7 @@
 function ReportSection({ eyebrow, title, content }) {
   return (
     <section
-      className="ori-main-frame cinematic-card relative overflow-hidden rounded-4xl md:rounded-[44px] p-8 md:p-12 fade-up"
+      className="ori-main-frame cinematic-card relative overflow-hidden rounded-[24px] md:rounded-[44px] p-4 md:p-12 fade-up"
       style={{
         background:
           "radial-gradient(circle at top right, rgba(242,185,104,0.055), transparent 34%), linear-gradient(180deg, rgba(18,9,10,0.98), rgba(7,3,4,1))",
@@ -27,14 +27,14 @@ function ReportSection({ eyebrow, title, content }) {
 
       <div className="relative z-10">
         <p
-          className="uppercase tracking-[0.4em] text-[10px] md:text-xs mb-6"
+          className="uppercase tracking-[0.22em] md:tracking-[0.4em] text-[9px] md:text-xs mb-3 md:mb-6"
           style={{ color: "var(--gold-soft)" }}
         >
           {eyebrow}
         </p>
 
         <h3
-          className="text-3xl md:text-4xl font-semibold mb-8 md:mb-10 leading-tight max-w-4xl"
+          className="text-2xl md:text-4xl font-semibold mb-4 md:mb-10 leading-tight max-w-4xl"
           style={{
             color: "var(--gold-primary)",
             letterSpacing: "-0.035em",
@@ -44,7 +44,7 @@ function ReportSection({ eyebrow, title, content }) {
         </h3>
 
         <div
-          className="w-20 h-px mb-8"
+          className="w-16 md:w-20 h-px mb-4 md:mb-8"
           style={{
             background:
               "linear-gradient(to right, var(--gold-primary), transparent)",
@@ -52,7 +52,7 @@ function ReportSection({ eyebrow, title, content }) {
         />
 
         <p
-          className="text-lg md:text-xl leading-[1.9] whitespace-pre-line max-w-5xl"
+          className="ori-mobile-preview-3 text-sm md:text-xl leading-relaxed md:leading-[1.9] whitespace-pre-line max-w-5xl"
           style={{ color: "var(--text-soft)" }}
         >
           {content}

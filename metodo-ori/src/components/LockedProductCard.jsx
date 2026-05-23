@@ -9,7 +9,7 @@ function LockedProductCard({
 }) {
   return (
     <section
-      className="ori-card-teaser relative overflow-hidden rounded-[44px] p-12"
+      className="ori-card-teaser relative overflow-hidden rounded-[24px] p-4 md:rounded-[44px] md:p-12"
       data-state="sealed"
       style={{
         background:
@@ -19,32 +19,32 @@ function LockedProductCard({
       }}
     >
       <p
-        className="ori-type-system text-xs mb-5"
+        className="ori-type-system text-[9px] md:text-xs mb-3 md:mb-5"
         style={{ color: "var(--gold-soft)" }}
       >
         Acesso Bloqueado
       </p>
 
       <h1
-        className="ori-type-hero text-5xl font-semibold mb-5"
+        className="ori-type-hero text-3xl md:text-5xl font-semibold mb-3 md:mb-5"
         style={{ color: "var(--gold-primary)" }}
       >
         {titulo}
       </h1>
 
-      <p className="ori-type-revelation text-2xl mb-8" style={{ color: "var(--text-primary)" }}>
+      <p className="ori-type-revelation text-lg md:text-2xl mb-4 md:mb-8" style={{ color: "var(--text-primary)" }}>
         {subtitulo}
       </p>
 
       <p
-        className="ori-type-reading-soft text-xl max-w-4xl mb-10"
+        className="ori-mobile-preview-3 ori-type-reading-soft text-sm md:text-xl max-w-4xl mb-5 md:mb-10"
         style={{ color: "var(--text-soft)" }}
       >
         {descricao}
       </p>
 
       <div
-        className="ori-card-secondary p-6 rounded-[28px] mb-10"
+        className="ori-card-secondary p-3.5 md:p-6 rounded-[18px] md:rounded-[28px] mb-5 md:mb-10"
         style={{
           background: "rgba(242,185,104,0.05)",
           border: "1px solid rgba(242,185,104,0.12)",
@@ -55,7 +55,7 @@ function LockedProductCard({
 
       <Link
         to={link}
-        className="ori-journey-action inline-flex px-8 py-4 rounded-full font-medium"
+        className="ori-journey-action inline-flex px-6 py-3 md:px-8 md:py-4 rounded-full font-medium"
         style={{
           background: "var(--gold-primary)",
           color: "#090506",

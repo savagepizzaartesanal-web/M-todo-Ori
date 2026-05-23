@@ -142,7 +142,7 @@ function AdminClientes() {
   if (loading) {
     return (
       <div
-        className="ori-main-frame ori-card-protagonist relative overflow-hidden rounded-[34px] md:rounded-[42px] p-8 md:p-10 cinematic-card"
+        className="ori-main-frame ori-card-protagonist relative overflow-hidden rounded-[24px] md:rounded-[42px] p-4 md:p-10 cinematic-card"
         style={{
           background:
             "linear-gradient(135deg, rgba(18,9,10,0.88), rgba(5,2,2,0.96))",
@@ -180,7 +180,7 @@ function AdminClientes() {
 
       <div className="relative z-10">
         <section
-          className="ori-main-frame ori-hero-panel relative overflow-hidden rounded-[34px] md:rounded-[42px] p-7 md:p-9 xl:p-10 mb-8 cinematic-card"
+          className="ori-main-frame ori-hero-panel relative overflow-hidden rounded-[24px] md:rounded-[42px] p-4 md:p-9 xl:p-10 mb-5 md:mb-8 cinematic-card"
           style={{
             background:
               "radial-gradient(circle at top right, rgba(242,185,104,0.12), transparent 34%), linear-gradient(135deg, rgba(18,9,10,0.88), rgba(5,2,2,0.96))",
@@ -201,7 +201,7 @@ function AdminClientes() {
           />
 
           <div className="relative z-10">
-            <div className="inline-flex items-center gap-4 mb-4">
+            <div className="inline-flex items-center gap-3 md:gap-4 mb-3 md:mb-4">
               <div
                 className="w-8 h-px"
                 style={{
@@ -221,7 +221,7 @@ function AdminClientes() {
             <div className="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-6">
               <div>
                 <h1
-                  className="ori-type-hero text-4xl md:text-5xl xl:text-[64px] mb-5"
+                  className="ori-type-hero text-[34px] md:text-5xl xl:text-[64px] mb-3 md:mb-5"
                   style={{
                     color: "var(--gold-primary)",
                     fontWeight: 600,
@@ -233,7 +233,7 @@ function AdminClientes() {
                 </h1>
 
                 <p
-                  className="ori-type-reading-soft text-base md:text-lg max-w-2xl"
+                  className="ori-mobile-preview-3 ori-type-reading-soft text-sm md:text-lg max-w-2xl"
                   style={{ color: "var(--text-soft)" }}
                 >
                   Gestão de leads, acessos, liberações e jornadas simbólicas do
@@ -256,7 +256,7 @@ function AdminClientes() {
           </div>
         </section>
 
-        <div className="grid md:grid-cols-2 xl:grid-cols-5 gap-4 mb-7">
+        <div className="grid md:grid-cols-2 xl:grid-cols-5 gap-3 md:gap-4 mb-5 md:mb-7">
           {[
             ["Total", resumo.total],
             ["Leads", resumo.leads],
@@ -266,7 +266,7 @@ function AdminClientes() {
           ].map(([label, value]) => (
             <div
               key={label}
-              className="ori-card-secondary relative overflow-hidden rounded-[24px] p-5 cinematic-card"
+              className="ori-card-secondary relative overflow-hidden rounded-[18px] md:rounded-[24px] p-3.5 md:p-5 cinematic-card"
               style={{
                 background:
                   "linear-gradient(180deg, rgba(18,9,10,0.72), rgba(7,3,4,0.88))",
@@ -275,14 +275,14 @@ function AdminClientes() {
               }}
             >
               <p
-                className="ori-type-system text-[9px] mb-3"
+                className="ori-type-system text-[9px] mb-2 md:mb-3"
                 style={{ color: "var(--gold-soft)" }}
               >
                 {label}
               </p>
 
               <h2
-                className="ori-type-revelation text-3xl md:text-4xl"
+                className="ori-type-revelation text-2xl md:text-4xl"
                 style={{
                   color: "var(--gold-primary)",
                   fontWeight: 600,
@@ -296,7 +296,7 @@ function AdminClientes() {
         </div>
 
         <div
-          className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[26px] p-4 md:p-5 mb-7 cinematic-card"
+          className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[20px] md:rounded-[26px] p-3.5 md:p-5 mb-5 md:mb-7 cinematic-card"
           style={{
             background:
               "linear-gradient(180deg, rgba(18,9,10,0.66), rgba(7,3,4,0.82))",

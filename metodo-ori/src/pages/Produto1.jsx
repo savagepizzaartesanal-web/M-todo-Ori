@@ -53,7 +53,7 @@ function QuizProduto1() {
   return (
     <div className="max-w-6xl">
       <section
-        className="ori-hero-panel relative overflow-hidden rounded-[30px] md:rounded-[40px] mb-16 min-h-[520px]"
+        className="ori-hero-panel relative overflow-hidden rounded-[24px] md:rounded-[40px] mb-8 md:mb-16 min-h-[390px] md:min-h-[520px]"
         style={{
           background:
             "radial-gradient(circle at 78% 18%, rgba(242,185,104,0.13), transparent 32%), linear-gradient(135deg, rgba(18,9,10,0.62), rgba(5,2,2,0.82))",
@@ -81,8 +81,8 @@ function QuizProduto1() {
           }}
         />
 
-        <div className="relative z-10 grid min-h-[520px] lg:grid-cols-[0.95fr_0.72fr]">
-          <div className="flex min-h-[520px] flex-col justify-center p-6 md:p-8 xl:p-10">
+        <div className="relative z-10 grid min-h-[390px] md:min-h-[520px] lg:grid-cols-[0.95fr_0.72fr]">
+          <div className="flex min-h-[390px] flex-col justify-center p-4 pt-7 md:min-h-[520px] md:p-8 xl:p-10">
             <p
               className="ori-type-system text-[10px] md:text-xs mb-5"
               style={{ color: "var(--gold-soft)" }}
@@ -91,7 +91,7 @@ function QuizProduto1() {
             </p>
 
             <h1
-              className="ori-type-hero text-4xl md:text-6xl font-semibold mb-6 max-w-4xl"
+              className="ori-type-hero text-[34px] md:text-6xl font-semibold mb-3 md:mb-6 max-w-4xl"
               style={{
                 color: "var(--gold-primary)",
                 letterSpacing: "-0.065em",
@@ -102,7 +102,7 @@ function QuizProduto1() {
             </h1>
 
             <p
-              className="ori-type-reading text-lg md:text-xl max-w-3xl mb-5"
+              className="ori-type-reading text-[15px] md:text-xl max-w-3xl mb-4 md:mb-5"
               style={{ color: "var(--text-primary)" }}
             >
               Sua imagem não começa na aparência. Ela começa nos padrões que
@@ -110,7 +110,7 @@ function QuizProduto1() {
             </p>
 
             <div
-              className="max-w-3xl max-h-[150px] overflow-y-auto pr-2 mb-6"
+              className="hidden max-w-3xl max-h-[150px] overflow-y-auto pr-2 mb-6 md:block"
               style={{
                 scrollbarWidth: "thin",
                 scrollbarColor: "rgba(242,185,104,0.22) transparent",
@@ -127,7 +127,7 @@ function QuizProduto1() {
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-2.5 mb-7">
+            <div className="hidden flex-wrap gap-2.5 mb-7 sm:flex">
               {[
                 "Leitura inicial",
                 "Composição arquetípica",
@@ -152,7 +152,7 @@ function QuizProduto1() {
             <button
               type="button"
               onClick={handleScrollToQuiz}
-              className="w-fit px-8 py-4 rounded-full font-medium transition-all duration-300 hover:scale-[1.03]"
+              className="w-fit px-6 py-3 md:px-8 md:py-4 rounded-full font-medium transition-all duration-300 hover:scale-[1.03]"
               style={{
                 background: "var(--gold-primary)",
                 color: "#090506",
