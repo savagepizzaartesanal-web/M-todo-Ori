@@ -2032,14 +2032,14 @@ function EspelhoOri() {
               </p>
             </div>
 
-            <div className="mb-4 md:mb-5 grid gap-2 md:gap-2.5 md:grid-cols-4">
+            <div className="ori-premium-scroll mb-4 flex gap-2 overflow-x-auto pb-1 md:mb-5 md:grid md:grid-cols-4 md:gap-2.5 md:overflow-visible md:pb-0">
               {profileSnapshot.map((item) => {
                 const isSealed = item.state === "sealed";
 
                 return (
                   <article
                     key={item.label}
-                    className={`relative overflow-hidden rounded-[16px] p-3.5 md:rounded-[18px] md:p-4 ${
+                    className={`relative min-w-[176px] shrink-0 overflow-hidden rounded-[15px] p-3 md:min-w-0 md:rounded-[18px] md:p-4 ${
                       isSealed ? "ori-card-sealed" : "ori-card-secondary"
                     }`}
                     style={{
@@ -2060,7 +2060,7 @@ function EspelhoOri() {
                           : "linear-gradient(90deg, transparent, rgba(242,185,104,0.34), transparent)",
                       }}
                     />
-                    <div className="mb-2.5 md:mb-3 flex items-center justify-between gap-3">
+                    <div className="mb-2 flex items-center justify-between gap-3 md:mb-3">
                       <span
                         className="ori-type-system"
                         style={{ color: isSealed ? colors.quiet : colors.goldSoft }}
@@ -2078,7 +2078,7 @@ function EspelhoOri() {
                       )}
                     </div>
                     <h3
-                      className="ori-type-revelation mb-1.5 md:mb-2 text-base md:text-lg"
+                      className="ori-type-revelation mb-1 text-sm md:mb-2 md:text-lg"
                       style={{
                         color: isSealed
                           ? "rgba(255,245,235,0.48)"
@@ -3965,7 +3965,7 @@ function EspelhoOri() {
         <MotionSection
           id="espelho-proxima"
           reduceMotion={reduceMotion}
-          className="ori-mobile-section relative overflow-hidden rounded-[24px] md:rounded-[38px] p-4 md:p-8 mb-5"
+          className="ori-mobile-section relative mb-4 overflow-hidden rounded-[20px] p-3.5 md:mb-5 md:rounded-[38px] md:p-8"
           style={{
             backgroundColor: "rgba(5,2,2,0.92)",
             backgroundImage: ORACLE_PANEL_BACKGROUND,
@@ -3978,14 +3978,14 @@ function EspelhoOri() {
             WebkitBackdropFilter: "blur(8px)",
           }}
         >
-          <div className="relative z-10 grid gap-6 md:grid-cols-[0.62fr_0.38fr] md:items-center">
+          <div className="relative z-10 grid gap-4 md:grid-cols-[0.62fr_0.38fr] md:items-center md:gap-6">
             <div>
-              <AtrioLineLabel className="mb-4">
+              <AtrioLineLabel className="mb-3 md:mb-4">
                 Próximo passo
               </AtrioLineLabel>
 
               <h2
-                className="mb-4 max-w-3xl text-3xl leading-[1.02] md:text-[42px]"
+                className="mb-2.5 max-w-3xl text-[24px] leading-[1.02] md:mb-4 md:text-[42px]"
                 style={{
                   color: colors.headingSection,
                   fontWeight: 620,
@@ -3996,7 +3996,7 @@ function EspelhoOri() {
               </h2>
 
               <p
-                className="ori-mobile-preview-3 max-w-2xl text-base leading-relaxed md:text-lg"
+                className="ori-mobile-preview-3 max-w-2xl text-sm leading-relaxed md:text-lg"
                 style={{ color: "rgba(255,245,235,0.66)" }}
               >
                 Agora que sua base foi revelada, está na hora de entender como
@@ -4005,11 +4005,11 @@ function EspelhoOri() {
               </p>
             </div>
 
-            <div className="flex flex-col gap-3 md:items-end">
+            <div className="flex flex-col gap-2.5 md:items-end md:gap-3">
               {produto2Liberado ? (
                 <Link
                   to="/produto-2"
-                  className="inline-flex w-full justify-center rounded-full px-8 py-3.5 text-sm md:w-fit"
+                  className="inline-flex w-full justify-center rounded-full px-6 py-3 text-sm md:w-fit md:px-8 md:py-3.5"
                   style={{
                     background:
                       "linear-gradient(90deg, var(--copper-primary), var(--gold-primary))",
@@ -4024,7 +4024,7 @@ function EspelhoOri() {
               ) : (
                 <button
                   disabled
-                  className="inline-flex w-full cursor-not-allowed justify-center rounded-full px-8 py-3.5 text-sm opacity-75 md:w-fit"
+                  className="inline-flex w-full cursor-not-allowed justify-center rounded-full px-6 py-3 text-sm opacity-75 md:w-fit md:px-8 md:py-3.5"
                   style={{
                     background: "rgba(255,255,255,0.035)",
                     border: `1px solid ${colors.border}`,
@@ -4037,7 +4037,7 @@ function EspelhoOri() {
 
               <Link
                 to="/portal"
-                className="inline-flex w-full justify-center rounded-full px-8 py-3.5 text-sm md:w-fit"
+                className="inline-flex w-full justify-center rounded-full px-6 py-3 text-sm md:w-fit md:px-8 md:py-3.5"
                 style={{
                   background: "rgba(255,255,255,0.026)",
                   border: `1px solid ${colors.borderSoft}`,
@@ -4053,7 +4053,7 @@ function EspelhoOri() {
           <MotionSection
             id="espelho-carta"
             reduceMotion={reduceMotion}
-            className="ori-mobile-section relative overflow-hidden rounded-[22px] md:rounded-[30px] p-3.5 md:p-5 mb-5"
+            className="ori-mobile-section relative mb-4 overflow-hidden rounded-[20px] p-3 md:mb-5 md:rounded-[30px] md:p-5"
           style={{
             backgroundColor: "rgba(5,2,2,0.92)",
             backgroundImage: ORACLE_PANEL_BACKGROUND,
@@ -4087,10 +4087,10 @@ function EspelhoOri() {
             }}
           />
 
-          <div className="relative z-10 grid gap-5 xl:grid-cols-[0.42fr_1.58fr] xl:items-center">
+          <div className="relative z-10 grid gap-4 xl:grid-cols-[0.42fr_1.58fr] xl:items-center xl:gap-5">
             <div className="flex flex-col justify-center text-center xl:items-start xl:text-left">
               <h2
-                className="mb-3 text-2xl leading-[1.02] md:text-[28px]"
+                className="mb-2 text-[22px] leading-[1.02] md:mb-3 md:text-[28px]"
                 style={{
                   color: colors.headingSection,
                   fontWeight: 600,
@@ -4101,7 +4101,7 @@ function EspelhoOri() {
               </h2>
 
               <p
-                className="mx-auto mb-3 max-w-md text-sm leading-relaxed xl:mx-0"
+                className="ori-mobile-preview-3 mx-auto mb-3 max-w-md text-sm leading-relaxed xl:mx-0"
                 style={{ color: colors.muted }}
               >
                 {!hasResult
@@ -4140,7 +4140,7 @@ function EspelhoOri() {
 
             <div className="grid items-stretch gap-4 xl:grid-cols-[0.72fr_1.28fr]">
               <div
-                className="relative flex min-h-[286px] items-center justify-center px-3 py-2 md:min-h-[348px] md:py-3"
+                className="relative flex min-h-[252px] items-center justify-center px-2 py-2 md:min-h-[348px] md:px-3 md:py-3"
                 style={{
                   perspective: 1400,
                 }}

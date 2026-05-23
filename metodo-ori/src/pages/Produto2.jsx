@@ -19,7 +19,7 @@ function Produto2() {
   return (
     <div className="ori-atmosphere ori-atmosphere-dossie relative overflow-hidden max-w-[1320px]">
       <section
-        className="ori-main-frame ori-hero-panel relative overflow-hidden rounded-[24px] md:rounded-[36px] p-4 pt-7 md:p-7 mb-5 cinematic-card min-h-[360px] md:min-h-[clamp(460px,calc(100vh-120px),580px)] flex items-center"
+        className="ori-main-frame ori-hero-panel relative mb-4 flex min-h-[318px] items-center overflow-hidden rounded-[22px] p-3.5 pt-6 md:mb-5 md:min-h-[clamp(460px,calc(100vh-120px),580px)] md:rounded-[36px] md:p-7"
         style={{
           background:
             "linear-gradient(135deg, rgba(18,9,10,0.88), rgba(5,2,2,0.96))",
@@ -118,7 +118,7 @@ function Produto2() {
           </div>
 
           <h1
-            className="ori-type-hero text-[38px] md:text-5xl xl:text-[50px] mb-3"
+            className="ori-type-hero mb-2.5 text-[34px] md:mb-3 md:text-5xl xl:text-[50px]"
             style={{
               color: "var(--gold-primary)",
               fontWeight: 600,
@@ -130,7 +130,7 @@ function Produto2() {
           </h1>
 
           <p
-            className="ori-type-reading text-sm max-w-[500px] mb-4"
+            className="ori-type-reading mb-3 max-w-[500px] text-sm md:mb-4"
             style={{
               color: "var(--text-primary)",
               textShadow: "0 0 28px rgba(0,0,0,0.45)",
@@ -160,7 +160,7 @@ function Produto2() {
           />
 
           <div
-            className="ori-card-teaser relative overflow-hidden rounded-[18px] p-3.5 md:rounded-[20px] md:p-4 max-w-[520px] mb-4"
+            className="ori-card-teaser relative mb-3 max-w-[520px] overflow-hidden rounded-[16px] p-3 md:mb-4 md:rounded-[20px] md:p-4"
             data-state="sealed"
             style={{
               background:
@@ -181,7 +181,7 @@ function Produto2() {
               }}
             />
 
-            <div className="relative z-10 min-h-[96px] pr-8 flex flex-col justify-center md:min-h-[132px]">
+            <div className="relative z-10 flex min-h-[82px] flex-col justify-center pr-8 md:min-h-[132px]">
               <div
                 className="absolute right-0 top-0 text-lg leading-none"
                 style={{
@@ -194,7 +194,7 @@ function Produto2() {
               </div>
 
               <h2
-                className="ori-type-revelation text-lg md:text-xl mb-2"
+                className="ori-type-revelation mb-1.5 text-base md:mb-2 md:text-xl"
                 style={{
                   color: "var(--gold-primary)",
                   fontWeight: 600,
@@ -205,7 +205,7 @@ function Produto2() {
               </h2>
 
               <p
-                className="ori-type-reading-soft text-sm max-w-[480px]"
+                className="ori-type-reading-soft max-w-[480px] text-xs md:text-sm"
                 style={{ color: "var(--text-soft)" }}
               >
                 <span className="md:hidden">
@@ -260,7 +260,7 @@ function Produto2() {
       </section>
 
       <section
-        className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[20px] md:rounded-[30px] p-3.5 md:p-5"
+        className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[18px] p-3 md:rounded-[30px] md:p-5"
         style={{
           background:
             "linear-gradient(180deg, rgba(18,9,10,0.70), rgba(5,2,2,0.90))",
@@ -271,7 +271,7 @@ function Produto2() {
           WebkitBackdropFilter: "blur(14px)",
         }}
       >
-        <div className="ori-label-line mb-4">
+        <div className="ori-label-line mb-3 md:mb-4">
           <p
             className="ori-type-system text-[9px] md:text-[10px]"
             style={{ color: "var(--gold-soft)" }}
@@ -282,7 +282,7 @@ function Produto2() {
 
         <div className="grid gap-3 lg:grid-cols-[1.1fr_0.9fr]">
           <article
-            className="ori-card-protagonist relative overflow-hidden rounded-[18px] p-3.5 md:rounded-[20px] md:p-5"
+            className="ori-card-protagonist relative overflow-hidden rounded-[16px] p-3 md:rounded-[20px] md:p-5"
             style={{
               background:
                 "linear-gradient(90deg, rgba(242,185,104,0.080), rgba(255,255,255,0.012))",
@@ -290,14 +290,14 @@ function Produto2() {
             }}
           >
             <p
-              className="ori-type-system mb-3"
+              className="ori-type-system mb-2 md:mb-3"
               style={{ color: "var(--gold-soft)" }}
             >
               Próxima camada
             </p>
 
             <h2
-              className="ori-type-revelation text-xl md:text-2xl mb-3"
+              className="ori-type-revelation mb-2 text-lg md:mb-3 md:text-2xl"
               style={{
                 color: "var(--gold-primary)",
                 fontWeight: 620,
