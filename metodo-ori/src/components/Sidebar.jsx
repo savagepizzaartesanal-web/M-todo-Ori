@@ -155,24 +155,24 @@ function Sidebar() {
 
   return (
     <>
-      <div className="fixed left-3 right-3 top-3 z-50 flex items-center justify-between gap-3 lg:hidden">
+      <div className="fixed left-2.5 right-2.5 top-2 z-50 flex items-center justify-between gap-2 lg:hidden">
         <button
           type="button"
           onClick={() => setMobileOpen(true)}
-          className="ori-button-secondary inline-flex min-h-11 items-center gap-3 rounded-full px-4 py-2 text-sm"
+          className="ori-button-secondary inline-flex min-h-9 items-center gap-2 rounded-full px-3 py-1.5 text-[12px]"
           style={{
-            background: "rgba(5,2,2,0.72)",
-            border: "1px solid rgba(242,185,104,0.16)",
-            color: "rgba(247,234,216,0.82)",
-            backdropFilter: "blur(16px)",
-            WebkitBackdropFilter: "blur(16px)",
-            boxShadow: "0 10px 34px rgba(0,0,0,0.28)",
+            background: "rgba(5,2,2,0.58)",
+            border: "1px solid rgba(242,185,104,0.11)",
+            color: "rgba(247,234,216,0.76)",
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
+            boxShadow: "0 8px 26px rgba(0,0,0,0.22)",
           }}
           aria-expanded={mobileOpen}
           aria-controls="ori-mobile-menu"
         >
           <span
-            className="h-px w-5"
+            className="h-px w-4"
             style={{
               background:
                 "linear-gradient(90deg, var(--gold-primary), transparent)",
@@ -182,13 +182,13 @@ function Sidebar() {
         </button>
 
         <span
-          className="ori-type-system rounded-full px-3 py-2 text-[9px]"
+          className="ori-type-system rounded-full px-2.5 py-1.5 text-[8px]"
           style={{
-            background: "rgba(5,2,2,0.58)",
-            border: "1px solid rgba(242,185,104,0.10)",
-            color: "rgba(242,185,104,0.72)",
-            backdropFilter: "blur(14px)",
-            WebkitBackdropFilter: "blur(14px)",
+            background: "rgba(5,2,2,0.42)",
+            border: "1px solid rgba(242,185,104,0.075)",
+            color: "rgba(242,185,104,0.58)",
+            backdropFilter: "blur(10px)",
+            WebkitBackdropFilter: "blur(10px)",
           }}
         >
           Portal
@@ -280,6 +280,7 @@ function Sidebar() {
                 )}
 
                 <button
+                  type="button"
                   onClick={handleLogout}
                   className="ori-button-secondary ori-type-system w-full rounded-[14px] px-3.5 py-3 text-[12px]"
                   style={{
@@ -521,6 +522,7 @@ function Sidebar() {
             </div>
 
             <button
+              type="button"
               onClick={handleLogout}
               className="ori-button-secondary ori-type-system group relative overflow-hidden w-full rounded-[14px] px-3.5 py-2.5 text-[12px] transition-all duration-500 hover:translate-x-0.5"
               style={{

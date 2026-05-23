@@ -89,6 +89,27 @@ body {
   color: var(--bg-primary);
 }
 
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid rgba(242, 185, 104, 0.78);
+  outline-offset: 3px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[role="tab"]:focus-visible {
+  box-shadow:
+    0 0 0 3px rgba(5, 2, 2, 0.92),
+    0 0 0 5px rgba(242, 185, 104, 0.42),
+    0 0 24px rgba(242, 185, 104, 0.14);
+}
+
 .fade-up {
   opacity: 0;
 
@@ -1019,6 +1040,32 @@ body {
     min-width: 0;
     white-space: normal;
     text-align: center;
+  }
+
+  .ori-chip {
+    padding: 0.32rem 0.62rem;
+    font-size: 9px;
+    letter-spacing: 0.045em;
+  }
+
+  .ori-badge {
+    padding: 0.3rem 0.58rem;
+    font-size: 8px;
+    letter-spacing: 0.11em;
+  }
+
+  .ori-tab,
+  .ori-step {
+    border-radius: 14px;
+  }
+
+  .ori-premium-scroll {
+    scrollbar-width: none;
+    scroll-padding-inline: 0.75rem;
+  }
+
+  .ori-premium-scroll::-webkit-scrollbar {
+    display: none;
   }
 
   .ori-type-hero {

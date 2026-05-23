@@ -493,6 +493,9 @@ function Login() {
         <div className="flex justify-center">
           <motion.form
             onSubmit={handleSubmit}
+            aria-describedby={
+              erro ? "ori-login-error" : mensagem ? "ori-login-message" : undefined
+            }
             initial={{ opacity: 0, y: 22, scale: 0.985 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{
@@ -635,6 +638,7 @@ function Login() {
               >
                 <motion.button
                   type="button"
+                  aria-pressed={modo === "login"}
                   onClick={() => {
                     setModo("login");
                     resetFeedback();
@@ -655,6 +659,7 @@ function Login() {
 
                 <motion.button
                   type="button"
+                  aria-pressed={modo === "cadastro"}
                   onClick={() => {
                     setModo("cadastro");
                     resetFeedback();
@@ -683,6 +688,7 @@ function Login() {
                       transition={{ duration: 0.3 }}
                     >
                       <label
+                        htmlFor="ori-login-name"
                         className="ori-type-system block text-[10px] mb-2"
                         style={{ color: "var(--gold-soft)" }}
                       >
@@ -690,7 +696,9 @@ function Login() {
                       </label>
 
                       <input
+                        id="ori-login-name"
                         type="text"
+                        autoComplete="name"
                         value={nome}
                         onChange={(event) => setNome(event.target.value)}
                         placeholder="Seu nome"
@@ -703,6 +711,7 @@ function Login() {
 
                   <div>
                     <label
+                      htmlFor="ori-login-email"
                       className="ori-type-system block text-[10px] mb-2"
                       style={{ color: "var(--gold-soft)" }}
                     >
@@ -710,7 +719,10 @@ function Login() {
                     </label>
 
                     <input
+                      id="ori-login-email"
                       type="email"
+                      autoComplete="email"
+                      inputMode="email"
                       value={email}
                       onChange={(event) => setEmail(event.target.value)}
                       placeholder="seunome@email.com"
@@ -722,6 +734,7 @@ function Login() {
 
                   <div>
                     <label
+                      htmlFor="ori-login-password"
                       className="ori-type-system block text-[10px] mb-2"
                       style={{ color: "var(--gold-soft)" }}
                     >
@@ -729,7 +742,9 @@ function Login() {
                     </label>
 
                     <input
+                      id="ori-login-password"
                       type="password"
+                      autoComplete={isCadastro ? "new-password" : "current-password"}
                       value={senha}
                       onChange={(event) => setSenha(event.target.value)}
                       placeholder="••••••••"
@@ -743,6 +758,8 @@ function Login() {
 
                   {erro && (
                     <motion.div
+                      id="ori-login-error"
+                      role="alert"
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       className="rounded-2xl p-3.5 text-sm leading-relaxed"
@@ -758,6 +775,9 @@ function Login() {
 
                   {mensagem && (
                     <motion.div
+                      id="ori-login-message"
+                      role="status"
+                      aria-live="polite"
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       className="rounded-2xl p-3.5 text-sm leading-relaxed"

@@ -4,7 +4,7 @@ function QuizHero({
 }) {
   return (
     <section
-      className="ori-main-frame ori-hero-panel relative overflow-hidden rounded-[28px] md:rounded-[36px] p-5 md:p-6 xl:p-7 mb-5 cinematic-card min-h-[clamp(400px,calc(100vh-160px),500px)] flex items-center"
+      className="ori-main-frame ori-hero-panel relative overflow-hidden rounded-[24px] md:rounded-[36px] p-4 pt-7 md:p-6 xl:p-7 mb-5 cinematic-card min-h-[390px] md:min-h-[clamp(400px,calc(100vh-160px),500px)] flex items-center"
       style={{
         background:
           "linear-gradient(135deg, rgba(18,9,10,0.88), rgba(5,2,2,0.96))",
@@ -91,7 +91,7 @@ function QuizHero({
       />
 
       <div className="relative z-10 max-w-[610px]">
-        <div className="inline-flex items-center gap-3 mb-3">
+        <div className="inline-flex items-center gap-3 mb-2.5 md:mb-3">
           <div
             className="w-7 h-px"
             style={{
@@ -109,7 +109,7 @@ function QuizHero({
         </div>
 
         <h1
-          className="ori-type-hero text-4xl md:text-5xl xl:text-[48px] mb-3 max-w-[560px]"
+          className="ori-type-hero text-[36px] md:text-5xl xl:text-[48px] mb-3 max-w-[560px]"
           style={{
             color: "var(--gold-primary)",
             fontWeight: 600,
@@ -133,7 +133,7 @@ function QuizHero({
         </h1>
 
         <p
-          className="ori-type-reading text-base md:text-[17px] max-w-[560px] mb-4"
+          className="ori-type-reading text-[15px] md:text-[17px] max-w-[560px] mb-4"
           style={{
             color: "var(--text-primary)",
           }}
@@ -152,7 +152,7 @@ function QuizHero({
         />
 
         <div
-          className="relative max-w-[570px] mb-4 rounded-[20px]"
+          className="relative hidden max-w-[570px] mb-4 rounded-[20px] md:block"
           style={{
             background:
               "linear-gradient(90deg, rgba(5,2,2,0.34), rgba(255,255,255,0.012))",
@@ -202,7 +202,7 @@ function QuizHero({
           />
         </div>
 
-        <div className="flex flex-wrap gap-2.5 mb-5">
+        <div className="hidden flex-wrap gap-2.5 mb-5 sm:flex">
           {[
             "Nomeação",
             "Composição arquetípica",
@@ -229,7 +229,7 @@ function QuizHero({
           <button
             type="button"
             onClick={onPrimaryAction}
-            className="ori-journey-action px-7 py-3 rounded-full text-sm md:text-[15px]"
+            className="ori-journey-action w-full px-7 py-3 rounded-full text-sm sm:w-auto md:text-[15px]"
             style={{
               background: "var(--gold-primary)",
               color: "#090506",

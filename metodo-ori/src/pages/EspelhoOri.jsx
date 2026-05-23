@@ -268,7 +268,7 @@ function MotionSection({
 function MirrorHero() {
   return (
     <section
-      className="ori-main-frame ori-hero-panel cinematic-card relative mb-5 min-h-[520px] overflow-hidden rounded-[30px] md:rounded-[42px]"
+      className="ori-main-frame ori-hero-panel cinematic-card relative mb-5 min-h-[430px] overflow-hidden rounded-[24px] md:min-h-[520px] md:rounded-[42px]"
       style={{
         backgroundColor: "rgba(5,2,2,0.94)",
         backgroundImage:
@@ -299,12 +299,12 @@ function MirrorHero() {
         }}
       />
 
-      <div className="relative z-10 grid min-h-[520px] gap-7 px-6 py-7 md:px-8 md:py-8 xl:grid-cols-[0.58fr_0.42fr] xl:px-11 xl:py-9">
+      <div className="relative z-10 grid min-h-[430px] gap-5 px-4 py-7 md:min-h-[520px] md:gap-7 md:px-8 md:py-8 xl:grid-cols-[0.58fr_0.42fr] xl:px-11 xl:py-9">
         <div className="flex max-w-2xl flex-col justify-center">
-          <AtrioLineLabel className="mb-6">Espelho ORI</AtrioLineLabel>
+          <AtrioLineLabel className="mb-3 md:mb-6">Espelho ORI</AtrioLineLabel>
 
           <h1
-            className="ori-type-hero mb-6 max-w-3xl text-[40px] md:text-[60px] xl:text-[66px]"
+            className="ori-type-hero mb-3 max-w-3xl text-[36px] md:mb-6 md:text-[60px] xl:text-[66px]"
             style={{
               color: "var(--gold-primary)",
               fontWeight: 540,
@@ -316,7 +316,7 @@ function MirrorHero() {
           </h1>
 
           <div
-            className="mb-6 h-px max-w-sm"
+            className="mb-4 h-px max-w-[13rem] md:mb-6 md:max-w-sm"
             style={{
               background:
                 "linear-gradient(90deg, rgba(242,185,104,0.40), rgba(242,185,104,0.08), transparent)",
@@ -324,7 +324,7 @@ function MirrorHero() {
           />
 
           <p
-            className="ori-type-reading mb-5 max-w-xl text-base md:text-lg"
+            className="ori-type-reading mb-5 max-w-xl text-[15px] md:text-lg"
             style={{ color: "rgba(255,245,235,0.64)" }}
           >
             Aqui você acompanha o que já foi revelado, o que está em tradução e
@@ -332,7 +332,7 @@ function MirrorHero() {
           </p>
 
           <p
-            className="ori-type-reading mb-7 max-w-xl border-l pl-5 text-base md:text-lg"
+            className="ori-type-reading mb-7 hidden max-w-xl border-l pl-5 text-base md:block md:text-lg"
             style={{
               borderColor: "rgba(242,185,104,0.26)",
               color: colors.gold,
@@ -344,10 +344,10 @@ function MirrorHero() {
             direção, ponto de atenção e próximo movimento.
           </p>
 
-          <div className="flex flex-col gap-3 sm:flex-row">
+          <div className="flex flex-col gap-2.5 sm:flex-row sm:gap-3">
             <a
               href="#espelho-resultados"
-              className="ori-journey-action inline-flex justify-center rounded-full px-7 py-3.5 text-sm"
+              className="ori-journey-action inline-flex justify-center rounded-full px-6 py-3 text-sm md:px-7 md:py-3.5"
               style={{
                 background:
                   "linear-gradient(90deg, var(--copper-primary), var(--gold-primary))",
@@ -362,7 +362,7 @@ function MirrorHero() {
 
             <a
               href="#espelho-carta"
-              className="ori-button-secondary inline-flex justify-center px-7 py-3.5 text-sm"
+              className="ori-button-secondary inline-flex justify-center px-5 py-2.5 text-xs md:px-7 md:py-3.5 md:text-sm"
               style={{
                 background: "rgba(255,255,255,0.020)",
                 border: "1px solid rgba(242,185,104,0.16)",
@@ -1991,7 +1991,7 @@ function EspelhoOri() {
         <MotionSection
           id="espelho-resultados"
           reduceMotion={reduceMotion}
-          className="ori-main-frame relative overflow-hidden rounded-[24px] md:rounded-[32px] p-4 md:p-5 mb-5"
+          className="ori-main-frame relative overflow-hidden rounded-[20px] md:rounded-[32px] p-3.5 md:p-5 mb-5"
           style={{
             backgroundColor: "rgba(5,2,2,0.92)",
             backgroundImage: ORACLE_PANEL_BACKGROUND,
@@ -2005,14 +2005,14 @@ function EspelhoOri() {
           }}
         >
           <div className="relative z-10">
-            <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            <div className="mb-4 md:mb-5 flex flex-col gap-2.5 md:gap-3 md:flex-row md:items-end md:justify-between">
               <div className="max-w-2xl">
-                <AtrioLineLabel className="mb-3">
+                <AtrioLineLabel className="mb-2.5 md:mb-3">
                   Mapa Vivo ORI
                 </AtrioLineLabel>
 
                 <h2
-                  className="ori-type-revelation text-2xl md:text-[32px]"
+                  className="ori-type-revelation text-[23px] md:text-[32px]"
                   style={{
                     color: colors.headingSection,
                     fontWeight: 620,
@@ -2024,7 +2024,7 @@ function EspelhoOri() {
               </div>
 
               <p
-                className="ori-type-reading-soft max-w-md text-sm"
+                className="ori-type-reading-soft hidden max-w-md text-sm md:block"
                 style={{ color: "rgba(255,245,235,0.54)" }}
               >
                 Aqui você acompanha o que já abriu, o que guia sua jornada e o
@@ -2032,14 +2032,14 @@ function EspelhoOri() {
               </p>
             </div>
 
-            <div className="mb-5 grid gap-2.5 md:grid-cols-4">
+            <div className="mb-4 md:mb-5 grid gap-2 md:gap-2.5 md:grid-cols-4">
               {profileSnapshot.map((item) => {
                 const isSealed = item.state === "sealed";
 
                 return (
                   <article
                     key={item.label}
-                    className={`relative overflow-hidden rounded-[18px] p-4 ${
+                    className={`relative overflow-hidden rounded-[16px] p-3.5 md:rounded-[18px] md:p-4 ${
                       isSealed ? "ori-card-sealed" : "ori-card-secondary"
                     }`}
                     style={{
@@ -2060,7 +2060,7 @@ function EspelhoOri() {
                           : "linear-gradient(90deg, transparent, rgba(242,185,104,0.34), transparent)",
                       }}
                     />
-                    <div className="mb-3 flex items-center justify-between gap-3">
+                    <div className="mb-2.5 md:mb-3 flex items-center justify-between gap-3">
                       <span
                         className="ori-type-system"
                         style={{ color: isSealed ? colors.quiet : colors.goldSoft }}
@@ -2078,7 +2078,7 @@ function EspelhoOri() {
                       )}
                     </div>
                     <h3
-                      className="ori-type-revelation mb-2 text-base md:text-lg"
+                      className="ori-type-revelation mb-1.5 md:mb-2 text-base md:text-lg"
                       style={{
                         color: isSealed
                           ? "rgba(255,245,235,0.48)"
@@ -2090,7 +2090,7 @@ function EspelhoOri() {
                       {item.title}
                     </h3>
                     <p
-                      className="ori-type-reading-soft text-xs"
+                      className="ori-type-reading-soft hidden text-xs md:block"
                       style={{ color: "rgba(255,245,235,0.48)" }}
                     >
                       {item.text}
@@ -2100,7 +2100,7 @@ function EspelhoOri() {
               })}
             </div>
 
-            <div className="grid gap-5">
+            <div className="grid gap-3 md:gap-5">
               {journeyDetailGroups.map((group) => {
                 const isLocked =
                   group.statusType === "sealed" ||
@@ -2122,7 +2122,7 @@ function EspelhoOri() {
                 return (
                   <div
                     key={group.id}
-                    className={`rounded-[26px] p-3 md:p-4 ${
+                    className={`rounded-[20px] md:rounded-[26px] p-3 md:p-4 ${
                       isLocked ? "ori-card-sealed" : "ori-card-secondary"
                     }`}
                     style={{
@@ -2130,10 +2130,10 @@ function EspelhoOri() {
                       border: "1px solid rgba(242,185,104,0.075)",
                     }}
                   >
-                    <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+                    <div className="mb-3 md:mb-4 flex flex-col gap-2.5 md:gap-3 md:flex-row md:items-end md:justify-between">
                       <div>
                         <h3
-                          className="ori-type-revelation text-2xl md:text-[30px]"
+                          className="ori-type-revelation text-xl md:text-[30px]"
                           style={{
                             color: colors.headingReading,
                             fontWeight: 620,
@@ -3028,6 +3028,7 @@ function EspelhoOri() {
                       type="button"
                       role="tab"
                       aria-selected={isActiveLayer}
+                      aria-label={`Ver camada ${layer.title}`}
                       onClick={() => {
                         setActiveMatrixLayer(layer.id);
                         setActiveMatrixItem(layer.items[0]?.label);
@@ -3172,7 +3173,7 @@ function EspelhoOri() {
 
                 <div className="relative min-w-0 max-w-full overflow-hidden">
                   <div
-                    className="ori-premium-scroll flex w-full max-w-full snap-x flex-nowrap gap-2.5 overflow-x-auto pb-2.5 pr-6"
+                    className="ori-premium-scroll flex w-full max-w-full snap-x flex-nowrap gap-1.5 overflow-x-auto pb-1.5 pr-4 md:gap-2.5 md:pb-2.5 md:pr-6"
                     role="tablist"
                     aria-label={`Itens da camada ${selectedMatrixLayer.title}`}
                     style={{
@@ -3191,8 +3192,9 @@ function EspelhoOri() {
                           type="button"
                           role="tab"
                           aria-selected={isActive}
+                          aria-label={`Ver etapa ${index + 1}: ${item.label}`}
                           onClick={() => setActiveMatrixItem(item.label)}
-                          className="relative h-[104px] min-w-[206px] max-w-[206px] shrink-0 basis-[206px] snap-start overflow-hidden rounded-[18px] p-3.5 text-left transition-colors duration-300"
+                          className="relative h-[86px] min-w-[168px] max-w-[168px] shrink-0 basis-[168px] snap-start overflow-hidden rounded-[14px] p-2.5 text-left transition-colors duration-300 md:h-[104px] md:min-w-[206px] md:max-w-[206px] md:basis-[206px] md:rounded-[18px] md:p-3.5"
                           style={{
                             background: isActive
                               ? `${item.aura}, linear-gradient(135deg, rgba(242,185,104,0.12), rgba(255,255,255,0.018))`
@@ -3205,9 +3207,9 @@ function EspelhoOri() {
                               : "inset 0 0 14px rgba(255,255,255,0.005)",
                           }}
                         >
-                        <div className="mb-3 flex items-center justify-between gap-2">
+                        <div className="mb-2 flex items-center justify-between gap-2 md:mb-3">
                           <span
-                            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[9px]"
+                            className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[8px] md:h-6 md:w-6 md:text-[9px]"
                             style={{
                               background: isActive
                                 ? "rgba(242,185,104,0.13)"
@@ -3222,7 +3224,7 @@ function EspelhoOri() {
                           </span>
 
                           <span
-                            className="rounded-full px-2 py-0.5 text-[7px] uppercase tracking-[0.14em]"
+                            className="rounded-full px-1.5 py-0.5 text-[7px] uppercase tracking-[0.10em] md:px-2 md:tracking-[0.14em]"
                             style={{
                               background: isRevealed
                                 ? "rgba(242,185,104,0.09)"
@@ -3246,7 +3248,7 @@ function EspelhoOri() {
                         </div>
 
                         <p
-                          className="mb-1.5 text-[15px] leading-tight"
+                          className="mb-1 text-[13px] leading-tight md:mb-1.5 md:text-[15px]"
                           style={{
                             color: isActive
                               ? colors.headingReading
@@ -3258,12 +3260,11 @@ function EspelhoOri() {
                           {item.label}
                         </p>
                         <p
-                          className="text-[11px] leading-relaxed"
+                          className="hidden text-[11px] leading-relaxed sm:[display:-webkit-box]"
                           style={{
                             color: isActive
                               ? "rgba(255,245,235,0.54)"
                               : "rgba(255,245,235,0.42)",
-                            display: "-webkit-box",
                             overflow: "hidden",
                             WebkitBoxOrient: "vertical",
                             WebkitLineClamp: 2,

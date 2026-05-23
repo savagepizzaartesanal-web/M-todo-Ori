@@ -130,13 +130,13 @@ const fadeLayer = {
 function ProgressRail({ activeLayer, onSelect }) {
   return (
     <aside
-      className="relative z-20 p-3 md:p-4"
+      className="relative z-20 p-2.5 md:p-4"
       style={{
         borderBottom: "1px solid rgba(242,185,104,0.075)",
       }}
     >
       <div className="relative z-10">
-        <div className="mb-4 flex items-center justify-between gap-4">
+        <div className="mb-2.5 md:mb-4 flex items-center justify-between gap-4">
           <div className="ori-label-line">
             <p
               className="ori-type-system"
@@ -154,7 +154,7 @@ function ProgressRail({ activeLayer, onSelect }) {
           </p>
         </div>
 
-        <div className="ori-premium-scroll flex gap-2 overflow-x-auto pb-2">
+        <div className="ori-premium-scroll flex gap-1.5 overflow-x-auto pb-1 md:gap-2 md:pb-2">
           {layers.map((layer, index) => {
             const active = activeLayer === index;
 
@@ -163,7 +163,9 @@ function ProgressRail({ activeLayer, onSelect }) {
                 key={layer.id}
                 type="button"
                 onClick={() => onSelect(index)}
-                className="ori-tab flex h-[46px] w-[178px] shrink-0 items-center rounded-[16px] px-3.5 py-2 text-left transition-all hover:-translate-y-0.5 md:w-[196px]"
+                aria-current={active ? "step" : undefined}
+                aria-label={`Abrir camada ${layer.number}: ${layer.title}`}
+                className="ori-tab flex h-[38px] w-[118px] shrink-0 items-center rounded-[14px] px-2 py-1.5 text-left transition-all hover:-translate-y-0.5 md:h-[46px] md:w-[196px] md:px-3.5 md:py-2"
                 style={{
                   background: active
                     ? "linear-gradient(90deg, rgba(242,185,104,0.145), rgba(210,135,70,0.055))"
@@ -177,9 +179,9 @@ function ProgressRail({ activeLayer, onSelect }) {
                   opacity: active ? 1 : 0.78,
                 }}
               >
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-2 md:gap-2.5">
                   <span
-                    className="h-7 w-7 rounded-[10px] flex items-center justify-center text-[10px]"
+                    className="flex h-5 w-5 items-center justify-center rounded-[8px] text-[8px] md:h-7 md:w-7 md:rounded-[10px] md:text-[10px]"
                     style={{
                       background: active
                         ? "var(--gold-primary)"
@@ -192,7 +194,7 @@ function ProgressRail({ activeLayer, onSelect }) {
                   </span>
 
                   <span
-                    className="text-[13px] leading-tight"
+                    className="text-[10px] leading-tight md:text-[13px]"
                     style={{
                       color: active
                         ? "var(--text-primary)"
@@ -202,9 +204,11 @@ function ProgressRail({ activeLayer, onSelect }) {
                   >
                     {layer.id === "dor" ? (
                       <>
-                        Quando vestir
+                        <span className="md:hidden">Vestir</span>
+                        <span className="hidden md:inline">Quando vestir</span>
                         <br />
-                        parece esforço
+                        <span className="md:hidden">esforço</span>
+                        <span className="hidden md:inline">parece esforço</span>
                       </>
                     ) : (
                       layer.title
@@ -229,16 +233,16 @@ function SectionShell({ layer, children }) {
       animate="visible"
       exit="exit"
       transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
-      className="relative z-10 p-4 md:p-6 min-h-[440px]"
+      className="relative z-10 p-3.5 md:p-6 min-h-[auto] md:min-h-[440px]"
       style={{
         background: "transparent",
       }}
     >
       <div className="relative z-10">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4 mb-4 md:mb-5">
           <div>
             <h2
-              className="ori-type-revelation text-3xl md:text-[38px]"
+              className="ori-type-revelation text-[26px] md:text-[38px]"
               style={{
                 color: "var(--gold-primary)",
                 fontWeight: 620,
@@ -250,7 +254,7 @@ function SectionShell({ layer, children }) {
           </div>
 
           <div
-            className="h-12 w-12 rounded-[18px] flex items-center justify-center"
+            className="hidden h-12 w-12 rounded-[18px] md:flex items-center justify-center"
             style={{
               background: "rgba(255,255,255,0.026)",
               border: "1px solid rgba(242,185,104,0.14)",
@@ -661,7 +665,7 @@ function MetodoOriLayer({ activeLayer, activeProduct, setActiveProduct }) {
             border: "1px solid rgba(242,185,104,0.08)",
           }}
         >
-          <div className="grid gap-2 md:grid-cols-3">
+          <div className="grid gap-1.5 sm:grid-cols-3 md:gap-2">
             {productPhases.map((phase, index) => {
               const active = activeProduct === index;
 
@@ -670,7 +674,9 @@ function MetodoOriLayer({ activeLayer, activeProduct, setActiveProduct }) {
                   key={phase.number}
                   type="button"
                   onClick={() => setActiveProduct(index)}
-                  className="ori-tab text-left rounded-[18px] px-3.5 py-3 transition-all hover:-translate-y-0.5"
+                  aria-pressed={active}
+                  aria-label={`Ver produto ${phase.number}: ${phase.title}`}
+                  className="ori-tab rounded-[14px] px-2.5 py-2 text-left transition-all hover:-translate-y-0.5 md:rounded-[18px] md:px-3.5 md:py-3"
                   data-state={active ? "active" : "sealed"}
                   style={{
                     background: active
@@ -684,9 +690,9 @@ function MetodoOriLayer({ activeLayer, activeProduct, setActiveProduct }) {
                       : "none",
                   }}
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2.5 md:gap-3">
                     <span
-                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[11px]"
+                      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] md:h-8 md:w-8 md:text-[11px]"
                       style={{
                         background: active
                           ? "var(--gold-primary)"
@@ -711,7 +717,7 @@ function MetodoOriLayer({ activeLayer, activeProduct, setActiveProduct }) {
                         {phase.title}
                       </span>
                       <span
-                        className="ori-type-reading-soft mt-1 block text-[11px]"
+                        className="ori-type-reading-soft mt-1 hidden text-[11px] sm:block"
                         style={{ color: "rgba(255,245,235,0.50)" }}
                       >
                         {active ? "Etapa aberta" : phase.subtitle}
@@ -1053,7 +1059,7 @@ function MetodoOri() {
   return (
     <div className="ori-atmosphere ori-atmosphere-method relative overflow-hidden">
       <section
-        className="ori-main-frame ori-hero-panel relative overflow-hidden rounded-[30px] md:rounded-[40px] p-5 md:p-8 mb-5 min-h-[460px] flex items-center cinematic-card"
+        className="ori-main-frame ori-hero-panel relative overflow-hidden rounded-[24px] md:rounded-[40px] p-4 pt-7 md:p-8 mb-5 min-h-[390px] md:min-h-[460px] flex items-center cinematic-card"
         style={{
           background:
             "linear-gradient(135deg, rgba(18,9,10,0.88), rgba(5,2,2,0.96))",
@@ -1087,7 +1093,7 @@ function MetodoOri() {
         />
 
         <div className="relative z-10 max-w-[760px]">
-          <div className="ori-label-line mb-5">
+          <div className="ori-label-line mb-3 md:mb-5">
             <p
               className="ori-type-system"
               style={{ color: "var(--gold-soft)" }}
@@ -1097,7 +1103,7 @@ function MetodoOri() {
           </div>
 
           <h1
-            className="ori-type-hero text-4xl md:text-6xl xl:text-[68px] mb-5"
+            className="ori-type-hero text-[36px] md:text-6xl xl:text-[68px] mb-3 md:mb-5"
             style={{
               color: "var(--gold-primary)",
               fontWeight: 640,
@@ -1109,7 +1115,7 @@ function MetodoOri() {
           </h1>
 
           <p
-            className="ori-type-reading text-base md:text-xl max-w-3xl mb-5"
+            className="ori-type-reading text-[15px] md:text-xl max-w-3xl mb-4 md:mb-5"
             style={{ color: "var(--text-primary)" }}
           >
             Uma jornada em camadas para revelar a força que sustenta sua imagem,
@@ -1118,7 +1124,7 @@ function MetodoOri() {
           </p>
 
           <p
-            className="ori-type-reading-soft text-sm md:text-base max-w-2xl mb-6"
+            className="ori-type-reading-soft hidden text-sm md:mb-6 md:block md:text-base max-w-2xl"
             style={{ color: "rgba(255,245,235,0.68)" }}
           >
             O Método ORI não começa pela roupa. Primeiro, a força é nomeada.
@@ -1126,11 +1132,11 @@ function MetodoOri() {
             fim, essa identidade entra no guarda-roupa real.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex flex-col gap-2.5 sm:flex-row sm:gap-3">
             <button
               type="button"
               onClick={() => selectLayer(0)}
-              className="ori-journey-action inline-flex justify-center px-7 py-3.5 rounded-full text-sm"
+              className="ori-journey-action inline-flex justify-center px-6 py-3 rounded-full text-sm md:px-7 md:py-3.5"
               style={{
                 background:
                   "linear-gradient(90deg, var(--copper-primary), var(--gold-primary))",
@@ -1145,7 +1151,7 @@ function MetodoOri() {
 
             <Link
               to="/portal"
-              className="ori-button-secondary inline-flex justify-center px-7 py-3.5 text-sm"
+              className="ori-button-secondary inline-flex justify-center px-5 py-2.5 text-xs md:px-7 md:py-3.5 md:text-sm"
               style={{
                 background: "rgba(255,255,255,0.026)",
                 border: "1px solid rgba(242,185,104,0.12)",
@@ -1214,10 +1220,11 @@ function MetodoOri() {
 
             <div className="flex gap-2.5">
               {activeLayer > 0 && (
-                <button
-                  type="button"
-                  onClick={goBack}
-                  className="px-4 py-2.5 rounded-full text-xs md:text-sm"
+              <button
+                type="button"
+                onClick={goBack}
+                aria-label="Voltar para a camada anterior"
+                className="px-4 py-2.5 rounded-full text-xs md:text-sm"
                   style={{
                     background: "rgba(255,255,255,0.026)",
                     border: "1px solid rgba(242,185,104,0.10)",
@@ -1232,6 +1239,7 @@ function MetodoOri() {
                 <button
                   type="button"
                   onClick={goNext}
+                  aria-label={`Avançar para ${nextButtonLabel}`}
                   className="ori-journey-action px-5 py-2.5 rounded-full text-xs md:text-sm"
                   style={{
                     background:

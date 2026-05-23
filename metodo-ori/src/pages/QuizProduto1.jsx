@@ -1429,6 +1429,8 @@ function QuizQuestionView({
                         key={item.value}
                         type="button"
                         onClick={() => onAnswer(currentQuestion.id, item.value)}
+                        aria-pressed={active}
+                        aria-label={`Responder ${item.value}: ${item.short}`}
                         whileHover={
                           reduceMotion ? undefined : { y: -3, scale: 1.015 }
                         }
@@ -1935,7 +1937,7 @@ function LayerTabNavigation({ tabs, activeNumber, onSelect }) {
         </div>
       </div>
 
-      <div className="relative flex gap-2 overflow-x-auto pb-1">
+      <div className="ori-premium-scroll relative flex gap-1.5 overflow-x-auto pb-1 md:gap-2">
         {tabs.map((item, index) => {
           const isActive = activeNumber === item.number;
           const isPast = index < activeIndex;
@@ -1945,9 +1947,11 @@ function LayerTabNavigation({ tabs, activeNumber, onSelect }) {
               key={item.number}
               type="button"
               onClick={() => onSelect(item.number)}
+              aria-current={isActive ? "step" : undefined}
+              aria-label={`Abrir camada ${item.number}: ${item.label}`}
               whileHover={{ y: -2 }}
               whileTap={{ scale: 0.98 }}
-              className="ori-tab group relative flex min-h-[48px] w-[154px] shrink-0 items-center gap-2.5 overflow-hidden rounded-[16px] px-3 py-2 text-left transition-all duration-300"
+              className="ori-tab group relative flex min-h-[42px] w-[124px] shrink-0 items-center gap-2 overflow-hidden rounded-[14px] px-2.5 py-1.5 text-left transition-all duration-300 md:min-h-[48px] md:w-[154px] md:gap-2.5 md:rounded-[16px] md:px-3 md:py-2"
               data-state={isActive ? "active" : isPast ? "done" : "sealed"}
               style={{
                 background: isActive
@@ -1962,7 +1966,7 @@ function LayerTabNavigation({ tabs, activeNumber, onSelect }) {
               }}
             >
               <span
-                className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] shrink-0"
+                className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[9px] md:h-7 md:w-7 md:text-[10px]"
                 style={{
                   background: isActive
                     ? "var(--gold-primary)"
@@ -1983,7 +1987,7 @@ function LayerTabNavigation({ tabs, activeNumber, onSelect }) {
               </span>
 
               <p
-                className="ori-type-reading-soft text-xs leading-tight"
+                className="ori-type-reading-soft text-[11px] leading-tight md:text-xs"
                 style={{
                   color: isActive
                     ? "var(--text-primary)"
