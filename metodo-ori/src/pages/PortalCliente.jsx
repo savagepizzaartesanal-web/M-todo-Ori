@@ -196,7 +196,7 @@ function PortalCliente() {
       tone: "copper",
       aura:
         "radial-gradient(circle at top right, rgba(210,135,70,0.34), transparent 38%)",
-      action: produto1Liberado ? (
+      action: produto1Liberado && hasResult ? (
         <Link
           to="/produto-1"
           className="inline-flex justify-center px-5 py-3 rounded-full text-sm font-medium w-full md:w-fit"
@@ -210,7 +210,7 @@ function PortalCliente() {
         >
           {buttonProduto1}
         </Link>
-      ) : (
+      ) : !produto1Liberado ? (
         <button
           type="button"
           disabled
@@ -224,7 +224,7 @@ function PortalCliente() {
         >
           Aguardando liberação
         </button>
-      ),
+      ) : null,
     },
     {
       number: "02",
@@ -378,6 +378,8 @@ function PortalCliente() {
         action: "Iniciar agora",
         to: "/produto-1",
       };
+
+  const showQuickSecondary = recommendation.to !== quickEntry.primaryTo;
 
   return (
     <div className="ori-atmosphere ori-atmosphere-portal relative overflow-hidden">
@@ -671,20 +673,6 @@ function PortalCliente() {
                   </span>
                 </p>
 
-                {produto1Liberado && (
-                  <Link
-                    to="/produto-1"
-                    className="ori-journey-action mt-5 inline-flex w-full justify-center rounded-full px-5 py-3 text-sm font-medium sm:w-auto"
-                    style={{
-                      background: "var(--gold-primary)",
-                      color: "#090506",
-                      boxShadow:
-                        "0 0 34px rgba(242,185,104,0.14), inset 0 0 14px rgba(255,255,255,0.16)",
-                    }}
-                  >
-                    Iniciar Código das Deusas
-                  </Link>
-                )}
               </div>
             )}
           </div>
@@ -761,18 +749,20 @@ function PortalCliente() {
                   {quickEntry.primaryLabel}
                 </Link>
 
-                <Link
-                  to={recommendation.to}
-                  className="ori-button-secondary inline-flex min-h-9 w-full items-center justify-center px-4 py-2 text-center text-xs sm:w-auto md:min-h-11 md:px-5 md:py-2.5 md:text-sm"
-                  style={{
-                    background: "rgba(255,255,255,0.024)",
-                    border: "1px solid rgba(242,185,104,0.12)",
-                    color: "var(--gold-primary)",
-                    fontWeight: 620,
-                  }}
-                >
-                  {recommendation.action}
-                </Link>
+                {showQuickSecondary && (
+                  <Link
+                    to={recommendation.to}
+                    className="ori-button-secondary inline-flex min-h-9 w-full items-center justify-center px-4 py-2 text-center text-xs sm:w-auto md:min-h-11 md:px-5 md:py-2.5 md:text-sm"
+                    style={{
+                      background: "rgba(255,255,255,0.024)",
+                      border: "1px solid rgba(242,185,104,0.12)",
+                      color: "var(--gold-primary)",
+                      fontWeight: 620,
+                    }}
+                  >
+                    {recommendation.action}
+                  </Link>
+                )}
               </div>
             </div>
 
@@ -983,9 +973,11 @@ function PortalCliente() {
                     </span>
                   </p>
 
-                  <div className={card.active ? "mt-auto" : "mt-auto opacity-80"}>
-                    {card.action}
-                  </div>
+                  {card.action && (
+                    <div className={card.active ? "mt-auto" : "mt-auto opacity-80"}>
+                      {card.action}
+                    </div>
+                  )}
                 </div>
               </div>
             );

@@ -5,11 +5,12 @@ import { supabase } from "../lib/supabaseClient";
 
 const mainLinks = [
   ["Portal Cliente", "/portal"],
-  ["Método ORI", "/metodo-ori"],
+  ["Conheça o Método", "/metodo-ori"],
   ["Código das Deusas", "/produto-1"],
   ["Dossiê ORI", "/produto-2"],
   ["Código Final", "/produto-3"],
   ["Espelho ORI", "/espelho-ori"],
+  ["Oráculo", "/oraculo"],
 ];
 
 const adminLinks = [

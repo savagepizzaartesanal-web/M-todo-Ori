@@ -536,14 +536,14 @@ select:focus-visible,
   gap: 0.4rem;
   padding: 0.38rem 0.72rem;
   font-size: 10px;
-  font-weight: 620;
+  font-weight: 400;
   letter-spacing: 0.10em;
 }
 
 .ori-badge {
   padding: 0.36rem 0.72rem;
   font-size: 9px;
-  font-weight: 680;
+  font-weight: 400;
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
@@ -551,7 +551,14 @@ select:focus-visible,
 .ori-pill {
   padding: 0.46rem 0.9rem;
   font-size: 11px;
-  font-weight: 620;
+  font-weight: 400;
+}
+
+.ori-chip *,
+.ori-badge *,
+.ori-pill *,
+.ori-mini-chip * {
+  font-weight: 400;
 }
 
 .ori-tab,
@@ -919,7 +926,7 @@ select:focus-visible,
   color: rgba(255, 245, 235, 0.78);
   border-radius: 999px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 400;
   letter-spacing: 0.06em;
 }
 
@@ -1244,6 +1251,96 @@ select:focus-visible,
   .ori-card-teaser p,
   .ori-card-sealed p {
     line-height: 1.5;
+  }
+
+  .ori-quiz-mobile-shell {
+    align-items: flex-start;
+    border-radius: 20px !important;
+    padding: 0.75rem !important;
+  }
+
+  .ori-quiz-mobile-top {
+    margin-bottom: 0.75rem !important;
+  }
+
+  .ori-quiz-mobile-top .ori-label-line {
+    margin-bottom: 0.25rem !important;
+  }
+
+  .ori-quiz-mobile-card {
+    border-radius: 18px !important;
+    padding: 0.875rem !important;
+    box-shadow:
+      0 0 28px rgba(242, 185, 104, 0.04),
+      inset 0 0 20px rgba(255, 255, 255, 0.010) !important;
+  }
+
+  .ori-quiz-mobile-card > .absolute.inset-\[8px\] {
+    inset: 6px !important;
+    border-radius: 15px !important;
+  }
+
+  .ori-quiz-mobile-question {
+    padding-block: 0.875rem 1rem !important;
+    text-align: left !important;
+  }
+
+  .ori-quiz-mobile-question h3 {
+    max-width: 100% !important;
+    margin-inline: 0 !important;
+    font-size: 24px !important;
+    line-height: 1.08 !important;
+    letter-spacing: -0.055em !important;
+    text-align: left !important;
+  }
+
+  .ori-quiz-mobile-question p {
+    text-align: left !important;
+  }
+
+  .ori-quiz-mobile-question-wrap {
+    display: flex;
+    min-height: min(58vh, 430px);
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .ori-quiz-mobile-scale {
+    gap: 0.5rem !important;
+  }
+
+  .ori-quiz-mobile-scale-option {
+    min-height: 70px !important;
+    border-radius: 15px !important;
+    padding: 0.45rem 0.2rem !important;
+  }
+
+  .ori-quiz-mobile-scale-option span:first-child {
+    width: 2.25rem !important;
+    height: 2.25rem !important;
+    font-size: 0.875rem !important;
+  }
+
+  .ori-quiz-mobile-scale-option span:last-child {
+    max-width: 100%;
+    font-size: 9px !important;
+    line-height: 1.1 !important;
+    word-break: normal;
+  }
+
+  .ori-quiz-mobile-footer {
+    margin-top: 0.75rem !important;
+    padding: 0.75rem !important;
+    background: rgba(5, 2, 2, 0.34) !important;
+    border-color: rgba(242, 185, 104, 0.10) !important;
+  }
+
+  .ori-quiz-mobile-footer button {
+    width: fit-content;
+  }
+
+  .ori-quiz-mobile-footer .grid {
+    width: 100%;
   }
 
   a:focus-visible,

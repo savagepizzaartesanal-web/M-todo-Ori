@@ -1180,7 +1180,7 @@ function QuizQuestionView({
       initial={reduceMotion ? false : "hidden"}
       animate={reduceMotion ? undefined : "visible"}
       exit={reduceMotion ? undefined : "exit"}
-      className="relative overflow-hidden rounded-[22px] md:rounded-[32px] p-2.5 md:p-4 xl:p-5 mb-4 md:mb-5 min-h-[auto] md:min-h-[380px] flex items-center"
+      className="ori-quiz-mobile-shell relative mb-4 flex min-h-[auto] items-center overflow-hidden rounded-[22px] p-2.5 md:mb-5 md:min-h-[380px] md:rounded-[32px] md:p-4 xl:p-5"
       style={{
         background: `${theme.aura}, radial-gradient(circle at 50% 42%, ${theme.glow}, transparent 32%), linear-gradient(135deg, rgba(18,9,10,0.74), rgba(5,2,2,0.94))`,
         border: "1px solid rgba(242,185,104,0.10)",
@@ -1223,7 +1223,7 @@ function QuizQuestionView({
       />
 
       <div className="relative z-10 w-full max-w-5xl mx-auto">
-        <div className="flex flex-row items-start justify-between gap-2 mb-2 px-0">
+        <div className="ori-quiz-mobile-top mb-2 flex flex-row items-start justify-between gap-2 px-0">
           <div>
             <Eyebrow className="mb-1">Câmara de Leitura ORI</Eyebrow>
             <p
@@ -1283,7 +1283,7 @@ function QuizQuestionView({
         </div>
 
         <div
-          className="relative overflow-hidden rounded-[18px] md:rounded-[28px] px-3 py-3 md:px-5 md:py-4 xl:px-7 xl:py-5 min-h-[auto] md:min-h-[360px] flex flex-col justify-between"
+          className="ori-quiz-mobile-card relative flex min-h-[auto] flex-col justify-between overflow-hidden rounded-[18px] px-3 py-3 md:min-h-[360px] md:rounded-[28px] md:px-5 md:py-4 xl:px-7 xl:py-5"
           style={{
             background:
               "radial-gradient(circle at top, rgba(255,255,255,0.048), transparent 38%), linear-gradient(180deg, rgba(255,255,255,0.028), rgba(255,255,255,0.008))",
@@ -1377,9 +1377,9 @@ function QuizQuestionView({
                     }
               }
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-              className="relative z-10"
+              className="ori-quiz-mobile-question-wrap relative z-10"
             >
-              <div className="text-center max-w-4xl mx-auto py-3 md:py-4">
+              <div className="ori-quiz-mobile-question mx-auto max-w-4xl py-3 text-center md:py-4">
                 <p
                   className="uppercase tracking-[0.18em] text-[7px] md:tracking-[0.26em] md:text-[9px] mb-2 md:mb-4"
                   style={{ color: "rgba(255,245,235,0.45)" }}
@@ -1422,7 +1422,7 @@ function QuizQuestionView({
                   </motion.p>
                 </AnimatePresence>
 
-                <div className="grid grid-cols-5 gap-1.5 md:gap-1.5 relative z-10">
+                <div className="ori-quiz-mobile-scale relative z-10 grid grid-cols-5 gap-1.5 md:gap-1.5">
                   {scaleLabels.map((item) => {
                     const active = selectedValue === item.value;
 
@@ -1437,7 +1437,7 @@ function QuizQuestionView({
                           reduceMotion ? undefined : { y: -2, scale: 1.01 }
                         }
                         whileTap={reduceMotion ? undefined : { scale: 0.96 }}
-                        className="group flex min-h-[58px] flex-col items-center justify-center gap-1 rounded-[13px] px-1 py-1.5 md:min-h-[64px] md:rounded-[14px] md:px-1 md:py-1.5 transition-colors duration-300"
+                        className="ori-quiz-mobile-scale-option group flex min-h-[58px] flex-col items-center justify-center gap-1 rounded-[13px] px-1 py-1.5 transition-colors duration-300 md:min-h-[64px] md:rounded-[14px] md:px-1 md:py-1.5"
                         style={{
                           background: active
                             ? "linear-gradient(90deg, rgba(210,135,70,0.10), transparent), rgba(255,255,255,0.018)"
@@ -1513,7 +1513,7 @@ function QuizQuestionView({
           </AnimatePresence>
 
           <div
-            className="relative z-10 max-w-3xl mx-auto rounded-[14px] md:rounded-[16px] px-3 py-2 flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-3"
+            className="ori-quiz-mobile-footer relative z-10 mx-auto flex max-w-3xl flex-col gap-2 rounded-[14px] px-3 py-2 md:flex-row md:items-center md:justify-between md:gap-3 md:rounded-[16px]"
             style={{
               background: "rgba(5,2,2,0.22)",
               border: "1px solid rgba(242,185,104,0.06)",
@@ -1643,7 +1643,7 @@ function ReadingLayerPanel({ layer }) {
       exit={reduceMotion ? undefined : { opacity: 0, y: -10, filter: "blur(6px)" }}
       transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
       className={`relative overflow-hidden rounded-[18px] md:rounded-[26px] ${
-        isExpanded ? "lg:min-h-[560px]" : "lg:h-[350px]"
+        isExpanded ? "lg:min-h-[560px]" : "lg:min-h-[350px]"
       }`}
       style={{
         background:
@@ -1692,12 +1692,12 @@ function ReadingLayerPanel({ layer }) {
 
       <div
         className={`relative z-10 ${
-          isExpanded ? "lg:min-h-[560px]" : "lg:h-[350px]"
+          isExpanded ? "lg:min-h-[560px]" : "lg:min-h-[350px]"
         }`}
       >
         <div
           className={`flex min-h-0 max-w-full flex-col p-3 md:p-5 lg:max-w-[54%] ${
-            isExpanded ? "justify-center lg:h-[350px]" : "justify-center lg:h-[350px]"
+            isExpanded ? "justify-center lg:min-h-[350px]" : "justify-center lg:min-h-[350px]"
           }`}
         >
           <div className="mb-2 flex flex-wrap items-center gap-2 md:mb-2.5">
@@ -1829,7 +1829,7 @@ function ReadingLayerPanel({ layer }) {
                 color: "rgba(242,185,104,0.88)",
               }}
             >
-              {isExpanded ? "Voltar à síntese" : "Ler camada completa"}
+              {isExpanded ? "Recolher leitura" : "Aprofundar leitura"}
             </button>
           )}
         </div>

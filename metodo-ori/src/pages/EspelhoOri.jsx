@@ -8,8 +8,6 @@ import { MirrorSectionNav } from "../components/espelho/EspelhoInteractions";
 
 const LEGACY_STORAGE_KEY = "ori_produto_1_quiz";
 const ONBOARDING_DATA_KEY = "ori_onboarding_data";
-const DAILY_CARD_STORAGE_KEY = "ori_espelho_daily_oracle_v1";
-const ORACLE_CARD_BACK_IMAGE = "/images/espelho-ori/oraculo/verso-deck.png";
 const MIRROR_HERO_IMAGE = "/images/heroes/hero-espelho-ori.png";
 const ORACLE_PANEL_BACKGROUND =
   "radial-gradient(circle at 88% 12%, rgba(242,185,104,0.09), transparent 34%), radial-gradient(circle at 8% 92%, rgba(183,140,255,0.05), transparent 34%), linear-gradient(90deg, rgba(5,2,2,0.88), rgba(5,2,2,0.68), rgba(5,2,2,0.92)), url('/images/espelho-ori/oraculo/fundo-oraculo-premium.png')";
@@ -106,52 +104,6 @@ function getLocalResult(storageKey) {
   } catch (error) {
     console.log("Erro ao ler resultado local:", error);
     return null;
-  }
-}
-
-function getTodayKey(date = new Date()) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-
-  return `${year}-${month}-${day}`;
-}
-
-function shuffleArray(items = []) {
-  const copy = [...items];
-
-  for (let index = copy.length - 1; index > 0; index -= 1) {
-    const randomIndex = Math.floor(Math.random() * (index + 1));
-    [copy[index], copy[randomIndex]] = [copy[randomIndex], copy[index]];
-  }
-
-  return copy;
-}
-
-function pickRandom(items = []) {
-  if (!items.length) return "";
-  return items[Math.floor(Math.random() * items.length)];
-}
-
-function getDailyStorageKey(userKey) {
-  return `${DAILY_CARD_STORAGE_KEY}:${userKey || "local"}`;
-}
-
-function readDailyOracle(userKey) {
-  try {
-    const rawData = localStorage.getItem(getDailyStorageKey(userKey));
-    return rawData ? JSON.parse(rawData) : null;
-  } catch (error) {
-    console.log("Erro ao ler carta diária:", error);
-    return null;
-  }
-}
-
-function saveDailyOracle(userKey, data) {
-  try {
-    localStorage.setItem(getDailyStorageKey(userKey), JSON.stringify(data));
-  } catch (error) {
-    console.log("Erro ao salvar carta diária:", error);
   }
 }
 
@@ -360,8 +312,8 @@ function MirrorHero() {
               Ver minha jornada
             </a>
 
-            <a
-              href="#espelho-carta"
+            <Link
+              to="/oraculo"
               className="ori-button-secondary inline-flex justify-center px-5 py-2.5 text-xs md:px-7 md:py-3.5 md:text-sm"
               style={{
                 background: "rgba(255,255,255,0.020)",
@@ -372,8 +324,8 @@ function MirrorHero() {
                 WebkitBackdropFilter: "blur(10px)",
               }}
             >
-              Abrir oráculo
-            </a>
+              Abrir Oráculo ORI
+            </Link>
           </div>
         </div>
 
@@ -381,185 +333,6 @@ function MirrorHero() {
       </div>
     </section>
   );
-}
-
-function buildOracleCards({
-  hasResult,
-  resultadoFinal,
-  principal,
-  secundario,
-}) {
-  const resultName = resultadoFinal || "sua força";
-  const first = principal || "seu arquétipo principal";
-  const second = secundario || "seu arquétipo secundário";
-
-  return [
-    {
-      id: "essencia",
-      code: "I",
-      hiddenTitle: "Carta I",
-      title: "Carta da Essência",
-      subtitle: "O que sustenta você",
-      revealLabel: "Essência revelada",
-      image: "/images/espelho-ori/oraculo/carta-essencia.png",
-      aura: "radial-gradient(circle at top, rgba(210,135,70,0.24), transparent 36%), radial-gradient(circle at bottom, rgba(210,135,70,0.12), transparent 38%), linear-gradient(180deg, rgba(74,26,26,0.58), var(--wine-deep))",
-      messages: hasResult
-        ? [
-            `${resultName} não é apenas um nome. É uma estrutura começando a pedir presença, escolha e sustentação.`,
-            `Hoje, o Espelho lembra: você não precisa suavizar sua força para que ela seja aceita.`,
-            `A essência da ${resultName} se fortalece quando você para de negociar o direito de existir inteira.`,
-            `Nem toda força precisa ser explicada. Algumas precisam apenas ser sustentadas com calma e presença.`,
-            `O que foi revelado em você não é excesso. É matéria-prima da sua imagem futura.`,
-            `Sua essência não está pedindo uma versão mais adequada. Está pedindo uma forma mais fiel.`,
-            `O nome da sua força já apareceu. Agora observe onde você ainda age como se precisasse escondê-la.`,
-            `Hoje, a pergunta é simples: que parte da sua presença você ainda trata como se fosse grande demais?`,
-            `A sua força não nasceu para caber em leituras pequenas. Ela nasceu para organizar sua presença.`,
-            `O Espelho não revelou um rótulo. Ele revelou uma direção interna.`,
-            `Sua essência fica mais clara quando você abandona a tentativa de agradar todos os olhares.`,
-            `A ${resultName} amadurece quando presença deixa de ser performance e vira verdade sustentada.`,
-            `Você não precisa se tornar outra mulher. Precisa parar de abandonar a mulher que foi nomeada em você.`,
-            `O que sustenta você não é aprovação. É coerência entre o que sente, escolhe e comunica.`,
-            `Hoje, honre a parte de você que já sabe quem é, mesmo antes de conseguir mostrar isso por completo.`,
-          ]
-        : [
-            "Sua essência ainda está aguardando nome. A primeira leitura abre essa porta.",
-            "Antes da forma, existe uma força esperando linguagem.",
-            "O primeiro espelho começa quando você permite que sua presença seja lida com profundidade.",
-          ],
-    },
-    {
-      id: "sombra",
-      code: "II",
-      hiddenTitle: "Carta II",
-      title: "Carta da Sombra",
-      subtitle: "O que pede consciência",
-      revealLabel: "Sombra revelada",
-      image: "/images/espelho-ori/oraculo/carta-sombra.png",
-      aura: "radial-gradient(circle at top, rgba(107,90,110,0.24), transparent 36%), radial-gradient(circle at bottom, rgba(74,26,26,0.16), transparent 38%), linear-gradient(180deg, rgba(42,24,44,0.70), var(--wine-deep))",
-      messages: hasResult
-        ? [
-            `A sombra da ${resultName} aparece quando a força que protege você também começa a limitar sua expansão.`,
-            `Hoje, observe onde sua defesa já deixou de proteger e começou a impedir movimento.`,
-            `Nem tudo que parece autocontrole é consciência. Às vezes, é medo vestido de força.`,
-            `Sua sombra não quer te punir. Ela quer mostrar onde sua energia ainda está sendo usada para sobreviver.`,
-            `O ponto oculto de hoje: talvez você esteja chamando de limite aquilo que, na verdade, virou armadura.`,
-            `A ${resultName} perde brilho quando tenta provar força escondendo vulnerabilidade.`,
-            `A sombra pede uma pergunta: o que você evita mostrar porque acredita que isso diminuiria sua presença?`,
-            `Algumas defesas foram necessárias um dia. Mas nem todas precisam continuar governando sua imagem.`,
-            `Hoje, o Espelho mostra uma tensão: proteger-se demais também pode apagar sua expressão.`,
-            `A consciência começa quando você percebe que nem toda reação rápida é intuição. Às vezes, é ferida antiga.`,
-            `Sua força amadurece quando a sombra deixa de comandar em silêncio.`,
-            `O que você tenta controlar em excesso pode estar revelando exatamente onde sua imagem pede cuidado.`,
-            `A sombra não é o oposto da sua beleza. É a camada que precisa ser integrada para sua presença ficar inteira.`,
-            `Hoje, não lute contra o que apareceu. Nomeie. O que é nomeado perde parte do poder invisível.`,
-            `Existe uma parte sua que quer crescer, mas ainda se protege como se estivesse em ameaça. Olhe para ela com respeito.`,
-          ]
-        : [
-            "Algumas defesas só podem ser vistas depois que sua primeira leitura abre o espelho.",
-            "A sombra não é defeito. É uma camada esperando consciência.",
-            "Antes de revelar a imagem, o Espelho precisa nomear o que ainda está oculto.",
-          ],
-    },
-    {
-      id: "imagem",
-      code: "III",
-      hiddenTitle: "Carta III",
-      title: "Carta da Imagem",
-      subtitle: "O que quer ganhar forma",
-      revealLabel: "Imagem revelada",
-      image: "/images/espelho-ori/oraculo/carta-imagem.png",
-      aura: "radial-gradient(circle at top, rgba(255,230,190,0.18), transparent 34%), radial-gradient(circle at bottom, rgba(210,135,70,0.12), transparent 40%), linear-gradient(180deg, rgba(74,26,26,0.52), var(--wine-deep))",
-      messages: hasResult
-        ? [
-            `Sua imagem não precisa criar uma nova versão de você. Ela precisa traduzir com mais precisão a força que a leitura já revelou: ${resultName}.`,
-            `Hoje, o Espelho pergunta: sua aparência está sustentando sua essência ou escondendo sua força?`,
-            `A imagem certa não inventa presença. Ela organiza o que já existe em você.`,
-            `O próximo passo não é parecer melhor. É parecer mais coerente.`,
-            `Sua imagem começa a se alinhar quando forma, cor e presença deixam de competir entre si.`,
-            `A ${resultName} pede uma estética que não reduza sua complexidade a uma tendência.`,
-            `Hoje, observe se sua roupa está comunicando verdade ou apenas tentando resolver expectativa externa.`,
-            `A imagem não é superfície. É linguagem visível da sua identidade.`,
-            `O que você veste pode reforçar sua leitura ou criar ruído no modo como o mundo te percebe.`,
-            `A pergunta do dia: que parte da sua imagem ainda não acompanha a força que você sente por dentro?`,
-            `Sua presença visual não precisa gritar. Precisa sustentar uma direção clara.`,
-            `A imagem amadurece quando deixa de ser tentativa de agradar e vira assinatura.`,
-            `Você não precisa escolher entre beleza e profundidade. Sua imagem pode carregar as duas.`,
-            `A ${resultName} pede menos improviso visual e mais coerência simbólica.`,
-            `Hoje, repare nos detalhes: cor, textura, corte e gesto já estão dizendo algo sobre você.`,
-          ]
-        : [
-            "Sua imagem ainda está em silêncio. Primeiro a essência é nomeada, depois ela ganha forma.",
-            "A forma só faz sentido depois que a força é reconhecida.",
-            "O Dossiê ORI transforma leitura em direção visual.",
-          ],
-    },
-    {
-      id: "presenca",
-      code: "IV",
-      hiddenTitle: "Carta IV",
-      title: "Carta da Presença",
-      subtitle: "O que chega antes da fala",
-      revealLabel: "Presença revelada",
-      image: "/images/espelho-ori/oraculo/carta-presenca.png",
-      aura: "radial-gradient(circle at top, rgba(210,135,70,0.28), transparent 36%), radial-gradient(circle at bottom, rgba(255,145,88,0.12), transparent 38%), linear-gradient(180deg, rgba(74,26,26,0.55), var(--wine-deep))",
-      messages: hasResult
-        ? [
-            `${first} e ${second} já começam a desenhar a forma como sua presença chega antes das palavras.`,
-            `Hoje, observe o que você comunica antes de se explicar.`,
-            `Sua presença não está apenas no que você veste. Está no ritmo, no olhar, no gesto e na forma como ocupa espaço.`,
-            `A ${resultName} se torna mais forte quando o corpo deixa de pedir licença para existir.`,
-            `A presença chega antes da fala. E muitas vezes revela o que a imagem ainda tenta esconder.`,
-            `Hoje, o Espelho lembra: postura também é linguagem simbólica.`,
-            `Sua energia visual muda quando você se posiciona como alguém que pertence ao próprio lugar.`,
-            `Nem toda presença precisa ser intensa. Algumas precisam ser firmes, silenciosas e inegociáveis.`,
-            `A pergunta de hoje: o mundo vê sua força ou apenas a versão que você aprendeu a apresentar?`,
-            `Sua presença cresce quando você para de entrar nos espaços como se precisasse ser aceita por eles.`,
-            `O corpo comunica uma verdade que a mente nem sempre consegue organizar.`,
-            `A presença da ${resultName} pede eixo, não rigidez. Profundidade, não excesso.`,
-            `Hoje, perceba se você está ocupando espaço com verdade ou se está se ajustando para não causar impacto.`,
-            `Sua presença não precisa ser explicada para ser sentida.`,
-            `O que chega antes da sua fala merece ser cuidado como parte da sua assinatura.`,
-          ]
-        : [
-            "Sua presença será revelada em camadas, quando sua leitura começar a tomar forma.",
-            "A presença é o primeiro sinal do espelho, mesmo antes da imagem estar pronta.",
-            "Quando sua essência for nomeada, sua presença começará a ganhar direção.",
-          ],
-    },
-    {
-      id: "caminho",
-      code: "V",
-      hiddenTitle: "Carta V",
-      title: "Carta do Caminho",
-      subtitle: "O próximo movimento",
-      revealLabel: "Caminho revelado",
-      image: "/images/espelho-ori/oraculo/carta-caminho.png",
-      aura: "radial-gradient(circle at top, rgba(210,135,70,0.20), transparent 36%), radial-gradient(circle at bottom, rgba(107,90,110,0.18), transparent 38%), linear-gradient(180deg, rgba(74,26,26,0.50), var(--wine-deep))",
-      messages: hasResult
-        ? [
-            `O próximo passo não é parecer diferente. É transformar a força ${resultName} em imagem, escolha, presença e direção visual.`,
-            `Hoje, o caminho pede menos pressa e mais integração.`,
-            `Você já viu quem é. Agora o próximo espelho pergunta: como essa força aparece no mundo?`,
-            `A jornada não termina na revelação. Ela começa quando você decide viver de forma mais coerente com ela.`,
-            `O Dossiê ORI é a ponte entre identidade percebida e imagem visível.`,
-            `Hoje, o Espelho aponta para frente: corpo, cor, cabelo, beleza e presença ainda têm algo a revelar.`,
-            `O próximo movimento é transformar percepção em direção.`,
-            `Sua força já foi nomeada. O caminho agora é impedir que ela continue invisível na sua imagem.`,
-            `A próxima camada não vai mudar quem você é. Vai dar forma ao que já começou a aparecer.`,
-            `Hoje, não procure uma resposta final. Procure o próximo gesto coerente.`,
-            `A ${resultName} pede continuidade. Uma revelação sem integração vira apenas informação bonita.`,
-            `O caminho se abre quando você entende que imagem também é escolha de identidade.`,
-            `Sua jornada pede travessia, não pressa. Camada por camada, a imagem começa a se organizar.`,
-            `O próximo passo é fazer sua presença ser reconhecida antes mesmo de você precisar explicar.`,
-            `Hoje, o Espelho não entrega tudo. Ele apenas aponta: ainda existe mais de você para ser visto.`,
-          ]
-        : [
-            "O próximo caminho se abre quando a primeira camada da jornada é concluída.",
-            "A jornada começa quando sua essência deixa de ser sensação e vira linguagem.",
-            "O próximo espelho só se revela quando a primeira porta é aberta.",
-          ],
-    },
-  ];
 }
 
 function useMobileMotionOff() {
@@ -592,9 +365,6 @@ function EspelhoOri() {
   const [cliente, setCliente] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeMirrorTab, setActiveMirrorTab] = useState("essencia");
-  const [activeCard, setActiveCard] = useState(null);
-  const [dailyOracle, setDailyOracle] = useState(null);
-  const [cardOrder, setCardOrder] = useState([]);
   const [localResult, setLocalResult] = useState(null);
   const [localOnboardingProfile, setLocalOnboardingProfile] = useState({});
   const [expandedMirrorLayer, setExpandedMirrorLayer] = useState(false);
@@ -602,8 +372,6 @@ function EspelhoOri() {
   const [activeMatrixLayer, setActiveMatrixLayer] = useState("revelado");
   const [activeJourneyStep, setActiveJourneyStep] = useState("integracao");
   const [expandedResultItems, setExpandedResultItems] = useState({});
-
-  const todayKey = getTodayKey();
 
   useEffect(() => {
     async function loadCliente() {
@@ -693,91 +461,6 @@ function EspelhoOri() {
   );
   const profileObjective = formatProfileValue(onboardingProfile.mainDesire);
   const profileMoment = formatProfileValue(onboardingProfile.journeyStage);
-
-  const userKey =
-    cliente?.user_id ||
-    cliente?.id ||
-    localResult?.nomeComposto ||
-    resultadoFinal ||
-    "local";
-
-  const oracleCards = useMemo(
-    () =>
-      buildOracleCards({
-        hasResult,
-        resultadoFinal,
-        principal,
-        secundario,
-      }),
-    [hasResult, resultadoFinal, principal, secundario],
-  );
-
-  const defaultCardOrder = useMemo(
-    () => oracleCards.map((card) => card.id),
-    [oracleCards],
-  );
-
-  useEffect(() => {
-    if (!oracleCards.length || loading) return;
-
-    let isMounted = true;
-
-    async function syncDailyOracle() {
-      await Promise.resolve();
-
-      if (!isMounted) return;
-
-      if (!hasResult) {
-        setDailyOracle(null);
-        setActiveCard(null);
-        setCardOrder(defaultCardOrder);
-        return;
-      }
-
-      const storedOracle = readDailyOracle(userKey);
-
-      if (storedOracle?.dateKey === todayKey) {
-        setDailyOracle(storedOracle);
-        setActiveCard(storedOracle.cardId);
-        setCardOrder(
-          storedOracle.cardOrder?.length
-            ? storedOracle.cardOrder
-            : defaultCardOrder,
-        );
-        return;
-      }
-
-      setDailyOracle(null);
-      setActiveCard(null);
-      setCardOrder(shuffleArray(defaultCardOrder));
-    }
-
-    syncDailyOracle();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [
-    defaultCardOrder,
-    hasResult,
-    loading,
-    oracleCards.length,
-    todayKey,
-    userKey,
-  ]);
-
-  const orderedOracleCards = useMemo(() => {
-    const ordered = cardOrder
-      .map((id) => oracleCards.find((card) => card.id === id))
-      .filter(Boolean);
-
-    return ordered.length ? ordered : oracleCards;
-  }, [cardOrder, oracleCards]);
-
-  const selectedCard =
-    oracleCards.find((card) => card.id === activeCard) || null;
-
-  const oracleLockedToday = dailyOracle?.dateKey === todayKey;
 
   const mirrorTabs = useMemo(
     () => [
@@ -933,12 +616,12 @@ function EspelhoOri() {
       : "A dor central será nomeada quando sua primeira camada abrir.");
   const profileSnapshot = [
     {
-      label: "Resultado",
-      title: hasResult ? resultadoFinal : "Primeira camada selada",
-      text: hasResult
-        ? `${principal} + ${secundario}`
-        : "O Código das Deusas abre a base do seu Espelho.",
-      state: hasResult ? "revealed" : "sealed",
+      label: "Conexão",
+      title: hasConnectionPercent ? connectionLabel : "Presença em formação",
+      text: hasConnectionPercent
+        ? "O quanto sua imagem já conversa com sua essência."
+        : "O primeiro sinal antes da imagem ganhar direção.",
+      state: hasConnectionPercent || hasResult ? "revealed" : "next",
     },
     {
       label: "Dor atual",
@@ -1194,7 +877,6 @@ function EspelhoOri() {
     { id: "espelho-hero", number: "01", label: "Entrada" },
     { id: "espelho-resultados", number: "02", label: "Camadas" },
     { id: "espelho-proxima", number: "03", label: "Próximo passo" },
-    { id: "espelho-carta", number: "04", label: "Oráculo" },
   ];
 
   const revealedNow = hasResult
@@ -1228,44 +910,6 @@ function EspelhoOri() {
   const finalCrossingText = produto3Liberado
     ? "O Espelho ORI já revelou e traduziu sua direção visual. A próxima etapa não repete essa leitura: ela aplica essa identidade ao armário real, às escolhas, às lacunas e às fórmulas de look."
     : "O Espelho ORI já revelou a força que sustenta sua presença. A próxima etapa não repete essa leitura: ela traduz essa força em corpo, cor, cabelo, presença e direção visual.";
-
-  const handleDrawCard = (card) => {
-    if (!hasResult) return;
-    if (oracleLockedToday) return;
-
-    const message = pickRandom(card.messages);
-    const shuffledOrder = shuffleArray(defaultCardOrder);
-
-    const data = {
-      dateKey: todayKey,
-      cardId: card.id,
-      cardTitle: card.title,
-      revealLabel: card.revealLabel,
-      code: card.code,
-      message,
-      cardOrder: shuffledOrder,
-    };
-
-    setActiveCard(card.id);
-    setDailyOracle(data);
-    saveDailyOracle(userKey, data);
-
-    window.setTimeout(() => {
-      setCardOrder(shuffledOrder);
-    }, 520);
-  };
-
-  const handleDrawFromDeck = () => {
-    if (!hasResult || oracleLockedToday || !orderedOracleCards.length) return;
-    handleDrawCard(pickRandom(orderedOracleCards));
-  };
-
-  const handleShuffleCards = () => {
-    if (!hasResult || oracleLockedToday) return;
-    setActiveCard(null);
-    setDailyOracle(null);
-    setCardOrder(shuffleArray(defaultCardOrder));
-  };
 
   const nextStep = !hasResult
     ? {
@@ -4037,7 +3681,7 @@ function EspelhoOri() {
 
               <Link
                 to="/portal"
-                className="inline-flex w-full justify-center rounded-full px-8 py-3.5 text-sm md:w-fit"
+                className="hidden w-full justify-center rounded-full px-8 py-3.5 text-sm md:inline-flex md:w-fit"
                 style={{
                   background: "rgba(255,255,255,0.026)",
                   border: `1px solid ${colors.borderSoft}`,
@@ -4046,530 +3690,6 @@ function EspelhoOri() {
               >
                 Voltar ao portal
               </Link>
-            </div>
-          </div>
-        </MotionSection>
-
-          <MotionSection
-            id="espelho-carta"
-            reduceMotion={reduceMotion}
-            className="ori-mobile-section relative overflow-hidden rounded-[22px] md:rounded-[30px] p-3.5 md:p-5 mb-5"
-          style={{
-            backgroundColor: "rgba(5,2,2,0.92)",
-            backgroundImage: ORACLE_PANEL_BACKGROUND,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            border: `1px solid ${colors.border}`,
-            boxShadow:
-              "0 24px 80px rgba(0,0,0,0.20), inset 0 1px 0 rgba(255,255,255,0.018)",
-            backdropFilter: "blur(10px)",
-            WebkitBackdropFilter: "blur(10px)",
-          }}
-        >
-          <motion.div
-            className="absolute right-[6%] top-[6%] w-[340px] h-[340px] rounded-full opacity-20 pointer-events-none"
-            animate={
-              reduceMotion
-                ? undefined
-                : {
-                    scale: [1, 1.05, 1],
-                    opacity: [0.14, 0.25, 0.16],
-                  }
-            }
-            transition={{
-              duration: 7,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            style={{
-              border: "1px solid rgba(242,185,104,0.14)",
-              boxShadow: "inset 0 0 62px rgba(242,185,104,0.035)",
-            }}
-          />
-
-          <div className="relative z-10 grid gap-5 xl:grid-cols-[0.42fr_1.58fr] xl:items-center">
-            <div className="flex flex-col justify-center text-center xl:items-start xl:text-left">
-              <h2
-                className="mb-3 text-2xl leading-[1.02] md:text-[28px]"
-                style={{
-                  color: colors.headingSection,
-                  fontWeight: 600,
-                  letterSpacing: "-0.06em",
-                }}
-              >
-                Oráculo do Espelho.
-              </h2>
-
-              <p
-                className="mx-auto mb-3 max-w-md text-sm leading-relaxed xl:mx-0"
-                style={{ color: colors.muted }}
-              >
-                {!hasResult
-                  ? "A carta diária fica selada até a primeira leitura revelar sua composição."
-                  : oracleLockedToday
-                    ? "A carta de hoje já foi aberta. O baralho se recolhe, e o conselho permanece disponível até amanhã."
-                    : "Toque no baralho. O Espelho escolhe uma carta e entrega o conselho do dia."}
-              </p>
-
-              {hasResult && !oracleLockedToday && (
-                <motion.button
-                  type="button"
-                  onClick={handleShuffleCards}
-                  whileHover={reduceMotion ? undefined : { x: 3 }}
-                  whileTap={reduceMotion ? undefined : { scale: 0.97 }}
-                  className="mb-5 inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-xs"
-                  style={{
-                    background: "rgba(255,255,255,0.028)",
-                    border: "1px solid rgba(242,185,104,0.11)",
-                    color: colors.goldSoft,
-                  }}
-                >
-                  <span>↻</span>
-                  Embaralhar cartas
-                </motion.button>
-              )}
-
-              <div
-                className="hidden xl:block w-28 h-px"
-                style={{
-                  background:
-                    "linear-gradient(90deg, transparent, var(--gold-primary), transparent)",
-                }}
-              />
-            </div>
-
-            <div className="grid items-stretch gap-4 xl:grid-cols-[0.72fr_1.28fr]">
-              <div
-                className="relative flex min-h-[286px] items-center justify-center px-3 py-2 md:min-h-[348px] md:py-3"
-                style={{
-                  perspective: 1400,
-                }}
-              >
-                <div
-                  className="pointer-events-none absolute inset-x-[16%] bottom-8 h-16 rounded-full blur-2xl"
-                  style={{
-                    background:
-                      "linear-gradient(90deg, transparent, rgba(242,185,104,0.16), rgba(183,140,255,0.08), transparent)",
-                  }}
-                />
-                <div
-                  className="pointer-events-none absolute inset-x-[18%] bottom-16 h-px"
-                  style={{
-                    background:
-                      "linear-gradient(90deg, transparent, rgba(242,185,104,0.34), transparent)",
-                  }}
-                />
-                <div className="relative z-10 flex min-h-[266px] flex-col items-center justify-center gap-3 md:min-h-[324px] md:gap-4">
-                  <div
-                    className="relative h-[210px] w-[142px] md:h-[278px] md:w-[188px]"
-                    style={{
-                      opacity: !hasResult ? 0.42 : 1,
-                      isolation: "isolate",
-                      perspective: 1400,
-                      transformStyle: "preserve-3d",
-                    }}
-                  >
-                    <motion.button
-                      type="button"
-                      disabled={!hasResult || oracleLockedToday}
-                      onClick={handleDrawFromDeck}
-                      whileHover={
-                        reduceMotion || !hasResult || oracleLockedToday
-                          ? undefined
-                          : { y: -8, scale: 1.02 }
-                      }
-                      whileTap={
-                        reduceMotion || !hasResult || oracleLockedToday
-                          ? undefined
-                          : { scale: 0.97 }
-                      }
-                      className="absolute inset-0 cursor-pointer disabled:cursor-not-allowed"
-                      style={{
-                        transformStyle: "preserve-3d",
-                      }}
-                    >
-                      {orderedOracleCards.slice(0, 5).map((card, index) => {
-                        const offset = index - 2;
-
-                        return (
-                          <motion.div
-                            key={card.id}
-                            className="absolute inset-0 overflow-hidden rounded-[30px] p-5"
-                            initial={false}
-                            animate={{
-                              x: offset * 7,
-                              y: selectedCard
-                                ? Math.abs(offset) * 7 + 18
-                                : Math.abs(offset) * 5,
-                              rotateZ: offset * 4,
-                              scale: selectedCard
-                                ? 0.88 - Math.abs(offset) * 0.012
-                                : 1 - Math.abs(offset) * 0.018,
-                              opacity: selectedCard ? 0.28 : 1,
-                              filter: selectedCard
-                                ? "blur(2.2px)"
-                                : "blur(0px)",
-                            }}
-                            transition={{
-                              duration: selectedCard ? 0.72 : 0.42,
-                              ease: [0.22, 1, 0.36, 1],
-                            }}
-                            style={{
-                              zIndex: index + 1,
-                              background:
-                                "radial-gradient(circle at top, rgba(210,135,70,0.18), transparent 34%), radial-gradient(circle at bottom, rgba(107,90,110,0.10), transparent 40%), linear-gradient(180deg, rgba(74,26,26,0.62), var(--wine-deep) 62%, #050202 100%)",
-                              border: "1px solid var(--copper-soft)",
-                              boxShadow:
-                                "0 22px 54px rgba(0,0,0,0.34), inset 0 0 34px rgba(255,255,255,0.012)",
-                              transformStyle: "preserve-3d",
-                            }}
-                          >
-                            <img
-                              src={ORACLE_CARD_BACK_IMAGE}
-                              alt=""
-                              className="absolute inset-0 h-full w-full object-cover"
-                              loading="lazy"
-                              decoding="async"
-                              style={{
-                                opacity: 0.82,
-                                filter: "saturate(1.08) contrast(1.08)",
-                              }}
-                            />
-                            <div
-                              className="absolute inset-0"
-                              style={{
-                                background:
-                                  "linear-gradient(180deg, rgba(5,2,2,0.08), rgba(5,2,2,0.42))",
-                              }}
-                            />
-                            <div
-                              className="absolute inset-[11px] rounded-[25px]"
-                              style={{
-                                border: "1px solid rgba(210,135,70,0.20)",
-                              }}
-                            />
-
-                            <div className="relative z-10 flex h-full flex-col">
-                              <div className="flex items-center justify-between">
-                                <span
-                                  className="text-[8px] uppercase tracking-[0.28em]"
-                                  style={{ color: colors.goldSoft }}
-                                >
-                                  ORI
-                                </span>
-                              </div>
-
-                              <div className="mt-auto flex flex-col items-center gap-3">
-                                <div
-                                  className="h-px w-full"
-                                  style={{
-                                    background:
-                                      "linear-gradient(90deg, transparent, rgba(210,135,70,0.30), transparent)",
-                                  }}
-                                />
-                                <span
-                                  className="rounded-full px-3 py-1 text-[10px] uppercase tracking-[0.18em]"
-                                  style={{
-                                    background: "rgba(5,2,2,0.58)",
-                                    border: "1px solid var(--copper-soft)",
-                                    color: "rgba(255,245,235,0.72)",
-                                    backdropFilter: "blur(10px)",
-                                  }}
-                                >
-                                  {hasResult ? "Toque para revelar" : "Selada"}
-                                </span>
-                              </div>
-                            </div>
-                          </motion.div>
-                        );
-                      })}
-                    </motion.button>
-
-                    <AnimatePresence>
-                      {selectedCard && (
-                        <motion.div
-                          key={selectedCard.id}
-                          className="pointer-events-none absolute inset-0 z-50 overflow-hidden rounded-[30px] p-5"
-                          initial={
-                            reduceMotion
-                              ? false
-                              : {
-                                  opacity: 0,
-                                  y: 20,
-                                  rotateY: -88,
-                                  scale: 0.96,
-                                }
-                          }
-                          animate={
-                            reduceMotion
-                              ? undefined
-                              : {
-                                  opacity: 1,
-                                  y: -8,
-                                  rotateY: 0,
-                                  scale: 1.03,
-                                }
-                          }
-                          exit={
-                            reduceMotion
-                              ? undefined
-                              : {
-                                  opacity: 0,
-                                  y: -12,
-                                  rotateY: 32,
-                                  scale: 0.98,
-                                }
-                          }
-                          transition={{
-                            duration: 1.35,
-                            ease: [0.22, 1, 0.36, 1],
-                          }}
-                          style={{
-                            transformStyle: "preserve-3d",
-                            background: `${selectedCard.aura}, linear-gradient(180deg, rgba(74,26,26,0.72) 0%, var(--wine-deep) 58%, #060203 100%)`,
-                            border: "1px solid var(--copper-soft)",
-                            boxShadow:
-                              "0 28px 82px rgba(0,0,0,0.58), 0 0 62px rgba(210,135,70,0.18), inset 0 0 42px rgba(210,135,70,0.055)",
-                          }}
-                        >
-                          <img
-                            src={selectedCard.image}
-                            alt=""
-                            className="absolute inset-0 h-full w-full object-cover"
-                            loading="lazy"
-                            decoding="async"
-                            style={{
-                              opacity: 0.82,
-                              filter: "saturate(1.08) contrast(1.1)",
-                            }}
-                          />
-                          <div
-                            className="absolute inset-0"
-                            style={{
-                              background:
-                                "linear-gradient(180deg, rgba(20,7,4,0.10), rgba(5,2,2,0.50))",
-                            }}
-                          />
-                          <div
-                            className="absolute inset-[11px] rounded-[25px]"
-                            style={{
-                              border: "1px solid var(--copper-soft)",
-                            }}
-                          />
-                          {!reduceMotion && (
-                            <motion.div
-                              className="absolute inset-y-[-18%] w-14 rotate-12"
-                              initial={{ x: "-190%", opacity: 0 }}
-                              animate={{ x: "520%", opacity: [0, 0.34, 0] }}
-                              transition={{
-                                duration: 1.25,
-                                delay: 0.42,
-                                ease: [0.22, 1, 0.36, 1],
-                              }}
-                              style={{
-                                background:
-                                  "linear-gradient(90deg, transparent, rgba(255,235,190,0.30), transparent)",
-                                filter: "blur(8px)",
-                              }}
-                            />
-                          )}
-
-                          <div className="relative z-10 flex h-full flex-col justify-end gap-5 text-center">
-                            <div
-                              className="mx-auto rounded-2xl px-4 py-3"
-                              style={{
-                                background: "rgba(5,2,2,0.48)",
-                                border: "1px solid var(--copper-soft)",
-                                backdropFilter: "blur(10px)",
-                              }}
-                            >
-                              <p
-                                className="text-lg leading-tight"
-                                style={{
-                                  color: colors.gold,
-                                  fontWeight: 650,
-                                  letterSpacing: "-0.035em",
-                                }}
-                              >
-                                {dailyOracle?.cardTitle || selectedCard.title}
-                              </p>
-                            </div>
-
-                            <div
-                              className="h-px w-full"
-                              style={{
-                                background:
-                                  "linear-gradient(90deg, transparent, rgba(210,135,70,0.34), transparent)",
-                              }}
-                            />
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                  <AnimatePresence>
-                    {selectedCard && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 6 }}
-                        transition={{ duration: 0.35 }}
-                        className="relative z-40 whitespace-nowrap rounded-full px-4 py-2 text-[10px] uppercase tracking-[0.18em]"
-                        style={{
-                          background: "rgba(5,2,2,0.62)",
-                          border: "1px solid rgba(242,185,104,0.14)",
-                          color: colors.goldSoft,
-                          backdropFilter: "blur(12px)",
-                        }}
-                      >
-                        Carta recolhida até amanhã
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </div>
-
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={dailyOracle?.message || activeCard || "empty-card"}
-                  initial={
-                    reduceMotion
-                      ? false
-                      : {
-                          opacity: 0,
-                          rotateY: -8,
-                          y: 18,
-                          filter: "blur(10px)",
-                        }
-                  }
-                  animate={
-                    reduceMotion
-                      ? undefined
-                      : {
-                          opacity: 1,
-                          rotateY: 0,
-                          y: 0,
-                          filter: "blur(0px)",
-                        }
-                  }
-                  exit={
-                    reduceMotion
-                      ? undefined
-                      : {
-                          opacity: 0,
-                          rotateY: 8,
-                          y: -12,
-                          filter: "blur(8px)",
-                        }
-                  }
-                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                  className="relative self-center overflow-hidden rounded-[20px] px-3.5 py-4 md:rounded-[22px] md:px-5 md:py-5"
-                  style={{
-                    transformStyle: "preserve-3d",
-                    background:
-                      "radial-gradient(circle at 88% 12%, rgba(242,185,104,0.18), transparent 34%), radial-gradient(circle at 8% 90%, rgba(210,135,70,0.10), transparent 38%), linear-gradient(180deg, rgba(18,9,10,0.52), rgba(5,2,2,0.72))",
-                    border: "1px solid rgba(242,185,104,0.12)",
-                    boxShadow:
-                      "0 0 42px rgba(242,185,104,0.032), inset 0 1px 0 rgba(255,255,255,0.020), inset 0 0 34px rgba(242,185,104,0.012)",
-                    backdropFilter: "blur(12px)",
-                    WebkitBackdropFilter: "blur(12px)",
-                  }}
-                >
-                  <div
-                    className="pointer-events-none absolute inset-x-8 top-0 h-px"
-                    style={{
-                      background:
-                        "linear-gradient(90deg, transparent, rgba(242,185,104,0.36), transparent)",
-                    }}
-                  />
-                  <div
-                    className="pointer-events-none absolute inset-y-6 left-0 w-px"
-                    style={{
-                      background:
-                        "linear-gradient(180deg, transparent, rgba(210,135,70,0.48), transparent)",
-                    }}
-                  />
-                  <div className="relative z-10">
-                    <AtrioLineLabel className="mb-4">
-                      {selectedCard ? "Conselho do oráculo" : "Carta do dia"}
-                    </AtrioLineLabel>
-
-                    <h3
-                      className="mb-2 max-w-2xl text-lg leading-[1.08] md:mb-3 md:text-2xl"
-                      style={{
-                        color: selectedCard
-                          ? colors.headingActive
-                          : colors.headingSection,
-                        fontWeight: 540,
-                        letterSpacing: "-0.046em",
-                      }}
-                    >
-                      {selectedCard
-                        ? dailyOracle?.cardTitle || selectedCard.title
-                        : hasResult
-                          ? "O Espelho guardou uma mensagem para hoje."
-                          : "A carta diária ainda está selada."}
-                    </h3>
-
-                    <AnimatePresence>
-                      {selectedCard && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 8, scale: 0.98 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          exit={{ opacity: 0, y: -6, scale: 0.98 }}
-                          transition={{ duration: 0.3 }}
-                          className="mb-4 inline-flex items-center gap-2 rounded-full px-3 py-1.5"
-                          style={{
-                            background: "rgba(210,135,70,0.065)",
-                            border: "1px solid rgba(210,135,70,0.15)",
-                            color: colors.goldSoft,
-                          }}
-                        >
-                          <span className="text-[10px]">✓</span>
-                          <span className="text-[10px] uppercase tracking-[0.16em]">
-                            Carta revelada hoje
-                          </span>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-
-                    <blockquote
-                      className="max-w-2xl rounded-[16px] px-3.5 py-3 text-sm leading-relaxed md:rounded-[18px] md:px-4 md:py-3.5 md:text-lg md:leading-[1.48]"
-                      style={{
-                        background:
-                          "linear-gradient(90deg, rgba(255,255,255,0.026), rgba(255,255,255,0.010))",
-                        border: "1px solid rgba(242,185,104,0.075)",
-                        color: selectedCard
-                          ? "rgba(255,245,235,0.66)"
-                          : colors.muted,
-                        fontWeight: 330,
-                        letterSpacing: "-0.01em",
-                      }}
-                    >
-                      {selectedCard
-                        ? dailyOracle?.message || selectedCard.messages[0]
-                        : hasResult
-                          ? "Toque no baralho fechado. A carta abre uma vez por dia e o conselho aparece aqui."
-                          : "Conclua o Código das Deusas para ativar este reflexo diário."}
-                    </blockquote>
-                  </div>
-
-                  <div
-                    className="relative z-10 mt-4"
-                  >
-                    <p
-                      className="ori-mobile-preview max-w-xl text-xs leading-relaxed md:text-sm"
-                      style={{ color: "rgba(255,245,235,0.44)" }}
-                    >
-                      {selectedCard
-                        ? "O baralho se recolheu por hoje. O conselho permanece como ponto de orientação."
-                        : hasResult
-                          ? "Uma carta por dia. Um fragmento por vez. A revelação precisa de ritmo."
-                          : "A primeira revelação é a chave que abre as próximas camadas."}
-                    </p>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
             </div>
           </div>
         </MotionSection>

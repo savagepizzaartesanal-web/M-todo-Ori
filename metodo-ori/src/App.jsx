@@ -11,6 +11,7 @@ const Produto2 = lazy(() => import("./pages/Produto2"));
 const Produto3 = lazy(() => import("./pages/Produto3"));
 const QuizProduto1 = lazy(() => import("./pages/QuizProduto1"));
 const EspelhoOri = lazy(() => import("./pages/EspelhoOri"));
+const OraculoOri = lazy(() => import("./pages/OraculoOri"));
 const MetodoOri = lazy(() => import("./pages/MetodoOri"));
 const Login = lazy(() => import("./pages/Login"));
 const OnboardingOri = lazy(() => import("./pages/OnboardingOri"));
@@ -185,6 +186,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <EspelhoOri />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/oraculo"
+            element={
+              <ProtectedRoute>
+                <OraculoOri />
               </ProtectedRoute>
             }
           />

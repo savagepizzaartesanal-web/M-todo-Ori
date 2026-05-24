@@ -258,21 +258,6 @@ function Dashboard() {
                   {portalStatus}
                 </div>
 
-                <Link
-                  to="/produto-1"
-                  className="inline-flex justify-center px-5 py-2.5 rounded-full font-medium transition-all hover:scale-[1.03] w-full md:w-fit"
-                  style={{
-                    background: hasResult
-                      ? "rgba(242,185,104,0.08)"
-                      : "var(--gold-primary)",
-                    border: hasResult
-                      ? "1px solid var(--border-primary)"
-                      : "none",
-                    color: hasResult ? "var(--text-soft)" : "#090506",
-                  }}
-                >
-                  {portalButtonText}
-                </Link>
               </div>
             </div>
           </div>
