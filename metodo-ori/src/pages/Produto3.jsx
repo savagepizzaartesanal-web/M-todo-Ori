@@ -201,7 +201,7 @@ function Produto3() {
                   letterSpacing: "-0.045em",
                 }}
               >
-                Produto 3 aguardando liberação
+                Código Final ainda selado
               </h2>
 
               <p
@@ -252,7 +252,7 @@ function Produto3() {
               boxShadow: "0 0 40px rgba(242,185,104,0.14)",
             }}
           >
-            Voltar ao Código das Deusas
+            Voltar para a primeira leitura
           </Link>
         </div>
       </section>
@@ -328,7 +328,7 @@ function Produto3() {
                   className="ori-type-system mb-2"
               style={{ color: "var(--gold-soft)" }}
             >
-                  Preview selado
+                  Em breve
             </p>
 
             <h2

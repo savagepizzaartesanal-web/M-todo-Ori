@@ -1046,6 +1046,17 @@ select:focus-visible,
     max-width: 100%;
   }
 
+  .ori-main-frame,
+  .ori-hero-panel,
+  .ori-card-protagonist,
+  .ori-card-secondary,
+  .ori-card-teaser,
+  .ori-card-sealed {
+    box-shadow:
+      0 0 34px rgba(242, 185, 104, 0.026),
+      inset 0 0 20px rgba(255, 255, 255, 0.008) !important;
+  }
+
   .ori-mobile-section {
     margin-bottom: 1rem !important;
   }
@@ -1106,7 +1117,39 @@ select:focus-visible,
     opacity: 0.045 !important;
   }
 
+  .ori-type-system,
+  .ori-label-line .ori-type-system {
+    color: rgba(216, 169, 106, 0.88) !important;
+    font-weight: 500 !important;
+    text-rendering: geometricPrecision;
+  }
+
+  .ori-type-reading-soft {
+    color: rgba(247, 234, 216, 0.68) !important;
+  }
+
+  .ori-card-secondary,
+  .ori-card-teaser,
+  .ori-card-sealed {
+    opacity: 1 !important;
+  }
+
+  .ori-card-teaser,
+  .ori-card-sealed {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0.010)) !important;
+    border-color: rgba(242, 185, 104, 0.082) !important;
+  }
+
+  .ori-card-teaser .ori-type-reading-soft,
+  .ori-card-sealed .ori-type-reading-soft,
+  .ori-card-teaser p,
+  .ori-card-sealed p {
+    color: rgba(247, 234, 216, 0.62) !important;
+  }
+
   button,
+  a[href],
   a[role="button"],
   .ori-button-secondary,
   .ori-journey-action,
@@ -1114,11 +1157,22 @@ select:focus-visible,
   .ori-tab,
   .ori-step {
     font-weight: 500 !important;
+    min-height: 42px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(242, 185, 104, 0.12);
   }
 
   .ori-journey-action,
   .ori-cta-slim {
     letter-spacing: 0.01em;
+    box-shadow:
+      0 0 20px rgba(210, 135, 70, 0.12),
+      inset 0 0 10px rgba(255, 255, 255, 0.10) !important;
+  }
+
+  .ori-button-secondary {
+    color: rgba(247, 234, 216, 0.76) !important;
+    border-color: rgba(242, 185, 104, 0.14) !important;
   }
 
   .ori-label-line {
@@ -1140,12 +1194,15 @@ select:focus-visible,
   }
 
   .ori-chip {
-    padding: 0.32rem 0.62rem;
-    font-size: 9px;
+    min-height: 30px;
+    padding: 0.34rem 0.66rem;
+    color: rgba(247, 234, 216, 0.72);
+    font-size: 9.5px;
     letter-spacing: 0.045em;
   }
 
   .ori-badge {
+    min-height: 28px;
     padding: 0.3rem 0.58rem;
     font-size: 8px;
     letter-spacing: 0.11em;
@@ -1154,11 +1211,24 @@ select:focus-visible,
   .ori-tab,
   .ori-step {
     border-radius: 14px;
+    min-height: 42px;
+  }
+
+  .ori-tab[data-state="active"],
+  .ori-step[data-state="active"],
+  .ori-sidebar-link[data-state="active"] {
+    box-shadow:
+      0 0 18px rgba(242, 185, 104, 0.055),
+      inset 0 0 12px rgba(242, 185, 104, 0.012) !important;
   }
 
   .ori-premium-scroll {
+    margin-inline: -0.1rem;
+    padding-inline: 0.1rem;
+    overscroll-behavior-inline: contain;
     scrollbar-width: none;
     scroll-padding-inline: 0.75rem;
+    -webkit-overflow-scrolling: touch;
   }
 
   .ori-premium-scroll::-webkit-scrollbar {
@@ -1174,6 +1244,21 @@ select:focus-visible,
   .ori-card-teaser p,
   .ori-card-sealed p {
     line-height: 1.5;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 2px solid rgba(242, 185, 104, 0.72);
+    outline-offset: 3px;
+  }
+
+  input,
+  textarea,
+  select {
+    font-size: 16px;
   }
 }
 

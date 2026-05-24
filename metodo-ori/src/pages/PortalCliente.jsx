@@ -257,7 +257,7 @@ function PortalCliente() {
             color: produto2Liberado ? "#d9bdff" : "var(--text-muted)",
           }}
         >
-          {produto2Liberado ? "Acessar Dossiê" : "Camada selada"}
+          {produto2Liberado ? "Acessar Dossiê" : "Ainda selada"}
         </button>
       ),
     },
@@ -294,7 +294,7 @@ function PortalCliente() {
               : "var(--text-muted)",
           }}
         >
-          {produto3Liberado ? "Acessar Código Final" : "Camada selada"}
+          {produto3Liberado ? "Acessar Código Final" : "Ainda selada"}
         </button>
       ),
     },

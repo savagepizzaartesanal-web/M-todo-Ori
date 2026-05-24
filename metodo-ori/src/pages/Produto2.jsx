@@ -201,7 +201,7 @@ function Produto2() {
                   letterSpacing: "-0.045em",
                 }}
               >
-                Produto 2 aguardando liberação
+                Dossiê ORI ainda selado
               </h2>
 
               <p
@@ -254,7 +254,7 @@ function Produto2() {
               boxShadow: "0 0 40px rgba(242,185,104,0.14)",
             }}
           >
-            Voltar ao Código das Deusas
+            Voltar para a primeira leitura
           </Link>
         </div>
       </section>
@@ -330,7 +330,7 @@ function Produto2() {
                   className="ori-type-system mb-2"
               style={{ color: "var(--gold-soft)" }}
             >
-                  Preview selado
+                  Em breve
             </p>
 
             <h2

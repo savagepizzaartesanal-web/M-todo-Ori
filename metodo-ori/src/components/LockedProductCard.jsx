@@ -9,7 +9,7 @@ function LockedProductCard({
 }) {
   return (
     <section
-      className="ori-card-teaser relative overflow-hidden rounded-[24px] p-4 md:rounded-[44px] md:p-12"
+      className="ori-card-teaser relative overflow-hidden rounded-[22px] p-4 md:rounded-[44px] md:p-12"
       data-state="sealed"
       style={{
         background:
@@ -22,7 +22,7 @@ function LockedProductCard({
         className="ori-type-system text-[9px] md:text-xs mb-3 md:mb-5"
         style={{ color: "var(--gold-soft)" }}
       >
-        Acesso Bloqueado
+        Acesso ainda selado
       </p>
 
       <h1
@@ -55,13 +55,13 @@ function LockedProductCard({
 
       <Link
         to={link}
-        className="ori-journey-action inline-flex px-6 py-3 md:px-8 md:py-4 rounded-full font-medium"
+        className="ori-journey-action inline-flex justify-center rounded-full px-6 py-3 font-medium md:px-8 md:py-4"
         style={{
           background: "var(--gold-primary)",
           color: "#090506",
         }}
       >
-        Voltar para o Produto 1
+        Voltar para a primeira leitura
       </Link>
     </section>
   );

@@ -1104,7 +1104,7 @@ function LayerReveal({
                 boxShadow: "inset 0 0 14px rgba(255,255,255,0.008)",
               }}
             >
-              ← Voltar sinal anterior
+              ← Voltar etapa anterior
             </motion.button>
 
             <motion.button
@@ -1532,7 +1532,7 @@ function QuizQuestionView({
                   color: "rgba(255,245,235,0.66)",
                 }}
               >
-                ← Voltar sinal anterior
+                ← Voltar etapa anterior
               </motion.button>
             ) : (
               <span
@@ -1723,7 +1723,7 @@ function ReadingLayerPanel({ layer }) {
               </p>
               <p
                 className="ori-type-reading-soft text-[11px] md:text-xs"
-                style={{ color: "rgba(255,245,235,0.48)" }}
+                style={{ color: "rgba(255,245,235,0.62)" }}
               >
                 Camada ativa da leitura
               </p>
@@ -1769,7 +1769,7 @@ function ReadingLayerPanel({ layer }) {
 
               <p
                 className="ori-type-reading text-[13px] leading-relaxed md:text-sm"
-                style={{ color: "var(--text-primary)" }}
+                style={{ color: "rgba(255,245,235,0.88)" }}
               >
                 {leadParagraph}
               </p>
@@ -1820,15 +1820,16 @@ function ReadingLayerPanel({ layer }) {
           {paragraphs.length > 0 && (
             <button
               type="button"
+              aria-expanded={isExpanded}
               onClick={() => setIsExpanded((current) => !current)}
-              className="mt-2.5 w-fit rounded-full px-3 py-1.5 text-[11px] transition-all hover:translate-y-[-1px] md:mt-3"
+              className="mt-2.5 w-fit rounded-full px-3.5 py-2 text-[11px] transition-all hover:translate-y-[-1px] md:mt-3"
               style={{
-                background: "rgba(242,185,104,0.055)",
-                border: "1px solid rgba(242,185,104,0.10)",
-                color: "var(--gold-soft)",
+                background: "rgba(242,185,104,0.075)",
+                border: "1px solid rgba(242,185,104,0.14)",
+                color: "rgba(242,185,104,0.88)",
               }}
             >
-              {isExpanded ? "Recolher leitura" : "Aprofundar leitura"}
+              {isExpanded ? "Voltar à síntese" : "Ler camada completa"}
             </button>
           )}
         </div>
@@ -1851,7 +1852,7 @@ function ReadingLayerPanel({ layer }) {
                 </p>
                 <span
                   className="text-[10px]"
-                  style={{ color: "rgba(255,245,235,0.42)" }}
+                  style={{ color: "rgba(255,245,235,0.58)" }}
                 >
                   {bodyParagraphs.length} trechos
                 </span>
@@ -1877,7 +1878,7 @@ function ReadingLayerPanel({ layer }) {
 
                   <p
                     className="ori-type-reading text-sm md:text-[15px] leading-relaxed"
-                    style={{ color: "var(--text-primary)" }}
+                    style={{ color: "rgba(255,245,235,0.88)" }}
                   >
                     {leadParagraph}
                   </p>
@@ -1951,7 +1952,7 @@ function LayerTabNavigation({ tabs, activeNumber, onSelect }) {
           <div className="mb-1.5 flex items-center justify-between">
             <span
               className="text-[10px]"
-              style={{ color: "rgba(255,245,235,0.45)" }}
+              style={{ color: "rgba(255,245,235,0.58)" }}
             >
               Progresso
             </span>
@@ -3244,7 +3245,7 @@ function QuizProduto1() {
                             color: "rgba(255,245,235,0.68)",
                           }}
                         >
-                          Voltar
+                          Núcleo anterior
                         </button>
                       )}
 

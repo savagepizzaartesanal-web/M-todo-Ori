@@ -1466,7 +1466,7 @@ function EspelhoOri() {
           visualLabel: "Referências de beleza e cabelo",
         },
       ],
-      cta: dossieRevelado ? "Acessar Dossiê ORI" : "Dossiê bloqueado",
+      cta: dossieRevelado ? "Acessar Dossiê ORI" : "Dossiê ainda selado",
       link: dossieRevelado ? "/produto-2" : "/portal",
       active: Boolean(dossieRevelado),
     },
@@ -1533,7 +1533,7 @@ function EspelhoOri() {
           visualLabel: "Aplicação na rotina",
         },
       ],
-      cta: codigoFinalRevelado ? "Acessar Código Final" : "Código Final bloqueado",
+      cta: codigoFinalRevelado ? "Acessar Código Final" : "Código Final ainda selado",
       link: codigoFinalRevelado ? "/produto-3" : "/portal",
       active: Boolean(codigoFinalRevelado),
     },
@@ -2047,9 +2047,9 @@ function EspelhoOri() {
                         ? "linear-gradient(135deg, rgba(255,255,255,0.018), rgba(255,255,255,0.006))"
                         : "linear-gradient(135deg, rgba(242,185,104,0.060), rgba(255,255,255,0.010))",
                       border: isSealed
-                        ? "1px solid rgba(255,255,255,0.045)"
+                        ? "1px solid rgba(242,185,104,0.070)"
                         : "1px solid rgba(242,185,104,0.095)",
-                      opacity: isSealed ? 0.72 : 1,
+                      opacity: 1,
                     }}
                   >
                     <span
@@ -2070,8 +2070,8 @@ function EspelhoOri() {
                       {isSealed && (
                         <span
                           className="text-xs"
-                          aria-label="Bloqueado"
-                          title="Bloqueado"
+                          aria-label="Ainda selado"
+                          title="Ainda selado"
                         >
                           🔒
                         </span>
@@ -2081,7 +2081,7 @@ function EspelhoOri() {
                       className="ori-type-revelation mb-1.5 md:mb-2 text-base md:text-lg"
                       style={{
                         color: isSealed
-                          ? "rgba(255,245,235,0.48)"
+                          ? "rgba(255,245,235,0.62)"
                           : colors.headingSection,
                         fontWeight: 620,
                         letterSpacing: "-0.035em",

@@ -1231,7 +1231,7 @@ function MetodoOri() {
                     color: "rgba(255,245,235,0.68)",
                   }}
                 >
-                  Voltar
+                  Camada anterior
                 </button>
               )}
 
