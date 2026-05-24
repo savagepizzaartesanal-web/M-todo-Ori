@@ -393,7 +393,7 @@ function PortalCliente() {
 
       <div className="relative z-10 max-w-7xl">
         <section
-          className="ori-main-frame ori-hero-panel ori-card-protagonist relative mb-4 flex min-h-[318px] items-center overflow-hidden rounded-[22px] p-3.5 pt-6 md:mb-10 md:min-h-[430px] md:rounded-[42px] md:p-8 xl:p-9"
+          className="ori-main-frame ori-hero-panel ori-card-protagonist relative overflow-hidden rounded-[24px] md:rounded-[42px] p-4 pt-7 md:p-8 xl:p-9 mb-5 md:mb-10 cinematic-card min-h-[350px] sm:min-h-[390px] md:min-h-[430px] flex items-center"
           style={{
             background:
               "linear-gradient(135deg, rgba(18,9,10,0.88), rgba(5,2,2,0.96))",
@@ -487,7 +487,7 @@ function PortalCliente() {
             </div>
 
             <h1
-              className="ori-type-hero mb-2.5 text-[32px] md:mb-5 md:text-5xl xl:text-[56px]"
+              className="ori-type-hero text-[34px] md:text-5xl xl:text-[56px] mb-3 md:mb-5 reveal-step"
               style={{
                 color: "var(--gold-primary)",
                 fontWeight: 600,
@@ -500,20 +500,20 @@ function PortalCliente() {
             </h1>
 
             <div
-              className="mb-3 max-w-[520px] md:mb-6"
+              className="max-w-[520px] mb-4 md:mb-6 reveal-step"
               style={{
                 "--delay": "0.32s",
               }}
             >
               <div
-                className="mb-2.5 max-h-none overflow-visible pr-0 md:mb-5 md:max-h-[176px] md:overflow-y-auto md:pr-2"
+                className="max-h-none overflow-visible pr-0 mb-3 md:mb-5 md:max-h-[176px] md:overflow-y-auto md:pr-2"
                 style={{
                   scrollbarWidth: "thin",
                   scrollbarColor: "rgba(242,185,104,0.24) transparent",
                 }}
               >
                 <p
-                  className="ori-type-reading mb-0 text-sm md:mb-5 md:text-lg"
+                  className="ori-type-reading text-[15px] md:text-lg mb-0 md:mb-5"
                   style={{
                     color: "var(--text-primary)",
                     textShadow: "0 0 28px rgba(0,0,0,0.45)",
@@ -573,7 +573,7 @@ function PortalCliente() {
             </div>
 
             <div
-              className="mb-3 h-px w-14 md:mb-6 md:w-24"
+              className="w-16 md:w-24 h-px mb-4 md:mb-6"
               style={{
                 background:
                   "linear-gradient(to right, var(--gold-primary), transparent)",
@@ -582,7 +582,7 @@ function PortalCliente() {
 
             {resultadoFinal ? (
               <div
-                className="ori-card-secondary relative max-w-[500px] overflow-hidden rounded-[16px] p-3 md:rounded-[24px] md:p-5"
+                className="ori-card-secondary reveal-step relative overflow-hidden rounded-[18px] md:rounded-[24px] p-3.5 md:p-5 max-w-[500px]"
                 data-state="revealed"
                 style={{
                   background:
@@ -604,7 +604,7 @@ function PortalCliente() {
                   }}
                 />
 
-                <div className="relative z-10 flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:gap-5">
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
                   <div>
                     <p
                       className="ori-type-system mb-1.5 md:mb-2"
@@ -614,7 +614,7 @@ function PortalCliente() {
                     </p>
 
                     <h2
-                      className="ori-type-revelation text-xl md:text-3xl"
+                      className="ori-type-revelation text-[22px] md:text-3xl"
                       style={{
                         color: "var(--gold-primary)",
                         fontWeight: 600,
@@ -646,7 +646,7 @@ function PortalCliente() {
               </div>
             ) : (
               <div
-                className="ori-card-teaser max-w-[500px] rounded-[16px] p-3 md:rounded-[24px] md:p-5"
+                className="ori-card-teaser reveal-step rounded-[18px] md:rounded-[24px] p-3.5 md:p-5 max-w-[500px]"
                 data-state="sealed"
                 style={{
                   background:
@@ -691,7 +691,7 @@ function PortalCliente() {
         </section>
 
         <section
-          className="ori-mobile-section ori-main-frame ori-card-secondary relative mb-4 overflow-hidden rounded-[18px] p-3 md:mb-8 md:rounded-[28px] md:p-5"
+          className="ori-mobile-section ori-main-frame ori-card-secondary relative overflow-hidden rounded-[20px] md:rounded-[28px] p-3.5 md:p-5 mb-5 md:mb-8 cinematic-card"
           style={{
             backgroundColor: "rgba(5,2,2,0.92)",
             backgroundImage: ORACLE_PANEL_BACKGROUND,
@@ -724,7 +724,7 @@ function PortalCliente() {
               </p>
 
               <h2
-                className="ori-type-revelation mb-1.5 text-base md:mb-2 md:text-2xl"
+                className="ori-type-revelation text-lg md:text-2xl mb-2"
                 style={{
                   color: "var(--gold-primary)",
                   fontWeight: 620,
@@ -735,7 +735,7 @@ function PortalCliente() {
               </h2>
 
               <p
-                className="ori-mobile-preview-3 ori-type-reading-soft max-w-2xl text-xs md:text-sm"
+                className="ori-type-reading-soft max-w-2xl text-xs md:text-sm"
                 style={{ color: "var(--text-soft)" }}
               >
                 <span className="md:hidden">
@@ -817,7 +817,7 @@ function PortalCliente() {
           </div>
 
           <h2
-              className="ori-type-revelation text-[22px] md:text-4xl"
+              className="ori-type-revelation text-[23px] md:text-4xl"
             style={{
               color: "var(--gold-primary)",
               letterSpacing: "-0.055em",
@@ -827,7 +827,7 @@ function PortalCliente() {
           </h2>
         </div>
 
-        <div className="grid gap-2.5 md:gap-4 xl:grid-cols-3">
+        <div className="grid gap-3 md:gap-4 xl:grid-cols-3">
           {portalCards.map((card) => {
             const isLavender = card.tone === "lavender";
             const isWine = card.tone === "wine";
@@ -855,7 +855,7 @@ function PortalCliente() {
             return (
               <div
                 key={card.number}
-                className={`group relative overflow-hidden rounded-[16px] p-3 md:rounded-[26px] md:p-5 ${
+                className={`group cinematic-card relative overflow-hidden rounded-[18px] md:rounded-[26px] p-3 md:p-5 ${
                   card.released
                     ? card.active
                       ? "ori-card-protagonist"
@@ -907,7 +907,7 @@ function PortalCliente() {
                 )}
 
                 <div className="relative z-10 flex min-h-full flex-col">
-                  <div className="mb-2.5 flex items-center justify-between gap-3 md:mb-4">
+                  <div className="flex items-center justify-between gap-3 mb-3 md:mb-4">
                     <div>
                       <p
                         className="ori-type-system mb-1.5 md:mb-2"
@@ -953,7 +953,7 @@ function PortalCliente() {
                   </div>
 
                   <h3
-                    className="ori-type-revelation mb-2 text-base md:mb-3 md:text-2xl"
+                    className="ori-type-revelation text-lg md:text-2xl mb-2.5 md:mb-3"
                     style={{
                       color: card.active
                         ? isLavender
@@ -970,7 +970,7 @@ function PortalCliente() {
                   </h3>
 
                   <p
-                    className="ori-type-reading-soft mb-3 text-xs md:mb-4 md:min-h-[96px] md:text-sm"
+                    className="ori-type-reading-soft text-xs md:text-sm mb-3 md:mb-4 md:min-h-[96px]"
                     style={{ color: "var(--text-soft)" }}
                   >
                     <span className="md:hidden">
