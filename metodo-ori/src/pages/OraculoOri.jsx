@@ -12,6 +12,7 @@ const ORACLE_HERO_BACKGROUND =
   "radial-gradient(circle at 86% 18%, rgba(242,185,104,0.10), transparent 34%), linear-gradient(90deg, rgba(5,2,2,0.92), rgba(5,2,2,0.70), rgba(5,2,2,0.90)), url('/images/espelho-ori/oraculo/fundo-mesa-oraculo.png')";
 const ORACLE_CARD_BACKGROUND =
   "radial-gradient(circle at 88% 12%, rgba(242,185,104,0.09), transparent 34%), radial-gradient(circle at 8% 92%, rgba(183,140,255,0.05), transparent 34%), linear-gradient(90deg, rgba(5,2,2,0.88), rgba(5,2,2,0.68), rgba(5,2,2,0.92)), url('/images/espelho-ori/oraculo/fundo-oraculo-premium.png')";
+const ORACLE_CARD_BACK_BACKGROUND = `linear-gradient(180deg, rgba(5,2,2,0.02), rgba(5,2,2,0.18)), url('${ORACLE_CARD_BACK_IMAGE}')`;
 
 const colors = {
   gold: "var(--gold-primary)",
@@ -569,7 +570,7 @@ function OraculoOri() {
         }}
       />
 
-      <div className="mx-auto w-full max-w-[1320px] space-y-5 pb-10">
+      <div className="mx-auto w-full max-w-[1320px] space-y-4 pb-8 md:space-y-5 md:pb-10">
       <section
         className="ori-mobile-hero relative overflow-hidden rounded-[26px] px-4 py-5 md:rounded-[34px] md:px-8 md:py-8"
         style={{
@@ -637,7 +638,7 @@ function OraculoOri() {
       </section>
 
       <section
-        className="relative overflow-hidden rounded-[26px] p-4 md:rounded-[34px] md:p-7"
+        className="relative overflow-hidden rounded-[26px] p-4 md:rounded-[34px] md:p-6 lg:p-7"
         style={{
           backgroundColor: "rgba(5,2,2,0.92)",
           backgroundImage: ORACLE_CARD_BACKGROUND,
@@ -648,13 +649,14 @@ function OraculoOri() {
             "0 26px 86px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.018)",
         }}
       >
-        <div className="grid gap-5 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-          <div className="flex flex-col items-center justify-center gap-4 text-center lg:min-h-[500px]">
+        <div className="grid gap-5 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
+          <div className="flex flex-col items-center justify-center gap-4 text-center md:py-3 lg:min-h-[500px]">
             <button
               type="button"
               disabled={!hasResult || oracleLockedToday}
               onClick={handleDrawCard}
-              className="group relative h-[330px] w-[224px] overflow-visible rounded-[32px] disabled:cursor-not-allowed md:h-[430px] md:w-[292px]"
+              aria-label={selectedCard ? selectedCard.title : "Embaralhar cartas"}
+              className="group relative h-[315px] w-[214px] overflow-visible rounded-[32px] disabled:cursor-not-allowed md:h-[430px] md:w-[292px]"
               style={{
                 opacity: !hasResult ? 0.46 : 1,
               }}
@@ -665,8 +667,9 @@ function OraculoOri() {
                     className="absolute inset-0 rounded-[32px]"
                     style={{
                       transform: "translate(15px, 10px) rotate(3.5deg)",
-                      background:
-                        "linear-gradient(180deg, rgba(74,26,26,0.62), var(--wine-deep) 62%, #050202 100%)",
+                      backgroundImage: ORACLE_CARD_BACK_BACKGROUND,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
                       border: "1px solid rgba(210,135,70,0.22)",
                       boxShadow: "0 22px 48px rgba(0,0,0,0.28)",
                     }}
@@ -675,8 +678,9 @@ function OraculoOri() {
                     className="absolute inset-0 rounded-[32px]"
                     style={{
                       transform: "translate(-13px, 9px) rotate(-3deg)",
-                      background:
-                        "linear-gradient(180deg, rgba(74,26,26,0.56), var(--wine-deep) 62%, #050202 100%)",
+                      backgroundImage: ORACLE_CARD_BACK_BACKGROUND,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
                       border: "1px solid rgba(210,135,70,0.18)",
                       boxShadow: "0 22px 48px rgba(0,0,0,0.22)",
                     }}
@@ -717,23 +721,21 @@ function OraculoOri() {
                   className="absolute inset-[12px] rounded-[24px]"
                   style={{ border: "1px solid rgba(210,135,70,0.22)" }}
                 />
-                <span className="relative z-10 flex h-full flex-col justify-end p-5">
-                  <span
-                    className="mx-auto rounded-full px-3 py-1.5 text-[10px] uppercase tracking-[0.16em]"
-                    style={{
-                      background: "rgba(5,2,2,0.64)",
-                      border: "1px solid var(--copper-soft)",
-                      color: colors.goldSoft,
-                      backdropFilter: "blur(10px)",
-                    }}
-                  >
-                    {!hasResult
-                      ? "Selada"
-                      : selectedCard
-                        ? selectedCard.title
-                        : "Embaralhar cartas"}
+                {selectedCard && (
+                  <span className="relative z-10 flex h-full flex-col justify-end p-5">
+                    <span
+                      className="mx-auto rounded-full px-3 py-1.5 text-[10px] uppercase tracking-[0.16em]"
+                      style={{
+                        background: "rgba(5,2,2,0.64)",
+                        border: "1px solid var(--copper-soft)",
+                        color: colors.goldSoft,
+                        backdropFilter: "blur(10px)",
+                      }}
+                    >
+                      {selectedCard.title}
+                    </span>
                   </span>
-                </span>
+                )}
               </span>
             </button>
 
@@ -742,7 +744,7 @@ function OraculoOri() {
                 type="button"
                 disabled={oracleLockedToday}
                 onClick={handleDrawCard}
-                className="mt-3 inline-flex min-h-11 items-center justify-center rounded-full px-5 text-sm disabled:opacity-55"
+                className="mt-3 inline-flex min-h-11 items-center justify-center rounded-full px-5 text-sm disabled:opacity-55 md:min-h-12 md:px-6"
                 style={{
                   background: oracleLockedToday
                     ? "rgba(255,255,255,0.026)"
@@ -752,13 +754,13 @@ function OraculoOri() {
                   fontWeight: 560,
                 }}
               >
-                {oracleLockedToday ? "Carta recolhida até amanhã" : "Revelar carta de hoje"}
+                {oracleLockedToday ? "Carta recolhida até amanhã" : "Embaralhar cartas"}
               </button>
             )}
           </div>
 
           <div
-            className="rounded-[22px] px-4 py-5 md:px-5 md:py-5"
+            className="rounded-[22px] px-4 py-5 md:px-5 md:py-5 lg:max-w-[580px]"
             style={{
               background:
                 "radial-gradient(circle at 88% 12%, rgba(242,185,104,0.12), transparent 34%), linear-gradient(180deg, rgba(18,9,10,0.56), rgba(5,2,2,0.74))",
