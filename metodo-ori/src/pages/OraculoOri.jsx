@@ -637,14 +637,15 @@ function OraculoOri() {
         <img
           src={ORACLE_HERO_IMAGE}
           alt=""
-          className="pointer-events-none absolute bottom-0 right-[-26%] block h-[76%] w-[88%] object-cover opacity-45 md:inset-y-0 md:right-0 md:h-full md:w-[54%] md:opacity-80"
+          className="pointer-events-none absolute bottom-0 right-[-4%] block h-[62%] w-[52%] object-cover opacity-75 md:inset-y-0 md:right-0 md:h-full md:w-[54%] md:opacity-80"
           loading="eager"
           decoding="async"
           style={{
+            objectPosition: "right bottom",
             WebkitMaskImage:
-              "linear-gradient(90deg, transparent 0%, black 28%, black 100%), linear-gradient(180deg, transparent 0%, black 18%, black 100%)",
+              "linear-gradient(90deg, transparent 0%, black 16%, black 100%), linear-gradient(180deg, transparent 0%, black 12%, black 100%)",
             maskImage:
-              "linear-gradient(90deg, transparent 0%, black 28%, black 100%), linear-gradient(180deg, transparent 0%, black 18%, black 100%)",
+              "linear-gradient(90deg, transparent 0%, black 16%, black 100%), linear-gradient(180deg, transparent 0%, black 12%, black 100%)",
           }}
         />
       </section>
