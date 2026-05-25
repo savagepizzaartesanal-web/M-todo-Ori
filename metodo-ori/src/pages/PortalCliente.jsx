@@ -628,15 +628,16 @@ function PortalCliente() {
                   </div>
 
                   <div
-                    className="ori-badge ori-state-done ori-state-surface hidden w-fit sm:inline-flex"
+                    className="ori-badge ori-state-done ori-state-surface hidden w-fit gap-2.5 px-3.5 sm:inline-flex"
                     style={{
                       background: "rgba(242,185,104,0.08)",
                       border: "1px solid rgba(242,185,104,0.16)",
                       color: "var(--gold-primary)",
+                      letterSpacing: "0.12em",
                     }}
                   >
                     <span
-                      className="w-2 h-2 rounded-full"
+                      className="h-1.5 w-1.5 shrink-0 rounded-full"
                       style={{
                         background: "var(--gold-primary)",
                         boxShadow: "0 0 14px rgba(242,185,104,0.45)",

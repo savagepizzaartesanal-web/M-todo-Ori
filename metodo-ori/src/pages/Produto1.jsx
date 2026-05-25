@@ -161,6 +161,39 @@ function QuizProduto1() {
             >
               Começar minha leitura
             </button>
+
+            <div
+              className="mt-6 grid gap-2.5 rounded-[20px] p-3.5 sm:hidden"
+              style={{
+                background:
+                  "linear-gradient(180deg, rgba(255,255,255,0.034), rgba(255,255,255,0.010))",
+                border: "1px solid rgba(242,185,104,0.10)",
+                boxShadow: "inset 0 0 22px rgba(255,255,255,0.010)",
+              }}
+            >
+              <p
+                className="ori-type-system text-[8px]"
+                style={{ color: "var(--gold-soft)" }}
+              >
+                O que será revelado
+              </p>
+
+              <div className="grid grid-cols-3 gap-2">
+                {["Presença", "Essência", "Direção"].map((item) => (
+                  <span
+                    key={item}
+                    className="rounded-full px-2 py-2 text-center text-[11px]"
+                    style={{
+                      background: "rgba(255,255,255,0.024)",
+                      border: "1px solid rgba(242,185,104,0.08)",
+                      color: "rgba(255,245,235,0.72)",
+                    }}
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
 
           <div className="relative hidden lg:flex min-h-[520px] items-end p-8">

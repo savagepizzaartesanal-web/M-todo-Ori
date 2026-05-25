@@ -30,8 +30,8 @@ function SectionTitle({ children, variant = "gold" }) {
           color: isGreen
             ? "rgba(120,255,160,0.58)"
             : isPurple
-              ? "var(--lavender-muted)"
-              : "var(--copper-soft)",
+              ? "rgba(183,140,255,0.66)"
+              : "rgba(242,185,104,0.72)",
           letterSpacing: "0.35em",
         }}
       >
@@ -233,7 +233,7 @@ function Sidebar() {
                   <div>
                     <p
                       className="ori-type-system text-[9px]"
-                      style={{ color: "var(--gold-soft)" }}
+                      style={{ color: "rgba(242,185,104,0.78)" }}
                     >
                       Jornada ORI
                     </p>
@@ -270,7 +270,14 @@ function Sidebar() {
                 </div>
 
                 {isAdmin && (
-                  <div className="mb-5">
+                  <div
+                    className="mb-5 rounded-[18px] px-2.5 py-3"
+                    style={{
+                      background:
+                        "linear-gradient(180deg, rgba(183,140,255,0.045), rgba(255,255,255,0.010))",
+                      border: "1px solid rgba(183,140,255,0.085)",
+                    }}
+                  >
                     <SectionTitle variant="purple">
                       Painel Administrativo
                     </SectionTitle>

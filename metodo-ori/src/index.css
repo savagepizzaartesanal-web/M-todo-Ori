@@ -1282,20 +1282,20 @@ select:focus-visible,
 
   .ori-quiz-mobile-question {
     padding-block: 0.875rem 1rem !important;
-    text-align: left !important;
+    text-align: center !important;
   }
 
   .ori-quiz-mobile-question h3 {
     max-width: 100% !important;
-    margin-inline: 0 !important;
+    margin-inline: auto !important;
     font-size: 24px !important;
     line-height: 1.08 !important;
     letter-spacing: -0.055em !important;
-    text-align: left !important;
+    text-align: center !important;
   }
 
   .ori-quiz-mobile-question p {
-    text-align: left !important;
+    text-align: center !important;
   }
 
   .ori-quiz-mobile-question-wrap {

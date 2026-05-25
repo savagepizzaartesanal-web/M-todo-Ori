@@ -342,11 +342,7 @@ function LoadingDossie({ loadingRef, reduceMotion }) {
         playsInline
         preload="none"
       >
-        <source
-          src="/videos/quizz/quizz-bg.mp4"
-          type="video/mp4"
-          media="(min-width: 768px)"
-        />
+        <source src="/videos/quizz/quizz-bg.mp4" type="video/mp4" />
       </video>
 
       <div
@@ -977,11 +973,7 @@ function LayerReveal({
         playsInline
         preload="none"
       >
-        <source
-          src="/videos/quizz/quizz-bg.mp4"
-          type="video/mp4"
-          media="(min-width: 768px)"
-        />
+        <source src="/videos/quizz/quizz-bg.mp4" type="video/mp4" />
       </video>
 
       <div
