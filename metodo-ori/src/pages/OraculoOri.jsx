@@ -544,6 +544,17 @@ function OraculoOri() {
     }, 860);
   };
 
+  const handleOracleAction = () => {
+    if (!hasResult || oracleLockedToday || selectedCard) return;
+
+    if (hasShuffled) {
+      handleDrawCard();
+      return;
+    }
+
+    handleShuffleCards();
+  };
+
   if (loading) {
     return (
       <section className="flex min-h-[70vh] items-center justify-center px-4">
@@ -637,15 +648,14 @@ function OraculoOri() {
         <img
           src={ORACLE_HERO_IMAGE}
           alt=""
-          className="pointer-events-none absolute bottom-0 right-[-4%] block h-[62%] w-[52%] object-cover opacity-75 md:inset-y-0 md:right-0 md:h-full md:w-[54%] md:opacity-80"
+          className="pointer-events-none absolute inset-y-0 right-0 hidden h-full w-[54%] object-cover opacity-80 md:block"
           loading="eager"
           decoding="async"
           style={{
-            objectPosition: "right bottom",
             WebkitMaskImage:
-              "linear-gradient(90deg, transparent 0%, black 16%, black 100%), linear-gradient(180deg, transparent 0%, black 12%, black 100%)",
+              "linear-gradient(90deg, transparent 0%, black 28%, black 100%)",
             maskImage:
-              "linear-gradient(90deg, transparent 0%, black 16%, black 100%), linear-gradient(180deg, transparent 0%, black 12%, black 100%)",
+              "linear-gradient(90deg, transparent 0%, black 28%, black 100%)",
           }}
         />
       </section>
@@ -667,8 +677,8 @@ function OraculoOri() {
             <button
               type="button"
               disabled={!hasResult || oracleLockedToday}
-              onClick={handleShuffleCards}
-              aria-label={selectedCard ? selectedCard.title : "Embaralhar cartas"}
+              onClick={handleOracleAction}
+              aria-label={selectedCard ? selectedCard.title : "Preparar carta do dia"}
               className="group relative h-[315px] w-[214px] overflow-visible rounded-[32px] disabled:cursor-not-allowed md:h-[430px] md:w-[292px]"
               style={{
                 opacity: !hasResult ? 0.46 : 1,
@@ -759,45 +769,32 @@ function OraculoOri() {
             </button>
 
             {hasResult && (
-              <div className="mt-3 flex flex-col items-center gap-2.5">
-                {!oracleLockedToday && !selectedCard && (
-                  <button
-                    type="button"
-                    onClick={handleShuffleCards}
-                    className="ori-button-secondary inline-flex min-h-9 items-center justify-center rounded-full px-4 text-xs"
-                    style={{
-                      background: hasShuffled
-                        ? "rgba(242,185,104,0.070)"
-                        : "rgba(255,255,255,0.024)",
-                      border: "1px solid rgba(242,185,104,0.12)",
-                      color: colors.goldSoft,
-                    }}
-                  >
-                    {isShuffling
-                      ? "Embaralhando..."
-                      : hasShuffled
-                        ? "Baralho preparado"
-                        : "Embaralhar"}
-                  </button>
-                )}
-
-                <button
-                  type="button"
-                  disabled={oracleLockedToday}
-                  onClick={handleDrawCard}
-                  className="inline-flex min-h-11 items-center justify-center rounded-full px-5 text-sm disabled:opacity-55 md:min-h-12 md:px-6"
-                  style={{
-                    background: oracleLockedToday
-                      ? "rgba(255,255,255,0.026)"
-                      : "linear-gradient(135deg, #f2b968, #d28746)",
-                    border: oracleLockedToday ? "1px solid rgba(242,185,104,0.11)" : "none",
-                    color: oracleLockedToday ? colors.goldSoft : "#160807",
-                    fontWeight: 560,
-                  }}
-                >
-                  {oracleLockedToday ? "Carta recolhida até amanhã" : "Tirar carta do dia"}
-                </button>
-              </div>
+              <button
+                type="button"
+                disabled={oracleLockedToday || isShuffling}
+                onClick={handleOracleAction}
+                className="mt-3 inline-flex min-h-11 items-center justify-center rounded-full px-5 text-sm disabled:opacity-55 md:min-h-12 md:px-6"
+                style={{
+                  background: oracleLockedToday
+                    ? "rgba(255,255,255,0.026)"
+                    : hasShuffled
+                      ? "linear-gradient(135deg, #f2b968, #d28746)"
+                      : "rgba(255,255,255,0.026)",
+                  border: hasShuffled && !oracleLockedToday
+                    ? "none"
+                    : "1px solid rgba(242,185,104,0.12)",
+                  color: hasShuffled && !oracleLockedToday ? "#160807" : colors.goldSoft,
+                  fontWeight: 560,
+                }}
+              >
+                {oracleLockedToday
+                  ? "Carta recolhida até amanhã"
+                  : isShuffling
+                    ? "Embaralhando..."
+                    : hasShuffled
+                      ? "Tirar carta do dia"
+                      : "Embaralhar cartas"}
+              </button>
             )}
           </div>
 

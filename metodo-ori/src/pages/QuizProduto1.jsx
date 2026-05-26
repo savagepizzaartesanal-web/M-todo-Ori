@@ -327,15 +327,9 @@ function LoadingDossie({ loadingRef, reduceMotion }) {
         WebkitBackdropFilter: "blur(18px)",
       }}
     >
-      <img
-        src="/images/heroes/loading-ori.png"
-        alt="Processamento ORI"
-        className="absolute inset-0 w-full h-full object-cover object-center opacity-70 pointer-events-none select-none"
-      />
-
       <video
         aria-hidden="true"
-        className="absolute inset-0 h-full w-full object-cover opacity-85 pointer-events-none"
+        className="absolute inset-0 h-full w-full object-cover opacity-70 pointer-events-none"
         autoPlay
         loop
         muted
@@ -1205,7 +1199,7 @@ function QuizQuestionView({
       initial={reduceMotion ? false : "hidden"}
       animate={reduceMotion ? undefined : "visible"}
       exit={reduceMotion ? undefined : "exit"}
-      className="ori-quiz-mobile-shell relative mb-4 flex min-h-[auto] items-center overflow-hidden rounded-[22px] p-2.5 md:mb-5 md:min-h-[380px] md:rounded-[32px] md:p-4 xl:p-5"
+      className="ori-quiz-mobile-shell relative mb-4 flex min-h-[auto] items-center overflow-hidden rounded-[22px] p-2.5 md:mb-5 md:min-h-[520px] md:rounded-[32px] md:p-4 xl:min-h-[560px] xl:p-5"
       style={{
         background: `${theme.aura}, radial-gradient(circle at 50% 42%, ${theme.glow}, transparent 32%), linear-gradient(135deg, rgba(18,9,10,0.74), rgba(5,2,2,0.94))`,
         border: "1px solid rgba(242,185,104,0.10)",
@@ -1308,7 +1302,7 @@ function QuizQuestionView({
         </div>
 
         <div
-          className="ori-quiz-mobile-card relative flex min-h-[auto] flex-col justify-between overflow-hidden rounded-[18px] px-3 py-3 md:min-h-[360px] md:rounded-[28px] md:px-5 md:py-4 xl:px-7 xl:py-5"
+          className="ori-quiz-mobile-card relative flex min-h-[auto] flex-col justify-between overflow-hidden rounded-[18px] px-3 py-3 md:min-h-[420px] md:rounded-[28px] md:px-5 md:py-4 xl:min-h-[455px] xl:px-7 xl:py-5"
           style={{
             background:
               "radial-gradient(circle at top, rgba(255,255,255,0.048), transparent 38%), linear-gradient(180deg, rgba(255,255,255,0.028), rgba(255,255,255,0.008))",
@@ -1404,7 +1398,7 @@ function QuizQuestionView({
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
               className="ori-quiz-mobile-question-wrap relative z-10"
             >
-              <div className="ori-quiz-mobile-question mx-auto max-w-4xl py-3 text-center md:py-4">
+              <div className="ori-quiz-mobile-question mx-auto flex max-w-4xl flex-col justify-center py-3 text-center md:min-h-[142px] md:py-4 xl:min-h-[158px]">
                 <p
                   className="uppercase tracking-[0.18em] text-[7px] md:tracking-[0.26em] md:text-[9px] mb-2 md:mb-4"
                   style={{ color: "rgba(255,245,235,0.45)" }}
@@ -1639,14 +1633,8 @@ function createGuidedReadingBlocks(paragraphs) {
   });
 }
 
-function getReadingAxisLabel(index) {
-  const labels = ["Revelação", "Manifestação", "Direção", "Aprofundamento"];
-
-  return labels[index] || `Camada ${String(index + 1).padStart(2, "0")}`;
-}
-
 function ReadingLayerPanel({ layer }) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isDeepReadingOpen, setIsDeepReadingOpen] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const mobileMotionOff = useMobileMotionOff();
   const reduceMotion = prefersReducedMotion || mobileMotionOff;
@@ -1659,6 +1647,13 @@ function ReadingLayerPanel({ layer }) {
     .filter(Boolean);
   const [leadParagraph, ...bodyParagraphs] = paragraphs;
   const guidedBlocks = createGuidedReadingBlocks(bodyParagraphs);
+  const showCompleteText = mobileMotionOff;
+  const hasHiddenDesktopReading =
+    !showCompleteText &&
+    guidedBlocks.some(
+      (block) =>
+        block.paragraphs.length > 1 || (block.paragraphs[0] || "").length > 180,
+    );
 
   return (
     <motion.article
@@ -1667,9 +1662,7 @@ function ReadingLayerPanel({ layer }) {
       animate={reduceMotion ? undefined : { opacity: 1, y: 0, filter: "blur(0px)" }}
       exit={reduceMotion ? undefined : { opacity: 0, y: -10, filter: "blur(6px)" }}
       transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-      className={`relative overflow-hidden rounded-[18px] md:rounded-[26px] ${
-        isExpanded ? "lg:min-h-[560px]" : "lg:min-h-[350px]"
-      }`}
+      className="relative overflow-hidden rounded-[18px] md:rounded-[26px] lg:min-h-[350px]"
       style={{
         background:
           "radial-gradient(circle at top right, rgba(242,185,104,0.10), transparent 34%), linear-gradient(135deg, rgba(18,9,10,0.56), rgba(5,2,2,0.70))",
@@ -1715,15 +1708,9 @@ function ReadingLayerPanel({ layer }) {
         }}
       />
 
-      <div
-        className={`relative z-10 ${
-          isExpanded ? "lg:min-h-[560px]" : "lg:min-h-[350px]"
-        }`}
-      >
+      <div className="relative z-10 lg:min-h-[350px]">
         <div
-          className={`flex min-h-0 max-w-full flex-col p-3 md:p-5 lg:max-w-[54%] ${
-            isExpanded ? "justify-center lg:min-h-[350px]" : "justify-center lg:min-h-[350px]"
-          }`}
+          className="flex min-h-0 max-w-full flex-col justify-center p-3 md:p-5 lg:min-h-[350px] lg:max-w-[54%]"
         >
           <div className="mb-2 flex flex-wrap items-center gap-2 md:mb-2.5">
             <span
@@ -1774,9 +1761,9 @@ function ReadingLayerPanel({ layer }) {
             {layer.description}
           </p>
 
-          {leadParagraph && !isExpanded && (
+          {leadParagraph && (
             <div
-              className="mb-2 rounded-[15px] px-3 py-2.5 md:mb-2.5 md:px-3.5 md:py-3"
+              className="mb-2 w-full rounded-[15px] px-3 py-2.5 text-left transition-transform md:mb-2.5 md:px-3.5 md:py-3 md:hover:-translate-y-0.5"
               style={{
                 background:
                   "linear-gradient(90deg, rgba(242,185,104,0.060), rgba(255,255,255,0.010))",
@@ -1801,12 +1788,18 @@ function ReadingLayerPanel({ layer }) {
             </div>
           )}
 
-          {guidedBlocks.length > 0 && !isExpanded && (
+          {guidedBlocks.length > 0 && (
             <div className="grid gap-2 md:gap-2.5">
-              {guidedBlocks.slice(0, 2).map((block) => (
+              {guidedBlocks.map((block) => {
+                const preview = block.paragraphs[0] || "";
+                const visibleParagraphs = showCompleteText
+                  ? block.paragraphs
+                  : [preview];
+
+                return (
                 <div
                   key={`${layer.number}-${block.label}`}
-                  className="rounded-[14px] px-3 py-2 md:py-2.5"
+                  className="rounded-[14px] px-3 py-2 text-left transition-transform md:py-2.5"
                   style={{
                     background:
                       "linear-gradient(180deg, rgba(255,255,255,0.024), rgba(255,255,255,0.007))",
@@ -1821,127 +1814,92 @@ function ReadingLayerPanel({ layer }) {
                   </p>
 
                   <div className="space-y-1.5">
-                    {block.paragraphs.slice(0, 1).map((paragraph, index) => (
+                    {visibleParagraphs.map((paragraph, index) => (
                       <p
                         key={`${layer.number}-${block.label}-${index}`}
                         className="ori-type-reading-soft text-xs leading-relaxed md:text-[13px]"
                         style={{
                           color: "rgba(255,245,235,0.68)",
-                          display: "-webkit-box",
-                          WebkitBoxOrient: "vertical",
-                          WebkitLineClamp: 3,
-                          overflow: "hidden",
+                          ...(showCompleteText
+                            ? {}
+                            : {
+                                display: "-webkit-box",
+                                WebkitBoxOrient: "vertical",
+                                WebkitLineClamp: 3,
+                                overflow: "hidden",
+                          }),
                         }}
                       >
-                        {paragraph}
+                        {showCompleteText || index > 0
+                          ? paragraph
+                          : `${paragraph.slice(0, 180)}${
+                              paragraph.length > 180 || block.paragraphs.length > 1
+                                ? "..."
+                                : ""
+                            }`}
                       </p>
                     ))}
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
           )}
 
-          {paragraphs.length > 0 && (
-            <button
-              type="button"
-              aria-expanded={isExpanded}
-              onClick={() => setIsExpanded((current) => !current)}
-              className="mt-2.5 w-fit rounded-full px-3.5 py-2 text-[11px] transition-all hover:translate-y-[-1px] md:mt-3"
-              style={{
-                background: "rgba(242,185,104,0.075)",
-                border: "1px solid rgba(242,185,104,0.14)",
-                color: "rgba(242,185,104,0.88)",
-              }}
-            >
-              {isExpanded ? "Recolher leitura" : "Aprofundar leitura"}
-            </button>
+          {hasHiddenDesktopReading && (
+            <div className="mt-3 hidden md:block">
+              <button
+                type="button"
+                onClick={() => setIsDeepReadingOpen((current) => !current)}
+                className="ori-button-secondary rounded-full px-4 py-2 text-xs"
+                aria-expanded={isDeepReadingOpen}
+              >
+                {isDeepReadingOpen ? "Recolher leitura" : "Aprofundar leitura"}
+              </button>
+            </div>
           )}
         </div>
+      </div>
 
-        {paragraphs.length > 0 && isExpanded && (
-          <div className="px-3.5 pb-3.5 md:px-5 md:pb-5">
-            <div
-              className="grid gap-2.5"
-              style={{
-                borderTop: "1px solid rgba(242,185,104,0.075)",
-                paddingTop: "1rem",
-              }}
-            >
-              <div className="flex items-center justify-between gap-3">
+      {hasHiddenDesktopReading && isDeepReadingOpen && (
+        <div className="relative z-10 hidden border-t border-[rgba(242,185,104,0.08)] p-5 md:block">
+          <div
+            className="rounded-[18px] px-4 py-4"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(255,255,255,0.022), rgba(255,255,255,0.007))",
+              border: "1px solid rgba(242,185,104,0.075)",
+            }}
+          >
+            <div className="mb-3 flex items-center justify-between gap-4">
+              <p
+                className="ori-type-system ori-label-sm"
+                style={{ color: "var(--gold-soft)" }}
+              >
+                Leitura completa da camada
+              </p>
+              <span
+                className="text-[11px]"
+                style={{ color: "rgba(255,245,235,0.48)" }}
+              >
+                {paragraphs.length} trechos
+              </span>
+            </div>
+
+            <div className="grid gap-3">
+              {paragraphs.map((paragraph, index) => (
                 <p
-                  className="ori-type-system ori-label-sm"
-                  style={{ color: "var(--gold-soft)" }}
+                  key={`${layer.number}-complete-${index}`}
+                  className="ori-type-reading-soft text-sm leading-relaxed"
+                  style={{ color: "rgba(255,245,235,0.74)" }}
                 >
-                  Leitura completa da camada
+                  {paragraph}
                 </p>
-                <span
-                  className="text-[10px]"
-                  style={{ color: "rgba(255,245,235,0.58)" }}
-                >
-                  {bodyParagraphs.length} trechos
-                </span>
-              </div>
-
-              {leadParagraph && (
-                <div
-                  className="rounded-[16px] px-3.5 py-2.5 md:py-3"
-                  style={{
-                    background:
-                      "linear-gradient(90deg, rgba(242,185,104,0.060), rgba(255,255,255,0.010))",
-                    border: "1px solid rgba(242,185,104,0.10)",
-                    backdropFilter: "blur(8px)",
-                    WebkitBackdropFilter: "blur(8px)",
-                  }}
-                >
-                  <p
-                    className="ori-type-system ori-label-sm mb-2"
-                    style={{ color: "var(--gold-soft)" }}
-                  >
-                    Síntese principal
-                  </p>
-
-                  <p
-                    className="ori-type-reading text-sm md:text-[15px] leading-relaxed"
-                    style={{ color: "rgba(255,245,235,0.88)" }}
-                  >
-                    {leadParagraph}
-                  </p>
-                </div>
-              )}
-
-              <div className="grid gap-2.5 lg:grid-cols-2">
-                {bodyParagraphs.map((paragraph, index) => (
-                  <div
-                    key={`${layer.number}-full-${index}`}
-                    className="rounded-[16px] px-3.5 py-3"
-                    style={{
-                      background:
-                        "linear-gradient(180deg, rgba(255,255,255,0.026), rgba(255,255,255,0.008))",
-                      border: "1px solid rgba(242,185,104,0.075)",
-                      boxShadow: "inset 0 0 18px rgba(255,255,255,0.006)",
-                    }}
-                  >
-                    <p
-                      className="ori-type-system ori-label-sm mb-2"
-                      style={{ color: "var(--gold-soft)" }}
-                    >
-                      {getReadingAxisLabel(index)}
-                    </p>
-
-                    <p
-                      className="ori-type-reading-soft text-xs leading-relaxed md:text-[13px]"
-                      style={{ color: "rgba(255,245,235,0.70)" }}
-                    >
-                      {paragraph}
-                    </p>
-                  </div>
-                ))}
-              </div>
+              ))}
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </motion.article>
   );
 }
@@ -2015,6 +1973,7 @@ function LayerTabNavigation({ tabs, activeNumber, onSelect }) {
               onClick={() => onSelect(item.number)}
               aria-current={isActive ? "step" : undefined}
               aria-label={`Abrir camada ${item.number}: ${item.label}`}
+              data-layer-tab={item.number}
               whileHover={{ y: -2 }}
               whileTap={{ scale: 0.98 }}
               className="ori-tab group relative flex min-h-[38px] w-[102px] shrink-0 items-center gap-1.5 overflow-hidden rounded-[13px] px-2 py-1.5 text-left transition-all duration-300 md:min-h-[48px] md:w-[154px] md:gap-2.5 md:rounded-[16px] md:px-3 md:py-2"
@@ -2110,6 +2069,9 @@ function QuizProduto1() {
   const resultRef = useRef(null);
   const loadingRef = useRef(null);
   const quizRef = useRef(null);
+  const readingNavigationRef = useRef(null);
+  const readingLayerRef = useRef(null);
+  const nextStepRef = useRef(null);
 
   const groupedQuestions = useMemo(() => getGroupedQuestions(), []);
   const blockOrder = useMemo(() => getBlockOrder(), []);
@@ -2758,6 +2720,15 @@ function QuizProduto1() {
   const hasNextResultLayer =
     activeResultLayerIndex >= 0 &&
     activeResultLayerIndex < activeResultLayerState.tabs.length - 1;
+  const previousResultLayer =
+    activeResultLayerIndex > 0
+      ? activeResultLayerState.tabs[activeResultLayerIndex - 1]
+      : null;
+  const previousFlowLabel = previousResultLayer
+    ? "Camada anterior"
+    : previousResultCore
+      ? "Núcleo anterior"
+      : null;
   const isLastResultLayerOfLastCore =
     activeResultCore === "sintese" && !hasNextResultLayer;
   const resultFlowLabel = hasNextResultLayer
@@ -2773,6 +2744,50 @@ function QuizProduto1() {
         ? "Sua primeira leitura foi concluída. O próximo movimento é traduzir essa força no Dossiê ORI."
         : "Você chegou à última camada da sua primeira leitura.";
 
+  const scrollToReadingNavigation = () => {
+    window.setTimeout(() => {
+      readingNavigationRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 80);
+  };
+
+  const scrollToCurrentLayer = (layerNumber) => {
+    window.setTimeout(() => {
+      readingLayerRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+
+      document
+        .querySelector(`[data-layer-tab="${layerNumber}"]`)
+        ?.scrollIntoView({
+          behavior: "smooth",
+          inline: "center",
+          block: "nearest",
+        });
+    }, 100);
+  };
+
+  const scrollToCoreTab = (coreId) => {
+    window.setTimeout(() => {
+      document
+        .querySelector(`[data-core-tab="${coreId}"]`)
+        ?.scrollIntoView({
+          behavior: "smooth",
+          inline: "center",
+          block: "nearest",
+        });
+    }, 120);
+  };
+
+  const handleSelectResultCore = (coreId) => {
+    setActiveResultCore(coreId);
+    scrollToReadingNavigation();
+    scrollToCoreTab(coreId);
+  };
+
   const handleResultFlowNext = () => {
     if (!activeResultLayerState) return;
 
@@ -2782,6 +2797,7 @@ function QuizProduto1() {
 
       if (nextLayer) {
         activeResultLayerState.setActiveNumber(nextLayer);
+        scrollToCurrentLayer(nextLayer);
       }
 
       return;
@@ -2797,11 +2813,44 @@ function QuizProduto1() {
         nextLayerState.setActiveNumber(firstLayer);
       }
 
+      scrollToReadingNavigation();
+      scrollToCoreTab(nextResultCore.id);
       return;
     }
 
     if (isLastResultLayerOfLastCore) {
       setResultReadingCompleted(true);
+      window.setTimeout(() => {
+        nextStepRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 100);
+    }
+  };
+
+  const handleResultFlowPrevious = () => {
+    if (!activeResultLayerState) return;
+
+    if (previousResultLayer) {
+      activeResultLayerState.setActiveNumber(previousResultLayer.number);
+      scrollToCurrentLayer(previousResultLayer.number);
+      return;
+    }
+
+    if (previousResultCore) {
+      setActiveResultCore(previousResultCore.id);
+
+      const previousLayerState = resultCoreLayerState[previousResultCore.id];
+      const lastLayer =
+        previousLayerState?.tabs?.[previousLayerState.tabs.length - 1]?.number;
+
+      if (lastLayer) {
+        previousLayerState.setActiveNumber(lastLayer);
+      }
+
+      scrollToReadingNavigation();
+      scrollToCoreTab(previousResultCore.id);
     }
   };
 
@@ -3034,7 +3083,7 @@ function QuizProduto1() {
                     }}
                   />
 
-                  <section className="relative z-10 pb-3">
+                  <section ref={readingNavigationRef} className="relative z-10 scroll-mt-8 pb-3">
                     <div className="relative z-10">
                       <div className="ori-label-line mb-2.5 md:mb-3">
                         <p
@@ -3053,7 +3102,8 @@ function QuizProduto1() {
                             <button
                               key={item.number}
                               type="button"
-                              onClick={() => setActiveResultCore(item.id)}
+                              onClick={() => handleSelectResultCore(item.id)}
+                              data-core-tab={item.id}
                               className="ori-tab min-w-[136px] shrink-0 rounded-[15px] px-2.5 py-2 text-left transition-all duration-500 hover:-translate-y-0.5 md:min-w-0 md:rounded-[16px] md:px-3 md:py-2.5"
                               data-state={isActive ? "active" : "sealed"}
                               style={{
@@ -3127,8 +3177,9 @@ function QuizProduto1() {
                   {activeResultCore === "estrutura" && (
                     <>
                       <section
+                        ref={readingLayerRef}
                         id="nucleo-estrutura-interna"
-                        className="relative z-10 overflow-hidden pt-3"
+                        className="relative z-10 scroll-mt-8 overflow-hidden pt-3"
                         style={{
                           background: "transparent",
                         }}
@@ -3154,8 +3205,9 @@ function QuizProduto1() {
                   {activeResultCore === "sombra" && (
                     <>
                       <section
+                        ref={readingLayerRef}
                         id="nucleo-sombra-vinculos"
-                        className="relative z-10 overflow-hidden pt-3"
+                        className="relative z-10 scroll-mt-8 overflow-hidden pt-3"
                         style={{
                           background: "transparent",
                         }}
@@ -3181,8 +3233,9 @@ function QuizProduto1() {
                   {activeResultCore === "imagem" && (
                     <>
                       <section
+                        ref={readingLayerRef}
                         id="nucleo-imagem-presenca"
-                        className="relative z-10 overflow-hidden pt-3"
+                        className="relative z-10 scroll-mt-8 overflow-hidden pt-3"
                         style={{
                           background: "transparent",
                         }}
@@ -3208,8 +3261,9 @@ function QuizProduto1() {
                   {activeResultCore === "sintese" && (
                     <>
                       <section
+                        ref={readingLayerRef}
                         id="nucleo-sintese-final"
-                        className="relative z-10 overflow-hidden pt-3"
+                        className="relative z-10 scroll-mt-8 overflow-hidden pt-3"
                         style={{
                           background: "transparent",
                         }}
@@ -3257,12 +3311,10 @@ function QuizProduto1() {
                     </div>
 
                     <div className="flex flex-col gap-2.5 sm:flex-row md:gap-3">
-                      {previousResultCore && (
+                      {previousFlowLabel && (
                         <button
                           type="button"
-                          onClick={() =>
-                            setActiveResultCore(previousResultCore.id)
-                          }
+                          onClick={handleResultFlowPrevious}
                           className="rounded-full px-5 py-2.5 text-sm md:py-3"
                           style={{
                             background: "rgba(255,255,255,0.026)",
@@ -3270,7 +3322,7 @@ function QuizProduto1() {
                             color: "rgba(255,245,235,0.68)",
                           }}
                         >
-                          Núcleo anterior
+                          {previousFlowLabel}
                         </button>
                       )}
 
@@ -3292,7 +3344,11 @@ function QuizProduto1() {
                     </div>
                   </section>
 
-                  {resultReadingCompleted && <NextStepCard />}
+                  {resultReadingCompleted && (
+                    <div ref={nextStepRef} className="scroll-mt-8">
+                      <NextStepCard />
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div

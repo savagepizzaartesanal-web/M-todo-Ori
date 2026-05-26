@@ -1037,10 +1037,13 @@ function EspelhoOri() {
             "Resume a direção simbólica que começa a organizar sua imagem.",
           reflection:
             "Sua imagem está reforçando essa direção ou criando ruído?",
-          detailTitle: "Sua primeira fórmula de imagem:",
-          detailText:
-            getPreview(report?.formula || report?.essenciaImagem, 520) ||
-            "A fórmula da imagem aparece quando sua força simbólica começa a ganhar linguagem estética.",
+          detailTitle: hasResult
+            ? "Sua primeira fórmula de imagem:"
+            : "Fórmula em preparação",
+          detailText: hasResult
+            ? getPreview(report?.formula || report?.essenciaImagem, 520) ||
+              "Primeira direção simbólica"
+            : "A primeira fórmula da sua imagem aparece depois da leitura arquetípica.",
         },
       ],
       cta: hasResult ? "Ver Código das Deusas" : "Começar Código das Deusas",
@@ -1842,6 +1845,11 @@ function EspelhoOri() {
 
                               {item.targetId === "resultado-formula" ? (
                                 <div className="flex flex-1 flex-col">
+                                  {(() => {
+                                    const formulaIsRevealed = hasResult;
+
+                                    return (
+                                      <>
                                   <h4
                                     className="ori-type-revelation mb-4 text-xl md:text-2xl"
                                     style={{
@@ -1863,17 +1871,27 @@ function EspelhoOri() {
                                         }}
                                       />
                                       <p
-                                        className="px-2 text-[11px] uppercase leading-tight sm:whitespace-nowrap sm:text-[13px] md:text-[15px] xl:text-[16px]"
+                                        className={`px-2 leading-tight ${
+                                          formulaIsRevealed
+                                            ? "text-[11px] uppercase sm:text-[13px] md:text-[15px] xl:text-[16px]"
+                                            : "ori-type-reading-soft text-sm normal-case md:text-base"
+                                        }`}
                                         style={{
-                                          color: "rgba(242,185,104,0.82)",
+                                          color: formulaIsRevealed
+                                            ? "rgba(242,185,104,0.82)"
+                                            : "rgba(255,245,235,0.64)",
                                           fontStyle: "normal",
-                                          fontWeight: 540,
-                                          letterSpacing: "0.14em",
+                                          fontWeight: formulaIsRevealed ? 540 : 400,
+                                          letterSpacing: formulaIsRevealed
+                                            ? "0.14em"
+                                            : "0",
                                           textShadow:
                                             "0 0 18px rgba(242,185,104,0.10)",
                                         }}
                                       >
-                                        {formatSymbolicFormula(item.detailText)}
+                                        {formulaIsRevealed
+                                          ? formatSymbolicFormula(item.detailText)
+                                          : item.detailText}
                                       </p>
                                       <div
                                         className="mx-auto mt-4 h-px w-28"
@@ -1884,6 +1902,9 @@ function EspelhoOri() {
                                       />
                                     </div>
                                   </div>
+                                      </>
+                                    );
+                                  })()}
                                 </div>
                               ) : item.targetId === "resultado-arquetipos" ? (
                                 <div className="flex flex-1 flex-col">
