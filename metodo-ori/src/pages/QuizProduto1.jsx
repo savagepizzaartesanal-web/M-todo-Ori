@@ -5,6 +5,13 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { questions } from "../data/questions";
 import { reports } from "../data/reports";
 import { calculateResult } from "../services/calculateResult";
+import {
+  calculateQuizResult,
+  completeProduto1,
+  getProduto1Reading,
+  getProduto1Answers,
+  saveProduto1Answers,
+} from "../services/api";
 import { enrichReportWithSignals } from "../services/analyzeReadingSignals";
 import { archetypeImages } from "../data/archetypeImages";
 import { supabase } from "../lib/supabaseClient";
@@ -1633,6 +1640,63 @@ function createGuidedReadingBlocks(paragraphs) {
   });
 }
 
+function splitParagraphForDesktop(paragraph, maxPreviewLength = 360) {
+  const trimmedParagraph = String(paragraph || "").trim();
+
+  if (!trimmedParagraph) {
+    return {
+      visible: "",
+      hidden: "",
+    };
+  }
+
+  if (trimmedParagraph.length <= maxPreviewLength) {
+    return {
+      visible: trimmedParagraph,
+      hidden: "",
+    };
+  }
+
+  const punctuationCut = Math.max(
+    trimmedParagraph.lastIndexOf(". ", maxPreviewLength),
+    trimmedParagraph.lastIndexOf("! ", maxPreviewLength),
+    trimmedParagraph.lastIndexOf("? ", maxPreviewLength),
+  );
+  const cutPoint = punctuationCut > 180 ? punctuationCut + 1 : maxPreviewLength;
+  const visible = trimmedParagraph.slice(0, cutPoint).trim();
+  const hidden = trimmedParagraph.slice(cutPoint).trim();
+
+  if (hidden.length < 90) {
+    return {
+      visible: trimmedParagraph,
+      hidden: "",
+    };
+  }
+
+  return {
+    visible,
+    hidden,
+  };
+}
+
+function splitDesktopReadingBlock(block, maxPreviewLength = 360) {
+  const [firstParagraph = "", ...extraParagraphs] = block.paragraphs;
+  const splitFirstParagraph = splitParagraphForDesktop(
+    firstParagraph,
+    maxPreviewLength,
+  );
+
+  return {
+    visibleParagraphs: splitFirstParagraph.visible
+      ? [splitFirstParagraph.visible]
+      : [],
+    hiddenParagraphs: [
+      ...(splitFirstParagraph.hidden ? [splitFirstParagraph.hidden] : []),
+      ...extraParagraphs,
+    ],
+  };
+}
+
 function ReadingLayerPanel({ layer }) {
   const [isDeepReadingOpen, setIsDeepReadingOpen] = useState(false);
   const prefersReducedMotion = useReducedMotion();
@@ -1648,12 +1712,40 @@ function ReadingLayerPanel({ layer }) {
   const [leadParagraph, ...bodyParagraphs] = paragraphs;
   const guidedBlocks = createGuidedReadingBlocks(bodyParagraphs);
   const showCompleteText = mobileMotionOff;
-  const hasHiddenDesktopReading =
-    !showCompleteText &&
-    guidedBlocks.some(
+  const leadSplit = showCompleteText
+    ? { visible: leadParagraph, hidden: "" }
+    : splitParagraphForDesktop(leadParagraph, 460);
+  const desktopReadingBlocks = guidedBlocks
+    .map((block) => ({
+      ...block,
+      ...splitDesktopReadingBlock(block),
+    }))
+    .filter(
       (block) =>
-        block.paragraphs.length > 1 || (block.paragraphs[0] || "").length > 180,
+        block.visibleParagraphs.length > 0 || block.hiddenParagraphs.length > 0,
     );
+  const hiddenDesktopBlocks = [
+    ...(leadSplit.hidden
+      ? [
+          {
+            label: "Síntese principal",
+            paragraphs: [leadSplit.hidden],
+          },
+        ]
+      : []),
+    ...desktopReadingBlocks
+    .map((block) => ({
+      label: block.label,
+      paragraphs: block.hiddenParagraphs,
+    }))
+    .filter((block) => block.paragraphs.length > 0),
+  ];
+  const hiddenDesktopCount = hiddenDesktopBlocks.reduce(
+    (total, block) => total + block.paragraphs.length,
+    0,
+  );
+  const hasHiddenDesktopReading = !showCompleteText && hiddenDesktopCount > 0;
+  const visibleLeadParagraph = showCompleteText ? leadParagraph : leadSplit.visible;
 
   return (
     <motion.article
@@ -1761,7 +1853,7 @@ function ReadingLayerPanel({ layer }) {
             {layer.description}
           </p>
 
-          {leadParagraph && (
+          {visibleLeadParagraph && (
             <div
               className="mb-2 w-full rounded-[15px] px-3 py-2.5 text-left transition-transform md:mb-2.5 md:px-3.5 md:py-3 md:hover:-translate-y-0.5"
               style={{
@@ -1783,20 +1875,20 @@ function ReadingLayerPanel({ layer }) {
                 className="ori-type-reading text-[13px] leading-relaxed md:text-sm"
                 style={{ color: "rgba(255,245,235,0.88)" }}
               >
-                {leadParagraph}
+                {visibleLeadParagraph}
               </p>
             </div>
           )}
 
-          {guidedBlocks.length > 0 && (
+          {desktopReadingBlocks.length > 0 && (
             <div className="grid gap-2 md:gap-2.5">
-              {guidedBlocks.map((block) => {
-                const preview = block.paragraphs[0] || "";
+              {desktopReadingBlocks.map((block) => {
                 const visibleParagraphs = showCompleteText
                   ? block.paragraphs
-                  : [preview];
+                  : block.visibleParagraphs;
 
                 return (
+                visibleParagraphs.length > 0 && (
                 <div
                   key={`${layer.number}-${block.label}`}
                   className="rounded-[14px] px-3 py-2 text-left transition-transform md:py-2.5"
@@ -1820,27 +1912,14 @@ function ReadingLayerPanel({ layer }) {
                         className="ori-type-reading-soft text-xs leading-relaxed md:text-[13px]"
                         style={{
                           color: "rgba(255,245,235,0.68)",
-                          ...(showCompleteText
-                            ? {}
-                            : {
-                                display: "-webkit-box",
-                                WebkitBoxOrient: "vertical",
-                                WebkitLineClamp: 3,
-                                overflow: "hidden",
-                          }),
                         }}
                       >
-                        {showCompleteText || index > 0
-                          ? paragraph
-                          : `${paragraph.slice(0, 180)}${
-                              paragraph.length > 180 || block.paragraphs.length > 1
-                                ? "..."
-                                : ""
-                            }`}
+                        {paragraph}
                       </p>
                     ))}
                   </div>
                 </div>
+                )
                 );
               })}
             </div>
@@ -1882,19 +1961,30 @@ function ReadingLayerPanel({ layer }) {
                 className="text-[11px]"
                 style={{ color: "rgba(255,245,235,0.48)" }}
               >
-                {paragraphs.length} trechos
+                {hiddenDesktopCount} {hiddenDesktopCount === 1 ? "trecho" : "trechos"}
               </span>
             </div>
 
             <div className="grid gap-3">
-              {paragraphs.map((paragraph, index) => (
-                <p
-                  key={`${layer.number}-complete-${index}`}
-                  className="ori-type-reading-soft text-sm leading-relaxed"
-                  style={{ color: "rgba(255,245,235,0.74)" }}
-                >
-                  {paragraph}
-                </p>
+              {hiddenDesktopBlocks.map((block) => (
+                <div key={`${layer.number}-deep-${block.label}`} className="space-y-2">
+                  <p
+                    className="ori-type-system ori-label-sm"
+                    style={{ color: "var(--gold-soft)" }}
+                  >
+                    {block.label}
+                  </p>
+
+                  {block.paragraphs.map((paragraph, index) => (
+                    <p
+                      key={`${layer.number}-complete-${block.label}-${index}`}
+                      className="ori-type-reading-soft text-sm leading-relaxed"
+                      style={{ color: "rgba(255,245,235,0.74)" }}
+                    >
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
               ))}
             </div>
           </div>
@@ -2065,6 +2155,7 @@ function QuizProduto1() {
   const [activeImagemPresenca, setActiveImagemPresenca] = useState("08");
   const [activeSinteseFinal, setActiveSinteseFinal] = useState("14");
   const [resultReadingCompleted, setResultReadingCompleted] = useState(false);
+  const [backendReading, setBackendReading] = useState(null);
 
   const resultRef = useRef(null);
   const loadingRef = useRef(null);
@@ -2086,14 +2177,34 @@ function QuizProduto1() {
       localStorage.removeItem(LEGACY_STORAGE_KEY);
 
       const parsedData = readQuizFromStorage(userStorageKey);
-      const savedAnswers = parsedData?.answers || {};
-      const hasSavedAnswers = Object.keys(savedAnswers).length > 0;
+      let savedAnswers = parsedData?.answers || {};
+      let savedResult = parsedData?.result || null;
+      let hasSavedAnswers = Object.keys(savedAnswers).length > 0;
 
-      if (parsedData) {
+      if (user?.id) {
+        try {
+          const apiAnswers = await getProduto1Answers();
+          const backendAnswers = apiAnswers?.answers || {};
+          const hasBackendAnswers = Object.keys(backendAnswers).length > 0;
+
+          if (hasBackendAnswers) {
+            savedAnswers = backendAnswers;
+            savedResult = apiAnswers.result || savedResult;
+            hasSavedAnswers = true;
+          }
+        } catch (apiError) {
+          console.log(
+            "API de respostas indisponível, usando histórico local:",
+            apiError,
+          );
+        }
+      }
+
+      if (parsedData || hasSavedAnswers || savedResult) {
         setAnswers(savedAnswers);
-        setResult(parsedData.result || null);
+        setResult(savedResult);
 
-        if (parsedData.result) {
+        if (savedResult) {
           setShowQuiz(false);
           setHasStarted(false);
         } else if (hasSavedAnswers) {
@@ -2101,7 +2212,7 @@ function QuizProduto1() {
         }
       }
 
-      if (user?.id && !parsedData?.result && !hasSavedAnswers) {
+      if (user?.id && !savedResult && !hasSavedAnswers) {
         const { data, error } = await supabase
           .from("clientes")
           .select("resultado, arquetipo_principal, arquetipo_secundario")
@@ -2112,10 +2223,10 @@ function QuizProduto1() {
           console.log("Erro ao buscar resultado salvo:", error);
         }
 
-        const savedResult = getResultFromCliente(data);
+        const clienteResult = getResultFromCliente(data);
 
-        if (savedResult) {
-          setResult(savedResult);
+        if (clienteResult) {
+          setResult(clienteResult);
           setShowQuiz(false);
           setHasStarted(false);
         }
@@ -2190,6 +2301,30 @@ function QuizProduto1() {
 
     if (error) {
       console.log("Erro ao salvar resultado no Supabase:", error);
+    }
+  };
+
+  const calculateResultWithFallback = async () => {
+    try {
+      return await calculateQuizResult(answers);
+    } catch (apiError) {
+      console.log("API do quiz indisponível, usando cálculo local:", apiError);
+      return calculateResult(questions, answers);
+    }
+  };
+
+  const completeProduto1WithFallback = async () => {
+    try {
+      const conclusao = await completeProduto1(answers);
+      return conclusao.result;
+    } catch (apiError) {
+      console.log(
+        "API de conclusão indisponível, usando fluxo local:",
+        apiError,
+      );
+      const resultado = await calculateResultWithFallback();
+      await saveResultToSupabase(resultado);
+      return resultado;
     }
   };
 
@@ -2284,6 +2419,9 @@ function QuizProduto1() {
 
     setAnswers(nextAnswers);
     setResult(null);
+    saveProduto1Answers(nextAnswers).catch((apiError) => {
+      console.log("API de respostas indisponível, mantendo salvamento local:", apiError);
+    });
 
     setTimeout(() => {
       advanceFromQuestion(nextAnswers);
@@ -2357,10 +2495,9 @@ function QuizProduto1() {
       });
     }, 100);
 
-    const resultado = calculateResult(questions, answers);
-
     setTimeout(async () => {
-      await saveResultToSupabase(resultado);
+      const resultado = await completeProduto1WithFallback();
+
       setResult(resultado);
       setIsLoadingResult(false);
 
@@ -2438,15 +2575,79 @@ function QuizProduto1() {
   };
 
   const baseReport = result ? reports[result.nomeComposto] : null;
+  useEffect(() => {
+    if (!result) {
+      return undefined;
+    }
+
+    let isMounted = true;
+
+    async function loadPersonalReading() {
+      try {
+        const reading = await getProduto1Reading();
+
+        if (isMounted) {
+          setBackendReading(reading);
+        }
+      } catch (apiError) {
+        console.log(
+          "Leitura personalizada do backend indisponível:",
+          apiError,
+        );
+
+        if (isMounted) {
+          setBackendReading(null);
+        }
+      }
+    }
+
+    loadPersonalReading();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [result]);
+  const activeBackendReading =
+    backendReading?.resultado === result?.nomeComposto ? backendReading : null;
+
   const report = useMemo(
-    () =>
-      enrichReportWithSignals({
+    () => {
+      if (!baseReport) return null;
+
+      if (
+        activeBackendReading?.camadas &&
+        Object.keys(activeBackendReading.camadas).length > 0
+      ) {
+        const camadas = activeBackendReading.camadas;
+
+        return {
+          ...baseReport,
+          reconhecimento: camadas.reconhecimento
+            ? `${camadas.reconhecimento}\n\n${baseReport.reconhecimento}`
+            : baseReport.reconhecimento,
+          dinamica: camadas.dinamica
+            ? `${camadas.dinamica}\n\n${baseReport.dinamica}`
+            : baseReport.dinamica,
+          sombra: camadas.sombra
+            ? `${camadas.sombra}\n\n${baseReport.sombra}`
+            : baseReport.sombra,
+          essenciaImagem: camadas.essenciaImagem
+            ? `${baseReport.essenciaImagem}\n\n${camadas.essenciaImagem}`
+            : baseReport.essenciaImagem,
+          leituraFinal: camadas.leituraFinal
+            ? `${baseReport.leituraFinal}\n\n${camadas.leituraFinal}`
+            : baseReport.leituraFinal,
+        };
+      }
+
+      return enrichReportWithSignals({
         report: baseReport,
         questions,
         answers,
         result,
-      }),
-    [answers, baseReport, result],
+      });
+    },
+    [activeBackendReading, answers, baseReport, result],
   );
   const archetypeVisual = result ? archetypeImages[result.nomeComposto] : null;
   const estruturaInternaTabs = report

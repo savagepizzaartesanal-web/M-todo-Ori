@@ -3,6 +3,11 @@ import { Link } from "react-router-dom";
 
 import { reports } from "../data/reports";
 import { supabase } from "../lib/supabaseClient";
+import {
+  getCurrentJornada,
+  getDailyOracleCard,
+  saveDailyOracleCard,
+} from "../services/api";
 
 const ORACLE_HERO_IMAGE = "/images/heroes/hero-oraculo-ori-v2.png";
 const LEGACY_STORAGE_KEY = "ori_produto_1_quiz";
@@ -129,7 +134,7 @@ function getDailyStorageKey(userKey) {
   return `${DAILY_CARD_STORAGE_KEY}:${userKey || "local"}`;
 }
 
-function readDailyOracle(userKey) {
+function readDailyOracleLocal(userKey) {
   try {
     const rawData = localStorage.getItem(getDailyStorageKey(userKey));
     return rawData ? JSON.parse(rawData) : null;
@@ -139,7 +144,7 @@ function readDailyOracle(userKey) {
   }
 }
 
-function saveDailyOracle(userKey, data) {
+function saveDailyOracleLocal(userKey, data) {
   try {
     localStorage.setItem(getDailyStorageKey(userKey), JSON.stringify(data));
   } catch (error) {
@@ -395,6 +400,7 @@ function buildPersonalReflection({
 
 function OraculoOri() {
   const [cliente, setCliente] = useState(null);
+  const [jornadaApi, setJornadaApi] = useState(null);
   const [localResult, setLocalResult] = useState(null);
   const [loading, setLoading] = useState(true);
   const [dailyOracle, setDailyOracle] = useState(null);
@@ -411,6 +417,9 @@ function OraculoOri() {
       const user = sessionData?.session?.user;
 
       if (!user?.id) {
+        setCliente(null);
+        setJornadaApi(null);
+        setLocalResult(null);
         setLoading(false);
         return;
       }
@@ -419,6 +428,14 @@ function OraculoOri() {
       const revealedLocalResult = getLocalResult(storageKey);
       localStorage.removeItem(LEGACY_STORAGE_KEY);
       setLocalResult(revealedLocalResult);
+
+      try {
+        const jornadaData = await getCurrentJornada();
+        setJornadaApi(jornadaData);
+      } catch (apiError) {
+        console.log("API da jornada indisponível no Oráculo:", apiError);
+        setJornadaApi(null);
+      }
 
       let { data, error } = await supabase
         .from("clientes")
@@ -451,7 +468,8 @@ function OraculoOri() {
     loadCliente();
   }, []);
 
-  const resultadoFinal = cliente?.resultado || localResult?.nomeComposto || null;
+  const resultadoFinal =
+    jornadaApi?.resultado || cliente?.resultado || localResult?.nomeComposto || null;
   const report = resultadoFinal ? reports[resultadoFinal] : null;
   const principal =
     cliente?.arquetipo_principal ||
@@ -464,10 +482,17 @@ function OraculoOri() {
     report?.combinacao?.split("+")?.[1]?.trim() ||
     "Arquétipo secundário";
   const hasResult = Boolean(resultadoFinal);
-  const produto2Liberado = cliente?.produto_2_liberado ?? false;
-  const produto3Liberado = cliente?.produto_3_liberado ?? false;
+  const produto2Liberado =
+    jornadaApi?.produto_2_liberado ?? cliente?.produto_2_liberado ?? false;
+  const produto3Liberado =
+    jornadaApi?.produto_3_liberado ?? cliente?.produto_3_liberado ?? false;
   const userKey =
-    cliente?.user_id || cliente?.id || localResult?.nomeComposto || resultadoFinal || "local";
+    jornadaApi?.user_id ||
+    cliente?.user_id ||
+    cliente?.id ||
+    localResult?.nomeComposto ||
+    resultadoFinal ||
+    "local";
 
   const oracleCards = useMemo(
     () =>
@@ -495,7 +520,19 @@ function OraculoOri() {
         return;
       }
 
-      const storedOracle = readDailyOracle(userKey);
+      try {
+        const apiOracle = await getDailyOracleCard(todayKey);
+
+        if (apiOracle?.hasCard) {
+          setDailyOracle(apiOracle);
+          saveDailyOracleLocal(userKey, apiOracle);
+          return;
+        }
+      } catch (apiError) {
+        console.log("API da carta diária indisponível:", apiError);
+      }
+
+      const storedOracle = readDailyOracleLocal(userKey);
       setDailyOracle(storedOracle?.dateKey === todayKey ? storedOracle : null);
     }
 
@@ -514,7 +551,7 @@ function OraculoOri() {
     produto3Liberado,
   });
 
-  const handleDrawCard = () => {
+  const handleDrawCard = async () => {
     if (!hasResult || oracleLockedToday) return;
 
     const card = pickRandom(oracleCards);
@@ -530,8 +567,18 @@ function OraculoOri() {
       cardOrder: oracleCards.map((item) => item.id),
     };
 
-    saveDailyOracle(userKey, data);
+    saveDailyOracleLocal(userKey, data);
     setDailyOracle(data);
+
+    try {
+      const savedCard = await saveDailyOracleCard(data);
+      if (savedCard?.hasCard) {
+        setDailyOracle(savedCard);
+        saveDailyOracleLocal(userKey, savedCard);
+      }
+    } catch (apiError) {
+      console.log("Carta diária mantida localmente:", apiError);
+    }
   };
 
   const handleShuffleCards = () => {

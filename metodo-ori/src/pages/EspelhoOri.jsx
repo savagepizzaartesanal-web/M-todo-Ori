@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { supabase } from "../lib/supabaseClient";
 import { reports } from "../data/reports";
 import { MirrorSectionNav } from "../components/espelho/EspelhoInteractions";
+import { getCurrentJornada } from "../services/api";
 
 const LEGACY_STORAGE_KEY = "ori_produto_1_quiz";
 const ONBOARDING_DATA_KEY = "ori_onboarding_data";
@@ -363,6 +364,7 @@ function EspelhoOri() {
   const reduceMotion = prefersReducedMotion || mobileMotionOff;
 
   const [cliente, setCliente] = useState(null);
+  const [jornadaApi, setJornadaApi] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeMirrorTab, setActiveMirrorTab] = useState("essencia");
   const [localResult, setLocalResult] = useState(null);
@@ -381,6 +383,8 @@ function EspelhoOri() {
       const user = sessionData?.session?.user;
 
       if (!user?.id) {
+        setCliente(null);
+        setJornadaApi(null);
         setLocalResult(null);
         setLocalOnboardingProfile({});
         setLoading(false);
@@ -394,6 +398,14 @@ function EspelhoOri() {
       localStorage.removeItem(LEGACY_STORAGE_KEY);
       setLocalResult(revealedLocalResult);
       setLocalOnboardingProfile(storedOnboardingProfile);
+
+      try {
+        const jornadaData = await getCurrentJornada();
+        setJornadaApi(jornadaData);
+      } catch (apiError) {
+        console.log("API da jornada indisponível no Espelho:", apiError);
+        setJornadaApi(null);
+      }
 
       let { data, error } = await supabase
         .from("clientes")
@@ -427,7 +439,7 @@ function EspelhoOri() {
   }, []);
 
   const resultadoFinal =
-    cliente?.resultado || localResult?.nomeComposto || null;
+    jornadaApi?.resultado || cliente?.resultado || localResult?.nomeComposto || null;
 
   const report = resultadoFinal ? reports[resultadoFinal] : null;
   const reflection = report || fallbackReflection;
@@ -444,8 +456,10 @@ function EspelhoOri() {
     report?.combinacao?.split("+")?.[1]?.trim() ||
     "Arquétipo secundário";
 
-  const produto2Liberado = cliente?.produto_2_liberado ?? false;
-  const produto3Liberado = cliente?.produto_3_liberado ?? false;
+  const produto2Liberado =
+    jornadaApi?.produto_2_liberado ?? cliente?.produto_2_liberado ?? false;
+  const produto3Liberado =
+    jornadaApi?.produto_3_liberado ?? cliente?.produto_3_liberado ?? false;
   const dossieRevelado = produto2Liberado || produto3Liberado;
   const codigoFinalRevelado = produto3Liberado;
 

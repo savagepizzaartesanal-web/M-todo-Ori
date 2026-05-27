@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
+import { questions } from "../data/questions";
 import { supabase } from "../lib/supabaseClient";
 
 function AdminClienteDetalhe() {
@@ -11,6 +12,9 @@ function AdminClienteDetalhe() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [perfilAberto, setPerfilAberto] = useState(false);
+  const [leituraAberta, setLeituraAberta] = useState(false);
+  const [produto1Respostas, setProduto1Respostas] = useState(null);
+  const [oraculoCarta, setOraculoCarta] = useState(null);
 
   const fetchCliente = useCallback(async () => {
     setLoading(true);
@@ -27,6 +31,38 @@ function AdminClienteDetalhe() {
 
     setCliente(data || null);
     setObservacoes(data?.observacoes_admin || "");
+
+    if (data?.user_id) {
+      const { data: respostasData, error: respostasError } = await supabase
+        .from("produto_1_respostas")
+        .select("*")
+        .eq("user_id", data.user_id)
+        .maybeSingle();
+
+      if (respostasError) {
+        console.log("Erro ao buscar respostas do Produto 1:", respostasError);
+      }
+
+      setProduto1Respostas(respostasData || null);
+
+      const { data: oraculoData, error: oraculoError } = await supabase
+        .from("oraculo_cartas_diarias")
+        .select("*")
+        .eq("user_id", data.user_id)
+        .order("date_key", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (oraculoError) {
+        console.log("Erro ao buscar carta do Oráculo:", oraculoError);
+      }
+
+      setOraculoCarta(oraculoData || null);
+    } else {
+      setProduto1Respostas(null);
+      setOraculoCarta(null);
+    }
+
     setLoading(false);
   }, [id]);
 
@@ -220,6 +256,34 @@ function AdminClienteDetalhe() {
   const onboardingSummary = onboardingCompleted
     ? `${onboardingItems.length} respostas registradas`
     : "Perfil ainda não preenchido";
+  const produto1Answers = produto1Respostas?.answers || {};
+  const produto1AnsweredCount =
+    produto1Respostas?.answered_count || Object.keys(produto1Answers).length;
+  const produto1TotalQuestions =
+    produto1Respostas?.total_questions || questions.length;
+  const produto1Progress = Math.round(
+    (produto1AnsweredCount / produto1TotalQuestions) * 100,
+  );
+  const produto1Result =
+    produto1Respostas?.result?.nomeComposto || cliente.resultado || null;
+  const produto1AnswerItems = questions
+    .filter((question) => produto1Answers[String(question.id)])
+    .map((question) => ({
+      id: question.id,
+      bloco: question.bloco,
+      text: question.pergunta,
+      value: produto1Answers[String(question.id)],
+    }));
+  const oraculoPayload = oraculoCarta?.payload || {};
+  const oraculoCardTitle =
+    oraculoCarta?.card_title || oraculoPayload.cardTitle || "Sem carta registrada";
+  const oraculoRevealLabel =
+    oraculoCarta?.reveal_label || oraculoPayload.revealLabel || "Oráculo";
+  const oraculoMessage =
+    oraculoCarta?.message || oraculoPayload.message || "A cliente ainda não tirou uma carta.";
+  const oraculoDate = oraculoCarta?.date_key
+    ? formatShortDate(oraculoCarta.date_key)
+    : "Nenhuma carta";
 
   return (
     <div className="ori-atmosphere ori-atmosphere-method relative overflow-hidden max-w-7xl">
@@ -484,6 +548,336 @@ function AdminClienteDetalhe() {
               )}
             </div>
           )}
+        </div>
+      </section>
+
+      <section
+        className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[30px] mb-8 cinematic-card"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(18,9,10,0.72), rgba(7,3,4,0.88))",
+          border: "1px solid rgba(242,185,104,0.10)",
+          backdropFilter: "blur(14px)",
+          WebkitBackdropFilter: "blur(14px)",
+        }}
+      >
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.024]"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(242,185,104,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(242,185,104,0.08) 1px, transparent 1px)",
+            backgroundSize: "58px 58px",
+          }}
+        />
+
+        <div className="relative z-10">
+          <button
+            type="button"
+            onClick={() => setLeituraAberta((current) => !current)}
+            className="w-full text-left p-6 md:p-7"
+          >
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+              <div>
+                <div className="inline-flex items-center gap-4 mb-4">
+                  <div
+                    className="w-8 h-px"
+                    style={{
+                      background:
+                        "linear-gradient(90deg, var(--gold-primary), transparent)",
+                    }}
+                  />
+
+                  <p
+                    className="ori-type-system text-[10px] md:text-xs"
+                    style={{ color: "var(--gold-soft)" }}
+                  >
+                    Produto 1 · Código das Deusas
+                  </p>
+                </div>
+
+                <h2
+                  className="ori-type-revelation text-2xl md:text-3xl mb-2"
+                  style={{
+                    color: "var(--gold-primary)",
+                    fontWeight: 620,
+                    letterSpacing: "-0.05em",
+                  }}
+                >
+                  Respostas da leitura arquetípica
+                </h2>
+
+                <p
+                  className="ori-type-reading-soft text-sm md:text-base"
+                  style={{ color: "rgba(255,245,235,0.62)" }}
+                >
+                  {produto1Respostas
+                    ? `${produto1AnsweredCount} de ${produto1TotalQuestions} sinais respondidos`
+                    : "Nenhuma resposta registrada ainda"}
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <span
+                  className="ori-pill inline-flex w-fit items-center justify-center px-5 py-2.5 text-xs uppercase tracking-[0.18em]"
+                  data-state={produto1Respostas?.is_complete ? "done" : "next"}
+                  style={{
+                    background: produto1Respostas?.is_complete
+                      ? "rgba(120,255,160,0.10)"
+                      : "rgba(242,185,104,0.075)",
+                    border: produto1Respostas?.is_complete
+                      ? "1px solid rgba(120,255,160,0.16)"
+                      : "1px solid rgba(242,185,104,0.14)",
+                    color: produto1Respostas?.is_complete
+                      ? "#9BE7AE"
+                      : "var(--gold-primary)",
+                  }}
+                >
+                  {produto1Progress}%
+                </span>
+
+                <span
+                  className="ori-pill inline-flex w-fit items-center justify-center px-5 py-2.5 text-xs uppercase tracking-[0.18em]"
+                  data-state={produto1Respostas ? "revealed" : "sealed"}
+                  style={{
+                    background: produto1Respostas
+                      ? "rgba(242,185,104,0.085)"
+                      : "rgba(255,255,255,0.026)",
+                    border: produto1Respostas
+                      ? "1px solid rgba(242,185,104,0.16)"
+                      : "1px solid rgba(255,255,255,0.08)",
+                    color: produto1Respostas
+                      ? "var(--gold-primary)"
+                      : "rgba(255,245,235,0.54)",
+                  }}
+                >
+                  {leituraAberta ? "Ocultar sinais" : "Ver sinais"}
+                </span>
+              </div>
+            </div>
+          </button>
+
+          {produto1Respostas && (
+            <div className="px-7 md:px-8 pb-4">
+              <div
+                className="h-1 rounded-full overflow-hidden"
+                style={{
+                  background: "rgba(255,255,255,0.05)",
+                  border: "1px solid rgba(242,185,104,0.07)",
+                }}
+              >
+                <div
+                  className="h-full rounded-full"
+                  style={{
+                    width: `${produto1Progress}%`,
+                    background:
+                      "linear-gradient(90deg, rgba(210,135,70,0.62), rgba(242,185,104,0.95))",
+                    boxShadow: "0 0 18px rgba(242,185,104,0.18)",
+                  }}
+                />
+              </div>
+
+              {produto1Result && (
+                <p
+                  className="ori-type-reading-soft mt-4 text-sm md:text-base"
+                  style={{ color: "rgba(255,245,235,0.72)" }}
+                >
+                  Resultado atual:{" "}
+                  <span style={{ color: "var(--gold-primary)" }}>
+                    {produto1Result}
+                  </span>
+                </p>
+              )}
+            </div>
+          )}
+
+          {leituraAberta && (
+            <div className="px-7 md:px-8 pb-7 md:pb-8">
+              {produto1AnswerItems.length > 0 ? (
+                <div className="grid md:grid-cols-2 gap-3">
+                  {produto1AnswerItems.map((item) => (
+                    <div
+                      key={item.id}
+                      className="ori-card-secondary rounded-[22px] p-4"
+                      style={{
+                        background: "rgba(255,255,255,0.024)",
+                        border: "1px solid rgba(242,185,104,0.08)",
+                        boxShadow: "inset 0 0 18px rgba(255,255,255,0.006)",
+                      }}
+                    >
+                      <div className="flex items-start justify-between gap-4 mb-3">
+                        <div>
+                          <p
+                            className="ori-type-system text-[8px] mb-2"
+                            style={{ color: "rgba(242,185,104,0.72)" }}
+                          >
+                            {String(item.id).padStart(2, "0")} · {item.bloco}
+                          </p>
+
+                          <p
+                            className="ori-type-reading-soft text-sm"
+                            style={{ color: "rgba(255,245,235,0.74)" }}
+                          >
+                            {item.text}
+                          </p>
+                        </div>
+
+                        <span
+                          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm"
+                          style={{
+                            background: "rgba(242,185,104,0.10)",
+                            border: "1px solid rgba(242,185,104,0.16)",
+                            color: "var(--gold-primary)",
+                          }}
+                        >
+                          {item.value}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm" style={{ color: "var(--text-soft)" }}>
+                  Nenhuma resposta do Produto 1 foi registrada para esta
+                  cliente.
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section
+        className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[30px] mb-8 cinematic-card"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(18,9,10,0.72), rgba(7,3,4,0.88))",
+          border: "1px solid rgba(242,185,104,0.10)",
+          backdropFilter: "blur(14px)",
+          WebkitBackdropFilter: "blur(14px)",
+        }}
+      >
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.024]"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(242,185,104,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(242,185,104,0.08) 1px, transparent 1px)",
+            backgroundSize: "58px 58px",
+          }}
+        />
+
+        <div className="relative z-10 p-6 md:p-7">
+          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-5">
+            <div>
+              <div className="inline-flex items-center gap-4 mb-4">
+                <div
+                  className="w-8 h-px"
+                  style={{
+                    background:
+                      "linear-gradient(90deg, var(--gold-primary), transparent)",
+                  }}
+                />
+
+                <p
+                  className="ori-type-system text-[10px] md:text-xs"
+                  style={{ color: "var(--gold-soft)" }}
+                >
+                  Oráculo
+                </p>
+              </div>
+
+              <h2
+                className="ori-type-revelation text-2xl md:text-3xl mb-2"
+                style={{
+                  color: "var(--gold-primary)",
+                  fontWeight: 620,
+                  letterSpacing: "-0.05em",
+                }}
+              >
+                Última carta da cliente
+              </h2>
+
+              <p
+                className="ori-type-reading-soft text-sm md:text-base"
+                style={{ color: "rgba(255,245,235,0.62)" }}
+              >
+                {oraculoCarta
+                  ? `Carta tirada em ${oraculoDate}`
+                  : "Nenhuma carta diária registrada ainda"}
+              </p>
+            </div>
+
+            <span
+              className="ori-pill inline-flex w-fit items-center justify-center px-5 py-2.5 text-xs uppercase tracking-[0.18em]"
+              data-state={oraculoCarta ? "revealed" : "sealed"}
+              style={{
+                background: oraculoCarta
+                  ? "rgba(242,185,104,0.085)"
+                  : "rgba(255,255,255,0.026)",
+                border: oraculoCarta
+                  ? "1px solid rgba(242,185,104,0.16)"
+                  : "1px solid rgba(255,255,255,0.08)",
+                color: oraculoCarta
+                  ? "var(--gold-primary)"
+                  : "rgba(255,245,235,0.54)",
+              }}
+            >
+              {oraculoCarta ? "Registrada" : "Sem carta"}
+            </span>
+          </div>
+
+          <div className="mt-5 grid md:grid-cols-[0.7fr_1.3fr] gap-3">
+            <div
+              className="ori-card-secondary rounded-[22px] p-4"
+              style={{
+                background: "rgba(255,255,255,0.024)",
+                border: "1px solid rgba(242,185,104,0.08)",
+                boxShadow: "inset 0 0 18px rgba(255,255,255,0.006)",
+              }}
+            >
+              <p
+                className="ori-type-system text-[8px] mb-2"
+                style={{ color: "rgba(242,185,104,0.72)" }}
+              >
+                {oraculoRevealLabel}
+              </p>
+
+              <h3
+                className="ori-type-revelation text-xl"
+                style={{
+                  color: oraculoCarta
+                    ? "var(--gold-primary)"
+                    : "rgba(255,245,235,0.58)",
+                  fontWeight: 600,
+                  letterSpacing: "-0.04em",
+                }}
+              >
+                {oraculoCardTitle}
+              </h3>
+            </div>
+
+            <div
+              className="ori-card-secondary rounded-[22px] p-4"
+              style={{
+                background: "rgba(255,255,255,0.024)",
+                border: "1px solid rgba(242,185,104,0.08)",
+                boxShadow: "inset 0 0 18px rgba(255,255,255,0.006)",
+              }}
+            >
+              <p
+                className="ori-type-system text-[8px] mb-2"
+                style={{ color: "rgba(242,185,104,0.72)" }}
+              >
+                Mensagem registrada
+              </p>
+
+              <p
+                className="ori-type-reading-soft text-sm leading-relaxed"
+                style={{ color: "rgba(255,245,235,0.74)" }}
+              >
+                {oraculoMessage}
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 

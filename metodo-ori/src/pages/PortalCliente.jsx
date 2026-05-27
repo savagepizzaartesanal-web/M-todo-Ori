@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { supabase } from "../lib/supabaseClient";
+import { getCurrentJornada } from "../services/api";
 
 const LEGACY_STORAGE_KEY = "ori_produto_1_quiz";
 const ORACLE_PANEL_BACKGROUND =
@@ -27,6 +28,7 @@ function PortalCliente() {
   const [cliente, setCliente] = useState(null);
   const [loadingCliente, setLoadingCliente] = useState(true);
   const [quizLocal, setQuizLocal] = useState(null);
+  const [jornadaApi, setJornadaApi] = useState(null);
 
   useEffect(() => {
     async function loadCliente() {
@@ -38,6 +40,7 @@ function PortalCliente() {
       if (!user?.id) {
         setCliente(null);
         setQuizLocal(null);
+        setJornadaApi(null);
         setLoadingCliente(false);
         return;
       }
@@ -52,6 +55,14 @@ function PortalCliente() {
         resultado de outro usuário no mesmo navegador.
       */
       localStorage.removeItem(LEGACY_STORAGE_KEY);
+
+      try {
+        const jornadaData = await getCurrentJornada();
+        setJornadaApi(jornadaData);
+      } catch (apiError) {
+        console.log("API da jornada indisponível, usando Supabase direto:", apiError);
+        setJornadaApi(null);
+      }
 
       const { data, error } = await supabase
         .from("clientes")
@@ -116,14 +127,18 @@ function PortalCliente() {
   const localResult = quizLocal?.result || null;
 
   const resultadoFinal =
-    cliente?.resultado || localResult?.nomeComposto || null;
+    jornadaApi?.resultado || cliente?.resultado || localResult?.nomeComposto || null;
+  const clienteNome = jornadaApi?.nome || cliente?.nome || null;
 
   const hasAnswers = Object.keys(answers).length > 0;
   const hasResult = Boolean(resultadoFinal);
 
-  const produto1Liberado = cliente?.produto_1_liberado ?? true;
-  const produto2Liberado = cliente?.produto_2_liberado ?? false;
-  const produto3Liberado = cliente?.produto_3_liberado ?? false;
+  const produto1Liberado =
+    jornadaApi?.produto_1_liberado ?? cliente?.produto_1_liberado ?? true;
+  const produto2Liberado =
+    jornadaApi?.produto_2_liberado ?? cliente?.produto_2_liberado ?? false;
+  const produto3Liberado =
+    jornadaApi?.produto_3_liberado ?? cliente?.produto_3_liberado ?? false;
 
   const statusProduto1 = hasResult
     ? "Leitura revelada"
@@ -521,8 +536,8 @@ function PortalCliente() {
                     textShadow: "0 0 28px rgba(0,0,0,0.45)",
                   }}
                 >
-                  {cliente?.nome
-                    ? `${cliente.nome}, sua jornada de identidade, imagem e presença começa aqui.`
+                  {clienteNome
+                    ? `${clienteNome}, sua jornada de identidade, imagem e presença começa aqui.`
                     : "Sua jornada de identidade, imagem e presença começa aqui."}
                 </p>
 
