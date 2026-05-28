@@ -2641,6 +2641,13 @@ function QuizProduto1() {
       if (!baseReport) return null;
 
       if (
+        activeBackendReading?.report &&
+        Object.keys(activeBackendReading.report).length > 0
+      ) {
+        return activeBackendReading.report;
+      }
+
+      if (
         activeBackendReading?.camadas &&
         Object.keys(activeBackendReading.camadas).length > 0
       ) {

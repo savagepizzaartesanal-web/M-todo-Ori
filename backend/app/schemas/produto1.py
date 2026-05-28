@@ -51,3 +51,4 @@ class Produto1LeituraResponse(BaseModel):
     perfil: Produto1LeituraPerfil
     highlights: list[Produto1LeituraHighlight]
     camadas: dict[str, str]
+    report: dict | None = None

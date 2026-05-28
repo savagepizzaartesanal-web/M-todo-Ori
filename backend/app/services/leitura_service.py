@@ -1,4 +1,6 @@
 import json
+from functools import lru_cache
+from pathlib import Path
 
 from app.data.quiz import QUESTIONS
 from app.schemas.auth import CurrentUser
@@ -28,6 +30,8 @@ ARCHETYPE_TONE = {
     "artemis": "liberdade, território, movimento e autonomia",
 }
 
+REPORTS_PATH = Path(__file__).resolve().parents[1] / "data" / "reports.json"
+
 
 def get_answer_value(answers: dict, question_id: int) -> int:
     return int(answers.get(str(question_id)) or answers.get(question_id) or 0)
@@ -56,6 +60,57 @@ def format_profile_value(value) -> str | None:
 
     clean_value = str(value).strip()
     return clean_value or None
+
+
+@lru_cache
+def load_base_reports() -> dict:
+    if not REPORTS_PATH.exists():
+        return {}
+
+    return json.loads(REPORTS_PATH.read_text(encoding="utf-8"))
+
+
+def build_complete_report(
+    *,
+    result_name: str | None,
+    camadas: dict[str, str],
+) -> dict | None:
+    if not result_name:
+        return None
+
+    base_report = load_base_reports().get(result_name)
+
+    if not base_report:
+        return None
+
+    return {
+        **base_report,
+        "reconhecimento": (
+            f"{camadas['reconhecimento']}\n\n{base_report['reconhecimento']}"
+            if camadas.get("reconhecimento")
+            else base_report.get("reconhecimento", "")
+        ),
+        "dinamica": (
+            f"{camadas['dinamica']}\n\n{base_report['dinamica']}"
+            if camadas.get("dinamica")
+            else base_report.get("dinamica", "")
+        ),
+        "sombra": (
+            f"{camadas['sombra']}\n\n{base_report['sombra']}"
+            if camadas.get("sombra")
+            else base_report.get("sombra", "")
+        ),
+        "essenciaImagem": (
+            f"{base_report['essenciaImagem']}\n\n{camadas['essenciaImagem']}"
+            if camadas.get("essenciaImagem")
+            else base_report.get("essenciaImagem", "")
+        ),
+        "leituraFinal": (
+            f"{base_report['leituraFinal']}\n\n{camadas['leituraFinal']}"
+            if camadas.get("leituraFinal")
+            else base_report.get("leituraFinal", "")
+        ),
+    }
 
 
 def get_profile_context(cliente: dict | None) -> Produto1LeituraPerfil:
@@ -283,12 +338,17 @@ async def get_produto1_leitura_personalizada(
         answers=respostas.answers,
         perfil=perfil,
     )
+    result_name = (result or {}).get("nomeComposto")
 
     return Produto1LeituraResponse(
         user_id=current_user.user_id,
         email=(cliente or {}).get("email") or current_user.email,
-        resultado=(result or {}).get("nomeComposto"),
+        resultado=result_name,
         perfil=perfil,
         highlights=highlights,
         camadas=camadas,
+        report=build_complete_report(
+            result_name=result_name,
+            camadas=camadas,
+        ),
     )
