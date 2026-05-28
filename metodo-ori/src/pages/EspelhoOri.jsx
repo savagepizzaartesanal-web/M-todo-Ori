@@ -2033,6 +2033,54 @@ function EspelhoOri() {
                           ))}
                         </div>
 
+                        {hasResult && (
+                          <div
+                            className="ori-card-secondary flex flex-col gap-4 rounded-[20px] p-4 md:flex-row md:items-center md:justify-between md:rounded-[24px] md:p-5"
+                            style={{
+                              background:
+                                "linear-gradient(135deg, rgba(242,185,104,0.065), rgba(255,255,255,0.014))",
+                              border: "1px solid rgba(242,185,104,0.12)",
+                              boxShadow:
+                                "inset 0 0 24px rgba(255,255,255,0.008)",
+                            }}
+                          >
+                            <div>
+                              <AtrioLineLabel className="mb-2">
+                                Relatório digital
+                              </AtrioLineLabel>
+                              <h4
+                                className="ori-type-revelation text-xl md:text-2xl"
+                                style={{
+                                  color: colors.headingSection,
+                                  fontWeight: 620,
+                                  letterSpacing: "-0.045em",
+                                }}
+                              >
+                                Consulte sua leitura completa.
+                              </h4>
+                              <p
+                                className="ori-type-reading-soft mt-1 text-sm"
+                                style={{ color: "rgba(255,245,235,0.58)" }}
+                              >
+                                Abra o relatório do Código das Deusas em formato
+                                de leitura contínua.
+                              </p>
+                            </div>
+
+                            <Link
+                              to="/produto-1/relatorio"
+                              className="ori-button-secondary inline-flex w-full justify-center rounded-full px-5 py-3 text-sm md:w-auto"
+                              style={{
+                                background: "rgba(242,185,104,0.10)",
+                                border: "1px solid rgba(242,185,104,0.16)",
+                                color: colors.gold,
+                              }}
+                            >
+                              Abrir relatório completo
+                            </Link>
+                          </div>
+                        )}
+
                         <div className="grid gap-2">
                           {expandableItems.map((item) => {
                             const isExpanded = Boolean(
