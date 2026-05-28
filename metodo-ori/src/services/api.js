@@ -1,20 +1,67 @@
 import { supabase } from "../lib/supabaseClient";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_TIMEOUT_MS = 12000;
+
+export class OriApiError extends Error {
+  constructor(message, options = {}) {
+    super(message);
+    this.name = "OriApiError";
+    this.status = options.status || null;
+    this.details = options.details || "";
+    this.isTimeout = Boolean(options.isTimeout);
+    this.isNetworkError = Boolean(options.isNetworkError);
+    this.userMessage =
+      options.userMessage ||
+      "O ORI está demorando um pouco para sincronizar. Você pode continuar; seus dados serão preservados.";
+  }
+}
 
 async function requestApi(path, options = {}) {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...options.headers,
-    },
-  });
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+  let response;
+
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, {
+      ...options,
+      signal: controller.signal,
+      headers: {
+        "Content-Type": "application/json",
+        ...options.headers,
+      },
+    });
+  } catch (error) {
+    const isTimeout = error?.name === "AbortError";
+
+    throw new OriApiError(
+      isTimeout
+        ? "Tempo limite ao conectar com a API ORI."
+        : "Não foi possível conectar com a API ORI.",
+      {
+        isTimeout,
+        isNetworkError: !isTimeout,
+        userMessage: isTimeout
+          ? "O ORI está acordando a leitura. Aguarde alguns segundos e tente novamente."
+          : "Não conseguimos sincronizar com o ORI agora. Você pode continuar; vamos manter o que já foi salvo.",
+      },
+    );
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
 
   if (!response.ok) {
     const details = await response.text().catch(() => "");
-    throw new Error(
+    throw new OriApiError(
       `Erro na API ORI: ${response.status}${details ? ` - ${details}` : ""}`,
+      {
+        status: response.status,
+        details,
+        userMessage:
+          response.status === 401
+            ? "Sua sessão precisa ser atualizada. Entre novamente para continuar com segurança."
+            : "Não conseguimos concluir a sincronização agora. Tente novamente em alguns instantes.",
+      },
     );
   }
 
@@ -25,7 +72,10 @@ async function getSupabaseAccessToken() {
   const { data, error } = await supabase.auth.getSession();
 
   if (error) {
-    throw new Error("Não foi possível ler a sessão atual.");
+    throw new OriApiError("Não foi possível ler a sessão atual.", {
+      userMessage:
+        "Não conseguimos confirmar sua sessão agora. Atualize a página ou entre novamente.",
+    });
   }
 
   return data.session?.access_token || null;
@@ -35,7 +85,11 @@ async function requestAuthenticatedApi(path, options = {}) {
   const token = await getSupabaseAccessToken();
 
   if (!token) {
-    throw new Error("Sessão não encontrada.");
+    throw new OriApiError("Sessão não encontrada.", {
+      status: 401,
+      userMessage:
+        "Sua sessão expirou. Entre novamente para continuar sua jornada ORI.",
+    });
   }
 
   return requestApi(path, {

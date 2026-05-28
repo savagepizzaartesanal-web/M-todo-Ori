@@ -19,6 +19,7 @@ import { supabase } from "../lib/supabaseClient";
 import QuizHero from "../components/QuizHero";
 import ResultHero from "../components/ResultHero";
 import NextStepCard from "../components/NextStepCard";
+import SyncNotice from "../components/SyncNotice";
 
 const LEGACY_STORAGE_KEY = "ori_produto_1_quiz";
 const ORACLE_PANEL_BACKGROUND =
@@ -2156,6 +2157,7 @@ function QuizProduto1() {
   const [activeSinteseFinal, setActiveSinteseFinal] = useState("14");
   const [resultReadingCompleted, setResultReadingCompleted] = useState(false);
   const [backendReading, setBackendReading] = useState(null);
+  const [syncNotice, setSyncNotice] = useState("");
 
   const resultRef = useRef(null);
   const loadingRef = useRef(null);
@@ -2191,11 +2193,16 @@ function QuizProduto1() {
             savedAnswers = backendAnswers;
             savedResult = apiAnswers.result || savedResult;
             hasSavedAnswers = true;
+            setSyncNotice("");
           }
         } catch (apiError) {
           console.log(
             "API de respostas indisponível, usando histórico local:",
             apiError,
+          );
+          setSyncNotice(
+            apiError?.userMessage ||
+              "Estamos usando o histórico salvo neste dispositivo enquanto o ORI sincroniza.",
           );
         }
       }
@@ -2309,6 +2316,10 @@ function QuizProduto1() {
       return await calculateQuizResult(answers);
     } catch (apiError) {
       console.log("API do quiz indisponível, usando cálculo local:", apiError);
+      setSyncNotice(
+        apiError?.userMessage ||
+          "A leitura foi calculada localmente. Vamos sincronizar com o ORI em seguida.",
+      );
       return calculateResult(questions, answers);
     }
   };
@@ -2321,6 +2332,10 @@ function QuizProduto1() {
       console.log(
         "API de conclusão indisponível, usando fluxo local:",
         apiError,
+      );
+      setSyncNotice(
+        apiError?.userMessage ||
+          "Sua leitura foi preservada. A sincronização completa será retomada em instantes.",
       );
       const resultado = await calculateResultWithFallback();
       await saveResultToSupabase(resultado);
@@ -2419,9 +2434,15 @@ function QuizProduto1() {
 
     setAnswers(nextAnswers);
     setResult(null);
-    saveProduto1Answers(nextAnswers).catch((apiError) => {
-      console.log("API de respostas indisponível, mantendo salvamento local:", apiError);
-    });
+    saveProduto1Answers(nextAnswers)
+      .then(() => setSyncNotice(""))
+      .catch((apiError) => {
+        console.log("API de respostas indisponível, mantendo salvamento local:", apiError);
+        setSyncNotice(
+          apiError?.userMessage ||
+            "Suas respostas seguem salvas neste dispositivo enquanto o ORI sincroniza.",
+        );
+      });
 
     setTimeout(() => {
       advanceFromQuestion(nextAnswers);
@@ -2588,6 +2609,7 @@ function QuizProduto1() {
 
         if (isMounted) {
           setBackendReading(reading);
+          setSyncNotice("");
         }
       } catch (apiError) {
         console.log(
@@ -2597,6 +2619,10 @@ function QuizProduto1() {
 
         if (isMounted) {
           setBackendReading(null);
+          setSyncNotice(
+            apiError?.userMessage ||
+              "Estamos usando a leitura salva enquanto o ORI termina a sincronização.",
+          );
         }
       }
     }
@@ -3261,6 +3287,8 @@ function QuizProduto1() {
                   imagem={archetypeVisual?.image}
                 />
               </div>
+
+              <SyncNotice message={syncNotice} />
 
               {report ? (
                 <div

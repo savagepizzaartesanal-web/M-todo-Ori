@@ -8,6 +8,7 @@ import {
   getDailyOracleCard,
   saveDailyOracleCard,
 } from "../services/api";
+import SyncNotice from "../components/SyncNotice";
 
 const ORACLE_HERO_IMAGE = "/images/heroes/hero-oraculo-ori-v2.png";
 const LEGACY_STORAGE_KEY = "ori_produto_1_quiz";
@@ -406,6 +407,7 @@ function OraculoOri() {
   const [dailyOracle, setDailyOracle] = useState(null);
   const [hasShuffled, setHasShuffled] = useState(false);
   const [isShuffling, setIsShuffling] = useState(false);
+  const [syncNotice, setSyncNotice] = useState("");
 
   const todayKey = getTodayKey();
 
@@ -432,9 +434,14 @@ function OraculoOri() {
       try {
         const jornadaData = await getCurrentJornada();
         setJornadaApi(jornadaData);
+        setSyncNotice("");
       } catch (apiError) {
         console.log("API da jornada indisponível no Oráculo:", apiError);
         setJornadaApi(null);
+        setSyncNotice(
+          apiError?.userMessage ||
+            "Estamos usando sua leitura salva enquanto o Oráculo termina a sincronização.",
+        );
       }
 
       let { data, error } = await supabase
@@ -530,6 +537,10 @@ function OraculoOri() {
         }
       } catch (apiError) {
         console.log("API da carta diária indisponível:", apiError);
+        setSyncNotice(
+          apiError?.userMessage ||
+            "A carta será consultada nos dados salvos enquanto o Oráculo sincroniza.",
+        );
       }
 
       const storedOracle = readDailyOracleLocal(userKey);
@@ -575,9 +586,14 @@ function OraculoOri() {
       if (savedCard?.hasCard) {
         setDailyOracle(savedCard);
         saveDailyOracleLocal(userKey, savedCard);
+        setSyncNotice("");
       }
     } catch (apiError) {
       console.log("Carta diária mantida localmente:", apiError);
+      setSyncNotice(
+        apiError?.userMessage ||
+          "Sua carta foi revelada neste aparelho. Vamos tentar sincronizar novamente em instantes.",
+      );
     }
   };
 
@@ -641,6 +657,8 @@ function OraculoOri() {
       />
 
       <div className="mx-auto w-full max-w-[1320px] space-y-4 pb-8 md:space-y-5 md:pb-10">
+      <SyncNotice message={syncNotice} label="Oráculo em sincronização" />
+
       <section
         className="ori-mobile-hero relative overflow-hidden rounded-[26px] px-4 py-5 md:rounded-[34px] md:px-8 md:py-8"
         style={{

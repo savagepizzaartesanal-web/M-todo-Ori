@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import { supabase } from "../lib/supabaseClient";
 import { getCurrentJornada } from "../services/api";
+import SyncNotice from "../components/SyncNotice";
 
 const LEGACY_STORAGE_KEY = "ori_produto_1_quiz";
 const ORACLE_PANEL_BACKGROUND =
@@ -29,6 +30,7 @@ function PortalCliente() {
   const [loadingCliente, setLoadingCliente] = useState(true);
   const [quizLocal, setQuizLocal] = useState(null);
   const [jornadaApi, setJornadaApi] = useState(null);
+  const [syncNotice, setSyncNotice] = useState("");
 
   useEffect(() => {
     async function loadCliente() {
@@ -59,9 +61,14 @@ function PortalCliente() {
       try {
         const jornadaData = await getCurrentJornada();
         setJornadaApi(jornadaData);
+        setSyncNotice("");
       } catch (apiError) {
         console.log("API da jornada indisponível, usando Supabase direto:", apiError);
         setJornadaApi(null);
+        setSyncNotice(
+          apiError?.userMessage ||
+            "Estamos usando seus dados salvos enquanto o ORI termina a sincronização.",
+        );
       }
 
       const { data, error } = await supabase
@@ -409,6 +416,8 @@ function PortalCliente() {
       />
 
       <div className="relative z-10 max-w-7xl">
+        <SyncNotice message={syncNotice} />
+
         <section
           className="ori-main-frame ori-hero-panel ori-card-protagonist relative overflow-hidden rounded-[24px] md:rounded-[42px] p-4 pt-7 md:p-8 xl:p-9 mb-5 md:mb-10 cinematic-card min-h-[350px] sm:min-h-[390px] md:min-h-[430px] flex items-center"
           style={{

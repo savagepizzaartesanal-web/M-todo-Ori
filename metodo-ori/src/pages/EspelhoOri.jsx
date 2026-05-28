@@ -6,6 +6,7 @@ import { supabase } from "../lib/supabaseClient";
 import { reports } from "../data/reports";
 import { MirrorSectionNav } from "../components/espelho/EspelhoInteractions";
 import { getCurrentJornada } from "../services/api";
+import SyncNotice from "../components/SyncNotice";
 
 const LEGACY_STORAGE_KEY = "ori_produto_1_quiz";
 const ONBOARDING_DATA_KEY = "ori_onboarding_data";
@@ -374,6 +375,7 @@ function EspelhoOri() {
   const [activeMatrixLayer, setActiveMatrixLayer] = useState("revelado");
   const [activeJourneyStep, setActiveJourneyStep] = useState("integracao");
   const [expandedResultItems, setExpandedResultItems] = useState({});
+  const [syncNotice, setSyncNotice] = useState("");
 
   useEffect(() => {
     async function loadCliente() {
@@ -402,9 +404,14 @@ function EspelhoOri() {
       try {
         const jornadaData = await getCurrentJornada();
         setJornadaApi(jornadaData);
+        setSyncNotice("");
       } catch (apiError) {
         console.log("API da jornada indisponível no Espelho:", apiError);
         setJornadaApi(null);
+        setSyncNotice(
+          apiError?.userMessage ||
+            "Estamos usando seu reflexo salvo enquanto o ORI termina a sincronização.",
+        );
       }
 
       let { data, error } = await supabase
@@ -1275,6 +1282,8 @@ function EspelhoOri() {
       />
 
       <div className="relative z-10 w-full max-w-[1240px] mx-auto">
+        <SyncNotice message={syncNotice} />
+
         <header
           className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 mb-5"
         >
