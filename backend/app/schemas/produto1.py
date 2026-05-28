@@ -52,3 +52,25 @@ class Produto1LeituraResponse(BaseModel):
     highlights: list[Produto1LeituraHighlight]
     camadas: dict[str, str]
     report: dict | None = None
+
+
+class Produto1RelatorioSection(BaseModel):
+    id: str
+    label: str
+    title: str
+    text: str
+
+
+class Produto1RelatorioResponse(BaseModel):
+    user_id: str
+    email: str | None = None
+    generated_at: datetime
+    resultado: str
+    combinacao: str | None = None
+    title: str
+    subtitle: str | None = None
+    perfil: Produto1LeituraPerfil
+    highlights: list[Produto1LeituraHighlight]
+    sections: list[Produto1RelatorioSection]
+    formula: str | None = None
+    next_step: str | None = None

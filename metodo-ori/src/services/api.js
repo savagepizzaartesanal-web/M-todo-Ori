@@ -142,6 +142,10 @@ export function getProduto1Reading() {
   return requestAuthenticatedApi("/api/produto-1/leitura/me");
 }
 
+export function getProduto1Report() {
+  return requestAuthenticatedApi("/api/produto-1/relatorio/me");
+}
+
 export function getCurrentApiUser() {
   return requestAuthenticatedApi("/api/me");
 }

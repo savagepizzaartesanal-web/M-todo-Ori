@@ -1,6 +1,9 @@
 import json
+from datetime import UTC, datetime
 from functools import lru_cache
 from pathlib import Path
+
+from fastapi import HTTPException, status
 
 from app.data.quiz import QUESTIONS
 from app.schemas.auth import CurrentUser
@@ -8,6 +11,8 @@ from app.schemas.produto1 import (
     Produto1LeituraHighlight,
     Produto1LeituraPerfil,
     Produto1LeituraResponse,
+    Produto1RelatorioResponse,
+    Produto1RelatorioSection,
 )
 from app.services.jornada_service import fetch_current_cliente
 from app.services.produto1_service import get_produto1_respostas
@@ -31,6 +36,23 @@ ARCHETYPE_TONE = {
 }
 
 REPORTS_PATH = Path(__file__).resolve().parents[1] / "data" / "reports.json"
+REPORT_SECTION_ORDER = [
+    ("reconhecimento", "01", "Reconhecimento"),
+    ("essencia", "02", "Essência"),
+    ("dinamica", "03", "Dinâmica psíquica"),
+    ("percebida", "04", "Como você é percebida"),
+    ("sombra", "05", "Sombra"),
+    ("padraoRelacional", "06", "Padrão relacional"),
+    ("caminho", "07", "Caminho de individuação"),
+    ("essenciaImagem", "08", "Essência de imagem"),
+    ("paleta", "09", "Paleta simbólica"),
+    ("modelagem", "10", "Modelagem"),
+    ("tecidos", "11", "Tecidos"),
+    ("beleza", "12", "Beleza"),
+    ("presenca", "13", "Presença"),
+    ("evitar", "14", "O que quebra seu arquétipo"),
+    ("leituraFinal", "15", "Leitura final"),
+]
 
 
 def get_answer_value(answers: dict, question_id: int) -> int:
@@ -351,4 +373,60 @@ async def get_produto1_leitura_personalizada(
             result_name=result_name,
             camadas=camadas,
         ),
+    )
+
+
+def build_relatorio_sections(report: dict) -> list[Produto1RelatorioSection]:
+    sections = []
+
+    for key, label, title in REPORT_SECTION_ORDER:
+        value = report.get(key)
+
+        if not value:
+            continue
+
+        if isinstance(value, list):
+            text = "\n".join(f"- {item}" for item in value)
+        else:
+            text = str(value)
+
+        sections.append(
+            Produto1RelatorioSection(
+                id=key,
+                label=label,
+                title=title,
+                text=text,
+            )
+        )
+
+    return sections
+
+
+async def get_produto1_relatorio(
+    *,
+    current_user: CurrentUser,
+) -> Produto1RelatorioResponse:
+    leitura = await get_produto1_leitura_personalizada(current_user=current_user)
+
+    if not leitura.report or not leitura.resultado:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="A leitura do Produto 1 ainda não está pronta para relatório.",
+        )
+
+    report = leitura.report
+
+    return Produto1RelatorioResponse(
+        user_id=leitura.user_id,
+        email=leitura.email,
+        generated_at=datetime.now(UTC),
+        resultado=leitura.resultado,
+        combinacao=report.get("combinacao"),
+        title=f"Relatório ORI · {leitura.resultado}",
+        subtitle=report.get("fraseHero"),
+        perfil=leitura.perfil,
+        highlights=leitura.highlights,
+        sections=build_relatorio_sections(report),
+        formula=report.get("formula"),
+        next_step=report.get("proximoPasso"),
     )
