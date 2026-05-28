@@ -60,3 +60,34 @@ Exemplo de `.env.local` no frontend:
 ```env
 VITE_API_URL=http://localhost:8000
 ```
+
+## Deploy no Render
+
+O arquivo `render.yaml` na raiz do repositório prepara o deploy do backend
+como Web Service Python.
+
+No Render:
+
+1. Crie um novo **Blueprint** apontando para este repositório.
+2. Confirme o serviço `metodo-ori-api`.
+3. Configure as variáveis privadas:
+
+```env
+SUPABASE_URL=sua_url_do_supabase
+SUPABASE_PUBLISHABLE_KEY=sua_chave_publicavel_do_supabase
+```
+
+4. Confira a origem permitida do frontend:
+
+```env
+FRONTEND_ORIGINS=https://metodo-ori.vercel.app
+```
+
+Depois do deploy, copie a URL pública do Render e configure no projeto da
+Vercel:
+
+```env
+VITE_API_URL=https://sua-api-no-render.onrender.com
+```
+
+Faça um novo deploy do frontend após salvar essa variável.
