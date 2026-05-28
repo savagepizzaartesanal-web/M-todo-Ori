@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { questions } from "../data/questions";
-import { supabase } from "../lib/supabaseClient";
+import { getAdminCliente, updateAdminCliente } from "../services/api";
 
 function AdminClienteDetalhe() {
   const { id } = useParams();
@@ -19,51 +19,22 @@ function AdminClienteDetalhe() {
   const fetchCliente = useCallback(async () => {
     setLoading(true);
 
-    const { data, error } = await supabase
-      .from("clientes")
-      .select("*")
-      .eq("id", id)
-      .maybeSingle();
+    try {
+      const data = await getAdminCliente(id);
+      const clienteData = data.cliente || null;
 
-    if (error) {
+      setCliente(clienteData);
+      setObservacoes(clienteData?.observacoes_admin || "");
+      setProduto1Respostas(data.produto1_respostas || null);
+      setOraculoCarta(data.oraculo_carta || null);
+    } catch (error) {
       console.log("Erro ao buscar cliente:", error);
-    }
-
-    setCliente(data || null);
-    setObservacoes(data?.observacoes_admin || "");
-
-    if (data?.user_id) {
-      const { data: respostasData, error: respostasError } = await supabase
-        .from("produto_1_respostas")
-        .select("*")
-        .eq("user_id", data.user_id)
-        .maybeSingle();
-
-      if (respostasError) {
-        console.log("Erro ao buscar respostas do Produto 1:", respostasError);
-      }
-
-      setProduto1Respostas(respostasData || null);
-
-      const { data: oraculoData, error: oraculoError } = await supabase
-        .from("oraculo_cartas_diarias")
-        .select("*")
-        .eq("user_id", data.user_id)
-        .order("date_key", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      if (oraculoError) {
-        console.log("Erro ao buscar carta do Oráculo:", oraculoError);
-      }
-
-      setOraculoCarta(oraculoData || null);
-    } else {
+      setCliente(null);
       setProduto1Respostas(null);
       setOraculoCarta(null);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   }, [id]);
 
   useEffect(() => {
@@ -75,12 +46,9 @@ function AdminClienteDetalhe() {
 
     setSaving(true);
 
-    const { error } = await supabase
-      .from("clientes")
-      .update(updates)
-      .eq("id", cliente.id);
-
-    if (error) {
+    try {
+      await updateAdminCliente(cliente.id, updates);
+    } catch (error) {
       console.log("Erro ao atualizar cliente:", error);
     }
 
@@ -284,6 +252,67 @@ function AdminClienteDetalhe() {
   const oraculoDate = oraculoCarta?.date_key
     ? formatShortDate(oraculoCarta.date_key)
     : "Nenhuma carta";
+  const nextAction = (() => {
+    if (!onboardingCompleted) {
+      return {
+        label: "Finalizar perfil inicial",
+        description:
+          "A cliente ainda precisa completar a Entrada ORI para a jornada ficar bem amarrada.",
+        state: "sealed",
+      };
+    }
+
+    if (produto1Respostas && !produto1Respostas.is_complete) {
+      return {
+        label: "Acompanhar quiz em andamento",
+        description: `${produto1Progress}% da leitura respondida. Vale observar se ela travou em algum ponto.`,
+        state: "next",
+      };
+    }
+
+    if (!cliente.resultado) {
+      return {
+        label: "Aguardar conclusão do Código",
+        description:
+          "O Produto 1 ainda não gerou resultado final para esta cliente.",
+        state: "active",
+      };
+    }
+
+    if (!cliente.produto_2_liberado) {
+      return {
+        label: "Convidar para o Dossiê ORI",
+        description:
+          "A leitura arquetípica já foi revelada. O próximo movimento é traduzir essa força no corpo, cor, cabelo e presença.",
+        state: "revealed",
+      };
+    }
+
+    if (!cliente.produto_3_liberado) {
+      return {
+        label: "Acompanhar entrega do Dossiê",
+        description:
+          "Produto 2 liberado. Observe fotos, formulário e preparação antes de abrir o Código Final.",
+        state: "next",
+      };
+    }
+
+    if (cliente.status_jornada !== "Finalizado") {
+      return {
+        label: "Encerrar jornada com cuidado",
+        description:
+          "Código Final liberado. Falta apenas marcar o fechamento quando a entrega estiver concluída.",
+        state: "done",
+      };
+    }
+
+    return {
+      label: "Jornada finalizada",
+      description:
+        "Cliente com percurso completo registrado no painel administrativo.",
+      state: "done",
+    };
+  })();
 
   return (
     <div className="ori-atmosphere ori-atmosphere-method relative overflow-hidden max-w-7xl">
@@ -417,6 +446,129 @@ function AdminClienteDetalhe() {
           </div>
         ))}
       </div>
+
+      <section
+        className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[30px] p-5 md:p-7 mb-8 cinematic-card"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(18,9,10,0.74), rgba(7,3,4,0.9))",
+          border: "1px solid rgba(242,185,104,0.10)",
+          backdropFilter: "blur(14px)",
+          WebkitBackdropFilter: "blur(14px)",
+        }}
+      >
+        <div className="grid gap-4 xl:grid-cols-[1.2fr_0.9fr_0.9fr]">
+          <div
+            className="ori-card-secondary rounded-[22px] p-4 md:p-5"
+            style={{
+              background: "rgba(242,185,104,0.045)",
+              border: "1px solid rgba(242,185,104,0.11)",
+            }}
+          >
+            <p
+              className="ori-type-system text-[9px] mb-3"
+              style={{ color: "var(--gold-soft)" }}
+            >
+              Próxima ação sugerida
+            </p>
+
+            <h2
+              className="ori-type-revelation text-2xl mb-2"
+              style={{ color: "var(--gold-primary)", fontWeight: 620 }}
+            >
+              {nextAction.label}
+            </h2>
+
+            <p
+              className="ori-type-reading-soft text-sm leading-relaxed"
+              style={{ color: "rgba(255,245,235,0.68)" }}
+            >
+              {nextAction.description}
+            </p>
+          </div>
+
+          <div
+            className="ori-card-secondary rounded-[22px] p-4 md:p-5"
+            style={{
+              background: "rgba(255,255,255,0.024)",
+              border: "1px solid rgba(242,185,104,0.08)",
+            }}
+          >
+            <p
+              className="ori-type-system text-[9px] mb-3"
+              style={{ color: "var(--gold-soft)" }}
+            >
+              Produto 1
+            </p>
+
+            <p
+              className="ori-type-revelation text-xl mb-3"
+              style={{ color: "var(--gold-primary)", fontWeight: 600 }}
+            >
+              {produto1Result || "Sem resultado final"}
+            </p>
+
+            <div
+              className="h-1 rounded-full overflow-hidden"
+              style={{
+                background: "rgba(255,255,255,0.05)",
+                border: "1px solid rgba(242,185,104,0.07)",
+              }}
+            >
+              <div
+                className="h-full rounded-full"
+                style={{
+                  width: `${produto1Progress}%`,
+                  background:
+                    "linear-gradient(90deg, rgba(210,135,70,0.62), rgba(242,185,104,0.95))",
+                }}
+              />
+            </div>
+
+            <p
+              className="ori-type-reading-soft mt-3 text-xs"
+              style={{ color: "rgba(255,245,235,0.56)" }}
+            >
+              {produto1AnsweredCount} de {produto1TotalQuestions} sinais ·{" "}
+              {produto1Progress}%
+            </p>
+          </div>
+
+          <div
+            className="ori-card-secondary rounded-[22px] p-4 md:p-5"
+            style={{
+              background: "rgba(255,255,255,0.024)",
+              border: "1px solid rgba(242,185,104,0.08)",
+            }}
+          >
+            <p
+              className="ori-type-system text-[9px] mb-3"
+              style={{ color: "var(--gold-soft)" }}
+            >
+              Oráculo
+            </p>
+
+            <p
+              className="ori-type-revelation text-xl mb-2"
+              style={{
+                color: oraculoCarta
+                  ? "var(--gold-primary)"
+                  : "rgba(255,245,235,0.58)",
+                fontWeight: 600,
+              }}
+            >
+              {oraculoCardTitle}
+            </p>
+
+            <p
+              className="ori-type-reading-soft text-xs"
+              style={{ color: "rgba(255,245,235,0.56)" }}
+            >
+              {oraculoCarta ? `Última carta: ${oraculoDate}` : "Sem carta registrada"}
+            </p>
+          </div>
+        </div>
+      </section>
 
       <section
         className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[30px] mb-8 cinematic-card"

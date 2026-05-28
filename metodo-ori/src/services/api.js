@@ -163,4 +163,24 @@ export function saveDailyOracleCard(cardData) {
   });
 }
 
+export function getAdminClientes() {
+  return requestAuthenticatedApi("/api/admin/clientes");
+}
+
+export function getAdminCliente(clienteId) {
+  return requestAuthenticatedApi(
+    `/api/admin/clientes/${encodeURIComponent(clienteId)}`,
+  );
+}
+
+export function updateAdminCliente(clienteId, updates) {
+  return requestAuthenticatedApi(
+    `/api/admin/clientes/${encodeURIComponent(clienteId)}`,
+    {
+      method: "PATCH",
+      body: JSON.stringify(updates),
+    },
+  );
+}
+
 export { API_BASE_URL };

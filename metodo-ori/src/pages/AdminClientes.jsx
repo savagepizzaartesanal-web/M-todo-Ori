@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { supabase } from "../lib/supabaseClient";
+import { getAdminClientes, updateAdminCliente } from "../services/api";
 
 function AdminClientes() {
   const [clientes, setClientes] = useState([]);
+  const [respostasProduto1, setRespostasProduto1] = useState([]);
+  const [cartasOraculo, setCartasOraculo] = useState([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
   const [busca, setBusca] = useState("");
@@ -13,19 +15,19 @@ function AdminClientes() {
   const fetchClientes = useCallback(async () => {
     setLoading(true);
 
-    const { data, error } = await supabase
-      .from("clientes")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    if (error) {
+    try {
+      const data = await getAdminClientes();
+      setClientes(data.clientes || []);
+      setRespostasProduto1(data.respostas_produto1 || []);
+      setCartasOraculo(data.cartas_oraculo || []);
+    } catch (error) {
       console.log("Erro ao buscar clientes:", error);
       setClientes([]);
-    } else {
-      setClientes(data || []);
+      setRespostasProduto1([]);
+      setCartasOraculo([]);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -35,12 +37,9 @@ function AdminClientes() {
   const updateCliente = async (cliente, updates) => {
     setUpdatingId(cliente.id);
 
-    const { error } = await supabase
-      .from("clientes")
-      .update(updates)
-      .eq("id", cliente.id);
-
-    if (error) {
+    try {
+      await updateAdminCliente(cliente.id, updates);
+    } catch (error) {
       console.log("Erro ao atualizar cliente:", error);
     }
 
@@ -93,6 +92,53 @@ function AdminClientes() {
     return "Lead / Código das Deusas";
   };
 
+  const respostasPorUser = useMemo(
+    () =>
+      new Map(
+        respostasProduto1.map((resposta) => [resposta.user_id, resposta]),
+      ),
+    [respostasProduto1],
+  );
+
+  const oraculoPorUser = useMemo(() => {
+    const map = new Map();
+
+    cartasOraculo.forEach((carta) => {
+      if (!map.has(carta.user_id)) {
+        map.set(carta.user_id, carta);
+      }
+    });
+
+    return map;
+  }, [cartasOraculo]);
+
+  const getProduto1Progress = (cliente) => {
+    const resposta = respostasPorUser.get(cliente.user_id);
+
+    if (!resposta) return null;
+
+    return Math.round(
+      ((resposta.answered_count || 0) / (resposta.total_questions || 36)) *
+        100,
+    );
+  };
+
+  const getClienteSignal = (cliente) => {
+    const resposta = respostasPorUser.get(cliente.user_id);
+    const progress = getProduto1Progress(cliente);
+
+    if (!cliente.perfil_onboarding_concluido) return "Perfil pendente";
+    if (resposta && !resposta.is_complete) return `Quiz em andamento · ${progress}%`;
+    if (cliente.resultado && !cliente.produto_2_liberado) {
+      return "Pronta para Dossiê";
+    }
+    if (cliente.produto_2_liberado && !cliente.produto_3_liberado) {
+      return "Dossiê liberado";
+    }
+    if (cliente.produto_3_liberado) return "Código Final liberado";
+    return "Acompanhar entrada";
+  };
+
   const clientesFiltrados = useMemo(() => {
     const termo = busca.trim().toLowerCase();
 
@@ -107,20 +153,31 @@ function AdminClientes() {
       const matchFiltro =
         filtro === "todos" ||
         (filtro === "leads" && !cliente.resultado) ||
+        (filtro === "andamento" &&
+          respostasPorUser.get(cliente.user_id) &&
+          !respostasPorUser.get(cliente.user_id)?.is_complete) ||
         (filtro === "produto1" && Boolean(cliente.resultado)) ||
         (filtro === "produto2" && Boolean(cliente.produto_2_liberado)) ||
         (filtro === "produto3" && Boolean(cliente.produto_3_liberado)) ||
+        (filtro === "oraculo" && Boolean(oraculoPorUser.get(cliente.user_id))) ||
         (filtro === "admins" && Boolean(cliente.admin));
 
       return matchBusca && matchFiltro;
     });
-  }, [clientes, busca, filtro]);
+  }, [clientes, busca, filtro, oraculoPorUser, respostasPorUser]);
 
   const resumo = useMemo(() => {
     return {
       total: clientes.length,
       leads: clientes.filter((cliente) => !cliente.resultado).length,
+      andamento: clientes.filter((cliente) => {
+        const resposta = respostasPorUser.get(cliente.user_id);
+        return resposta && !resposta.is_complete;
+      }).length,
       produto1: clientes.filter((cliente) => Boolean(cliente.resultado)).length,
+      oraculo: clientes.filter((cliente) =>
+        Boolean(oraculoPorUser.get(cliente.user_id)),
+      ).length,
       produto2: clientes.filter((cliente) =>
         Boolean(cliente.produto_2_liberado),
       ).length,
@@ -128,14 +185,16 @@ function AdminClientes() {
         Boolean(cliente.produto_3_liberado),
       ).length,
     };
-  }, [clientes]);
+  }, [clientes, oraculoPorUser, respostasPorUser]);
 
   const filtros = [
     ["todos", "Todos"],
     ["leads", "Leads"],
+    ["andamento", "Em andamento"],
     ["produto1", "Código das Deusas"],
     ["produto2", "Dossiê ORI"],
     ["produto3", "Código Final"],
+    ["oraculo", "Com Oráculo"],
     ["admins", "Admins"],
   ];
 
@@ -256,11 +315,13 @@ function AdminClientes() {
           </div>
         </section>
 
-        <div className="grid md:grid-cols-2 xl:grid-cols-5 gap-3 md:gap-4 mb-5 md:mb-7">
+        <div className="grid md:grid-cols-2 xl:grid-cols-7 gap-3 md:gap-4 mb-5 md:mb-7">
           {[
             ["Total", resumo.total],
             ["Leads", resumo.leads],
+            ["Em andamento", resumo.andamento],
             ["Código das Deusas", resumo.produto1],
+            ["Com Oráculo", resumo.oraculo],
             ["Dossiê ORI", resumo.produto2],
             ["Código Final", resumo.produto3],
           ].map(([label, value]) => (
@@ -367,6 +428,9 @@ function AdminClientes() {
             {clientesFiltrados.map((cliente) => {
               const produtoAtual = getProdutoAtual(cliente);
               const isUpdating = updatingId === cliente.id;
+              const progress = getProduto1Progress(cliente);
+              const oraculo = oraculoPorUser.get(cliente.user_id);
+              const signal = getClienteSignal(cliente);
 
               return (
                 <div
@@ -497,7 +561,42 @@ function AdminClientes() {
                         >
                           {produtoAtual}
                         </div>
+
+                        <div
+                          className="ori-chip px-4 py-2 text-xs"
+                          data-state={progress === 100 ? "done" : "active"}
+                          style={{
+                            background: "rgba(255,255,255,0.025)",
+                            border: "1px solid rgba(242,185,104,0.08)",
+                            color: "rgba(255,245,235,0.62)",
+                          }}
+                        >
+                          {progress === null ? "Quiz não iniciado" : `Quiz ${progress}%`}
+                        </div>
+
+                        <div
+                          className="ori-chip px-4 py-2 text-xs"
+                          data-state={oraculo ? "revealed" : "sealed"}
+                          style={{
+                            background: oraculo
+                              ? "rgba(183,140,255,0.08)"
+                              : "rgba(255,255,255,0.025)",
+                            border: oraculo
+                              ? "1px solid rgba(183,140,255,0.14)"
+                              : "1px solid rgba(255,255,255,0.06)",
+                            color: oraculo ? "#d9bdff" : "rgba(255,245,235,0.55)",
+                          }}
+                        >
+                          {oraculo ? `Oráculo ${formatDate(oraculo.date_key)}` : "Sem carta"}
+                        </div>
                       </div>
+
+                      <p
+                        className="ori-type-reading-soft mt-4 text-sm"
+                        style={{ color: "rgba(255,245,235,0.58)" }}
+                      >
+                        Próxima atenção: {signal}
+                      </p>
                     </div>
 
                     <div className="flex flex-col md:flex-row xl:flex-col gap-3 xl:min-w-[220px]">
