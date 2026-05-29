@@ -98,7 +98,7 @@ function QuizProduto1() {
                 textShadow: "0 0 34px rgba(242,185,104,0.12)",
               }}
             >
-              Diagnóstico Arquetípico de Imagem
+              Leitura Arquetípica de Imagem
             </h1>
 
             <p

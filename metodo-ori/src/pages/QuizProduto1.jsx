@@ -3580,6 +3580,56 @@ function QuizProduto1() {
                     </div>
                   </section>
 
+                  <section
+                    className="mt-3 flex flex-col gap-3 rounded-[18px] p-3 md:mt-4 md:flex-row md:items-center md:justify-between md:gap-5 md:rounded-[22px] md:p-4"
+                    style={{
+                      background:
+                        "linear-gradient(135deg, rgba(242,185,104,0.070), rgba(255,255,255,0.012))",
+                      border: "1px solid rgba(242,185,104,0.12)",
+                      boxShadow:
+                        "0 0 30px rgba(242,185,104,0.035), inset 0 0 24px rgba(255,255,255,0.010)",
+                    }}
+                  >
+                    <div className="min-w-0">
+                      <p
+                        className="mb-1.5 text-[9px] uppercase tracking-[0.22em] md:mb-2 md:tracking-[0.28em]"
+                        style={{ color: "var(--gold-soft)" }}
+                      >
+                        Relatório digital
+                      </p>
+                      <h3
+                        className="ori-type-revelation text-xl md:text-2xl"
+                        style={{
+                          color: "var(--gold-primary)",
+                          fontWeight: 620,
+                          letterSpacing: "-0.045em",
+                        }}
+                      >
+                        Sua leitura completa em formato de consulta.
+                      </h3>
+                      <p
+                        className="ori-mobile-preview-3 mt-1.5 text-[13px] leading-relaxed md:text-sm"
+                        style={{ color: "rgba(255,245,235,0.62)" }}
+                      >
+                        Acesse o documento do Código das Deusas com os capítulos
+                        organizados para reler, salvar e acompanhar sua jornada
+                        depois da revelação.
+                      </p>
+                    </div>
+
+                    <Link
+                      to="/produto-1/relatorio"
+                      className="ori-button-secondary inline-flex w-full shrink-0 justify-center rounded-full px-5 py-2.5 text-sm md:w-auto md:py-3"
+                      style={{
+                        background: "rgba(242,185,104,0.10)",
+                        border: "1px solid rgba(242,185,104,0.18)",
+                        color: "var(--gold-primary)",
+                      }}
+                    >
+                      Abrir relatório digital
+                    </Link>
+                  </section>
+
                   {resultReadingCompleted && (
                     <div ref={nextStepRef} className="scroll-mt-8">
                       <NextStepCard />
