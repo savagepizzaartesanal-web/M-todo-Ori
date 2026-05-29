@@ -101,6 +101,73 @@ async function requestAuthenticatedApi(path, options = {}) {
   });
 }
 
+async function requestAuthenticatedFile(path, options = {}) {
+  const token = await getSupabaseAccessToken();
+
+  if (!token) {
+    throw new OriApiError("Sessão não encontrada.", {
+      status: 401,
+      userMessage:
+        "Sua sessão expirou. Entre novamente para continuar sua jornada ORI.",
+    });
+  }
+
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+  let response;
+
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, {
+      ...options,
+      signal: controller.signal,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        ...options.headers,
+      },
+    });
+  } catch (error) {
+    const isTimeout = error?.name === "AbortError";
+
+    throw new OriApiError(
+      isTimeout
+        ? "Tempo limite ao conectar com a API ORI."
+        : "Não foi possível conectar com a API ORI.",
+      {
+        isTimeout,
+        isNetworkError: !isTimeout,
+        userMessage: isTimeout
+          ? "O ORI está preparando o arquivo. Aguarde alguns segundos e tente novamente."
+          : "Não conseguimos baixar o arquivo agora. Tente novamente em alguns instantes.",
+      },
+    );
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
+
+  if (!response.ok) {
+    const details = await response.text().catch(() => "");
+    throw new OriApiError(
+      `Erro na API ORI: ${response.status}${details ? ` - ${details}` : ""}`,
+      {
+        status: response.status,
+        details,
+        userMessage:
+          response.status === 401
+            ? "Sua sessão precisa ser atualizada. Entre novamente para baixar o PDF."
+            : "Não conseguimos gerar o PDF agora. Tente novamente em alguns instantes.",
+      },
+    );
+  }
+
+  const disposition = response.headers.get("Content-Disposition") || "";
+  const filenameMatch = disposition.match(/filename="([^"]+)"/);
+
+  return {
+    blob: await response.blob(),
+    filename: filenameMatch?.[1] || "codigo-das-deusas.pdf",
+  };
+}
+
 export function getApiStatus() {
   return requestApi("/");
 }
@@ -144,6 +211,10 @@ export function getProduto1Reading() {
 
 export function getProduto1Report() {
   return requestAuthenticatedApi("/api/produto-1/relatorio/me");
+}
+
+export function downloadProduto1ReportPdf() {
+  return requestAuthenticatedFile("/api/produto-1/relatorio/me/pdf");
 }
 
 export function getCurrentApiUser() {

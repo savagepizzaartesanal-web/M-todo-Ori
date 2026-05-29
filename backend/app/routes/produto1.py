@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 
 from app.schemas.auth import CurrentUser
 from app.schemas.produto1 import (
@@ -13,6 +13,10 @@ from app.services.auth_service import get_current_user
 from app.services.leitura_service import (
     get_produto1_leitura_personalizada,
     get_produto1_relatorio,
+)
+from app.services.pdf_service import (
+    build_produto1_report_pdf,
+    get_report_pdf_filename,
 )
 from app.services.produto1_service import (
     concluir_produto1,
@@ -68,3 +72,20 @@ async def read_relatorio_produto1(
     current_user: CurrentUser = Depends(get_current_user),
 ):
     return await get_produto1_relatorio(current_user=current_user)
+
+
+@router.get("/relatorio/me/pdf")
+async def download_relatorio_produto1_pdf(
+    current_user: CurrentUser = Depends(get_current_user),
+):
+    report = await get_produto1_relatorio(current_user=current_user)
+    pdf_bytes = await build_produto1_report_pdf(report)
+    filename = get_report_pdf_filename(report)
+
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": f'attachment; filename="{filename}"',
+        },
+    )

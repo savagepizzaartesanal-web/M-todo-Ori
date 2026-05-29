@@ -37,7 +37,9 @@ function PageFallback() {
       <div className="mx-auto flex min-h-[60vh] max-w-5xl items-center justify-center">
         <div className="ori-card-secondary rounded-[28px] px-6 py-5 text-center">
           <p className="ori-label-line ori-type-system justify-center">ORI</p>
-          <p className="mt-3 text-sm text-[var(--ori-reading)]">Abrindo sua jornada...</p>
+          <p className="mt-3 text-sm text-[var(--ori-reading)]">
+            Abrindo sua jornada...
+          </p>
         </div>
       </div>
     </main>
