@@ -411,7 +411,7 @@ function Produto1Relatorio() {
           />
 
           <div className="relative z-10 grid gap-6 p-6 md:min-h-[430px] md:grid-cols-[0.95fr_0.75fr] md:p-10 xl:min-h-[450px] xl:p-12">
-            <div className="flex flex-col justify-between">
+            <div className="flex flex-col justify-center">
               <div>
                 <div className="ori-label-line mb-4">
                   <p
@@ -441,17 +441,17 @@ function Produto1Relatorio() {
                 </p>
               </div>
 
-              <div className="mt-6 flex flex-wrap gap-2.5">
+              <div className="mt-5 flex flex-wrap gap-3">
                 {[report.combinacao, report.formula, report.email]
                   .filter(Boolean)
                   .map((item) => (
                     <span
                       key={item}
-                      className="ori-chip px-4 py-2 text-xs"
+                      className="ori-chip px-5 py-2.5 text-[13px]"
                       style={{
-                        background: "rgba(255,255,255,0.028)",
-                        border: "1px solid rgba(242,185,104,0.10)",
-                        color: "rgba(255,245,235,0.70)",
+                        background: "rgba(242,185,104,0.060)",
+                        border: "1px solid rgba(242,185,104,0.18)",
+                        color: "rgba(255,245,235,0.82)",
                       }}
                     >
                       {item}

@@ -17,7 +17,7 @@ function QuizHero({
     >
       <img
         src="/images/heroes/diagnostico-arquetipico.png"
-        alt="Diagnóstico Arquetípico de Imagem"
+        alt="Leitura Arquetípica de Imagem"
         className="
           absolute
           inset-0
@@ -117,9 +117,9 @@ function QuizHero({
             textShadow: "0 0 42px rgba(242,185,104,0.12)",
           }}
         >
-          Diagnóstico
+          Leitura
           <br />
-          Arquetípico
+          Arquetípica
           <br />
           <span
             className="text-[0.72em]"

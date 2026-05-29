@@ -1021,9 +1021,9 @@ def build_produto1_report_html(report: Produto1RelatorioResponse) -> str:
 
     h1 {{
       margin: 0;
-      max-width: 620px;
+      max-width: 680px;
       color: #ffc06d;
-      font-size: 92px;
+      font-size: 102px;
       line-height: 0.94;
       letter-spacing: -0.04em;
       font-weight: 650;
@@ -1033,24 +1033,24 @@ def build_produto1_report_html(report: Produto1RelatorioResponse) -> str:
       max-width: 690px;
       margin: 34px 0 0;
       color: rgba(255, 245, 235, 0.82);
-      font-size: 27px;
-      line-height: 1.45;
+      font-size: 31px;
+      line-height: 1.42;
     }}
 
     .chips {{
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 42px;
+      gap: 14px;
+      margin-top: 44px;
     }}
 
     .chips span {{
-      padding: 12px 18px;
-      border: 1px solid rgba(242, 185, 104, 0.18);
+      padding: 13px 20px;
+      border: 1px solid rgba(242, 185, 104, 0.28);
       border-radius: 999px;
-      background: rgba(255,255,255,0.035);
-      color: rgba(255,245,235,0.72);
-      font-size: 12px;
+      background: rgba(242,185,104,0.060);
+      color: rgba(255,245,235,0.84);
+      font-size: 13px;
       letter-spacing: 0.08em;
     }}
 
@@ -1195,6 +1195,21 @@ def build_produto1_report_html(report: Produto1RelatorioResponse) -> str:
       display: flex;
       flex-direction: column;
       justify-content: center;
+    }}
+
+    .final-page h2 {{
+      max-width: 820px;
+      font-size: 60px;
+      line-height: 0.98;
+    }}
+
+    .final-page .final-box {{
+      max-width: 820px;
+    }}
+
+    .final-page .final-box p {{
+      font-size: 25px;
+      line-height: 1.62;
     }}
 
     .signature {{
