@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import base64
+import os
 import mimetypes
 import re
 import textwrap
@@ -1167,6 +1168,13 @@ def build_produto1_report_html(report: Produto1RelatorioResponse) -> str:
 
 
 async def build_produto1_report_pdf(report: Produto1RelatorioResponse) -> bytes:
+    if os.getenv("APP_ENV") == "production":
+        try:
+            return build_produto1_report_pdf_reportlab(report)
+        except Exception as reportlab_error:
+            logger.exception("Falha ao gerar PDF premium com ReportLab: %s", reportlab_error)
+            return build_produto1_report_pdf_basic(report)
+
     try:
         from playwright.async_api import async_playwright
     except ImportError as error:

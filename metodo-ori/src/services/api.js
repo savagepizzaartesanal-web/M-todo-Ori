@@ -2,6 +2,7 @@ import { supabase } from "../lib/supabaseClient";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 const API_TIMEOUT_MS = 12000;
+const FILE_TIMEOUT_MS = 60000;
 
 export class OriApiError extends Error {
   constructor(message, options = {}) {
@@ -113,7 +114,7 @@ async function requestAuthenticatedFile(path, options = {}) {
   }
 
   const controller = new AbortController();
-  const timeoutId = window.setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+  const timeoutId = window.setTimeout(() => controller.abort(), FILE_TIMEOUT_MS);
   let response;
 
   try {
