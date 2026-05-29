@@ -458,11 +458,15 @@ def build_produto1_report_pdf_reportlab(report: Produto1RelatorioResponse) -> by
     from reportlab.lib.colors import Color, HexColor
     from reportlab.lib.pagesizes import portrait
     from reportlab.lib.utils import ImageReader
+    from reportlab.pdfbase.pdfmetrics import stringWidth
     from reportlab.pdfgen import canvas
 
     page_width, page_height = 1080, 1920
     buffer = BytesIO()
     pdf = canvas.Canvas(buffer, pagesize=portrait((page_width, page_height)))
+    pdf.setTitle(f"Relatório ORI · {report.resultado}")
+    pdf.setAuthor("Método ORI by Telúrica")
+    pdf.setSubject("Código das Deusas")
 
     gold = HexColor("#f3ad61")
     soft = HexColor("#f5e6d7")
@@ -473,6 +477,50 @@ def build_produto1_report_pdf_reportlab(report: Produto1RelatorioResponse) -> by
     cover_relative = REPORT_COVER_PATHS.get(report.resultado)
     cover_path = PUBLIC_DIR / cover_relative if cover_relative else None
 
+    def wrap_lines(text: str, *, max_width: int, font_name: str, font_size: int) -> list[str]:
+        lines: list[str] = []
+        for paragraph in [part.strip() for part in text.split("\n") if part.strip()]:
+            words = paragraph.split()
+            current = ""
+            for word in words:
+                candidate = f"{current} {word}".strip()
+                if stringWidth(candidate, font_name, font_size) <= max_width:
+                    current = candidate
+                    continue
+
+                if current:
+                    lines.append(current)
+                current = word
+
+            if current:
+                lines.append(current)
+            lines.append("")
+
+        while lines and not lines[-1]:
+            lines.pop()
+        return lines
+
+    def draw_wrapped_lines(
+        lines: list[str],
+        *,
+        x: int,
+        y: int,
+        font_name: str,
+        font_size: int,
+        leading: int,
+        color,
+    ) -> int:
+        pdf.setFont(font_name, font_size)
+        pdf.setFillColor(color)
+        current_y = y
+        for line_text in lines:
+            if line_text:
+                pdf.drawString(x, current_y, line_text)
+                current_y -= leading
+            else:
+                current_y -= int(leading * 0.45)
+        return current_y
+
     def draw_base_page() -> None:
         if REPORT_BG_PATH.exists():
             _draw_reportlab_image_cover(pdf, REPORT_BG_PATH, width=page_width, height=page_height)
@@ -480,8 +528,8 @@ def build_produto1_report_pdf_reportlab(report: Produto1RelatorioResponse) -> by
             pdf.setFillColor(dark)
             pdf.rect(0, 0, page_width, page_height, fill=1, stroke=0)
 
-        pdf.setFillColor(Color(0.02, 0.008, 0.006, alpha=0.74))
-        _reportlab_set_alpha(pdf, 0.74)
+        pdf.setFillColor(Color(0.02, 0.008, 0.006, alpha=0.89))
+        _reportlab_set_alpha(pdf, 0.89)
         pdf.rect(0, 0, page_width, page_height, fill=1, stroke=0)
         _reportlab_set_alpha(pdf, 1)
 
@@ -515,6 +563,23 @@ def build_produto1_report_pdf_reportlab(report: Produto1RelatorioResponse) -> by
         pdf.setFont("Helvetica", 12)
         pdf.drawCentredString(x + width / 2, y + 14, text[:38])
 
+    def draw_header_logo() -> None:
+        if not LOGO_PATH.exists():
+            return
+
+        logo = ImageReader(str(LOGO_PATH))
+        logo_width, logo_height = logo.getSize()
+        draw_width = 150
+        draw_height = draw_width * logo_height / logo_width
+        pdf.drawImage(
+            logo,
+            (page_width - draw_width) / 2,
+            1634,
+            draw_width,
+            draw_height,
+            mask="auto",
+        )
+
     def draw_cover() -> None:
         pdf.setFillColor(dark)
         pdf.rect(0, 0, page_width, page_height, fill=1, stroke=0)
@@ -535,9 +600,9 @@ def build_produto1_report_pdf_reportlab(report: Produto1RelatorioResponse) -> by
         if LOGO_PATH.exists():
             logo = ImageReader(str(LOGO_PATH))
             logo_width, logo_height = logo.getSize()
-            draw_width = 280
+            draw_width = 430
             draw_height = draw_width * logo_height / logo_width
-            pdf.drawImage(logo, (page_width - draw_width) / 2, 1480, draw_width, draw_height, mask="auto")
+            pdf.drawImage(logo, (page_width - draw_width) / 2, 1490, draw_width, draw_height, mask="auto")
 
         draw_label("Relatório digital · Código das Deusas", 150, 1365)
         pdf.setFillColor(gold)
@@ -568,57 +633,80 @@ def build_produto1_report_pdf_reportlab(report: Produto1RelatorioResponse) -> by
         draw_footer()
         pdf.showPage()
 
-    def draw_text_page(title: str, text: str, *, label: str = "Leitura arquetípica") -> None:
+    def draw_text_header(title: str, *, label: str, continuation: bool = False) -> int:
         draw_base_page()
+        draw_header_logo()
         draw_label(label, 150, 1570)
         pdf.setFillColor(gold)
         pdf.setFont("Helvetica-Bold", 46)
         title_y = 1478
-        for line_text in textwrap.wrap(title, width=24):
+        title_text = f"{title} · continuação" if continuation else title
+        for line_text in textwrap.wrap(title_text, width=23):
             pdf.drawString(150, title_y, line_text)
-            title_y -= 56
+            title_y -= 58
+        return title_y - 18
 
-        cursor_y = title_y - 18
-        pdf.setFillColor(soft)
-        first_paragraph, *rest = [part.strip() for part in text.split("\n\n") if part.strip()]
+    def draw_text_page(title: str, text: str, *, label: str = "Leitura arquetípica") -> None:
+        cursor_y = draw_text_header(title, label=label)
+        bottom_limit = 148
+        content_width = 780
+        paragraphs = [part.strip() for part in text.split("\n\n") if part.strip()]
+        first_paragraph = paragraphs[0] if paragraphs else ""
+        rest = paragraphs[1:]
+
         if first_paragraph:
+            summary_lines = wrap_lines(
+                first_paragraph,
+                max_width=724,
+                font_name="Helvetica-Bold",
+                font_size=25,
+            )
+            box_height = max(112, len(summary_lines) * 34 + 60)
             pdf.setFillColor(Color(0.16, 0.09, 0.06, alpha=0.78))
             _reportlab_set_alpha(pdf, 0.78)
-            pdf.roundRect(150, cursor_y - 138, 780, 138, 18, fill=1, stroke=0)
+            pdf.roundRect(150, cursor_y - box_height, 780, box_height, 18, fill=1, stroke=0)
             _reportlab_set_alpha(pdf, 1)
             pdf.setStrokeColor(HexColor("#5d3820"))
-            pdf.roundRect(150, cursor_y - 138, 780, 138, 18, fill=0, stroke=1)
-            cursor_y = _wrap_reportlab_text(
-                pdf,
-                first_paragraph,
+            pdf.roundRect(150, cursor_y - box_height, 780, box_height, 18, fill=0, stroke=1)
+            cursor_y = draw_wrapped_lines(
+                summary_lines,
                 x=176,
-                y=cursor_y - 42,
-                max_width=728,
                 font_name="Helvetica-Bold",
-                font_size=24,
+                font_size=25,
                 leading=34,
+                y=cursor_y - 38,
                 color=soft,
             ) - 38
 
-        body = "\n\n".join(rest)
-        if body:
-            _wrap_reportlab_text(
-                pdf,
-                body,
+        for paragraph in rest:
+            paragraph_lines = wrap_lines(
+                paragraph,
+                max_width=content_width,
+                font_name="Helvetica",
+                font_size=22,
+            )
+            paragraph_height = len(paragraph_lines) * 34 + 24
+            if cursor_y - paragraph_height < bottom_limit:
+                draw_footer()
+                pdf.showPage()
+                cursor_y = draw_text_header(title, label=label, continuation=True)
+
+            cursor_y = draw_wrapped_lines(
+                paragraph_lines,
                 x=150,
                 y=cursor_y,
-                max_width=780,
                 font_name="Helvetica",
                 font_size=22,
                 leading=34,
                 color=soft,
-            )
+            ) - 24
 
         draw_footer()
         pdf.showPage()
 
     def draw_map_page() -> None:
         draw_base_page()
+        draw_header_logo()
         draw_label("Mapa da leitura", 150, 1570)
         pdf.setFillColor(gold)
         pdf.setFont("Helvetica-Bold", 48)
