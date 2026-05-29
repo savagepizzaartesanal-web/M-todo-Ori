@@ -6,10 +6,9 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 
-COPY backend/requirements.txt .
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY backend .
-COPY metodo-ori/public /app/metodo-ori/public
+COPY . .
 
 CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}
