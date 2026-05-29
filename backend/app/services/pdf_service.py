@@ -528,16 +528,14 @@ def build_produto1_report_pdf_reportlab(report: Produto1RelatorioResponse) -> by
             pdf.setFillColor(dark)
             pdf.rect(0, 0, page_width, page_height, fill=1, stroke=0)
 
-        pdf.setFillColor(Color(0.02, 0.008, 0.006, alpha=0.89))
-        _reportlab_set_alpha(pdf, 0.89)
+        pdf.setFillColor(Color(0.02, 0.008, 0.006, alpha=0.60))
+        _reportlab_set_alpha(pdf, 0.60)
         pdf.rect(0, 0, page_width, page_height, fill=1, stroke=0)
         _reportlab_set_alpha(pdf, 1)
 
         pdf.setStrokeColor(line)
         pdf.setLineWidth(1.2)
         pdf.roundRect(64, 72, page_width - 128, page_height - 144, 34, fill=0, stroke=1)
-        pdf.setStrokeColor(HexColor("#3a2113"))
-        pdf.roundRect(92, 102, page_width - 184, page_height - 204, 28, fill=0, stroke=1)
 
     def draw_footer() -> None:
         pdf.setFillColor(HexColor("#8f6240"))
@@ -587,15 +585,17 @@ def build_produto1_report_pdf_reportlab(report: Produto1RelatorioResponse) -> by
         if cover_path and cover_path.exists():
             _draw_reportlab_image_cover(pdf, cover_path, width=page_width, height=page_height)
 
-        pdf.setFillColor(Color(0.02, 0.008, 0.006, alpha=0.80))
-        _reportlab_set_alpha(pdf, 0.80)
+        pdf.setFillColor(Color(0.02, 0.008, 0.006, alpha=0.26))
+        _reportlab_set_alpha(pdf, 0.26)
         pdf.rect(0, 0, page_width, page_height, fill=1, stroke=0)
+        pdf.setFillColor(Color(0.02, 0.008, 0.006, alpha=0.44))
+        _reportlab_set_alpha(pdf, 0.44)
+        pdf.rect(0, 920, page_width, 600, fill=1, stroke=0)
         _reportlab_set_alpha(pdf, 1)
 
         pdf.setStrokeColor(line)
         pdf.setLineWidth(1.4)
         pdf.roundRect(64, 72, page_width - 128, page_height - 144, 40, fill=0, stroke=1)
-        pdf.roundRect(92, 102, page_width - 184, page_height - 204, 34, fill=0, stroke=1)
 
         if LOGO_PATH.exists():
             logo = ImageReader(str(LOGO_PATH))
@@ -657,24 +657,17 @@ def build_produto1_report_pdf_reportlab(report: Produto1RelatorioResponse) -> by
         if first_paragraph:
             summary_lines = wrap_lines(
                 first_paragraph,
-                max_width=724,
+                max_width=780,
                 font_name="Helvetica-Bold",
                 font_size=25,
             )
-            box_height = max(112, len(summary_lines) * 34 + 60)
-            pdf.setFillColor(Color(0.16, 0.09, 0.06, alpha=0.78))
-            _reportlab_set_alpha(pdf, 0.78)
-            pdf.roundRect(150, cursor_y - box_height, 780, box_height, 18, fill=1, stroke=0)
-            _reportlab_set_alpha(pdf, 1)
-            pdf.setStrokeColor(HexColor("#5d3820"))
-            pdf.roundRect(150, cursor_y - box_height, 780, box_height, 18, fill=0, stroke=1)
             cursor_y = draw_wrapped_lines(
                 summary_lines,
-                x=176,
+                x=150,
                 font_name="Helvetica-Bold",
                 font_size=25,
                 leading=34,
-                y=cursor_y - 38,
+                y=cursor_y,
                 color=soft,
             ) - 38
 
@@ -719,26 +712,24 @@ def build_produto1_report_pdf_reportlab(report: Produto1RelatorioResponse) -> by
             ("O que seu perfil trouxe", report.highlights[1].text if len(report.highlights) > 1 else ""),
         ]
         for card_title, card_text in cards:
-            pdf.setFillColor(Color(0.16, 0.09, 0.06, alpha=0.72))
-            _reportlab_set_alpha(pdf, 0.72)
-            pdf.roundRect(150, y - 210, 780, 210, 18, fill=1, stroke=0)
-            _reportlab_set_alpha(pdf, 1)
-            pdf.setStrokeColor(HexColor("#5d3820"))
-            pdf.roundRect(150, y - 210, 780, 210, 18, fill=0, stroke=1)
             pdf.setFillColor(gold)
             pdf.setFont("Helvetica-Bold", 15)
-            pdf.drawString(176, y - 48, card_title.upper())
+            pdf.drawString(150, y - 28, card_title.upper())
             _wrap_reportlab_text(
                 pdf,
                 card_text,
-                x=176,
-                y=y - 88,
-                max_width=720,
+                x=150,
+                y=y - 68,
+                max_width=780,
                 font_name="Helvetica",
                 font_size=22,
                 leading=32,
                 color=soft,
             )
+            pdf.setStrokeColor(Color(0.95, 0.68, 0.38, alpha=0.24))
+            _reportlab_set_alpha(pdf, 0.24)
+            pdf.line(150, y - 236, 930, y - 236)
+            _reportlab_set_alpha(pdf, 1)
             y -= 270
         draw_footer()
         pdf.showPage()
@@ -832,7 +823,7 @@ def build_produto1_report_html(report: Produto1RelatorioResponse) -> str:
     report_bg_uri = _asset_data_uri(REPORT_BG_PATH)
     master_bg_uri = _asset_data_uri(MASTER_BG_PATH)
     page_background = (
-        f"linear-gradient(180deg, rgba(5, 2, 2, 0.22), rgba(5, 2, 2, 0.34)), url('{report_bg_uri}')"
+        f"linear-gradient(180deg, rgba(5, 2, 2, 0.14), rgba(5, 2, 2, 0.24)), url('{report_bg_uri}')"
         if report_bg_uri
         else f"linear-gradient(135deg, rgba(8, 3, 3, 0.78) 0%, rgba(5, 2, 2, 0.90) 48%, rgba(31, 13, 8, 0.82) 100%), url('{master_bg_uri}')"
         if master_bg_uri
@@ -840,7 +831,7 @@ def build_produto1_report_html(report: Produto1RelatorioResponse) -> str:
     )
     cover_image_uri = _report_cover_image_data_uri(report.resultado)
     cover_image_style = (
-        f"background-image: linear-gradient(90deg, rgba(5,2,2,0.97) 0%, rgba(5,2,2,0.84) 42%, rgba(5,2,2,0.10) 100%), url('{cover_image_uri}');"
+        f"background-image: linear-gradient(90deg, rgba(5,2,2,0.74) 0%, rgba(5,2,2,0.46) 42%, rgba(5,2,2,0.06) 100%), url('{cover_image_uri}');"
         if cover_image_uri
         else ""
     )
@@ -931,8 +922,8 @@ def build_produto1_report_html(report: Produto1RelatorioResponse) -> str:
     }}
 
     .page:not(.cover)::before {{
-      background: rgba(3, 1, 1, 0.34);
-      box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.30);
+      background: rgba(3, 1, 1, 0.18);
+      box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.22);
     }}
 
     .page::before {{
@@ -977,8 +968,8 @@ def build_produto1_report_html(report: Produto1RelatorioResponse) -> str:
       border-radius: 0;
       overflow: hidden;
       background:
-        linear-gradient(90deg, rgba(5, 2, 2, 0.86) 0%, rgba(5, 2, 2, 0.66) 42%, rgba(5, 2, 2, 0.16) 100%),
-        linear-gradient(180deg, rgba(5, 2, 2, 0.12), rgba(5, 2, 2, 0.44));
+        linear-gradient(90deg, rgba(5, 2, 2, 0.58) 0%, rgba(5, 2, 2, 0.36) 42%, rgba(5, 2, 2, 0.08) 100%),
+        linear-gradient(180deg, rgba(5, 2, 2, 0.06), rgba(5, 2, 2, 0.22));
       box-shadow: none;
     }}
 
@@ -992,8 +983,8 @@ def build_produto1_report_html(report: Produto1RelatorioResponse) -> str:
       inset: 0;
       z-index: -1;
       background:
-        radial-gradient(circle at 68% 30%, rgba(242,185,104,0.16), transparent 24%),
-        radial-gradient(circle at 22% 56%, rgba(5,2,2,0.42), transparent 42%);
+        radial-gradient(circle at 68% 30%, rgba(242,185,104,0.12), transparent 24%),
+        radial-gradient(circle at 22% 56%, rgba(5,2,2,0.24), transparent 42%);
       pointer-events: none;
     }}
 
@@ -1111,12 +1102,11 @@ def build_produto1_report_html(report: Produto1RelatorioResponse) -> str:
     .profile-card,
     .insight-card,
     .final-box {{
-      border: 1px solid rgba(242, 185, 104, 0.14);
-      border-radius: 26px;
-      background:
-        radial-gradient(circle at 90% 8%, rgba(242,185,104,0.10), transparent 30%),
-        rgba(255,255,255,0.035);
-      padding: 28px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      padding: 0 0 26px;
+      border-bottom: 1px solid rgba(242, 185, 104, 0.18);
     }}
 
     .profile-card p:last-child,
@@ -1180,11 +1170,12 @@ def build_produto1_report_html(report: Produto1RelatorioResponse) -> str:
 
     .section-text p:first-child {{
       margin-bottom: 38px;
-      padding: 0 0 0 30px;
-      border-left: 1px solid rgba(242, 185, 104, 0.42);
+      padding: 0;
+      border-left: 0;
       color: #fff0dd;
       font-size: 27px;
       line-height: 1.52;
+      font-weight: 650;
     }}
 
     .compact-card .section-text p {{
