@@ -1245,13 +1245,6 @@ def build_produto1_report_html(report: Produto1RelatorioResponse) -> str:
 
 
 async def build_produto1_report_pdf(report: Produto1RelatorioResponse) -> bytes:
-    if os.getenv("APP_ENV") == "production":
-        try:
-            return build_produto1_report_pdf_reportlab(report)
-        except Exception as reportlab_error:
-            logger.exception("Falha ao gerar PDF premium com ReportLab: %s", reportlab_error)
-            return build_produto1_report_pdf_basic(report)
-
     try:
         from playwright.async_api import async_playwright
     except ImportError as error:
@@ -1266,21 +1259,27 @@ async def build_produto1_report_pdf(report: Produto1RelatorioResponse) -> bytes:
 
     try:
         async with async_playwright() as p:
-            browser = await p.chromium.launch(args=["--no-sandbox"])
-            page = await browser.new_page(
-                viewport={"width": 1080, "height": 1920},
-                device_scale_factor=1,
-            )
-            await page.set_content(html, wait_until="networkidle")
-            pdf = await page.pdf(
-                width="1080px",
-                height="1920px",
-                print_background=True,
-                prefer_css_page_size=True,
-                margin={"top": "0", "right": "0", "bottom": "0", "left": "0"},
-            )
-            await browser.close()
-            return pdf
+            browser = None
+            try:
+                browser = await p.chromium.launch(
+                    headless=True,
+                    args=["--no-sandbox", "--disable-dev-shm-usage"],
+                )
+                page = await browser.new_page(
+                    viewport={"width": 1080, "height": 1920},
+                    device_scale_factor=1,
+                )
+                await page.set_content(html, wait_until="networkidle")
+                return await page.pdf(
+                    width="1080px",
+                    height="1920px",
+                    print_background=True,
+                    prefer_css_page_size=True,
+                    margin={"top": "0", "right": "0", "bottom": "0", "left": "0"},
+                )
+            finally:
+                if browser:
+                    await browser.close()
     except Exception as error:
         logger.exception("Falha ao gerar PDF premium com Playwright. Usando fallback simples: %s", error)
         try:
