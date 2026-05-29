@@ -7,9 +7,12 @@ import textwrap
 from dataclasses import dataclass, field
 from datetime import datetime
 from html import escape
+import logging
 from pathlib import Path
 
 from app.schemas.produto1 import Produto1RelatorioResponse
+
+logger = logging.getLogger(__name__)
 
 
 PAGE_WIDTH = 595
@@ -624,10 +627,10 @@ def build_produto1_report_html(report: Produto1RelatorioResponse) -> str:
     }}
 
     .logo {{
-      width: 230px;
+      width: 280px;
       height: auto;
       display: block;
-      margin-bottom: 68px;
+      margin: 0 auto 76px;
       opacity: 0.96;
     }}
 
@@ -884,7 +887,8 @@ def build_produto1_report_html(report: Produto1RelatorioResponse) -> str:
 async def build_produto1_report_pdf(report: Produto1RelatorioResponse) -> bytes:
     try:
         from playwright.async_api import async_playwright
-    except ImportError:
+    except ImportError as error:
+        logger.warning("Playwright indisponivel para gerar PDF premium: %s", error)
         return build_produto1_report_pdf_basic(report)
 
     html = build_produto1_report_html(report)
@@ -906,5 +910,6 @@ async def build_produto1_report_pdf(report: Produto1RelatorioResponse) -> bytes:
             )
             await browser.close()
             return pdf
-    except Exception:
+    except Exception as error:
+        logger.exception("Falha ao gerar PDF premium com Playwright. Usando fallback simples: %s", error)
         return build_produto1_report_pdf_basic(report)
