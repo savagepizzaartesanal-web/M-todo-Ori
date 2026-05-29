@@ -2,7 +2,7 @@ import { supabase } from "../lib/supabaseClient";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 const API_TIMEOUT_MS = 12000;
-const FILE_TIMEOUT_MS = 60000;
+const FILE_TIMEOUT_MS = 180000;
 
 export class OriApiError extends Error {
   constructor(message, options = {}) {
@@ -137,7 +137,7 @@ async function requestAuthenticatedFile(path, options = {}) {
         isTimeout,
         isNetworkError: !isTimeout,
         userMessage: isTimeout
-          ? "O ORI está preparando o arquivo. Aguarde alguns segundos e tente novamente."
+          ? "O ORI ainda está preparando o arquivo. Aguarde mais alguns instantes e tente baixar novamente."
           : "Não conseguimos baixar o arquivo agora. Tente novamente em alguns instantes.",
       },
     );
