@@ -273,6 +273,9 @@ function Produto1Relatorio() {
 
   async function handleDownloadPdf() {
     setDownloadingPdf(true);
+    setSyncNotice(
+      "Estamos preparando seu relatório em PDF. Nesta fase de protótipo, o arquivo pode levar alguns instantes para ficar pronto. Mantenha esta página aberta até o download começar.",
+    );
 
     try {
       const { blob, filename } = await downloadProduto1ReportPdf();
@@ -380,6 +383,22 @@ function Produto1Relatorio() {
             {downloadingPdf ? "Preparando PDF..." : "Baixar PDF"}
           </button>
         </div>
+
+        {downloadingPdf && (
+          <div
+            className="mb-5 rounded-[22px] px-5 py-4 text-sm leading-relaxed"
+            style={{
+              background:
+                "linear-gradient(90deg, rgba(242,185,104,0.075), rgba(255,255,255,0.016))",
+              border: "1px solid rgba(242,185,104,0.14)",
+              color: "rgba(255,245,235,0.76)",
+            }}
+          >
+            Estamos preparando seu relatório em PDF. Nesta fase de protótipo, o
+            arquivo pode levar alguns instantes para ficar pronto. Mantenha esta
+            página aberta até o download começar.
+          </div>
+        )}
 
         <section
           className="ori-main-frame ori-hero-panel relative overflow-hidden rounded-[28px] p-0 md:rounded-[46px]"

@@ -969,7 +969,7 @@ def build_produto1_report_html(report: Produto1RelatorioResponse) -> str:
       overflow: hidden;
       background:
         linear-gradient(90deg, rgba(5, 2, 2, 0.58) 0%, rgba(5, 2, 2, 0.36) 42%, rgba(5, 2, 2, 0.08) 100%),
-        linear-gradient(180deg, rgba(5, 2, 2, 0.06), rgba(5, 2, 2, 0.22));
+        linear-gradient(180deg, rgba(5, 2, 2, 0.02), rgba(5, 2, 2, 0.16));
       box-shadow: none;
     }}
 
@@ -989,11 +989,30 @@ def build_produto1_report_html(report: Produto1RelatorioResponse) -> str:
     }}
 
     .logo {{
-      width: 280px;
+      width: 260px;
       height: auto;
       display: block;
-      margin: 0 auto 76px;
+      margin: 0 auto;
       opacity: 0.96;
+    }}
+
+    .cover-content {{
+      position: relative;
+      max-width: 760px;
+      margin-top: auto;
+      margin-bottom: 132px;
+      padding: 78px 0 34px;
+    }}
+
+    .cover-content::before {{
+      content: "";
+      position: absolute;
+      inset: -58px -72px -42px -72px;
+      z-index: -1;
+      background:
+        radial-gradient(circle at 18% 52%, rgba(5,2,2,0.92), rgba(5,2,2,0.58) 46%, transparent 74%),
+        linear-gradient(90deg, rgba(5,2,2,0.92), rgba(5,2,2,0.58) 58%, transparent 100%);
+      pointer-events: none;
     }}
 
     .label-line {{
@@ -1021,36 +1040,36 @@ def build_produto1_report_html(report: Produto1RelatorioResponse) -> str:
 
     h1 {{
       margin: 0;
-      max-width: 680px;
+      max-width: 740px;
       color: #ffc06d;
-      font-size: 102px;
-      line-height: 0.94;
+      font-size: 116px;
+      line-height: 0.90;
       letter-spacing: -0.04em;
       font-weight: 650;
     }}
 
     .subtitle {{
-      max-width: 690px;
-      margin: 34px 0 0;
-      color: rgba(255, 245, 235, 0.82);
-      font-size: 31px;
-      line-height: 1.42;
+      max-width: 720px;
+      margin: 36px 0 0;
+      color: rgba(255, 245, 235, 0.88);
+      font-size: 34px;
+      line-height: 1.38;
     }}
 
     .chips {{
       display: flex;
       flex-wrap: wrap;
-      gap: 14px;
-      margin-top: 44px;
+      gap: 16px;
+      margin-top: 40px;
     }}
 
     .chips span {{
-      padding: 13px 20px;
-      border: 1px solid rgba(242, 185, 104, 0.28);
+      padding: 16px 24px;
+      border: 1px solid rgba(242, 185, 104, 0.32);
       border-radius: 999px;
-      background: rgba(242,185,104,0.060);
-      color: rgba(255,245,235,0.84);
-      font-size: 13px;
+      background: rgba(242,185,104,0.075);
+      color: rgba(255,245,235,0.88);
+      font-size: 14px;
       letter-spacing: 0.08em;
     }}
 
@@ -1223,8 +1242,8 @@ def build_produto1_report_html(report: Produto1RelatorioResponse) -> str:
 <body>
   <section class="page cover">
     <div class="cover-panel">
-      <div>
-        {logo_html}
+      {logo_html}
+      <div class="cover-content">
         <div class="label-line">
           <span></span>
           <p>Relatório digital · Código das Deusas</p>
