@@ -383,6 +383,288 @@ def build_produto1_report_pdf_basic(report: Produto1RelatorioResponse) -> bytes:
     return doc.to_bytes()
 
 
+def _wrap_reportlab_text(
+    canvas_obj,
+    text: str,
+    *,
+    x: int,
+    y: int,
+    max_width: int,
+    font_name: str = "Helvetica",
+    font_size: int = 34,
+    leading: int | None = None,
+    color=None,
+) -> int:
+    from reportlab.pdfbase.pdfmetrics import stringWidth
+
+    leading = leading or int(font_size * 1.38)
+    canvas_obj.setFont(font_name, font_size)
+    if color is not None:
+        canvas_obj.setFillColor(color)
+
+    paragraphs = [part.strip() for part in text.split("\n") if part.strip()]
+    current_y = y
+
+    for paragraph in paragraphs:
+        words = paragraph.split()
+        line = ""
+        for word in words:
+            test_line = f"{line} {word}".strip()
+            if stringWidth(test_line, font_name, font_size) <= max_width:
+                line = test_line
+                continue
+
+            if line:
+                canvas_obj.drawString(x, current_y, line)
+                current_y -= leading
+            line = word
+
+        if line:
+            canvas_obj.drawString(x, current_y, line)
+            current_y -= leading
+        current_y -= int(leading * 0.35)
+
+    return current_y
+
+
+def _draw_reportlab_image_cover(canvas_obj, image_path: Path, *, width: int, height: int) -> None:
+    from reportlab.lib.utils import ImageReader
+
+    if not image_path.exists():
+        return
+
+    image = ImageReader(str(image_path))
+    img_width, img_height = image.getSize()
+    scale = max(width / img_width, height / img_height)
+    draw_width = img_width * scale
+    draw_height = img_height * scale
+    x = (width - draw_width) / 2
+    y = (height - draw_height) / 2
+    canvas_obj.drawImage(image, x, y, draw_width, draw_height, mask="auto")
+
+
+def _reportlab_set_alpha(canvas_obj, value: float) -> None:
+    try:
+        canvas_obj.setFillAlpha(value)
+        canvas_obj.setStrokeAlpha(value)
+    except Exception:
+        return
+
+
+def build_produto1_report_pdf_reportlab(report: Produto1RelatorioResponse) -> bytes:
+    from io import BytesIO
+
+    from reportlab.lib.colors import Color, HexColor
+    from reportlab.lib.pagesizes import portrait
+    from reportlab.lib.utils import ImageReader
+    from reportlab.pdfgen import canvas
+
+    page_width, page_height = 1080, 1920
+    buffer = BytesIO()
+    pdf = canvas.Canvas(buffer, pagesize=portrait((page_width, page_height)))
+
+    gold = HexColor("#f3ad61")
+    soft = HexColor("#f5e6d7")
+    muted = HexColor("#bca99a")
+    dark = HexColor("#050202")
+    panel = HexColor("#160908")
+    line = HexColor("#7b4b25")
+    cover_relative = REPORT_COVER_PATHS.get(report.resultado)
+    cover_path = PUBLIC_DIR / cover_relative if cover_relative else None
+
+    def draw_base_page() -> None:
+        if REPORT_BG_PATH.exists():
+            _draw_reportlab_image_cover(pdf, REPORT_BG_PATH, width=page_width, height=page_height)
+        else:
+            pdf.setFillColor(dark)
+            pdf.rect(0, 0, page_width, page_height, fill=1, stroke=0)
+
+        pdf.setFillColor(Color(0.02, 0.008, 0.006, alpha=0.74))
+        _reportlab_set_alpha(pdf, 0.74)
+        pdf.rect(0, 0, page_width, page_height, fill=1, stroke=0)
+        _reportlab_set_alpha(pdf, 1)
+
+        pdf.setStrokeColor(line)
+        pdf.setLineWidth(1.2)
+        pdf.roundRect(64, 72, page_width - 128, page_height - 144, 34, fill=0, stroke=1)
+        pdf.setStrokeColor(HexColor("#3a2113"))
+        pdf.roundRect(92, 102, page_width - 184, page_height - 204, 28, fill=0, stroke=1)
+
+    def draw_footer() -> None:
+        pdf.setFillColor(HexColor("#8f6240"))
+        pdf.setFont("Helvetica", 13)
+        pdf.drawString(100, 76, "MÉTODO ORI BY TELÚRICA · CÓDIGO DAS DEUSAS")
+
+    def draw_label(text: str, x: int, y: int) -> None:
+        pdf.setStrokeColor(gold)
+        pdf.setLineWidth(2)
+        pdf.line(x, y + 9, x + 42, y + 9)
+        pdf.setFillColor(gold)
+        pdf.setFont("Helvetica", 14)
+        pdf.drawString(x + 62, y, text.upper())
+
+    def draw_chip(text: str, x: int, y: int, width: int) -> None:
+        pdf.setFillColor(Color(0.10, 0.05, 0.04, alpha=0.72))
+        _reportlab_set_alpha(pdf, 0.72)
+        pdf.roundRect(x, y, width, 42, 21, fill=1, stroke=0)
+        _reportlab_set_alpha(pdf, 1)
+        pdf.setStrokeColor(HexColor("#5b3820"))
+        pdf.roundRect(x, y, width, 42, 21, fill=0, stroke=1)
+        pdf.setFillColor(muted)
+        pdf.setFont("Helvetica", 12)
+        pdf.drawCentredString(x + width / 2, y + 14, text[:38])
+
+    def draw_cover() -> None:
+        pdf.setFillColor(dark)
+        pdf.rect(0, 0, page_width, page_height, fill=1, stroke=0)
+
+        if cover_path and cover_path.exists():
+            _draw_reportlab_image_cover(pdf, cover_path, width=page_width, height=page_height)
+
+        pdf.setFillColor(Color(0.02, 0.008, 0.006, alpha=0.80))
+        _reportlab_set_alpha(pdf, 0.80)
+        pdf.rect(0, 0, page_width, page_height, fill=1, stroke=0)
+        _reportlab_set_alpha(pdf, 1)
+
+        pdf.setStrokeColor(line)
+        pdf.setLineWidth(1.4)
+        pdf.roundRect(64, 72, page_width - 128, page_height - 144, 40, fill=0, stroke=1)
+        pdf.roundRect(92, 102, page_width - 184, page_height - 204, 34, fill=0, stroke=1)
+
+        if LOGO_PATH.exists():
+            logo = ImageReader(str(LOGO_PATH))
+            logo_width, logo_height = logo.getSize()
+            draw_width = 280
+            draw_height = draw_width * logo_height / logo_width
+            pdf.drawImage(logo, (page_width - draw_width) / 2, 1480, draw_width, draw_height, mask="auto")
+
+        draw_label("Relatório digital · Código das Deusas", 150, 1365)
+        pdf.setFillColor(gold)
+        pdf.setFont("Helvetica-Bold", 78)
+        title_y = 1262
+        for title_line in textwrap.wrap(report.resultado, width=18):
+            pdf.drawString(150, title_y, title_line)
+            title_y -= 86
+
+        pdf.setFillColor(soft)
+        subtitle_y = title_y - 20
+        _wrap_reportlab_text(
+            pdf,
+            report.subtitle,
+            x=150,
+            y=subtitle_y,
+            max_width=720,
+            font_name="Helvetica",
+            font_size=28,
+            leading=42,
+            color=soft,
+        )
+
+        chip_y = 780
+        draw_chip(report.combinacao, 150, chip_y, 190)
+        draw_chip(report.formula, 360, chip_y, 280)
+        draw_chip(report.email, 660, chip_y, 250)
+        draw_footer()
+        pdf.showPage()
+
+    def draw_text_page(title: str, text: str, *, label: str = "Leitura arquetípica") -> None:
+        draw_base_page()
+        draw_label(label, 150, 1570)
+        pdf.setFillColor(gold)
+        pdf.setFont("Helvetica-Bold", 46)
+        title_y = 1478
+        for line_text in textwrap.wrap(title, width=24):
+            pdf.drawString(150, title_y, line_text)
+            title_y -= 56
+
+        cursor_y = title_y - 18
+        pdf.setFillColor(soft)
+        first_paragraph, *rest = [part.strip() for part in text.split("\n\n") if part.strip()]
+        if first_paragraph:
+            pdf.setFillColor(Color(0.16, 0.09, 0.06, alpha=0.78))
+            _reportlab_set_alpha(pdf, 0.78)
+            pdf.roundRect(150, cursor_y - 138, 780, 138, 18, fill=1, stroke=0)
+            _reportlab_set_alpha(pdf, 1)
+            pdf.setStrokeColor(HexColor("#5d3820"))
+            pdf.roundRect(150, cursor_y - 138, 780, 138, 18, fill=0, stroke=1)
+            cursor_y = _wrap_reportlab_text(
+                pdf,
+                first_paragraph,
+                x=176,
+                y=cursor_y - 42,
+                max_width=728,
+                font_name="Helvetica-Bold",
+                font_size=24,
+                leading=34,
+                color=soft,
+            ) - 38
+
+        body = "\n\n".join(rest)
+        if body:
+            _wrap_reportlab_text(
+                pdf,
+                body,
+                x=150,
+                y=cursor_y,
+                max_width=780,
+                font_name="Helvetica",
+                font_size=22,
+                leading=34,
+                color=soft,
+            )
+
+        draw_footer()
+        pdf.showPage()
+
+    def draw_map_page() -> None:
+        draw_base_page()
+        draw_label("Mapa da leitura", 150, 1570)
+        pdf.setFillColor(gold)
+        pdf.setFont("Helvetica-Bold", 48)
+        pdf.drawString(150, 1480, "O que foi considerado")
+        pdf.drawString(150, 1422, "antes da revelação")
+
+        y = 1285
+        cards = [
+            ("O que suas respostas mostraram", report.highlights[0].text if report.highlights else ""),
+            ("O que seu perfil trouxe", report.highlights[1].text if len(report.highlights) > 1 else ""),
+        ]
+        for card_title, card_text in cards:
+            pdf.setFillColor(Color(0.16, 0.09, 0.06, alpha=0.72))
+            _reportlab_set_alpha(pdf, 0.72)
+            pdf.roundRect(150, y - 210, 780, 210, 18, fill=1, stroke=0)
+            _reportlab_set_alpha(pdf, 1)
+            pdf.setStrokeColor(HexColor("#5d3820"))
+            pdf.roundRect(150, y - 210, 780, 210, 18, fill=0, stroke=1)
+            pdf.setFillColor(gold)
+            pdf.setFont("Helvetica-Bold", 15)
+            pdf.drawString(176, y - 48, card_title.upper())
+            _wrap_reportlab_text(
+                pdf,
+                card_text,
+                x=176,
+                y=y - 88,
+                max_width=720,
+                font_name="Helvetica",
+                font_size=22,
+                leading=32,
+                color=soft,
+            )
+            y -= 270
+        draw_footer()
+        pdf.showPage()
+
+    draw_cover()
+    draw_map_page()
+    for section in report.sections:
+        draw_text_page(section.title, section.text)
+    if report.next_step:
+        draw_text_page("O movimento depois da leitura", report.next_step, label="Próximo passo")
+
+    pdf.save()
+    return buffer.getvalue()
+
+
 def _format_paragraphs(value: str) -> str:
     parts = [part.strip() for part in value.split("\n\n") if part.strip()]
     if not parts:
@@ -889,7 +1171,11 @@ async def build_produto1_report_pdf(report: Produto1RelatorioResponse) -> bytes:
         from playwright.async_api import async_playwright
     except ImportError as error:
         logger.warning("Playwright indisponivel para gerar PDF premium: %s", error)
-        return build_produto1_report_pdf_basic(report)
+        try:
+            return build_produto1_report_pdf_reportlab(report)
+        except Exception as reportlab_error:
+            logger.exception("Falha ao gerar PDF premium com ReportLab: %s", reportlab_error)
+            return build_produto1_report_pdf_basic(report)
 
     html = build_produto1_report_html(report)
 
@@ -912,4 +1198,8 @@ async def build_produto1_report_pdf(report: Produto1RelatorioResponse) -> bytes:
             return pdf
     except Exception as error:
         logger.exception("Falha ao gerar PDF premium com Playwright. Usando fallback simples: %s", error)
-        return build_produto1_report_pdf_basic(report)
+        try:
+            return build_produto1_report_pdf_reportlab(report)
+        except Exception as reportlab_error:
+            logger.exception("Falha ao gerar PDF premium com ReportLab: %s", reportlab_error)
+            return build_produto1_report_pdf_basic(report)
