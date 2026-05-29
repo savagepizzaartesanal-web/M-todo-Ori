@@ -7,6 +7,24 @@ import { archetypeThemes } from "../data/archetypeThemes";
 import { getReportVisualGuide } from "../data/reportVisualGuides";
 import { downloadProduto1ReportPdf, getProduto1Report } from "../services/api";
 
+const reportCoverImages = {
+  "Amante Nutridora": "/images/report-covers/amante-nutridora-mobile.png",
+  "Autônoma Absoluta": "/images/report-covers/autonoma-absoluta-mobile.png",
+  "Cuidadora Estratégica": "/images/report-covers/cuidadora-estrategica-mobile.png",
+  "Guardiã Sensível": "/images/report-covers/guardia-sensivel-mobile.png",
+  "Matriarca Soberana": "/images/report-covers/matriarca-soberana-mobile.png",
+  "Musa Enigmática": "/images/report-covers/musa-enigmática-mobile.png",
+  "Protetora Selvagem": "/images/report-covers/protetora-selvagem-mobile.png",
+  "Rainha Magnética": "/images/report-covers/rainha-magnetica-mobile.png",
+  "Rainha Oculta": "/images/report-covers/rainha-oculta-mobile.png",
+  "Sedutora Estratégica": "/images/report-covers/sedutora-estrategica-mobile.png",
+  "Selvagem Intuitiva": "/images/report-covers/selvagem-intuitiva-mobile.png",
+  "Selvagem Magnética": "/images/report-covers/selvagem-magnética-mobile.png",
+  "Soberana Estratégica": "/images/report-covers/soberana-estrategica-mobile.png",
+  "Soberana Indomável": "/images/report-covers/sobera-indomavel-mobile.png",
+  "Visionária Sutil": "/images/report-covers/visionaria-sutil-mobile.png",
+};
+
 function getVisualImages(guide, sectionId) {
   const sectionImages = guide?.images?.[sectionId];
 
@@ -250,6 +268,7 @@ function Produto1Relatorio() {
     : [];
   const visualGuide = report ? getReportVisualGuide(report.resultado) : null;
   const archetypeImage = report ? archetypeImages[report.resultado]?.image : "";
+  const reportCoverImage = report ? reportCoverImages[report.resultado] : "";
   const theme = report ? archetypeThemes[report.resultado] : null;
 
   async function handleDownloadPdf() {
@@ -441,12 +460,12 @@ function Produto1Relatorio() {
               </div>
             </div>
 
-            {archetypeImage && (
+            {(reportCoverImage || archetypeImage) && (
               <div
                 className="min-h-[360px] rounded-[24px] md:hidden"
                 style={{
-                  backgroundImage: `linear-gradient(180deg, rgba(7,3,4,0.03), rgba(7,3,4,0.30)), url(${archetypeImage})`,
-                  backgroundPosition: "center",
+                  backgroundImage: `linear-gradient(180deg, rgba(7,3,4,0.03), rgba(7,3,4,0.30)), url(${reportCoverImage || archetypeImage})`,
+                  backgroundPosition: "center top",
                   backgroundSize: "cover",
                   border: "1px solid rgba(242,185,104,0.12)",
                 }}

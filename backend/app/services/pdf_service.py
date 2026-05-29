@@ -624,11 +624,11 @@ def build_produto1_report_html(report: Produto1RelatorioResponse) -> str:
     }}
 
     .logo {{
-      width: 166px;
+      width: 230px;
       height: auto;
       display: block;
-      margin-bottom: 62px;
-      opacity: 0.94;
+      margin-bottom: 68px;
+      opacity: 0.96;
     }}
 
     .label-line {{
