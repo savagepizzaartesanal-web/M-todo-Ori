@@ -2,10 +2,15 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { supabase } from "../lib/supabaseClient";
-import { getCurrentJornada } from "../services/api";
+import {
+  getCurrentJornada,
+  getDailyOracleCard,
+  getProduto1Feedback,
+} from "../services/api";
 import SyncNotice from "../components/SyncNotice";
 
 const LEGACY_STORAGE_KEY = "ori_produto_1_quiz";
+const FEEDBACK_CONTEXT = "produto-1-leitura";
 const ORACLE_PANEL_BACKGROUND =
   "radial-gradient(circle at 88% 12%, rgba(242,185,104,0.09), transparent 34%), radial-gradient(circle at 8% 92%, rgba(183,140,255,0.05), transparent 34%), linear-gradient(90deg, rgba(5,2,2,0.88), rgba(5,2,2,0.68), rgba(5,2,2,0.92)), url('/images/espelho-ori/oraculo/fundo-oraculo-premium.png')";
 
@@ -25,11 +30,20 @@ const readQuizFromStorage = (storageKey) => {
   }
 };
 
+const getTodayKey = () =>
+  new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Sao_Paulo",
+  }).format(new Date());
+
 function PortalCliente() {
   const [cliente, setCliente] = useState(null);
   const [loadingCliente, setLoadingCliente] = useState(true);
   const [quizLocal, setQuizLocal] = useState(null);
   const [jornadaApi, setJornadaApi] = useState(null);
+  const [produto1Feedback, setProduto1Feedback] = useState(null);
+  const [feedbackLoaded, setFeedbackLoaded] = useState(false);
+  const [dailyOracleCard, setDailyOracleCard] = useState(null);
+  const [oracleLoaded, setOracleLoaded] = useState(false);
   const [syncNotice, setSyncNotice] = useState("");
 
   useEffect(() => {
@@ -43,6 +57,10 @@ function PortalCliente() {
         setCliente(null);
         setQuizLocal(null);
         setJornadaApi(null);
+        setProduto1Feedback(null);
+        setFeedbackLoaded(false);
+        setDailyOracleCard(null);
+        setOracleLoaded(false);
         setLoadingCliente(false);
         return;
       }
@@ -69,6 +87,29 @@ function PortalCliente() {
           apiError?.userMessage ||
             "Estamos usando seus dados salvos enquanto o ORI termina a sincronização.",
         );
+      }
+
+      const [feedbackResult, oracleResult] = await Promise.allSettled([
+        getProduto1Feedback(FEEDBACK_CONTEXT),
+        getDailyOracleCard(getTodayKey()),
+      ]);
+
+      if (feedbackResult.status === "fulfilled") {
+        setProduto1Feedback(feedbackResult.value || null);
+        setFeedbackLoaded(true);
+      } else {
+        console.log("Feedback da leitura indisponível no portal:", feedbackResult.reason);
+        setProduto1Feedback(null);
+        setFeedbackLoaded(false);
+      }
+
+      if (oracleResult.status === "fulfilled") {
+        setDailyOracleCard(oracleResult.value || null);
+        setOracleLoaded(true);
+      } else {
+        console.log("Carta diária indisponível no portal:", oracleResult.reason);
+        setDailyOracleCard(null);
+        setOracleLoaded(false);
       }
 
       const { data, error } = await supabase
@@ -146,6 +187,12 @@ function PortalCliente() {
     jornadaApi?.produto_2_liberado ?? cliente?.produto_2_liberado ?? false;
   const produto3Liberado =
     jornadaApi?.produto_3_liberado ?? cliente?.produto_3_liberado ?? false;
+  const onboardingConcluido =
+    Boolean(jornadaApi?.perfil_onboarding_concluido) ||
+    Boolean(cliente?.perfil_onboarding_concluido) ||
+    hasResult;
+  const hasProduto1Feedback = Boolean(produto1Feedback?.response);
+  const hasDailyOracleCard = Boolean(dailyOracleCard?.hasCard);
 
   const statusProduto1 = hasResult
     ? "Leitura revelada"
@@ -218,7 +265,7 @@ function PortalCliente() {
       tone: "copper",
       aura:
         "radial-gradient(circle at top right, rgba(210,135,70,0.34), transparent 38%)",
-      action: produto1Liberado && hasResult ? (
+      action: produto1Liberado ? (
         <Link
           to="/produto-1"
           className="inline-flex justify-center px-5 py-3 rounded-full text-sm font-medium w-full md:w-fit"
@@ -402,6 +449,65 @@ function PortalCliente() {
       };
 
   const showQuickSecondary = recommendation.to !== quickEntry.primaryTo;
+
+  const nextMovement = (() => {
+    if (!onboardingConcluido && !hasAnswers && !hasResult) {
+      return {
+        eyebrow: "Próximo movimento",
+        title: "Finalize sua Entrada ORI.",
+        text: "Esse primeiro perfil ajuda o ORI a organizar sua jornada com mais precisão antes das leituras simbólicas.",
+        action: "Finalizar entrada",
+        to: "/entrada-ori",
+        state: "attention",
+      };
+    }
+
+    if (produto1Liberado && !hasAnswers && !hasResult) {
+      return {
+        eyebrow: "Próximo movimento",
+        title: "Comece pelo Código das Deusas.",
+        text: "Essa leitura nomeia a força que sustenta sua imagem e abre o primeiro mapa da sua presença.",
+        action: "Começar leitura",
+        to: "/produto-1",
+        state: "active",
+      };
+    }
+
+    if (hasAnswers && !hasResult) {
+      return {
+        eyebrow: "Próximo movimento",
+        title: "Continue sua leitura.",
+        text: "Você já iniciou o Código das Deusas. Termine as respostas para revelar sua composição arquetípica.",
+        action: "Continuar leitura",
+        to: "/produto-1",
+        state: "active",
+      };
+    }
+
+    if (hasResult && feedbackLoaded && !hasProduto1Feedback) {
+      return {
+        eyebrow: "Próximo movimento",
+        title: "Deixe sua percepção sobre a leitura.",
+        text: "Seu feedback ajuda o ORI a entender se a leitura te encontrou, ficou abstrata ou precisa ser revista.",
+        action: "Responder feedback",
+        to: "/produto-1/leitura",
+        state: "attention",
+      };
+    }
+
+    if (hasResult && oracleLoaded && !hasDailyOracleCard) {
+      return {
+        eyebrow: "Próximo movimento",
+        title: "Tire sua carta diária.",
+        text: "A carta do dia registra o clima simbólico da sua jornada e ajuda você a observar o movimento de hoje.",
+        action: "Abrir Oráculo",
+        to: "/oraculo",
+        state: "active",
+      };
+    }
+
+    return null;
+  })();
 
   return (
     <div className="ori-atmosphere ori-atmosphere-portal relative overflow-hidden">
@@ -702,6 +808,91 @@ function PortalCliente() {
             )}
           </div>
         </section>
+
+        {nextMovement && (
+          <section
+            className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[20px] md:rounded-[28px] p-4 md:p-5 mb-5 md:mb-8 cinematic-card"
+            data-state={nextMovement.state}
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(18,9,10,0.84), rgba(7,3,4,0.92))",
+              border:
+                nextMovement.state === "sealed"
+                  ? "1px solid rgba(255,255,255,0.07)"
+                  : "1px solid rgba(242,185,104,0.13)",
+              boxShadow:
+                "0 0 58px rgba(242,185,104,0.028), inset 0 0 32px rgba(255,255,255,0.010)",
+              backdropFilter: "blur(14px)",
+              WebkitBackdropFilter: "blur(14px)",
+            }}
+          >
+            <div
+              className="absolute inset-0 pointer-events-none opacity-[0.022]"
+              style={{
+                backgroundImage:
+                  "linear-gradient(rgba(242,185,104,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(242,185,104,0.08) 1px, transparent 1px)",
+                backgroundSize: "54px 54px",
+              }}
+            />
+
+            <div className="relative z-10 grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
+              <div>
+                <p
+                  className="ori-type-system mb-2 text-[9px] md:text-[10px]"
+                  style={{ color: "var(--gold-soft)" }}
+                >
+                  {nextMovement.eyebrow}
+                </p>
+
+                <h2
+                  className="ori-type-revelation mb-2 text-xl md:text-3xl"
+                  style={{
+                    color: "var(--gold-primary)",
+                    fontWeight: 620,
+                    letterSpacing: "-0.045em",
+                  }}
+                >
+                  {nextMovement.title}
+                </h2>
+
+                <p
+                  className="ori-type-reading-soft max-w-3xl text-sm leading-relaxed md:text-base"
+                  style={{ color: "rgba(255,245,235,0.66)" }}
+                >
+                  {nextMovement.text}
+                </p>
+              </div>
+
+              {nextMovement.to ? (
+                <Link
+                  to={nextMovement.to}
+                  className="ori-journey-action inline-flex min-h-11 w-full items-center justify-center rounded-full px-5 py-3 text-center text-sm lg:w-fit"
+                  style={{
+                    background:
+                      "linear-gradient(90deg, var(--copper-primary), var(--gold-primary))",
+                    color: "#090506",
+                    fontWeight: 750,
+                    boxShadow:
+                      "0 0 30px rgba(210,135,70,0.14), inset 0 0 12px rgba(255,255,255,0.14)",
+                  }}
+                >
+                  {nextMovement.action}
+                </Link>
+              ) : (
+                <span
+                  className="ori-chip inline-flex w-fit px-4 py-2 text-xs"
+                  style={{
+                    background: "rgba(255,255,255,0.026)",
+                    border: "1px solid rgba(255,255,255,0.07)",
+                    color: "rgba(255,245,235,0.56)",
+                  }}
+                >
+                  Aguardando liberação
+                </span>
+              )}
+            </div>
+          </section>
+        )}
 
         <section
           className="ori-mobile-section ori-main-frame ori-card-secondary relative overflow-hidden rounded-[20px] md:rounded-[28px] p-3.5 md:p-5 mb-5 md:mb-8 cinematic-card"

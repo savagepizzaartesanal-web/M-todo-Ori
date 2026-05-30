@@ -95,3 +95,113 @@ export function getAdminClientPriority({ cliente, resposta, feedback }) {
     state: "empty",
   };
 }
+
+export function getAdminClientMemory({
+  cliente,
+  resposta,
+  feedback,
+  onboardingProfile = {},
+  priority,
+}) {
+  const activePriority =
+    priority || getAdminClientPriority({ cliente, resposta, feedback });
+  const preferredName =
+    onboardingProfile.preferredName ||
+    cliente?.nome?.trim()?.split(" ")?.[0] ||
+    "Cliente";
+  const resultName =
+    resposta?.result?.nomeComposto || cliente?.resultado || "sem resultado definido";
+  const progress = getProduto1Progress(resposta);
+  const profileMoment = onboardingProfile.journeyStage;
+  const mainPain =
+    onboardingProfile.mainPain === "Quero escrever com minhas palavras"
+      ? onboardingProfile.mainPainCustom || onboardingProfile.mainPain
+      : onboardingProfile.mainPain || onboardingProfile.mainPainCustom;
+  const mainDesire = onboardingProfile.mainDesire;
+
+  let stateText = `${preferredName} ainda está em entrada.`;
+
+  if (!cliente?.perfil_onboarding_concluido) {
+    stateText =
+      `${preferredName} ainda não concluiu o perfil inicial. O foco é destravar a Entrada ORI.`;
+  } else if (resposta && !resposta.is_complete) {
+    stateText =
+      `${preferredName} iniciou o Código das Deusas e avançou ${progress || 0}%.`;
+  } else if (cliente?.resultado) {
+    stateText =
+      `${preferredName} concluiu o Código das Deusas com leitura ${resultName}.`;
+  }
+
+  let receptionText = "Ainda não há feedback pós-leitura registrado.";
+
+  if (feedback?.response === "me_senti_vista") {
+    receptionText =
+      "A leitura teve alta aderência: ela sinalizou que se sentiu vista.";
+  } else if (feedback?.response === "fez_sentido_mas_abstrato") {
+    receptionText =
+      "A leitura tocou, mas ainda precisa virar exemplo concreto antes do convite.";
+  } else if (feedback?.response === "nao_me_reconheci") {
+    receptionText =
+      "Há risco de desalinhamento: ela disse que não se reconheceu na leitura.";
+  }
+
+  const contextParts = [
+    profileMoment ? `Momento: ${profileMoment}` : "",
+    mainPain ? `Dor: ${mainPain}` : "",
+    mainDesire ? `Desejo: ${mainDesire}` : "",
+  ].filter(Boolean);
+
+  return {
+    title: "Estado da cliente agora",
+    summary: `${stateText} ${receptionText}`,
+    signals: contextParts,
+    nextContact:
+      `${activePriority.action} ` +
+      "Entrar pelo próximo passo, não por uma nova explicação da jornada.",
+  };
+}
+
+export function getAdminClientApproach({
+  cliente,
+  feedbackBridge,
+  onboardingProfile = {},
+  priority,
+}) {
+  const firstName =
+    onboardingProfile.preferredName ||
+    cliente?.nome?.trim()?.split(" ")?.[0] ||
+    "nome";
+
+  if (feedbackBridge?.text) {
+    return {
+      title: feedbackBridge.title || "Mensagem sugerida",
+      text: feedbackBridge.text,
+    };
+  }
+
+  if (priority?.state === "positive") {
+    return {
+      title: "Convite para próxima camada",
+      text:
+        `Oi, ${firstName}. Sua leitura já mostrou uma direção importante. ` +
+        "O próximo passo é traduzir essa força no corpo, cabelo, cor, beleza e presença. " +
+        "Se fizer sentido para você, posso te explicar como funciona o Dossiê ORI.",
+    };
+  }
+
+  if (priority?.state === "sealed") {
+    return {
+      title: "Retomada da Entrada ORI",
+      text:
+        `Oi, ${firstName}. Vi que sua Entrada ORI ainda não foi finalizada. ` +
+        "Quando você completar essa parte, consigo ler sua jornada com mais precisão e liberar a próxima etapa.",
+    };
+  }
+
+  return {
+    title: "Acompanhamento leve",
+    text:
+      `Oi, ${firstName}. Passei para acompanhar sua jornada no ORI. ` +
+      "Quando você quiser, posso te orientar no próximo passo com calma.",
+  };
+}

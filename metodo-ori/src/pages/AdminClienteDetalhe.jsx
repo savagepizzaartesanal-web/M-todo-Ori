@@ -3,7 +3,11 @@ import { Link, useParams } from "react-router-dom";
 
 import { questions } from "../data/questions";
 import { getAdminCliente, updateAdminCliente } from "../services/api";
-import { getAdminClientPriority } from "../utils/adminClientPriority";
+import {
+  getAdminClientApproach,
+  getAdminClientMemory,
+  getAdminClientPriority,
+} from "../utils/adminClientPriority";
 import {
   FEEDBACK_LABELS,
   getFeedbackBridge,
@@ -22,6 +26,7 @@ function AdminClienteDetalhe() {
   const [produto1Respostas, setProduto1Respostas] = useState(null);
   const [produto1Feedback, setProduto1Feedback] = useState(null);
   const [oraculoCarta, setOraculoCarta] = useState(null);
+  const [copiedApproach, setCopiedApproach] = useState(false);
 
   const fetchCliente = useCallback(async () => {
     setLoading(true);
@@ -272,7 +277,47 @@ function AdminClienteDetalhe() {
     resposta: produto1Respostas,
     feedback: produto1Feedback,
   });
+  const memory = getAdminClientMemory({
+    cliente,
+    resposta: produto1Respostas,
+    feedback: produto1Feedback,
+    onboardingProfile,
+    priority,
+  });
   const contactWhatsapp = onboardingProfile.whatsapp || cliente.whatsapp || "";
+  const approach = getAdminClientApproach({
+    cliente,
+    feedbackBridge: produto1Feedback ? feedbackBridge : null,
+    onboardingProfile,
+    priority,
+  });
+  const whatsappDigits = String(contactWhatsapp).replace(/\D/g, "");
+  const whatsappUrl = whatsappDigits
+    ? `https://wa.me/55${whatsappDigits.replace(/^55/, "")}?text=${encodeURIComponent(
+        approach.text,
+      )}`
+    : "";
+  const copyApproach = async () => {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(approach.text);
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = approach.text;
+        textArea.setAttribute("readonly", "");
+        textArea.style.position = "fixed";
+        textArea.style.opacity = "0";
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+      }
+      setCopiedApproach(true);
+      window.setTimeout(() => setCopiedApproach(false), 1800);
+    } catch (error) {
+      console.log("Não consegui copiar a abordagem:", error);
+    }
+  };
   const nextAction = (() => {
     if (!onboardingCompleted) {
       return {
@@ -468,8 +513,8 @@ function AdminClienteDetalhe() {
         ))}
       </div>
 
-	      <section
-	        className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[30px] p-5 md:p-7 mb-8 cinematic-card"
+      <section
+        className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[30px] p-5 md:p-7 mb-8 cinematic-card"
         style={{
           background:
             "linear-gradient(180deg, rgba(18,9,10,0.74), rgba(7,3,4,0.9))",
@@ -478,45 +523,76 @@ function AdminClienteDetalhe() {
           WebkitBackdropFilter: "blur(14px)",
         }}
       >
-	        <div className="grid gap-4 xl:grid-cols-[1.15fr_1fr]">
-	          <div
-	            className="ori-card-secondary rounded-[22px] p-4 md:p-5"
-	            style={{
-	              background: "rgba(242,185,104,0.055)",
-	              border: "1px solid rgba(242,185,104,0.13)",
-	            }}
-	          >
-	            <p
-	              className="ori-type-system text-[9px] mb-3"
-	              style={{ color: "var(--gold-soft)" }}
-	            >
-	              Mesa de decisão
-	            </p>
+        <div className="grid gap-4 xl:grid-cols-[1.15fr_1fr]">
+          <div
+            className="ori-card-secondary rounded-[22px] p-4 md:p-5"
+            style={{
+              background: "rgba(242,185,104,0.055)",
+              border: "1px solid rgba(242,185,104,0.13)",
+            }}
+          >
+            <p
+              className="ori-type-system text-[9px] mb-3"
+              style={{ color: "var(--gold-soft)" }}
+            >
+              {memory.title}
+            </p>
 
-	            <h2
-	              className="ori-type-revelation text-2xl mb-2"
-	              style={{ color: "var(--gold-primary)", fontWeight: 620 }}
-	            >
-	              {priority.label}
-	            </h2>
+            <h2
+              className="ori-type-revelation text-2xl mb-2"
+              style={{ color: "var(--gold-primary)", fontWeight: 620 }}
+            >
+              {priority.label}
+            </h2>
 
-	            <p
-	              className="ori-type-reading-soft text-sm leading-relaxed"
-	              style={{ color: "rgba(255,245,235,0.72)" }}
-	            >
-	              {priority.reason}
-	            </p>
-	            <p
-	              className="ori-type-system mt-3 text-[8px]"
-	              style={{ color: "var(--gold-soft)" }}
-	            >
-	              {priority.action}
-	            </p>
-	          </div>
+            <p
+              className="ori-type-reading-soft text-sm leading-relaxed"
+              style={{ color: "rgba(255,245,235,0.74)" }}
+            >
+              {memory.summary}
+            </p>
+            {memory.signals.length > 0 && (
+              <div className="mt-4 flex flex-wrap gap-2">
+                {memory.signals.map((signal) => (
+                  <span
+                    key={signal}
+                    className="ori-chip px-3 py-1.5 text-[11px]"
+                    style={{
+                      background: "rgba(255,255,255,0.026)",
+                      border: "1px solid rgba(242,185,104,0.08)",
+                      color: "rgba(255,245,235,0.62)",
+                    }}
+                  >
+                    {signal}
+                  </span>
+                ))}
+              </div>
+            )}
+            <div
+              className="mt-4 rounded-[16px] p-3"
+              style={{
+                background: "rgba(5,2,2,0.28)",
+                border: "1px solid rgba(242,185,104,0.09)",
+              }}
+            >
+              <p
+                className="ori-type-system mb-1 text-[8px]"
+                style={{ color: "var(--gold-soft)" }}
+              >
+                Próximo contato
+              </p>
+              <p
+                className="ori-type-reading-soft text-xs leading-relaxed"
+                style={{ color: "rgba(255,245,235,0.66)" }}
+              >
+                {memory.nextContact}
+              </p>
+            </div>
+          </div>
 
-	          <div
-	            className="ori-card-secondary rounded-[22px] p-4 md:p-5"
-	            style={{
+          <div
+            className="ori-card-secondary rounded-[22px] p-4 md:p-5"
+            style={{
               background: "rgba(242,185,104,0.045)",
               border: "1px solid rgba(242,185,104,0.11)",
             }}
@@ -540,11 +616,77 @@ function AdminClienteDetalhe() {
               style={{ color: "rgba(255,245,235,0.68)" }}
             >
               {nextAction.description}
-	            </p>
-	          </div>
+            </p>
+          </div>
 
-	          <div
-	            className="ori-card-secondary rounded-[22px] p-4 md:p-5"
+          <div
+            className="ori-card-secondary rounded-[22px] p-4 md:p-5 xl:col-span-2"
+            style={{
+              background: "rgba(255,255,255,0.024)",
+              border: "1px solid rgba(242,185,104,0.09)",
+            }}
+          >
+            <div className="mb-3 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+              <div>
+                <p
+                  className="ori-type-system text-[9px] mb-2"
+                  style={{ color: "var(--gold-soft)" }}
+                >
+                  Abordagem pronta
+                </p>
+                <h3
+                  className="ori-type-revelation text-xl"
+                  style={{ color: "var(--gold-primary)", fontWeight: 600 }}
+                >
+                  {approach.title}
+                </h3>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={copyApproach}
+                  className="ori-button-secondary rounded-full px-4 py-2 text-xs"
+                  style={{
+                    background: "rgba(242,185,104,0.08)",
+                    border: "1px solid rgba(242,185,104,0.14)",
+                    color: "var(--gold-primary)",
+                  }}
+                >
+                  {copiedApproach ? "Copiado" : "Copiar mensagem"}
+                </button>
+                {whatsappUrl && (
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="ori-button-secondary rounded-full px-4 py-2 text-xs"
+                    style={{
+                      background: "rgba(120,255,160,0.08)",
+                      border: "1px solid rgba(120,255,160,0.14)",
+                      color: "#9BE7AE",
+                    }}
+                  >
+                    Abrir WhatsApp
+                  </a>
+                )}
+              </div>
+            </div>
+
+            <p
+              className="ori-type-reading-soft rounded-[16px] p-4 text-sm leading-relaxed"
+              style={{
+                background: "rgba(5,2,2,0.28)",
+                border: "1px solid rgba(242,185,104,0.08)",
+                color: "rgba(255,245,235,0.72)",
+              }}
+            >
+              {approach.text}
+            </p>
+          </div>
+
+          <div
+            className="ori-card-secondary rounded-[22px] p-4 md:p-5"
             style={{
               background: "rgba(255,255,255,0.024)",
               border: "1px solid rgba(242,185,104,0.08)",
