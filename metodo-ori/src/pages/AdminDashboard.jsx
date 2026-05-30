@@ -197,6 +197,7 @@ function AdminDashboard() {
             cliente,
             resposta,
             feedback,
+            oraculoCarta: oraculo,
           });
           const progress = resposta
             ? Math.round(

@@ -35,7 +35,7 @@ export function getFeedbackInsight(feedback) {
   if (!feedback?.response) {
     return {
       label: "Sem feedback",
-      action: "Pedir percepção manualmente.",
+      action: "Pedir retorno da leitura.",
       state: "empty",
     };
   }
@@ -55,7 +55,7 @@ export function getFeedbackBridge(feedback, cliente) {
 
   return {
     title: insight.bridgeTitle || "Abordagem manual",
-    text: (insight.bridgeText || "Oi, {nome}. Li sua percepção e vou olhar sua leitura com calma antes de sugerir o próximo movimento.").replace(
+    text: (insight.bridgeText || "Oi, {nome}. Li seu retorno e vou olhar sua leitura com calma antes de sugerir o próximo movimento.").replace(
       "{nome}",
       firstName,
     ),

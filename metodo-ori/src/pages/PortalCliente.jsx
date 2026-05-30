@@ -487,9 +487,9 @@ function PortalCliente() {
     if (hasResult && feedbackLoaded && !hasProduto1Feedback) {
       return {
         eyebrow: "Próximo movimento",
-        title: "Deixe sua percepção sobre a leitura.",
-        text: "Seu feedback ajuda o ORI a entender se a leitura te encontrou, ficou abstrata ou precisa ser revista.",
-        action: "Responder feedback",
+        title: "Conte como a leitura chegou em você.",
+        text: "Antes de seguir, o ORI precisa saber se essa leitura te encontrou, ficou abstrata ou pareceu distante.",
+        action: "Deixar retorno",
         to: "/produto-1/leitura",
         state: "attention",
       };

@@ -180,6 +180,7 @@ function AdminClientes() {
               cliente,
               resposta: respostasPorUser.get(cliente.user_id),
               feedback: feedbackPorUser.get(cliente.user_id),
+              oraculoCarta: oraculoPorUser.get(cliente.user_id),
             }).score >= 72) ||
           (filtro === "feedback_vista" &&
             feedbackPorUser.get(cliente.user_id)?.response === "me_senti_vista") ||
@@ -200,11 +201,13 @@ function AdminClientes() {
           cliente: a,
           resposta: respostasPorUser.get(a.user_id),
           feedback: feedbackPorUser.get(a.user_id),
+          oraculoCarta: oraculoPorUser.get(a.user_id),
         });
         const priorityB = getAdminClientPriority({
           cliente: b,
           resposta: respostasPorUser.get(b.user_id),
           feedback: feedbackPorUser.get(b.user_id),
+          oraculoCarta: oraculoPorUser.get(b.user_id),
         });
 
         return priorityB.score - priorityA.score;
@@ -235,6 +238,7 @@ function AdminClientes() {
             cliente,
             resposta: respostasPorUser.get(cliente.user_id),
             feedback: feedbackPorUser.get(cliente.user_id),
+            oraculoCarta: oraculoPorUser.get(cliente.user_id),
           }).score >= 72,
       ).length,
       feedbacks: feedbacksProduto1.length,
@@ -499,6 +503,7 @@ function AdminClientes() {
                 cliente,
                 resposta: respostasPorUser.get(cliente.user_id),
                 feedback,
+                oraculoCarta: oraculo,
               });
               const primaryContact =
                 cliente.email || cliente.nome || "Cliente sem contato";

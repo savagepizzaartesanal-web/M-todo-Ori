@@ -2,10 +2,15 @@ import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { questions } from "../data/questions";
-import { getAdminCliente, updateAdminCliente } from "../services/api";
+import {
+  generateAdminAiMessage,
+  getAdminCliente,
+  updateAdminCliente,
+} from "../services/api";
 import {
   getAdminClientApproach,
   getAdminClientMemory,
+  getAdminClientNextBestAction,
   getAdminClientPriority,
 } from "../utils/adminClientPriority";
 import {
@@ -27,6 +32,9 @@ function AdminClienteDetalhe() {
   const [produto1Feedback, setProduto1Feedback] = useState(null);
   const [oraculoCarta, setOraculoCarta] = useState(null);
   const [copiedApproach, setCopiedApproach] = useState(false);
+  const [aiApproach, setAiApproach] = useState(null);
+  const [generatingAi, setGeneratingAi] = useState(false);
+  const [aiNotice, setAiNotice] = useState("");
 
   const fetchCliente = useCallback(async () => {
     setLoading(true);
@@ -40,6 +48,8 @@ function AdminClienteDetalhe() {
       setProduto1Respostas(data.produto1_respostas || null);
       setProduto1Feedback(data.produto1_feedback || null);
       setOraculoCarta(data.oraculo_carta || null);
+      setAiApproach(null);
+      setAiNotice("");
     } catch (error) {
       console.log("Erro ao buscar cliente:", error);
       setCliente(null);
@@ -269,13 +279,22 @@ function AdminClienteDetalhe() {
     : "Nenhuma carta";
   const feedbackLabel = produto1Feedback
     ? FEEDBACK_LABELS[produto1Feedback.response] || produto1Feedback.response
-    : "Sem feedback";
+    : "Ainda não respondeu";
   const feedbackInsight = getFeedbackInsight(produto1Feedback);
   const feedbackBridge = getFeedbackBridge(produto1Feedback, cliente);
   const priority = getAdminClientPriority({
     cliente,
     resposta: produto1Respostas,
     feedback: produto1Feedback,
+    oraculoCarta,
+    onboardingProfile,
+  });
+  const nextAction = getAdminClientNextBestAction({
+    cliente,
+    resposta: produto1Respostas,
+    feedback: produto1Feedback,
+    oraculoCarta,
+    onboardingProfile,
   });
   const memory = getAdminClientMemory({
     cliente,
@@ -291,19 +310,20 @@ function AdminClienteDetalhe() {
     onboardingProfile,
     priority,
   });
+  const activeApproach = aiApproach || approach;
   const whatsappDigits = String(contactWhatsapp).replace(/\D/g, "");
   const whatsappUrl = whatsappDigits
     ? `https://wa.me/55${whatsappDigits.replace(/^55/, "")}?text=${encodeURIComponent(
-        approach.text,
+        activeApproach.text,
       )}`
     : "";
   const copyApproach = async () => {
     try {
       if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(approach.text);
+        await navigator.clipboard.writeText(activeApproach.text);
       } else {
         const textArea = document.createElement("textarea");
-        textArea.value = approach.text;
+        textArea.value = activeApproach.text;
         textArea.setAttribute("readonly", "");
         textArea.style.position = "fixed";
         textArea.style.opacity = "0";
@@ -318,68 +338,40 @@ function AdminClienteDetalhe() {
       console.log("Não consegui copiar a abordagem:", error);
     }
   };
-  const nextAction = (() => {
-    if (!onboardingCompleted) {
-      return {
-        label: "Finalizar perfil inicial",
-        description:
-          "A cliente ainda precisa completar a Entrada ORI para a jornada ficar bem amarrada.",
-        state: "sealed",
-      };
+  const handleGenerateAiApproach = async () => {
+    setGeneratingAi(true);
+    setAiNotice("");
+
+    try {
+      const data = await generateAdminAiMessage(cliente.id, {
+        next_action_label: nextAction.label,
+        next_action_reason: nextAction.reason,
+        next_action_instruction: nextAction.action,
+        message_goal: nextAction.messageGoal,
+        fallback_title: approach.title,
+        fallback_text: approach.text,
+      });
+
+      setAiApproach({
+        title: data.title,
+        text: data.text,
+        generated: data.generated,
+      });
+      setAiNotice(
+        data.generated
+          ? "Mensagem gerada com IA. Revise antes de enviar."
+          : data.warning || "A mensagem base foi mantida.",
+      );
+    } catch (error) {
+      console.log("Erro ao gerar mensagem com IA:", error);
+      setAiNotice(
+        error?.userMessage ||
+          "Não conseguimos gerar com IA agora. A mensagem base foi mantida.",
+      );
+    } finally {
+      setGeneratingAi(false);
     }
-
-    if (produto1Respostas && !produto1Respostas.is_complete) {
-      return {
-        label: "Acompanhar quiz em andamento",
-        description: `${produto1Progress}% da leitura respondida. Vale observar se ela travou em algum ponto.`,
-        state: "next",
-      };
-    }
-
-    if (!cliente.resultado) {
-      return {
-        label: "Aguardar conclusão do Código",
-        description:
-          "O Produto 1 ainda não gerou resultado final para esta cliente.",
-        state: "active",
-      };
-    }
-
-    if (!cliente.produto_2_liberado) {
-      return {
-        label: "Convidar para o Dossiê ORI",
-        description:
-          "A leitura arquetípica já foi revelada. O próximo movimento é traduzir essa força no corpo, cor, cabelo e presença.",
-        state: "revealed",
-      };
-    }
-
-    if (!cliente.produto_3_liberado) {
-      return {
-        label: "Acompanhar entrega do Dossiê",
-        description:
-          "Produto 2 liberado. Observe fotos, formulário e preparação antes de abrir o Código Final.",
-        state: "next",
-      };
-    }
-
-    if (cliente.status_jornada !== "Finalizado") {
-      return {
-        label: "Encerrar jornada com cuidado",
-        description:
-          "Código Final liberado. Falta apenas marcar o fechamento quando a entrega estiver concluída.",
-        state: "done",
-      };
-    }
-
-    return {
-      label: "Jornada finalizada",
-      description:
-        "Cliente com percurso completo registrado no painel administrativo.",
-      state: "done",
-    };
-  })();
-
+  };
   return (
     <div className="ori-atmosphere ori-atmosphere-method relative overflow-hidden max-w-7xl">
       <Link
@@ -478,8 +470,8 @@ function AdminClienteDetalhe() {
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4 mb-8">
         {[
           ["Prioridade", priority.label],
-          ["Próxima ação", nextAction.label],
-          ["Feedback", feedbackLabel],
+          ["Fazer", nextAction.label],
+          ["Como ela recebeu", feedbackLabel],
           ["WhatsApp", contactWhatsapp || "Não informado"],
         ].map(([label, value]) => (
           <div
@@ -579,7 +571,7 @@ function AdminClienteDetalhe() {
                 className="ori-type-system mb-1 text-[8px]"
                 style={{ color: "var(--gold-soft)" }}
               >
-                Próximo contato
+                Direção de contato
               </p>
               <p
                 className="ori-type-reading-soft text-xs leading-relaxed"
@@ -601,7 +593,7 @@ function AdminClienteDetalhe() {
               className="ori-type-system text-[9px] mb-3"
               style={{ color: "var(--gold-soft)" }}
             >
-              Próxima ação sugerida
+              Fazer
             </p>
 
             <h2
@@ -615,8 +607,28 @@ function AdminClienteDetalhe() {
               className="ori-type-reading-soft text-sm leading-relaxed"
               style={{ color: "rgba(255,245,235,0.68)" }}
             >
-              {nextAction.description}
+              {nextAction.reason}
             </p>
+            <div
+              className="mt-4 rounded-[16px] p-3"
+              style={{
+                background: "rgba(5,2,2,0.25)",
+                border: "1px solid rgba(242,185,104,0.08)",
+              }}
+            >
+              <p
+                className="ori-type-system mb-1 text-[8px]"
+                style={{ color: "rgba(242,185,104,0.72)" }}
+              >
+                Fazer agora
+              </p>
+              <p
+                className="ori-type-reading-soft text-xs leading-relaxed"
+                style={{ color: "rgba(255,245,235,0.66)" }}
+              >
+                {nextAction.action}
+              </p>
+            </div>
           </div>
 
           <div
@@ -632,17 +644,37 @@ function AdminClienteDetalhe() {
                   className="ori-type-system text-[9px] mb-2"
                   style={{ color: "var(--gold-soft)" }}
                 >
-                  Abordagem pronta
+                  Mensagem
                 </p>
                 <h3
                   className="ori-type-revelation text-xl"
                   style={{ color: "var(--gold-primary)", fontWeight: 600 }}
                 >
-                  {approach.title}
+                  {activeApproach.title}
                 </h3>
               </div>
 
               <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={handleGenerateAiApproach}
+                  disabled={generatingAi}
+                  className="ori-button-secondary rounded-full px-4 py-2 text-xs"
+                  style={{
+                    background: aiApproach?.generated
+                      ? "rgba(183,140,255,0.10)"
+                      : "rgba(242,185,104,0.08)",
+                    border: aiApproach?.generated
+                      ? "1px solid rgba(183,140,255,0.20)"
+                      : "1px solid rgba(242,185,104,0.14)",
+                    color: aiApproach?.generated
+                      ? "rgba(222,205,255,0.92)"
+                      : "var(--gold-primary)",
+                    opacity: generatingAi ? 0.72 : 1,
+                  }}
+                >
+                  {generatingAi ? "Gerando..." : "Gerar com IA"}
+                </button>
                 <button
                   type="button"
                   onClick={copyApproach}
@@ -673,6 +705,25 @@ function AdminClienteDetalhe() {
               </div>
             </div>
 
+            {aiNotice && (
+              <p
+                className="ori-type-reading-soft mb-3 rounded-[14px] px-3 py-2 text-xs"
+                style={{
+                  background: aiApproach?.generated
+                    ? "rgba(183,140,255,0.07)"
+                    : "rgba(242,185,104,0.05)",
+                  border: aiApproach?.generated
+                    ? "1px solid rgba(183,140,255,0.12)"
+                    : "1px solid rgba(242,185,104,0.09)",
+                  color: aiApproach?.generated
+                    ? "rgba(222,205,255,0.78)"
+                    : "rgba(255,245,235,0.62)",
+                }}
+              >
+                {aiNotice}
+              </p>
+            )}
+
             <p
               className="ori-type-reading-soft rounded-[16px] p-4 text-sm leading-relaxed"
               style={{
@@ -681,7 +732,7 @@ function AdminClienteDetalhe() {
                 color: "rgba(255,245,235,0.72)",
               }}
             >
-              {approach.text}
+              {activeApproach.text}
             </p>
           </div>
 
@@ -783,7 +834,7 @@ function AdminClienteDetalhe() {
             className="ori-type-system text-[10px] mb-3"
             style={{ color: "var(--gold-soft)" }}
           >
-            Validação da leitura
+            Como ela recebeu
           </p>
           <h2
             className="ori-type-revelation text-2xl md:text-3xl mb-4"

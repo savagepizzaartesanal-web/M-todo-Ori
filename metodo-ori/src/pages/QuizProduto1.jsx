@@ -41,7 +41,7 @@ const FEEDBACK_OPTIONS = [
   },
   {
     id: "nao_me_reconheci",
-    label: "Não me reconheci",
+    label: "Não me reconheci muito",
     text: "A leitura ainda não pareceu minha.",
   },
 ];
@@ -3158,7 +3158,7 @@ function QuizProduto1() {
       });
 
       setFeedbackSubmitted(true);
-      setFeedbackMessage("Obrigada. Sua percepção foi registrada.");
+      setFeedbackMessage("Obrigada. Seu retorno foi registrado.");
 
       window.setTimeout(() => {
         nextStepRef.current?.scrollIntoView({
@@ -3170,7 +3170,7 @@ function QuizProduto1() {
       console.log("Erro ao salvar feedback da leitura:", error);
       setFeedbackSubmitted(true);
       setFeedbackMessage(
-        "Sua percepção não sincronizou agora, mas você pode seguir para a próxima etapa.",
+        "Seu retorno não sincronizou agora, mas você pode seguir para a próxima etapa.",
       );
 
       window.setTimeout(() => {
@@ -3767,7 +3767,7 @@ function QuizProduto1() {
                           className="mb-1.5 text-[9px] uppercase tracking-[0.22em] md:tracking-[0.28em]"
                           style={{ color: "var(--gold-soft)" }}
                         >
-                          Sua percepção
+                          Pausa da leitura
                         </p>
                         <h3
                           className="ori-type-revelation text-xl md:text-2xl"
@@ -3777,14 +3777,14 @@ function QuizProduto1() {
                             letterSpacing: "-0.045em",
                           }}
                         >
-                          Essa leitura fez sentido para você?
+                          Antes de seguir, me conta uma coisa.
                         </h3>
                         <p
                           className="ori-mobile-preview-3 mt-1.5 text-[13px] leading-relaxed md:text-sm"
                           style={{ color: "rgba(255,245,235,0.58)" }}
                         >
-                          Antes de abrir o próximo movimento, conte como essa
-                          primeira leitura chegou para você.
+                          Como essa leitura chegou em você? Sua resposta ajuda o
+                          ORI a conduzir o próximo passo com mais cuidado.
                         </p>
                       </div>
 
@@ -3873,7 +3873,7 @@ function QuizProduto1() {
                         value={feedbackComment}
                         onChange={(event) => setFeedbackComment(event.target.value)}
                         rows={3}
-                        placeholder="Se quiser, escreva o que mais tocou, confundiu ou faltou."
+                        placeholder="Quer me contar onde tocou, confundiu ou ficou distante?"
                         className="ori-type-reading-soft mb-3 w-full resize-none rounded-[16px] px-3 py-3 text-sm outline-none"
                         style={{
                           background: "rgba(5,2,2,0.34)",
@@ -3887,8 +3887,8 @@ function QuizProduto1() {
                           className="ori-type-reading-soft text-xs"
                           style={{ color: "rgba(255,245,235,0.46)" }}
                         >
-                          Sua resposta ajuda a refinar o Método ORI antes do
-                          Dossiê.
+                          Não é uma avaliação. É só uma forma de seguir com mais
+                          cuidado.
                         </p>
                         <button
                           type="submit"

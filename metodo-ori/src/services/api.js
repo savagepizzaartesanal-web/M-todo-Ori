@@ -276,4 +276,14 @@ export function updateAdminCliente(clienteId, updates) {
   );
 }
 
+export function generateAdminAiMessage(clienteId, payload) {
+  return requestAuthenticatedApi(
+    `/api/admin/clientes/${encodeURIComponent(clienteId)}/mensagem-ia`,
+    {
+      method: "POST",
+      body: JSON.stringify(payload),
+    },
+  );
+}
+
 export { API_BASE_URL };
