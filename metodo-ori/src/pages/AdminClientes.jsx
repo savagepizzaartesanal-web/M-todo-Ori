@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 import { getAdminClientes, updateAdminCliente } from "../services/api";
 import { getAdminClientPriority } from "../utils/adminClientPriority";
@@ -10,6 +10,7 @@ import {
 } from "../utils/feedbackInsights";
 
 function AdminClientes() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [clientes, setClientes] = useState([]);
   const [respostasProduto1, setRespostasProduto1] = useState([]);
   const [cartasOraculo, setCartasOraculo] = useState([]);
@@ -17,7 +18,7 @@ function AdminClientes() {
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
   const [busca, setBusca] = useState("");
-  const [filtro, setFiltro] = useState("todos");
+  const filtro = searchParams.get("filtro") || "todos";
 
   const fetchClientes = useCallback(async () => {
     setLoading(true);
@@ -42,6 +43,15 @@ function AdminClientes() {
   useEffect(() => {
     Promise.resolve().then(fetchClientes);
   }, [fetchClientes]);
+
+  const handleFiltroChange = (value) => {
+    if (value === "todos") {
+      setSearchParams({});
+      return;
+    }
+
+    setSearchParams({ filtro: value });
+  };
 
   const updateCliente = async (cliente, updates) => {
     setUpdatingId(cliente.id);
@@ -141,22 +151,6 @@ function AdminClientes() {
       ((resposta.answered_count || 0) / (resposta.total_questions || 36)) *
         100,
     );
-  };
-
-  const getClienteSignal = (cliente) => {
-    const resposta = respostasPorUser.get(cliente.user_id);
-    const progress = getProduto1Progress(cliente);
-
-    if (!cliente.perfil_onboarding_concluido) return "Perfil pendente";
-    if (resposta && !resposta.is_complete) return `Quiz em andamento · ${progress}%`;
-    if (cliente.resultado && !cliente.produto_2_liberado) {
-      return "Pronta para Dossiê";
-    }
-    if (cliente.produto_2_liberado && !cliente.produto_3_liberado) {
-      return "Dossiê liberado";
-    }
-    if (cliente.produto_3_liberado) return "Código Final liberado";
-    return "Acompanhar entrada";
   };
 
   const clientesFiltrados = useMemo(() => {
@@ -385,17 +379,13 @@ function AdminClientes() {
           </div>
         </section>
 
-        <div className="grid md:grid-cols-2 xl:grid-cols-7 gap-3 md:gap-4 mb-5 md:mb-7">
+        <div className="grid md:grid-cols-2 xl:grid-cols-5 gap-3 md:gap-4 mb-5 md:mb-7">
           {[
             ["Total", resumo.total],
-            ["Leads", resumo.leads],
-            ["Em andamento", resumo.andamento],
-            ["Código das Deusas", resumo.produto1],
-            ["Com Oráculo", resumo.oraculo],
-            ["Dossiê ORI", resumo.produto2],
-            ["Código Final", resumo.produto3],
             ["Atenção agora", resumo.atencao],
+            ["Código das Deusas", resumo.produto1],
             ["Feedbacks", resumo.feedbacks],
+            ["Dossiês", resumo.produto2],
           ].map(([label, value]) => (
             <div
               key={label}
@@ -458,7 +448,7 @@ function AdminClientes() {
                 return (
                   <button
                     key={value}
-                    onClick={() => setFiltro(value)}
+                    onClick={() => handleFiltroChange(value)}
                     className="ori-tab px-4 py-2 rounded-full text-xs"
                     data-state={active ? "active" : "sealed"}
                     style={{
@@ -510,7 +500,8 @@ function AdminClientes() {
                 resposta: respostasPorUser.get(cliente.user_id),
                 feedback,
               });
-              const signal = getClienteSignal(cliente);
+              const primaryContact =
+                cliente.email || cliente.nome || "Cliente sem contato";
 
               return (
                 <div
@@ -545,14 +536,14 @@ function AdminClientes() {
                     }}
                   />
 
-                  <div className="relative z-10 grid xl:grid-cols-[1fr_auto] gap-7 xl:items-center">
+                  <div className="relative z-10 grid gap-7 xl:grid-cols-[1fr_auto] xl:items-start">
                     <div>
-                      <div className="flex flex-wrap items-center gap-3 mb-4">
+                      <div className="mb-4 flex flex-wrap items-center gap-3">
                         <p
                           className="ori-type-system text-[9px]"
                           style={{ color: "var(--gold-soft)" }}
                         >
-                          Cliente
+                          {priority.label}
                         </p>
 
                         <span
@@ -593,11 +584,32 @@ function AdminClientes() {
                       </h2>
 
                       <p
-                        className="ori-type-reading-soft text-sm md:text-base mb-5"
+                        className="ori-type-reading-soft mb-4 text-sm md:text-base"
                         style={{ color: "var(--text-soft)" }}
                       >
-                        {cliente.email}
+                        {primaryContact}
                       </p>
+
+                      <div
+                        className="mb-4 rounded-[18px] p-4"
+                        style={{
+                          background: "rgba(242,185,104,0.045)",
+                          border: "1px solid rgba(242,185,104,0.11)",
+                        }}
+                      >
+                        <p
+                          className="ori-type-reading-soft text-sm leading-relaxed"
+                          style={{ color: "rgba(255,245,235,0.72)" }}
+                        >
+                          {priority.reason}
+                        </p>
+                        <p
+                          className="ori-type-system mt-2 text-[8px]"
+                          style={{ color: "var(--gold-soft)" }}
+                        >
+                          Próxima ação: {priority.action}
+                        </p>
+                      </div>
 
                       <div className="flex flex-wrap gap-2.5">
                         <div
@@ -610,18 +622,6 @@ function AdminClientes() {
                           }}
                         >
                           {cliente.resultado || "Sem resultado"}
-                        </div>
-
-                        <div
-                          className="ori-chip px-4 py-2 text-xs"
-                          data-state="active"
-                          style={{
-                            background: "rgba(255,255,255,0.035)",
-                            border: "1px solid rgba(255,255,255,0.07)",
-                            color: "rgba(255,245,235,0.68)",
-                          }}
-                        >
-                          {cliente.status_jornada || "Cadastro recebido"}
                         </div>
 
                         <div
@@ -691,30 +691,12 @@ function AdminClientes() {
                         </div>
                       </div>
 
-                      <p
-                        className="ori-type-reading-soft mt-4 text-sm"
-                        style={{ color: "rgba(255,245,235,0.58)" }}
-                      >
-                        Próxima atenção: {signal}
-                      </p>
-                      <p
-                        className="ori-type-reading-soft mt-2 text-sm leading-relaxed"
-                        style={{ color: "rgba(255,245,235,0.66)" }}
-                      >
-                        Prioridade: {priority.label} · {priority.action}
-                      </p>
-                      <p
-                        className="ori-type-system mt-2 text-[8px]"
-                        style={{ color: "var(--gold-soft)" }}
-                      >
-                        {feedbackInsight.label} · {feedbackInsight.action}
-                      </p>
                       {feedback && (
                         <p
                           className="ori-type-reading-soft mt-2 text-xs leading-relaxed"
                           style={{ color: "rgba(255,245,235,0.54)" }}
                         >
-                          Ponte: {feedbackBridge.title}
+                          {feedbackInsight.label} · Ponte: {feedbackBridge.title}
                         </p>
                       )}
                     </div>

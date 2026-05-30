@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 
 import { questions } from "../data/questions";
 import { getAdminCliente, updateAdminCliente } from "../services/api";
+import { getAdminClientPriority } from "../utils/adminClientPriority";
 import {
   FEEDBACK_LABELS,
   getFeedbackBridge,
@@ -266,9 +267,12 @@ function AdminClienteDetalhe() {
     : "Sem feedback";
   const feedbackInsight = getFeedbackInsight(produto1Feedback);
   const feedbackBridge = getFeedbackBridge(produto1Feedback, cliente);
-  const feedbackDate = produto1Feedback?.updated_at
-    ? formatDate(produto1Feedback.updated_at)
-    : null;
+  const priority = getAdminClientPriority({
+    cliente,
+    resposta: produto1Respostas,
+    feedback: produto1Feedback,
+  });
+  const contactWhatsapp = onboardingProfile.whatsapp || cliente.whatsapp || "";
   const nextAction = (() => {
     if (!onboardingCompleted) {
       return {
@@ -397,10 +401,10 @@ function AdminClienteDetalhe() {
             style={{ color: "var(--text-soft)" }}
           >
             {cliente.email}
-            {cliente.whatsapp ? (
+            {contactWhatsapp ? (
               <>
                 <br />
-                {cliente.whatsapp}
+                {contactWhatsapp}
               </>
             ) : null}
           </p>
@@ -426,12 +430,12 @@ function AdminClienteDetalhe() {
         </div>
       </section>
 
-      <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4 mb-8">
         {[
-          ["Resultado", cliente.resultado || "Sem resultado"],
-          ["Produto atual", produtoAtual],
-          ["Status", etapaAtual],
-          ["Cadastro", formatDate(cliente.created_at)],
+          ["Prioridade", priority.label],
+          ["Próxima ação", nextAction.label],
+          ["Feedback", feedbackLabel],
+          ["WhatsApp", contactWhatsapp || "Não informado"],
         ].map(([label, value]) => (
           <div
             key={label}
@@ -464,8 +468,8 @@ function AdminClienteDetalhe() {
         ))}
       </div>
 
-      <section
-        className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[30px] p-5 md:p-7 mb-8 cinematic-card"
+	      <section
+	        className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[30px] p-5 md:p-7 mb-8 cinematic-card"
         style={{
           background:
             "linear-gradient(180deg, rgba(18,9,10,0.74), rgba(7,3,4,0.9))",
@@ -474,10 +478,45 @@ function AdminClienteDetalhe() {
           WebkitBackdropFilter: "blur(14px)",
         }}
       >
-        <div className="grid gap-4 xl:grid-cols-[1.2fr_0.9fr_0.9fr]">
-          <div
-            className="ori-card-secondary rounded-[22px] p-4 md:p-5"
-            style={{
+	        <div className="grid gap-4 xl:grid-cols-[1.15fr_1fr]">
+	          <div
+	            className="ori-card-secondary rounded-[22px] p-4 md:p-5"
+	            style={{
+	              background: "rgba(242,185,104,0.055)",
+	              border: "1px solid rgba(242,185,104,0.13)",
+	            }}
+	          >
+	            <p
+	              className="ori-type-system text-[9px] mb-3"
+	              style={{ color: "var(--gold-soft)" }}
+	            >
+	              Mesa de decisão
+	            </p>
+
+	            <h2
+	              className="ori-type-revelation text-2xl mb-2"
+	              style={{ color: "var(--gold-primary)", fontWeight: 620 }}
+	            >
+	              {priority.label}
+	            </h2>
+
+	            <p
+	              className="ori-type-reading-soft text-sm leading-relaxed"
+	              style={{ color: "rgba(255,245,235,0.72)" }}
+	            >
+	              {priority.reason}
+	            </p>
+	            <p
+	              className="ori-type-system mt-3 text-[8px]"
+	              style={{ color: "var(--gold-soft)" }}
+	            >
+	              {priority.action}
+	            </p>
+	          </div>
+
+	          <div
+	            className="ori-card-secondary rounded-[22px] p-4 md:p-5"
+	            style={{
               background: "rgba(242,185,104,0.045)",
               border: "1px solid rgba(242,185,104,0.11)",
             }}
@@ -501,55 +540,11 @@ function AdminClienteDetalhe() {
               style={{ color: "rgba(255,245,235,0.68)" }}
             >
               {nextAction.description}
-            </p>
-          </div>
+	            </p>
+	          </div>
 
-          <div
-            className="ori-card-secondary rounded-[22px] p-4 md:p-5"
-            style={{
-              background: produto1Feedback
-                ? "rgba(242,185,104,0.045)"
-                : "rgba(255,255,255,0.024)",
-              border: produto1Feedback
-                ? "1px solid rgba(242,185,104,0.11)"
-                : "1px solid rgba(242,185,104,0.08)",
-            }}
-          >
-            <p
-              className="ori-type-system text-[9px] mb-3"
-              style={{ color: "var(--gold-soft)" }}
-            >
-              Feedback Produto 1
-            </p>
-
-            <p
-              className="ori-type-revelation text-xl mb-2"
-              style={{
-                color: produto1Feedback
-                  ? "var(--gold-primary)"
-                  : "rgba(255,245,235,0.58)",
-                fontWeight: 600,
-              }}
-            >
-              {feedbackLabel}
-            </p>
-
-            <p
-              className="ori-type-reading-soft text-xs"
-              style={{ color: "rgba(255,245,235,0.56)" }}
-            >
-              {feedbackDate ? `Atualizado em ${feedbackDate}` : "Aguardando resposta"}
-            </p>
-            <p
-              className="ori-type-system mt-3 text-[8px]"
-              style={{ color: "var(--gold-soft)" }}
-            >
-              {feedbackInsight.label}
-            </p>
-          </div>
-
-          <div
-            className="ori-card-secondary rounded-[22px] p-4 md:p-5"
+	          <div
+	            className="ori-card-secondary rounded-[22px] p-4 md:p-5"
             style={{
               background: "rgba(255,255,255,0.024)",
               border: "1px solid rgba(242,185,104,0.08)",

@@ -9,6 +9,8 @@ import {
   getFeedbackInsight,
 } from "../utils/feedbackInsights";
 
+const formatPercent = (value) => `${Math.round(value || 0)}%`;
+
 function AdminDashboard() {
   const [clientes, setClientes] = useState([]);
   const [respostasProduto1, setRespostasProduto1] = useState([]);
@@ -102,6 +104,59 @@ function AdminDashboard() {
     };
   }, [feedbacksProduto1]);
 
+  const pilotoProduto1 = useMemo(() => {
+    const leiturasConcluidas = clientes.filter((cliente) =>
+      Boolean(cliente.resultado),
+    ).length;
+    const feedbacks = feedbacksProduto1.length;
+    const taxaFeedback = leiturasConcluidas
+      ? (feedbacks / leiturasConcluidas) * 100
+      : 0;
+    const taxaAderencia = feedbacks
+      ? (feedbackResumo.vista / feedbacks) * 100
+      : 0;
+    const taxaAbstracao = feedbacks
+      ? (feedbackResumo.abstrato / feedbacks) * 100
+      : 0;
+    const taxaRisco = feedbacks
+      ? (feedbackResumo.naoReconheci / feedbacks) * 100
+      : 0;
+
+    let status = "Coletando sinais";
+    let leitura =
+      "Ainda precisamos de mais respostas para ler a validação com segurança.";
+    let acao = "Priorizar clientes que concluíram a leitura e ainda não deram retorno.";
+
+    if (feedbacks >= 3 && taxaAderencia >= 60 && taxaRisco <= 15) {
+      status = "Produto validando bem";
+      leitura =
+        "A maioria das respostas indica reconhecimento. O Produto 1 está cumprindo a promessa de leitura inicial.";
+      acao = "Manter o fluxo e observar onde a cliente pede aprofundamento.";
+    } else if (feedbacks >= 3 && taxaAbstracao >= 35) {
+      status = "Pedir mais clareza prática";
+      leitura =
+        "Há sinal de que a leitura toca, mas algumas clientes precisam enxergar melhor a aplicação concreta.";
+      acao = "Reforçar exemplos de corpo, cor, cabelo, beleza e rotina antes do convite.";
+    } else if (feedbacks >= 3 && taxaRisco >= 25) {
+      status = "Revisar narrativa";
+      leitura =
+        "A taxa de não reconhecimento está alta para um protótipo de leitura simbólica.";
+      acao = "Revisar perguntas, resultado e texto de transição antes de escalar.";
+    }
+
+    return {
+      leiturasConcluidas,
+      feedbacks,
+      taxaFeedback,
+      taxaAderencia,
+      taxaAbstracao,
+      taxaRisco,
+      status,
+      leitura,
+      acao,
+    };
+  }, [clientes, feedbackResumo, feedbacksProduto1.length]);
+
   const resumo = useMemo(() => {
     const perfilCompleto = clientes.filter((cliente) =>
       Boolean(cliente.perfil_onboarding_concluido),
@@ -150,25 +205,10 @@ function AdminDashboard() {
                   100,
               )
             : 0;
-          let signal = "Acompanhar entrada";
-
-          if (!cliente.perfil_onboarding_concluido) {
-            signal = "Perfil inicial pendente";
-          } else if (resposta && !resposta.is_complete) {
-            signal = `Quiz em andamento · ${progress}%`;
-          } else if (cliente.resultado && !cliente.produto_2_liberado) {
-            signal = "Pronta para convite ao Dossiê";
-          } else if (cliente.produto_2_liberado && !cliente.produto_3_liberado) {
-            signal = "Acompanhar Dossiê";
-          } else if (cliente.produto_3_liberado) {
-            signal = "Código Final liberado";
-          }
-
           return {
             ...cliente,
             progress,
             priority,
-            signal,
             oraculoDate: oraculo?.date_key || null,
           };
         })
@@ -178,69 +218,74 @@ function AdminDashboard() {
   );
 
   return (
-    <div className="ori-atmosphere ori-atmosphere-method relative overflow-hidden max-w-7xl">
+    <div className="ori-atmosphere ori-atmosphere-method relative max-w-7xl overflow-hidden">
       <section
-        className="ori-main-frame ori-hero-panel relative overflow-hidden rounded-[24px] md:rounded-[42px] p-4 md:p-9 xl:p-10 mb-5 md:mb-8 cinematic-card"
+        className="ori-main-frame ori-hero-panel relative mb-5 overflow-hidden rounded-[24px] p-4 md:mb-7 md:rounded-[34px] md:p-8 cinematic-card"
         style={{
           background:
             "radial-gradient(circle at top right, rgba(242,185,104,0.12), transparent 34%), linear-gradient(135deg, rgba(18,9,10,0.88), rgba(5,2,2,0.96))",
           border: "1px solid rgba(242,185,104,0.14)",
-          boxShadow:
-            "0 0 90px rgba(242,185,104,0.055), inset 0 0 80px rgba(255,255,255,0.018)",
         }}
       >
-        <div className="ori-label-line mb-3 md:mb-5">
-          <p
-            className="ori-type-system text-[10px] md:text-xs"
-            style={{ color: "var(--gold-soft)" }}
-          >
-            Estúdio ORI
-          </p>
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p className="ori-type-system mb-3 text-[10px]" style={{ color: "var(--gold-soft)" }}>
+              Estúdio ORI
+            </p>
+            <h1
+              className="ori-type-hero mb-3 text-[34px] font-semibold md:text-6xl"
+              style={{ color: "var(--gold-primary)", letterSpacing: "-0.05em" }}
+            >
+              Painel Administrativo
+            </h1>
+            <p
+              className="ori-mobile-preview-3 ori-type-reading-soft max-w-3xl text-sm md:text-lg"
+              style={{ color: "var(--text-soft)" }}
+            >
+              Acompanhe a validação do Produto 1 e decida quais clientes pedem
+              abordagem agora.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <Link
+              to="/admin/clientes?filtro=atencao"
+              className="ori-button-secondary inline-flex justify-center rounded-full px-5 py-2.5 text-sm"
+              style={{ color: "var(--gold-primary)" }}
+            >
+              Atenção agora
+            </Link>
+            <Link
+              to="/admin/clientes"
+              className="ori-button-secondary inline-flex justify-center rounded-full px-5 py-2.5 text-sm"
+              style={{ color: "rgba(255,245,235,0.70)" }}
+            >
+              Lista completa
+            </Link>
+          </div>
         </div>
-
-        <h1
-          className="ori-type-hero text-[34px] md:text-7xl font-semibold mb-3 md:mb-6"
-          style={{ color: "var(--gold-primary)", letterSpacing: "-0.05em" }}
-        >
-          Painel Administrativo
-        </h1>
-
-        <p
-          className="ori-mobile-preview-3 ori-type-reading-soft text-sm md:text-xl max-w-4xl"
-          style={{ color: "var(--text-soft)" }}
-        >
-          Acompanhe clientes, leituras, entregas, aprovações e a evolução da
-          jornada ORI.
-        </p>
       </section>
 
-      <div className="grid md:grid-cols-2 xl:grid-cols-7 gap-3 md:gap-6 mb-5 md:mb-8">
+      <div className="mb-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         {[
-          ["Clientes ativos", loading ? "..." : resumo.clientes],
-          ["Perfis completos", loading ? "..." : resumo.perfilCompleto],
+          ["Clientes", loading ? "..." : resumo.clientes],
           ["Leituras concluídas", loading ? "..." : resumo.leituras],
-          ["Oráculo hoje", loading ? "..." : resumo.oraculoHoje],
-          ["Quiz em andamento", loading ? "..." : resumo.quizEmAndamento],
+          ["Feedbacks recebidos", loading ? "..." : pilotoProduto1.feedbacks],
           ["Dossiês a convidar", loading ? "..." : resumo.dossiesPendentes],
-          ["Código Final", loading ? "..." : resumo.final],
         ].map(([label, value]) => (
           <div
             key={label}
-            className="ori-card-secondary cinematic-card rounded-[18px] md:rounded-[28px] p-3.5 md:p-7"
+            className="ori-card-secondary rounded-[18px] p-4 md:rounded-[22px] md:p-5"
             style={{
-              background:
-                "linear-gradient(180deg, rgba(18,9,10,0.98), rgba(7,3,4,1))",
-              border: "1px solid var(--border-primary)",
+              background: "linear-gradient(180deg, rgba(18,9,10,0.82), rgba(7,3,4,0.92))",
+              border: "1px solid rgba(242,185,104,0.10)",
             }}
           >
-            <p
-              className="ori-type-system text-[9px] md:text-[10px] mb-2 md:mb-5"
-              style={{ color: "var(--gold-soft)" }}
-            >
+            <p className="ori-type-system mb-2 text-[9px]" style={{ color: "var(--gold-soft)" }}>
               {label}
             </p>
             <h2
-              className="ori-type-revelation text-3xl md:text-5xl font-semibold"
+              className="ori-type-revelation text-3xl font-semibold"
               style={{ color: "var(--gold-primary)" }}
             >
               {value}
@@ -249,66 +294,198 @@ function AdminDashboard() {
         ))}
       </div>
 
+      <div className="grid gap-5 xl:grid-cols-[1.08fr_0.92fr]">
+        <section
+          className="ori-main-frame ori-card-secondary rounded-[26px] p-4 md:p-7"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(18,9,10,0.72), rgba(7,3,4,0.88))",
+            border: "1px solid rgba(242,185,104,0.10)",
+          }}
+        >
+          <p className="ori-type-system mb-2 text-[10px]" style={{ color: "var(--gold-soft)" }}>
+            Validação do piloto
+          </p>
+          <h2
+            className="ori-type-revelation mb-3 text-2xl md:text-3xl"
+            style={{ color: "var(--gold-primary)", fontWeight: 620 }}
+          >
+            {pilotoProduto1.status}
+          </h2>
+          <p
+            className="ori-type-reading-soft mb-5 text-sm leading-relaxed md:text-base"
+            style={{ color: "rgba(255,245,235,0.68)" }}
+          >
+            {pilotoProduto1.leitura}
+          </p>
+
+          <div className="mb-5 grid gap-3 md:grid-cols-2">
+            {[
+              ["Taxa de feedback", formatPercent(pilotoProduto1.taxaFeedback)],
+              ["Me senti vista", formatPercent(pilotoProduto1.taxaAderencia)],
+              ["Ficou abstrato", formatPercent(pilotoProduto1.taxaAbstracao)],
+              ["Não reconheci", formatPercent(pilotoProduto1.taxaRisco)],
+            ].map(([label, value]) => (
+              <div
+                key={label}
+                className="rounded-[18px] p-4"
+                style={{
+                  background: "rgba(255,255,255,0.024)",
+                  border: "1px solid rgba(242,185,104,0.08)",
+                }}
+              >
+                <p className="ori-type-system mb-2 text-[9px]" style={{ color: "var(--gold-soft)" }}>
+                  {label}
+                </p>
+                <p
+                  className="ori-type-revelation text-3xl"
+                  style={{ color: "var(--gold-primary)", fontWeight: 620 }}
+                >
+                  {loading ? "..." : value}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div
+            className="rounded-[18px] p-4"
+            style={{
+              background: "rgba(242,185,104,0.045)",
+              border: "1px solid rgba(242,185,104,0.11)",
+            }}
+          >
+            <p className="ori-type-system mb-2 text-[9px]" style={{ color: "var(--gold-soft)" }}>
+              Próxima decisão
+            </p>
+            <p
+              className="ori-type-reading-soft text-sm leading-relaxed"
+              style={{ color: "rgba(255,245,235,0.72)" }}
+            >
+              {pilotoProduto1.acao}
+            </p>
+          </div>
+        </section>
+
+        <section
+          className="ori-main-frame ori-card-secondary rounded-[26px] p-4 md:p-7"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(18,9,10,0.72), rgba(7,3,4,0.88))",
+            border: "1px solid rgba(242,185,104,0.10)",
+          }}
+        >
+          <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="ori-type-system mb-2 text-[10px]" style={{ color: "var(--gold-soft)" }}>
+                Ação
+              </p>
+              <h2
+                className="ori-type-revelation text-2xl md:text-3xl"
+                style={{ color: "var(--gold-primary)", fontWeight: 620 }}
+              >
+                Atenção agora
+              </h2>
+            </div>
+            <Link
+              to="/admin/clientes?filtro=atencao"
+              className="ori-button-secondary inline-flex w-fit justify-center rounded-full px-5 py-2.5 text-sm"
+              style={{ color: "var(--gold-primary)" }}
+            >
+              Ver todas
+            </Link>
+          </div>
+
+          <div className="grid gap-3">
+            {clientesAtencao.length > 0 ? (
+              clientesAtencao.map((cliente) => (
+                <Link
+                  key={cliente.id}
+                  to={`/admin/clientes/${cliente.id}`}
+                  className="rounded-[18px] p-4"
+                  style={{
+                    background: "rgba(255,255,255,0.024)",
+                    border: "1px solid rgba(242,185,104,0.08)",
+                  }}
+                >
+                  <div className="mb-2 flex flex-col gap-1 md:flex-row md:items-start md:justify-between">
+                    <div>
+                      <p
+                        className="ori-type-revelation text-lg"
+                        style={{ color: "var(--gold-primary)", fontWeight: 600 }}
+                      >
+                        {cliente.nome || "Cliente sem nome"}
+                      </p>
+                      <p
+                        className="ori-type-reading-soft text-xs"
+                        style={{ color: "rgba(255,245,235,0.56)" }}
+                      >
+                        {cliente.email}
+                      </p>
+                    </div>
+                    <span className="ori-chip w-fit px-3 py-1 text-xs">
+                      {cliente.priority.label}
+                    </span>
+                  </div>
+                  <p
+                    className="ori-type-reading-soft text-sm leading-relaxed"
+                    style={{ color: "rgba(255,245,235,0.68)" }}
+                  >
+                    {cliente.priority.reason}
+                  </p>
+                  <p className="ori-type-system mt-2 text-[8px]" style={{ color: "var(--gold-soft)" }}>
+                    {cliente.priority.action}
+                  </p>
+                </Link>
+              ))
+            ) : (
+              <p className="ori-type-reading-soft text-sm" style={{ color: "var(--text-soft)" }}>
+                Nenhuma cliente registrada ainda.
+              </p>
+            )}
+          </div>
+        </section>
+      </div>
+
       <section
-        className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[26px] p-4 md:p-7 mb-6 md:mb-8"
+        className="ori-main-frame ori-card-secondary mt-5 rounded-[26px] p-4 md:p-7"
         style={{
           background:
-            "linear-gradient(180deg, rgba(18,9,10,0.72), rgba(7,3,4,0.88))",
+            "linear-gradient(180deg, rgba(18,9,10,0.64), rgba(7,3,4,0.84))",
           border: "1px solid rgba(242,185,104,0.10)",
         }}
       >
-        <div className="mb-5">
-          <p
-            className="ori-type-system text-[10px] mb-2"
-            style={{ color: "var(--gold-soft)" }}
-          >
-            Validação do Produto 1
-          </p>
-          <h2
-            className="ori-type-revelation text-2xl md:text-3xl"
-            style={{ color: "var(--gold-primary)", fontWeight: 620 }}
-          >
-            Feedbacks pós-leitura
-          </h2>
-        </div>
-
-        <div className="mb-5 grid gap-3 md:grid-cols-4">
-          {[
-            ["Respostas", feedbackResumo.total],
-            ["Me senti vista", feedbackResumo.vista],
-            ["Abstrato", feedbackResumo.abstrato],
-            ["Não reconheci", feedbackResumo.naoReconheci],
-          ].map(([label, value]) => (
-            <div
-              key={label}
-              className="rounded-[18px] p-4"
-              style={{
-                background: "rgba(255,255,255,0.024)",
-                border: "1px solid rgba(242,185,104,0.08)",
-              }}
+        <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="ori-type-system mb-2 text-[10px]" style={{ color: "var(--gold-soft)" }}>
+              Feedbacks pós-leitura
+            </p>
+            <h2
+              className="ori-type-revelation text-2xl md:text-3xl"
+              style={{ color: "var(--gold-primary)", fontWeight: 620 }}
             >
-              <p
-                className="ori-type-system text-[9px] mb-2"
-                style={{ color: "var(--gold-soft)" }}
-              >
-                {label}
-              </p>
-              <p
-                className="ori-type-revelation text-3xl"
-                style={{ color: "var(--gold-primary)", fontWeight: 620 }}
-              >
-                {loading ? "..." : value}
-              </p>
-            </div>
-          ))}
+              Vozes recentes do Produto 1
+            </h2>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {[
+              ["Respostas", feedbackResumo.total],
+              ["Vista", feedbackResumo.vista],
+              ["Abstrato", feedbackResumo.abstrato],
+              ["Risco", feedbackResumo.naoReconheci],
+            ].map(([label, value]) => (
+              <span key={label} className="ori-chip px-3 py-1.5 text-xs">
+                {label}: {loading ? "..." : value}
+              </span>
+            ))}
+          </div>
         </div>
 
-        <div className="grid gap-3">
+        <div className="grid gap-3 md:grid-cols-2">
           {feedbackResumo.recentes.length > 0 ? (
-	            feedbackResumo.recentes.map((feedback) => {
-	              const cliente = clientePorUser.get(feedback.user_id);
-	              const insight = getFeedbackInsight(feedback);
-	              const bridge = getFeedbackBridge(feedback, cliente);
+            feedbackResumo.recentes.map((feedback) => {
+              const cliente = clientePorUser.get(feedback.user_id);
+              const insight = getFeedbackInsight(feedback);
+              const bridge = getFeedbackBridge(feedback, cliente);
 
               return (
                 <Link
@@ -331,129 +508,28 @@ function AdminDashboard() {
                       {FEEDBACK_LABELS[feedback.response] || feedback.response}
                     </span>
                   </div>
-                  <p
-                    className="ori-type-system mb-2 text-[8px]"
-                    style={{ color: "var(--gold-soft)" }}
-                  >
+                  <p className="ori-type-system mb-2 text-[8px]" style={{ color: "var(--gold-soft)" }}>
                     {insight.label} · {insight.action}
                   </p>
-	                  <p
-	                    className="ori-type-reading-soft text-sm leading-relaxed"
-	                    style={{ color: "rgba(255,245,235,0.66)" }}
-	                  >
-	                    {feedback.comment || "Sem comentário aberto."}
-	                  </p>
-	                  <p
-	                    className="ori-type-reading-soft mt-2 text-xs leading-relaxed"
-	                    style={{ color: "rgba(255,245,235,0.52)" }}
-	                  >
-	                    Ponte sugerida: {bridge.title}
-	                  </p>
-	                </Link>
-	              );
+                  <p
+                    className="ori-type-reading-soft text-sm leading-relaxed"
+                    style={{ color: "rgba(255,245,235,0.66)" }}
+                  >
+                    {feedback.comment || "Sem comentário aberto."}
+                  </p>
+                  <p
+                    className="ori-type-reading-soft mt-2 text-xs leading-relaxed"
+                    style={{ color: "rgba(255,245,235,0.52)" }}
+                  >
+                    Ponte sugerida: {bridge.title}
+                  </p>
+                </Link>
+              );
             })
           ) : (
-            <p
-              className="ori-type-reading-soft text-sm"
-              style={{ color: "var(--text-soft)" }}
-            >
+            <p className="ori-type-reading-soft text-sm" style={{ color: "var(--text-soft)" }}>
               Nenhum feedback registrado ainda.
             </p>
-          )}
-        </div>
-      </section>
-
-      <section
-        className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[26px] p-4 md:p-7 mb-6 md:mb-8"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(18,9,10,0.72), rgba(7,3,4,0.88))",
-          border: "1px solid rgba(242,185,104,0.10)",
-        }}
-      >
-        <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between mb-5">
-          <div>
-            <p
-              className="ori-type-system text-[10px] mb-2"
-              style={{ color: "var(--gold-soft)" }}
-            >
-              Monitoramento do piloto
-            </p>
-            <h2
-              className="ori-type-revelation text-2xl md:text-3xl"
-              style={{ color: "var(--gold-primary)", fontWeight: 620 }}
-            >
-              Clientes que pedem atenção agora
-            </h2>
-          </div>
-
-          <Link
-            to="/admin/clientes"
-            className="ori-button-secondary inline-flex w-fit justify-center rounded-full px-5 py-2.5 text-sm"
-            style={{ color: "var(--gold-primary)" }}
-          >
-            Ver lista completa
-          </Link>
-        </div>
-
-        <div className="grid gap-3">
-          {clientesAtencao.length > 0 ? (
-            clientesAtencao.map((cliente) => (
-              <Link
-                key={cliente.id}
-                to={`/admin/clientes/${cliente.id}`}
-                className="ori-card-secondary grid gap-3 rounded-[18px] p-4 md:grid-cols-[1fr_auto] md:items-center"
-                style={{
-                  background: "rgba(255,255,255,0.024)",
-                  border: "1px solid rgba(242,185,104,0.08)",
-                }}
-              >
-                <div>
-                  <p
-                    className="ori-type-revelation text-xl"
-                    style={{ color: "var(--gold-primary)", fontWeight: 600 }}
-                  >
-                    {cliente.nome || "Cliente sem nome"}
-                  </p>
-                  <p
-                    className="ori-type-reading-soft text-sm"
-                    style={{ color: "rgba(255,245,235,0.62)" }}
-                  >
-                    {cliente.email}
-                  </p>
-                  <p
-                    className="ori-type-reading-soft mt-2 text-sm leading-relaxed"
-                    style={{ color: "rgba(255,245,235,0.68)" }}
-                  >
-                    {cliente.priority.reason}
-                  </p>
-                </div>
-
-                <div className="flex flex-wrap gap-2 md:justify-end">
-                  <span className="ori-chip px-3 py-1.5 text-xs">
-                    {cliente.priority.label}
-                  </span>
-                  <span className="ori-chip px-3 py-1.5 text-xs">
-                    {cliente.priority.action}
-                  </span>
-                  <span className="ori-chip px-3 py-1.5 text-xs">
-                    Oráculo: {cliente.oraculoDate || "sem carta"}
-                  </span>
-                </div>
-              </Link>
-            ))
-          ) : (
-            <div
-              className="ori-card-secondary rounded-[18px] p-4"
-              style={{
-                background: "rgba(255,255,255,0.024)",
-                border: "1px solid rgba(242,185,104,0.08)",
-              }}
-            >
-              <p className="ori-type-reading-soft text-sm" style={{ color: "var(--text-soft)" }}>
-                Nenhuma cliente registrada ainda.
-              </p>
-            </div>
           )}
         </div>
       </section>
