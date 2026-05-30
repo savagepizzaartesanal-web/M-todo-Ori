@@ -5,7 +5,10 @@ import SyncNotice from "../components/SyncNotice";
 import { archetypeImages } from "../data/archetypeImages";
 import { archetypeThemes } from "../data/archetypeThemes";
 import { getReportVisualGuide } from "../data/reportVisualGuides";
-import { downloadProduto1ReportPdf, getProduto1Report } from "../services/api";
+import {
+  downloadProduto1ReportPdf,
+  getProduto1Report,
+} from "../services/api";
 
 const reportCoverImages = {
   "Amante Nutridora": "/images/report-covers/amante-nutridora-mobile.png",
@@ -610,6 +613,7 @@ function Produto1Relatorio() {
             </p>
           </section>
         )}
+
       </div>
     </main>
   );

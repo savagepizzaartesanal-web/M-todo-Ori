@@ -3,6 +3,11 @@ import { Link, useParams } from "react-router-dom";
 
 import { questions } from "../data/questions";
 import { getAdminCliente, updateAdminCliente } from "../services/api";
+import {
+  FEEDBACK_LABELS,
+  getFeedbackBridge,
+  getFeedbackInsight,
+} from "../utils/feedbackInsights";
 
 function AdminClienteDetalhe() {
   const { id } = useParams();
@@ -14,6 +19,7 @@ function AdminClienteDetalhe() {
   const [perfilAberto, setPerfilAberto] = useState(false);
   const [leituraAberta, setLeituraAberta] = useState(false);
   const [produto1Respostas, setProduto1Respostas] = useState(null);
+  const [produto1Feedback, setProduto1Feedback] = useState(null);
   const [oraculoCarta, setOraculoCarta] = useState(null);
 
   const fetchCliente = useCallback(async () => {
@@ -26,11 +32,13 @@ function AdminClienteDetalhe() {
       setCliente(clienteData);
       setObservacoes(clienteData?.observacoes_admin || "");
       setProduto1Respostas(data.produto1_respostas || null);
+      setProduto1Feedback(data.produto1_feedback || null);
       setOraculoCarta(data.oraculo_carta || null);
     } catch (error) {
       console.log("Erro ao buscar cliente:", error);
       setCliente(null);
       setProduto1Respostas(null);
+      setProduto1Feedback(null);
       setOraculoCarta(null);
     } finally {
       setLoading(false);
@@ -252,6 +260,14 @@ function AdminClienteDetalhe() {
   const oraculoDate = oraculoCarta?.date_key
     ? formatShortDate(oraculoCarta.date_key)
     : "Nenhuma carta";
+  const feedbackLabel = produto1Feedback
+    ? FEEDBACK_LABELS[produto1Feedback.response] || produto1Feedback.response
+    : "Sem feedback";
+  const feedbackInsight = getFeedbackInsight(produto1Feedback);
+  const feedbackBridge = getFeedbackBridge(produto1Feedback, cliente);
+  const feedbackDate = produto1Feedback?.updated_at
+    ? formatDate(produto1Feedback.updated_at)
+    : null;
   const nextAction = (() => {
     if (!onboardingCompleted) {
       return {
@@ -490,6 +506,50 @@ function AdminClienteDetalhe() {
           <div
             className="ori-card-secondary rounded-[22px] p-4 md:p-5"
             style={{
+              background: produto1Feedback
+                ? "rgba(242,185,104,0.045)"
+                : "rgba(255,255,255,0.024)",
+              border: produto1Feedback
+                ? "1px solid rgba(242,185,104,0.11)"
+                : "1px solid rgba(242,185,104,0.08)",
+            }}
+          >
+            <p
+              className="ori-type-system text-[9px] mb-3"
+              style={{ color: "var(--gold-soft)" }}
+            >
+              Feedback Produto 1
+            </p>
+
+            <p
+              className="ori-type-revelation text-xl mb-2"
+              style={{
+                color: produto1Feedback
+                  ? "var(--gold-primary)"
+                  : "rgba(255,245,235,0.58)",
+                fontWeight: 600,
+              }}
+            >
+              {feedbackLabel}
+            </p>
+
+            <p
+              className="ori-type-reading-soft text-xs"
+              style={{ color: "rgba(255,245,235,0.56)" }}
+            >
+              {feedbackDate ? `Atualizado em ${feedbackDate}` : "Aguardando resposta"}
+            </p>
+            <p
+              className="ori-type-system mt-3 text-[8px]"
+              style={{ color: "var(--gold-soft)" }}
+            >
+              {feedbackInsight.label}
+            </p>
+          </div>
+
+          <div
+            className="ori-card-secondary rounded-[22px] p-4 md:p-5"
+            style={{
               background: "rgba(255,255,255,0.024)",
               border: "1px solid rgba(242,185,104,0.08)",
             }}
@@ -569,6 +629,125 @@ function AdminClienteDetalhe() {
           </div>
         </div>
       </section>
+
+      {produto1Feedback && (
+        <section
+          className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[30px] p-5 md:p-7 mb-8 cinematic-card"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(18,9,10,0.74), rgba(7,3,4,0.9))",
+            border: "1px solid rgba(242,185,104,0.10)",
+            backdropFilter: "blur(14px)",
+            WebkitBackdropFilter: "blur(14px)",
+          }}
+        >
+          <p
+            className="ori-type-system text-[10px] mb-3"
+            style={{ color: "var(--gold-soft)" }}
+          >
+            Validação da leitura
+          </p>
+          <h2
+            className="ori-type-revelation text-2xl md:text-3xl mb-4"
+            style={{ color: "var(--gold-primary)", fontWeight: 620 }}
+          >
+            Como a cliente recebeu o Código das Deusas
+          </h2>
+
+          <div className="grid gap-3 md:grid-cols-[0.7fr_1.3fr]">
+            <div
+              className="rounded-[22px] p-4"
+              style={{
+                background: "rgba(242,185,104,0.045)",
+                border: "1px solid rgba(242,185,104,0.11)",
+              }}
+            >
+              <p
+                className="ori-type-system text-[8px] mb-2"
+                style={{ color: "rgba(242,185,104,0.72)" }}
+              >
+                Resposta rápida
+              </p>
+              <p
+                className="ori-type-revelation text-xl"
+                style={{ color: "var(--gold-primary)", fontWeight: 600 }}
+              >
+                {feedbackLabel}
+              </p>
+            </div>
+
+            <div
+              className="rounded-[22px] p-4"
+              style={{
+                background: "rgba(255,255,255,0.024)",
+                border: "1px solid rgba(242,185,104,0.08)",
+              }}
+            >
+              <p
+                className="ori-type-system text-[8px] mb-2"
+                style={{ color: "rgba(242,185,104,0.72)" }}
+              >
+                Comentário aberto
+              </p>
+              <p
+                className="ori-type-reading-soft text-sm leading-relaxed"
+                style={{ color: "rgba(255,245,235,0.74)" }}
+              >
+                {produto1Feedback.comment || "A cliente não deixou comentário aberto."}
+              </p>
+            </div>
+          </div>
+          <div className="mt-3 grid gap-3 md:grid-cols-[0.8fr_1.2fr]">
+            <div
+              className="rounded-[22px] p-4"
+              style={{
+                background: "rgba(255,255,255,0.024)",
+                border: "1px solid rgba(242,185,104,0.08)",
+              }}
+            >
+              <p
+                className="ori-type-system text-[8px] mb-2"
+                style={{ color: "rgba(242,185,104,0.72)" }}
+              >
+                Ação sugerida
+              </p>
+              <p
+                className="ori-type-reading-soft text-sm leading-relaxed"
+                style={{ color: "rgba(255,245,235,0.74)" }}
+              >
+                {feedbackInsight.action}
+              </p>
+            </div>
+
+            <div
+              className="rounded-[22px] p-4"
+              style={{
+                background: "rgba(242,185,104,0.045)",
+                border: "1px solid rgba(242,185,104,0.12)",
+              }}
+            >
+              <p
+                className="ori-type-system text-[8px] mb-2"
+                style={{ color: "rgba(242,185,104,0.72)" }}
+              >
+                Ponte pronta
+              </p>
+              <h3
+                className="ori-type-revelation mb-2 text-lg"
+                style={{ color: "var(--gold-primary)", fontWeight: 600 }}
+              >
+                {feedbackBridge.title}
+              </h3>
+              <p
+                className="ori-type-reading-soft text-sm leading-relaxed"
+                style={{ color: "rgba(255,245,235,0.74)" }}
+              >
+                {feedbackBridge.text}
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
 
       <section
         className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[30px] mb-8 cinematic-card"

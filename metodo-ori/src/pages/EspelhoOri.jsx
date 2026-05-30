@@ -5,7 +5,10 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { supabase } from "../lib/supabaseClient";
 import { reports } from "../data/reports";
 import { MirrorSectionNav } from "../components/espelho/EspelhoInteractions";
-import { getCurrentJornada } from "../services/api";
+import {
+  getCurrentJornada,
+  getMapaVivo,
+} from "../services/api";
 import SyncNotice from "../components/SyncNotice";
 
 const LEGACY_STORAGE_KEY = "ori_produto_1_quiz";
@@ -366,6 +369,7 @@ function EspelhoOri() {
 
   const [cliente, setCliente] = useState(null);
   const [jornadaApi, setJornadaApi] = useState(null);
+  const [mapaVivo, setMapaVivo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeMirrorTab, setActiveMirrorTab] = useState("essencia");
   const [localResult, setLocalResult] = useState(null);
@@ -387,6 +391,7 @@ function EspelhoOri() {
       if (!user?.id) {
         setCliente(null);
         setJornadaApi(null);
+        setMapaVivo(null);
         setLocalResult(null);
         setLocalOnboardingProfile({});
         setLoading(false);
@@ -401,17 +406,29 @@ function EspelhoOri() {
       setLocalResult(revealedLocalResult);
       setLocalOnboardingProfile(storedOnboardingProfile);
 
-      try {
-        const jornadaData = await getCurrentJornada();
-        setJornadaApi(jornadaData);
+      const [jornadaResult, mapaVivoResult] = await Promise.allSettled([
+        getCurrentJornada(),
+        getMapaVivo(),
+      ]);
+
+      if (jornadaResult.status === "fulfilled") {
+        setJornadaApi(jornadaResult.value);
         setSyncNotice("");
-      } catch (apiError) {
+      } else {
+        const apiError = jornadaResult.reason;
         console.log("API da jornada indisponível no Espelho:", apiError);
         setJornadaApi(null);
         setSyncNotice(
           apiError?.userMessage ||
             "Estamos usando seu reflexo salvo enquanto o ORI termina a sincronização.",
         );
+      }
+
+      if (mapaVivoResult.status === "fulfilled") {
+        setMapaVivo(mapaVivoResult.value);
+      } else {
+        console.log("Mapa Vivo indisponível no Espelho:", mapaVivoResult.reason);
+        setMapaVivo(null);
       }
 
       let { data, error } = await supabase
@@ -446,18 +463,26 @@ function EspelhoOri() {
   }, []);
 
   const resultadoFinal =
-    jornadaApi?.resultado || cliente?.resultado || localResult?.nomeComposto || null;
+    mapaVivo?.resultado ||
+    jornadaApi?.resultado ||
+    cliente?.resultado ||
+    localResult?.nomeComposto ||
+    null;
 
   const report = resultadoFinal ? reports[resultadoFinal] : null;
   const reflection = report || fallbackReflection;
 
   const principal =
+    mapaVivo?.archetypes?.find((item) => item.role === "forca_principal")
+      ?.name ||
     cliente?.arquetipo_principal ||
     localResult?.principal ||
     report?.combinacao?.split("+")?.[0]?.trim() ||
     "Arquétipo principal";
 
   const secundario =
+    mapaVivo?.archetypes?.find((item) => item.role === "forca_secundaria")
+      ?.name ||
     cliente?.arquetipo_secundario ||
     localResult?.secundario ||
     report?.combinacao?.split("+")?.[1]?.trim() ||
@@ -480,8 +505,6 @@ function EspelhoOri() {
       ? onboardingProfile.mainPainCustom || onboardingProfile.mainPain
       : onboardingProfile.mainPain || onboardingProfile.mainPainCustom || "",
   );
-  const profileObjective = formatProfileValue(onboardingProfile.mainDesire);
-  const profileMoment = formatProfileValue(onboardingProfile.journeyStage);
 
   const mirrorTabs = useMemo(
     () => [
@@ -601,23 +624,12 @@ function EspelhoOri() {
     cliente?.conexao_imagem ||
     null;
   const mainPain =
+    mapaVivo?.perfil?.dor_atual ||
     profilePain ||
     cliente?.principal_dor ||
     cliente?.dor_principal ||
     cliente?.dor_imagem ||
     null;
-  const mainObjective =
-    profileObjective ||
-    cliente?.objetivo_principal ||
-    cliente?.objetivo_imagem ||
-    cliente?.principal_objetivo ||
-    null;
-  const currentMoment =
-    profileMoment ||
-    cliente?.momento_atual ||
-    cliente?.estagio_jornada ||
-    null;
-
   const connectionPercent = imageConnectionIndex
     ? Number.parseInt(String(imageConnectionIndex).replace(/\D/g, ""), 10)
     : null;
@@ -635,40 +647,69 @@ function EspelhoOri() {
     (hasResult
       ? "A imagem ainda está aprendendo a sustentar a força que já foi nomeada."
       : "A dor central será nomeada quando sua primeira camada abrir.");
-  const profileSnapshot = [
-    {
-      label: "Conexão",
-      title: hasConnectionPercent ? connectionLabel : "Presença em formação",
-      text: hasConnectionPercent
-        ? "O quanto sua imagem já conversa com sua essência."
-        : "O primeiro sinal antes da imagem ganhar direção.",
-      state: hasConnectionPercent || hasResult ? "revealed" : "next",
-    },
-    {
-      label: "Dor atual",
-      title: mainPain || "Ainda não informada",
-      text: mainPain
-        ? "O ponto que sua imagem quer transformar."
-        : "Responda sua entrada ORI para revelar.",
-      state: mainPain ? "revealed" : "sealed",
-    },
-    {
-      label: "Objetivo",
-      title: mainObjective || "Ainda não informado",
-      text: mainObjective
-        ? "A direção que guia suas próximas camadas."
-        : "Responda sua entrada ORI para revelar.",
-      state: mainObjective ? "revealed" : "sealed",
-    },
-    {
-      label: "Momento",
-      title: currentMoment || "Em travessia",
-      text: currentMoment
-        ? "Seu ponto de partida dentro da jornada."
-        : "Seu ritmo será revelado na entrada ORI.",
-      state: currentMoment ? "revealed" : "next",
-    },
-  ];
+  const formaTitle =
+    mapaVivo?.strengths?.[1]?.label ||
+    mapaVivo?.strengths?.[0]?.label ||
+    "Imagem";
+  const tensaoTitle = mapaVivo?.tensions?.[0]?.label || "Presença";
+  const proximaCamadaTitle = dossieRevelado
+    ? "Dossiê ORI"
+    : hasResult
+      ? "Dossiê ORI"
+      : "Código das Deusas";
+  const proximaCamadaText = dossieRevelado
+    ? "Sua tradução visual já pode ser consultada: corpo, cor, cabelo, beleza e presença começam a organizar escolhas reais."
+    : hasResult
+      ? "O próximo espelho mostra como essa força aparece no corpo, na cor, no cabelo, na beleza e na presença."
+      : "A primeira leitura revela a força simbólica que abre todo o restante da jornada.";
+
+  const fallbackMapaVivoCards = mapaVivo
+    ? [
+        {
+          id: "forca-ativa",
+          label: "Força ativa",
+          title: mapaVivo.resultado || "Primeira camada em formação",
+          text: mapaVivo.resultado
+            ? "O que apareceu aqui não é um rótulo. É a força que começa a organizar sua presença, sua imagem e o modo como você se mostra."
+            : "Sua primeira força ainda está sendo formada a partir dos sinais da jornada.",
+          state: mapaVivo.resultado ? "revealed" : "next",
+        },
+        {
+          id: "o-que-pede-forma",
+          label: "O que pede forma",
+          title: formaTitle,
+          text: `Sua ${formaTitle.toLocaleLowerCase("pt-BR")} está pedindo escolhas mais fiéis: menos adaptação automática, mais presença sustentada no corpo e na imagem.`,
+          state: mapaVivo.strengths?.length ? "revealed" : "next",
+        },
+        {
+          id: "ponto-atencao",
+          label: "Ponto de atenção",
+          title: tensaoTitle,
+          text: "Cuidado para não diminuir sua força tentando explicar demais. Antes da fala, sua imagem já começa a comunicar.",
+          state: mapaVivo.tensions?.length ? "revealed" : "next",
+        },
+        {
+          id: "na-pratica",
+          label: "Na prática",
+          title: hasResult ? "Uma escolha por vez" : "Comece pela leitura",
+          text: hasResult
+            ? "Na próxima escolha de imagem, observe se ela sustenta sua força ou se apenas tenta caber no olhar de fora."
+            : "Comece pela primeira leitura para entender qual força simbólica sustenta sua presença.",
+          state: "revealed",
+        },
+      ]
+    : [];
+
+  const fallbackMapaVivoHeadline = hasResult
+    ? `Sua primeira camada já revelou ${resultadoFinal}. Agora essa força precisa aparecer com mais verdade no jeito como você se veste, se move e ocupa presença.`
+    : "O Espelho está reunindo seus sinais para revelar a primeira camada da sua jornada.";
+  const mapaVivoReading = mapaVivo?.reading || null;
+  const mapaVivoHeadline = mapaVivoReading?.headline || fallbackMapaVivoHeadline;
+  const mapaVivoCards = mapaVivoReading?.cards || fallbackMapaVivoCards;
+  const mapaVivoNextLayerTitle =
+    mapaVivoReading?.next_layer_title || proximaCamadaTitle;
+  const mapaVivoNextLayerText =
+    mapaVivoReading?.next_layer_text || proximaCamadaText;
 
   const matrixItems = [
     {
@@ -1697,78 +1738,142 @@ function EspelhoOri() {
                 className="ori-type-reading-soft hidden max-w-md text-sm md:block"
                 style={{ color: "rgba(255,245,235,0.54)" }}
               >
-                Aqui você acompanha o que já abriu, o que guia sua jornada e o
-                que ainda será revelado.
+                {mapaVivo
+                  ? "Aqui o ORI reúne seus sinais principais e mostra o que está mais vivo na sua jornada agora."
+                  : "Aqui você acompanha o que já abriu, o que guia sua jornada e o que ainda será revelado."}
               </p>
             </div>
 
-            <div className="mb-4 md:mb-5 grid gap-2 md:gap-2.5 md:grid-cols-4">
-              {profileSnapshot.map((item) => {
-                const isSealed = item.state === "sealed";
+            <div
+              className="mb-4 md:mb-5 rounded-[20px] p-3.5 md:rounded-[24px] md:p-4"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(242,185,104,0.105), rgba(255,255,255,0.014))",
+                border: "1px solid rgba(242,185,104,0.16)",
+                boxShadow:
+                  "0 0 44px rgba(242,185,104,0.040), inset 0 0 24px rgba(242,185,104,0.014)",
+              }}
+            >
+              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <p
+                    className="ori-type-system mb-1 text-[10px] uppercase"
+                    style={{
+                      color: colors.goldSoft,
+                      letterSpacing: "0.14em",
+                    }}
+                  >
+                    Leitura viva da sua jornada
+                  </p>
+                  <h3
+                    className="ori-type-revelation text-xl md:text-[28px]"
+                    style={{
+                      color: colors.headingSection,
+                      fontWeight: 620,
+                      letterSpacing: "-0.045em",
+                    }}
+                  >
+                    {mapaVivoHeadline}
+                  </h3>
+                </div>
 
-                return (
+                <div
+                  className="rounded-[18px] px-4 py-3 md:min-w-[330px] md:px-5 md:py-4"
+                  style={{
+                    background: "rgba(5,2,2,0.38)",
+                    border: "1px solid rgba(242,185,104,0.14)",
+                  }}
+                >
+                  <p
+                    className="ori-type-system mb-2 text-[10px] uppercase"
+                    style={{
+                      color: colors.goldSoft,
+                      letterSpacing: "0.14em",
+                    }}
+                  >
+                    Próximo espelho
+                  </p>
+                  <h4
+                    className="ori-type-revelation mb-1.5 text-lg"
+                    style={{
+                      color: colors.headingSection,
+                      fontWeight: 620,
+                      letterSpacing: "-0.035em",
+                    }}
+                  >
+                    {mapaVivoNextLayerTitle}
+                  </h4>
+                  <p
+                    className="ori-type-reading-soft text-xs leading-relaxed md:text-sm"
+                    style={{ color: "rgba(255,245,235,0.54)" }}
+                  >
+                    {mapaVivoNextLayerText}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {mapaVivoCards.length > 0 && (
+              <div className="mb-4 md:mb-5 grid gap-2.5 lg:grid-cols-[1.15fr_0.85fr_0.85fr_0.85fr]">
+                {mapaVivoCards.map((item, index) => (
                   <article
                     key={item.label}
-                    className={`relative overflow-hidden rounded-[16px] p-3.5 md:rounded-[18px] md:p-4 ${
-                      isSealed ? "ori-card-sealed" : "ori-card-secondary"
+                    className={`ori-card-secondary relative overflow-hidden rounded-[18px] p-3.5 md:rounded-[20px] md:p-4 ${
+                      index === 0 ? "lg:min-h-[180px]" : ""
                     }`}
                     style={{
-                      background: isSealed
-                        ? "linear-gradient(135deg, rgba(255,255,255,0.018), rgba(255,255,255,0.006))"
-                        : "linear-gradient(135deg, rgba(242,185,104,0.060), rgba(255,255,255,0.010))",
-                      border: isSealed
-                        ? "1px solid rgba(242,185,104,0.070)"
-                        : "1px solid rgba(242,185,104,0.095)",
-                      opacity: 1,
+                      background:
+                        index === 0
+                          ? "linear-gradient(135deg, rgba(242,185,104,0.082), rgba(255,255,255,0.012))"
+                          : "linear-gradient(135deg, rgba(255,255,255,0.030), rgba(255,255,255,0.008))",
+                      border:
+                        item.state === "revealed"
+                          ? "1px solid rgba(242,185,104,0.115)"
+                          : "1px solid rgba(255,255,255,0.060)",
+                      boxShadow:
+                        index === 0
+                          ? "0 0 38px rgba(242,185,104,0.035), inset 0 0 20px rgba(242,185,104,0.012)"
+                          : "inset 0 0 18px rgba(255,255,255,0.006)",
                     }}
                   >
                     <span
                       className="absolute inset-x-4 top-0 h-px"
                       style={{
-                        background: isSealed
-                          ? "linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent)"
-                          : "linear-gradient(90deg, transparent, rgba(242,185,104,0.34), transparent)",
+                        background:
+                          "linear-gradient(90deg, transparent, rgba(242,185,104,0.28), transparent)",
                       }}
                     />
-                    <div className="mb-2.5 md:mb-3 flex items-center justify-between gap-3">
-                      <span
-                        className="ori-type-system"
-                        style={{ color: isSealed ? colors.quiet : colors.goldSoft }}
-                      >
-                        {item.label}
-                      </span>
-                      {isSealed && (
-                        <span
-                          className="text-xs"
-                          aria-label="Ainda selado"
-                          title="Ainda selado"
-                        >
-                          🔒
-                        </span>
-                      )}
-                    </div>
-                    <h3
-                      className="ori-type-revelation mb-1.5 md:mb-2 text-base md:text-lg"
+                    <p
+                      className="ori-type-system mb-2 text-[10px] uppercase"
                       style={{
-                        color: isSealed
-                          ? "rgba(255,245,235,0.62)"
-                          : colors.headingSection,
+                        color: colors.goldSoft,
+                        letterSpacing: "0.14em",
+                      }}
+                    >
+                      {item.label}
+                    </p>
+                    <h3
+                      className={`ori-type-revelation mb-2 ${
+                        index === 0 ? "text-xl md:text-[26px]" : "text-lg"
+                      }`}
+                      style={{
+                        color: colors.headingSection,
                         fontWeight: 620,
-                        letterSpacing: "-0.035em",
+                        letterSpacing: "-0.04em",
                       }}
                     >
                       {item.title}
                     </h3>
                     <p
-                      className="ori-type-reading-soft hidden text-xs md:block"
-                      style={{ color: "rgba(255,245,235,0.48)" }}
+                      className="ori-type-reading-soft text-xs leading-relaxed md:text-sm"
+                      style={{ color: "rgba(255,245,235,0.56)" }}
                     >
-                      {item.text}
+                      {getPreview(item.text, index === 0 ? 260 : 150)}
                     </p>
                   </article>
-                );
-              })}
-            </div>
+                ))}
+              </div>
+            )}
 
             <div className="grid gap-3 md:gap-5">
               {journeyDetailGroups.map((group) => {

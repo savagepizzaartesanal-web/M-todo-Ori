@@ -147,7 +147,9 @@ def get_profile_context(cliente: dict | None) -> Produto1LeituraPerfil:
             profile.get("journeyStage") or (cliente or {}).get("momento_atual")
         ),
         dor_atual=format_profile_value(
-            pain or (cliente or {}).get("dor_atual")
+            pain
+            or (cliente or {}).get("principal_dor")
+            or (cliente or {}).get("dor_atual")
         ),
         objetivo_principal=format_profile_value(
             profile.get("mainDesire") or (cliente or {}).get("objetivo_principal")

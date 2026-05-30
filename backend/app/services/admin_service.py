@@ -10,6 +10,7 @@ from app.services.auth_service import get_supabase_config
 CLIENTES_TABLE = "clientes"
 PRODUTO_1_TABLE = "produto_1_respostas"
 ORACULO_TABLE = "oraculo_cartas_diarias"
+FEEDBACK_TABLE = "produto_1_feedbacks"
 
 
 def get_supabase_rest_headers(current_user: CurrentUser) -> dict[str, str]:
@@ -62,7 +63,12 @@ async def fetch_admin_overview(current_user: CurrentUser) -> dict:
     headers = get_supabase_rest_headers(current_user)
 
     async with httpx.AsyncClient(timeout=10) as client:
-        clientes_response, respostas_response, oraculo_response = await asyncio.gather(
+        (
+            clientes_response,
+            respostas_response,
+            oraculo_response,
+            feedback_response,
+        ) = await asyncio.gather(
             client.get(
                 f"{supabase_url}/rest/v1/{CLIENTES_TABLE}",
                 params={"select": "*", "order": "created_at.desc"},
@@ -87,9 +93,22 @@ async def fetch_admin_overview(current_user: CurrentUser) -> dict:
                 },
                 headers=headers,
             ),
+            client.get(
+                f"{supabase_url}/rest/v1/{FEEDBACK_TABLE}",
+                params={
+                    "select": "*",
+                    "order": "updated_at.desc",
+                },
+                headers=headers,
+            ),
         )
 
-    for response in (clientes_response, respostas_response, oraculo_response):
+    for response in (
+        clientes_response,
+        respostas_response,
+        oraculo_response,
+        feedback_response,
+    ):
         if response.status_code >= 400:
             raise HTTPException(
                 status_code=status.HTTP_502_BAD_GATEWAY,
@@ -100,6 +119,7 @@ async def fetch_admin_overview(current_user: CurrentUser) -> dict:
         "clientes": clientes_response.json(),
         "respostas_produto1": respostas_response.json(),
         "cartas_oraculo": oraculo_response.json(),
+        "feedbacks_produto1": feedback_response.json(),
     }
 
 
@@ -132,10 +152,11 @@ async def fetch_admin_cliente(cliente_id: str, current_user: CurrentUser) -> dic
     user_id = cliente.get("user_id")
     produto1 = None
     oraculo = None
+    feedback = None
 
     if user_id:
         async with httpx.AsyncClient(timeout=10) as client:
-            respostas_response, oraculo_response = await asyncio.gather(
+            respostas_response, oraculo_response, feedback_response = await asyncio.gather(
                 client.get(
                     f"{supabase_url}/rest/v1/{PRODUTO_1_TABLE}",
                     params={"select": "*", "user_id": f"eq.{user_id}", "limit": "1"},
@@ -151,9 +172,19 @@ async def fetch_admin_cliente(cliente_id: str, current_user: CurrentUser) -> dic
                     },
                     headers=headers,
                 ),
+                client.get(
+                    f"{supabase_url}/rest/v1/{FEEDBACK_TABLE}",
+                    params={
+                        "select": "*",
+                        "user_id": f"eq.{user_id}",
+                        "order": "updated_at.desc",
+                        "limit": "1",
+                    },
+                    headers=headers,
+                ),
             )
 
-        for response in (respostas_response, oraculo_response):
+        for response in (respostas_response, oraculo_response, feedback_response):
             if response.status_code >= 400:
                 raise HTTPException(
                     status_code=status.HTTP_502_BAD_GATEWAY,
@@ -162,13 +193,16 @@ async def fetch_admin_cliente(cliente_id: str, current_user: CurrentUser) -> dic
 
         produto1_rows = respostas_response.json()
         oraculo_rows = oraculo_response.json()
+        feedback_rows = feedback_response.json()
         produto1 = produto1_rows[0] if produto1_rows else None
         oraculo = oraculo_rows[0] if oraculo_rows else None
+        feedback = feedback_rows[0] if feedback_rows else None
 
     return {
         "cliente": cliente,
         "produto1_respostas": produto1,
         "oraculo_carta": oraculo,
+        "produto1_feedback": feedback,
     }
 
 

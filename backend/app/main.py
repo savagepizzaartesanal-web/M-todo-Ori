@@ -4,7 +4,18 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routes import admin, auth, health, jornada, oraculo, produto1, quiz, status
+from app.routes import (
+    admin,
+    auth,
+    feedback,
+    health,
+    jornada,
+    mapa_vivo,
+    oraculo,
+    produto1,
+    quiz,
+    status,
+)
 
 load_dotenv()
 
@@ -36,7 +47,9 @@ app.add_middleware(
 app.include_router(health.router)
 app.include_router(auth.router)
 app.include_router(admin.router)
+app.include_router(feedback.router)
 app.include_router(jornada.router)
+app.include_router(mapa_vivo.router)
 app.include_router(oraculo.router)
 app.include_router(produto1.router)
 app.include_router(quiz.router)

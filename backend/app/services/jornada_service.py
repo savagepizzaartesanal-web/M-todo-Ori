@@ -17,6 +17,12 @@ CLIENTE_SELECT = ",".join(
         "produto_3_liberado",
         "perfil_onboarding_concluido",
         "status_jornada",
+        "perfil_onboarding",
+        "principal_dor",
+        "objetivo_principal",
+        "momento_atual",
+        "arquetipo_principal",
+        "arquetipo_secundario",
     ]
 )
 

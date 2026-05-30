@@ -226,6 +226,10 @@ export function getCurrentJornada() {
   return requestAuthenticatedApi("/api/jornada/me");
 }
 
+export function getMapaVivo() {
+  return requestAuthenticatedApi("/api/mapa-vivo/me");
+}
+
 export function getDailyOracleCard(dateKey) {
   return requestAuthenticatedApi(
     `/api/oraculo/carta-dia/me?date_key=${encodeURIComponent(dateKey)}`,
@@ -236,6 +240,19 @@ export function saveDailyOracleCard(cardData) {
   return requestAuthenticatedApi("/api/oraculo/carta-dia", {
     method: "POST",
     body: JSON.stringify(cardData),
+  });
+}
+
+export function getProduto1Feedback(context = "espelho-ori") {
+  return requestAuthenticatedApi(
+    `/api/feedback/produto-1/me?context=${encodeURIComponent(context)}`,
+  );
+}
+
+export function saveProduto1Feedback(feedbackData) {
+  return requestAuthenticatedApi("/api/feedback/produto-1", {
+    method: "POST",
+    body: JSON.stringify(feedbackData),
   });
 }
 

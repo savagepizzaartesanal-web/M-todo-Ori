@@ -2,11 +2,17 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { getAdminClientes, updateAdminCliente } from "../services/api";
+import {
+  FEEDBACK_LABELS,
+  getFeedbackBridge,
+  getFeedbackInsight,
+} from "../utils/feedbackInsights";
 
 function AdminClientes() {
   const [clientes, setClientes] = useState([]);
   const [respostasProduto1, setRespostasProduto1] = useState([]);
   const [cartasOraculo, setCartasOraculo] = useState([]);
+  const [feedbacksProduto1, setFeedbacksProduto1] = useState([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
   const [busca, setBusca] = useState("");
@@ -20,11 +26,13 @@ function AdminClientes() {
       setClientes(data.clientes || []);
       setRespostasProduto1(data.respostas_produto1 || []);
       setCartasOraculo(data.cartas_oraculo || []);
+      setFeedbacksProduto1(data.feedbacks_produto1 || []);
     } catch (error) {
       console.log("Erro ao buscar clientes:", error);
       setClientes([]);
       setRespostasProduto1([]);
       setCartasOraculo([]);
+      setFeedbacksProduto1([]);
     } finally {
       setLoading(false);
     }
@@ -111,6 +119,17 @@ function AdminClientes() {
 
     return map;
   }, [cartasOraculo]);
+  const feedbackPorUser = useMemo(() => {
+    const map = new Map();
+
+    feedbacksProduto1.forEach((feedback) => {
+      if (!map.has(feedback.user_id)) {
+        map.set(feedback.user_id, feedback);
+      }
+    });
+
+    return map;
+  }, [feedbacksProduto1]);
 
   const getProduto1Progress = (cliente) => {
     const resposta = respostasPorUser.get(cliente.user_id);
@@ -160,11 +179,18 @@ function AdminClientes() {
         (filtro === "produto2" && Boolean(cliente.produto_2_liberado)) ||
         (filtro === "produto3" && Boolean(cliente.produto_3_liberado)) ||
         (filtro === "oraculo" && Boolean(oraculoPorUser.get(cliente.user_id))) ||
+        (filtro === "feedback_vista" &&
+          feedbackPorUser.get(cliente.user_id)?.response === "me_senti_vista") ||
+        (filtro === "feedback_abstrato" &&
+          feedbackPorUser.get(cliente.user_id)?.response ===
+            "fez_sentido_mas_abstrato") ||
+        (filtro === "feedback_risco" &&
+          feedbackPorUser.get(cliente.user_id)?.response === "nao_me_reconheci") ||
         (filtro === "admins" && Boolean(cliente.admin));
 
       return matchBusca && matchFiltro;
     });
-  }, [clientes, busca, filtro, oraculoPorUser, respostasPorUser]);
+  }, [clientes, busca, feedbackPorUser, filtro, oraculoPorUser, respostasPorUser]);
 
   const resumo = useMemo(() => {
     return {
@@ -184,8 +210,9 @@ function AdminClientes() {
       produto3: clientes.filter((cliente) =>
         Boolean(cliente.produto_3_liberado),
       ).length,
+      feedbacks: feedbacksProduto1.length,
     };
-  }, [clientes, oraculoPorUser, respostasPorUser]);
+  }, [clientes, feedbacksProduto1.length, oraculoPorUser, respostasPorUser]);
 
   const filtros = [
     ["todos", "Todos"],
@@ -195,6 +222,9 @@ function AdminClientes() {
     ["produto2", "Dossiê ORI"],
     ["produto3", "Código Final"],
     ["oraculo", "Com Oráculo"],
+    ["feedback_vista", "Alta aderência"],
+    ["feedback_abstrato", "Abstrato"],
+    ["feedback_risco", "Risco"],
     ["admins", "Admins"],
   ];
 
@@ -324,6 +354,7 @@ function AdminClientes() {
             ["Com Oráculo", resumo.oraculo],
             ["Dossiê ORI", resumo.produto2],
             ["Código Final", resumo.produto3],
+            ["Feedbacks", resumo.feedbacks],
           ].map(([label, value]) => (
             <div
               key={label}
@@ -430,6 +461,9 @@ function AdminClientes() {
               const isUpdating = updatingId === cliente.id;
               const progress = getProduto1Progress(cliente);
               const oraculo = oraculoPorUser.get(cliente.user_id);
+              const feedback = feedbackPorUser.get(cliente.user_id);
+              const feedbackInsight = getFeedbackInsight(feedback);
+              const feedbackBridge = getFeedbackBridge(feedback, cliente);
               const signal = getClienteSignal(cliente);
 
               return (
@@ -589,6 +623,26 @@ function AdminClientes() {
                         >
                           {oraculo ? `Oráculo ${formatDate(oraculo.date_key)}` : "Sem carta"}
                         </div>
+
+                        <div
+                          className="ori-chip px-4 py-2 text-xs"
+                          data-state={feedback ? "revealed" : "sealed"}
+                          style={{
+                            background: feedback
+                              ? "rgba(242,185,104,0.08)"
+                              : "rgba(255,255,255,0.025)",
+                            border: feedback
+                              ? "1px solid rgba(242,185,104,0.14)"
+                              : "1px solid rgba(255,255,255,0.06)",
+                            color: feedback
+                              ? "var(--gold-primary)"
+                              : "rgba(255,245,235,0.55)",
+                          }}
+                        >
+                          {feedback
+                            ? FEEDBACK_LABELS[feedback.response] || feedback.response
+                            : "Sem feedback"}
+                        </div>
                       </div>
 
                       <p
@@ -597,6 +651,20 @@ function AdminClientes() {
                       >
                         Próxima atenção: {signal}
                       </p>
+                      <p
+                        className="ori-type-system mt-2 text-[8px]"
+                        style={{ color: "var(--gold-soft)" }}
+                      >
+                        {feedbackInsight.label} · {feedbackInsight.action}
+                      </p>
+                      {feedback && (
+                        <p
+                          className="ori-type-reading-soft mt-2 text-xs leading-relaxed"
+                          style={{ color: "rgba(255,245,235,0.54)" }}
+                        >
+                          Ponte: {feedbackBridge.title}
+                        </p>
+                      )}
                     </div>
 
                     <div className="flex flex-col md:flex-row xl:flex-col gap-3 xl:min-w-[220px]">

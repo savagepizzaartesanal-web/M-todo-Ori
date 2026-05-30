@@ -2,11 +2,17 @@ import { Link } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 
 import { getAdminClientes } from "../services/api";
+import {
+  FEEDBACK_LABELS,
+  getFeedbackBridge,
+  getFeedbackInsight,
+} from "../utils/feedbackInsights";
 
 function AdminDashboard() {
   const [clientes, setClientes] = useState([]);
   const [respostasProduto1, setRespostasProduto1] = useState([]);
   const [cartasOraculo, setCartasOraculo] = useState([]);
+  const [feedbacksProduto1, setFeedbacksProduto1] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -20,6 +26,7 @@ function AdminDashboard() {
           setClientes(data.clientes || []);
           setRespostasProduto1(data.respostas_produto1 || []);
           setCartasOraculo(data.cartas_oraculo || []);
+          setFeedbacksProduto1(data.feedbacks_produto1 || []);
         }
       } catch (error) {
         console.log("Erro ao carregar resumo administrativo:", error);
@@ -58,6 +65,30 @@ function AdminDashboard() {
 
     return map;
   }, [cartasOraculo]);
+  const clientePorUser = useMemo(
+    () => new Map(clientes.map((cliente) => [cliente.user_id, cliente])),
+    [clientes],
+  );
+  const feedbackResumo = useMemo(() => {
+    const counts = feedbacksProduto1.reduce(
+      (acc, feedback) => ({
+        ...acc,
+        [feedback.response]: (acc[feedback.response] || 0) + 1,
+      }),
+      {},
+    );
+    const recentes = feedbacksProduto1
+      .filter((feedback) => feedback.comment || feedback.response)
+      .slice(0, 4);
+
+    return {
+      total: feedbacksProduto1.length,
+      vista: counts.me_senti_vista || 0,
+      abstrato: counts.fez_sentido_mas_abstrato || 0,
+      naoReconheci: counts.nao_me_reconheci || 0,
+      recentes,
+    };
+  }, [feedbacksProduto1]);
 
   const resumo = useMemo(() => {
     const perfilCompleto = clientes.filter((cliente) =>
@@ -197,6 +228,120 @@ function AdminDashboard() {
           </div>
         ))}
       </div>
+
+      <section
+        className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[26px] p-4 md:p-7 mb-6 md:mb-8"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(18,9,10,0.72), rgba(7,3,4,0.88))",
+          border: "1px solid rgba(242,185,104,0.10)",
+        }}
+      >
+        <div className="mb-5">
+          <p
+            className="ori-type-system text-[10px] mb-2"
+            style={{ color: "var(--gold-soft)" }}
+          >
+            Validação do Produto 1
+          </p>
+          <h2
+            className="ori-type-revelation text-2xl md:text-3xl"
+            style={{ color: "var(--gold-primary)", fontWeight: 620 }}
+          >
+            Feedbacks pós-leitura
+          </h2>
+        </div>
+
+        <div className="mb-5 grid gap-3 md:grid-cols-4">
+          {[
+            ["Respostas", feedbackResumo.total],
+            ["Me senti vista", feedbackResumo.vista],
+            ["Abstrato", feedbackResumo.abstrato],
+            ["Não reconheci", feedbackResumo.naoReconheci],
+          ].map(([label, value]) => (
+            <div
+              key={label}
+              className="rounded-[18px] p-4"
+              style={{
+                background: "rgba(255,255,255,0.024)",
+                border: "1px solid rgba(242,185,104,0.08)",
+              }}
+            >
+              <p
+                className="ori-type-system text-[9px] mb-2"
+                style={{ color: "var(--gold-soft)" }}
+              >
+                {label}
+              </p>
+              <p
+                className="ori-type-revelation text-3xl"
+                style={{ color: "var(--gold-primary)", fontWeight: 620 }}
+              >
+                {loading ? "..." : value}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid gap-3">
+          {feedbackResumo.recentes.length > 0 ? (
+	            feedbackResumo.recentes.map((feedback) => {
+	              const cliente = clientePorUser.get(feedback.user_id);
+	              const insight = getFeedbackInsight(feedback);
+	              const bridge = getFeedbackBridge(feedback, cliente);
+
+              return (
+                <Link
+                  key={feedback.id}
+                  to={cliente?.id ? `/admin/clientes/${cliente.id}` : "/admin/clientes"}
+                  className="rounded-[18px] p-4"
+                  style={{
+                    background: "rgba(255,255,255,0.024)",
+                    border: "1px solid rgba(242,185,104,0.08)",
+                  }}
+                >
+                  <div className="mb-2 flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
+                    <p
+                      className="ori-type-revelation text-lg"
+                      style={{ color: "var(--gold-primary)", fontWeight: 600 }}
+                    >
+                      {cliente?.nome || feedback.email || "Cliente"}
+                    </p>
+                    <span className="ori-chip w-fit px-3 py-1 text-xs">
+                      {FEEDBACK_LABELS[feedback.response] || feedback.response}
+                    </span>
+                  </div>
+                  <p
+                    className="ori-type-system mb-2 text-[8px]"
+                    style={{ color: "var(--gold-soft)" }}
+                  >
+                    {insight.label} · {insight.action}
+                  </p>
+	                  <p
+	                    className="ori-type-reading-soft text-sm leading-relaxed"
+	                    style={{ color: "rgba(255,245,235,0.66)" }}
+	                  >
+	                    {feedback.comment || "Sem comentário aberto."}
+	                  </p>
+	                  <p
+	                    className="ori-type-reading-soft mt-2 text-xs leading-relaxed"
+	                    style={{ color: "rgba(255,245,235,0.52)" }}
+	                  >
+	                    Ponte sugerida: {bridge.title}
+	                  </p>
+	                </Link>
+	              );
+            })
+          ) : (
+            <p
+              className="ori-type-reading-soft text-sm"
+              style={{ color: "var(--text-soft)" }}
+            >
+              Nenhum feedback registrado ainda.
+            </p>
+          )}
+        </div>
+      </section>
 
       <section
         className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[26px] p-4 md:p-7 mb-6 md:mb-8"
