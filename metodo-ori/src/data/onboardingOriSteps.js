@@ -34,6 +34,13 @@ export const onboardingSteps = [
         placeholder: "Ex: São Paulo / Campinas",
         required: true,
       },
+      {
+        name: "whatsapp",
+        label: "WhatsApp",
+        type: "tel",
+        placeholder: "Ex: (11) 99999-9999",
+        required: true,
+      },
     ],
     ctaLabel: "Continuar",
   },

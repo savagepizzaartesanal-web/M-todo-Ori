@@ -66,6 +66,7 @@ const normalizeOnboardingProfile = (data) => ({
   preferredName: data.preferredName || "",
   birthDate: data.birthDate || "",
   residenceLocation: data.residenceLocation || "",
+  whatsapp: data.whatsapp || "",
   email: data.email || "",
   journeyStage: data.journeyStage || "",
   mainPain: data.mainPain || "",

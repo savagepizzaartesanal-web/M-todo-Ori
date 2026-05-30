@@ -221,6 +221,7 @@ function AdminClienteDetalhe() {
     ["Como gosta de ser chamada", onboardingProfile.preferredName],
     ["Data de nascimento", formatShortDate(onboardingProfile.birthDate)],
     ["Estado/Cidade onde mora", onboardingProfile.residenceLocation],
+    ["WhatsApp", onboardingProfile.whatsapp],
     ["Momento atual", onboardingProfile.journeyStage],
     ["O que mais pesa", onboardingProfile.mainPain],
     ["Descrição livre", onboardingProfile.mainPainCustom],

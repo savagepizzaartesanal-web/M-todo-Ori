@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 
 import { getAdminClientes } from "../services/api";
+import { getAdminClientPriority } from "../utils/adminClientPriority";
 import {
   FEEDBACK_LABELS,
   getFeedbackBridge,
@@ -69,6 +70,17 @@ function AdminDashboard() {
     () => new Map(clientes.map((cliente) => [cliente.user_id, cliente])),
     [clientes],
   );
+  const feedbackPorUser = useMemo(() => {
+    const map = new Map();
+
+    feedbacksProduto1.forEach((feedback) => {
+      if (!map.has(feedback.user_id)) {
+        map.set(feedback.user_id, feedback);
+      }
+    });
+
+    return map;
+  }, [feedbacksProduto1]);
   const feedbackResumo = useMemo(() => {
     const counts = feedbacksProduto1.reduce(
       (acc, feedback) => ({
@@ -125,6 +137,12 @@ function AdminDashboard() {
         .map((cliente) => {
           const resposta = respostasPorUser.get(cliente.user_id);
           const oraculo = oraculoPorUser.get(cliente.user_id);
+          const feedback = feedbackPorUser.get(cliente.user_id);
+          const priority = getAdminClientPriority({
+            cliente,
+            resposta,
+            feedback,
+          });
           const progress = resposta
             ? Math.round(
                 ((resposta.answered_count || 0) /
@@ -149,12 +167,14 @@ function AdminDashboard() {
           return {
             ...cliente,
             progress,
+            priority,
             signal,
             oraculoDate: oraculo?.date_key || null,
           };
         })
+        .sort((a, b) => b.priority.score - a.priority.score)
         .slice(0, 5),
-    [clientes, oraculoPorUser, respostasPorUser],
+    [clientes, feedbackPorUser, oraculoPorUser, respostasPorUser],
   );
 
   return (
@@ -401,11 +421,20 @@ function AdminDashboard() {
                   >
                     {cliente.email}
                   </p>
+                  <p
+                    className="ori-type-reading-soft mt-2 text-sm leading-relaxed"
+                    style={{ color: "rgba(255,245,235,0.68)" }}
+                  >
+                    {cliente.priority.reason}
+                  </p>
                 </div>
 
                 <div className="flex flex-wrap gap-2 md:justify-end">
                   <span className="ori-chip px-3 py-1.5 text-xs">
-                    {cliente.signal}
+                    {cliente.priority.label}
+                  </span>
+                  <span className="ori-chip px-3 py-1.5 text-xs">
+                    {cliente.priority.action}
                   </span>
                   <span className="ori-chip px-3 py-1.5 text-xs">
                     Oráculo: {cliente.oraculoDate || "sem carta"}

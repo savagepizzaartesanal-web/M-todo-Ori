@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { getAdminClientes, updateAdminCliente } from "../services/api";
+import { getAdminClientPriority } from "../utils/adminClientPriority";
 import {
   FEEDBACK_LABELS,
   getFeedbackBridge,
@@ -161,35 +162,59 @@ function AdminClientes() {
   const clientesFiltrados = useMemo(() => {
     const termo = busca.trim().toLowerCase();
 
-    return clientes.filter((cliente) => {
-      const matchBusca =
-        !termo ||
-        cliente.nome?.toLowerCase().includes(termo) ||
-        cliente.email?.toLowerCase().includes(termo) ||
-        cliente.resultado?.toLowerCase().includes(termo) ||
-        cliente.status_jornada?.toLowerCase().includes(termo);
+    return clientes
+      .filter((cliente) => {
+        const matchBusca =
+          !termo ||
+          cliente.nome?.toLowerCase().includes(termo) ||
+          cliente.email?.toLowerCase().includes(termo) ||
+          cliente.resultado?.toLowerCase().includes(termo) ||
+          cliente.status_jornada?.toLowerCase().includes(termo);
 
-      const matchFiltro =
-        filtro === "todos" ||
-        (filtro === "leads" && !cliente.resultado) ||
-        (filtro === "andamento" &&
-          respostasPorUser.get(cliente.user_id) &&
-          !respostasPorUser.get(cliente.user_id)?.is_complete) ||
-        (filtro === "produto1" && Boolean(cliente.resultado)) ||
-        (filtro === "produto2" && Boolean(cliente.produto_2_liberado)) ||
-        (filtro === "produto3" && Boolean(cliente.produto_3_liberado)) ||
-        (filtro === "oraculo" && Boolean(oraculoPorUser.get(cliente.user_id))) ||
-        (filtro === "feedback_vista" &&
-          feedbackPorUser.get(cliente.user_id)?.response === "me_senti_vista") ||
-        (filtro === "feedback_abstrato" &&
-          feedbackPorUser.get(cliente.user_id)?.response ===
-            "fez_sentido_mas_abstrato") ||
-        (filtro === "feedback_risco" &&
-          feedbackPorUser.get(cliente.user_id)?.response === "nao_me_reconheci") ||
-        (filtro === "admins" && Boolean(cliente.admin));
+        const matchFiltro =
+          filtro === "todos" ||
+          (filtro === "leads" && !cliente.resultado) ||
+          (filtro === "andamento" &&
+            respostasPorUser.get(cliente.user_id) &&
+            !respostasPorUser.get(cliente.user_id)?.is_complete) ||
+          (filtro === "produto1" && Boolean(cliente.resultado)) ||
+          (filtro === "produto2" && Boolean(cliente.produto_2_liberado)) ||
+          (filtro === "produto3" && Boolean(cliente.produto_3_liberado)) ||
+          (filtro === "oraculo" && Boolean(oraculoPorUser.get(cliente.user_id))) ||
+          (filtro === "atencao" &&
+            getAdminClientPriority({
+              cliente,
+              resposta: respostasPorUser.get(cliente.user_id),
+              feedback: feedbackPorUser.get(cliente.user_id),
+            }).score >= 72) ||
+          (filtro === "feedback_vista" &&
+            feedbackPorUser.get(cliente.user_id)?.response === "me_senti_vista") ||
+          (filtro === "feedback_abstrato" &&
+            feedbackPorUser.get(cliente.user_id)?.response ===
+              "fez_sentido_mas_abstrato") ||
+          (filtro === "feedback_risco" &&
+            feedbackPorUser.get(cliente.user_id)?.response ===
+              "nao_me_reconheci") ||
+          (filtro === "admins" && Boolean(cliente.admin));
 
-      return matchBusca && matchFiltro;
-    });
+        return matchBusca && matchFiltro;
+      })
+      .sort((a, b) => {
+        if (filtro !== "atencao") return 0;
+
+        const priorityA = getAdminClientPriority({
+          cliente: a,
+          resposta: respostasPorUser.get(a.user_id),
+          feedback: feedbackPorUser.get(a.user_id),
+        });
+        const priorityB = getAdminClientPriority({
+          cliente: b,
+          resposta: respostasPorUser.get(b.user_id),
+          feedback: feedbackPorUser.get(b.user_id),
+        });
+
+        return priorityB.score - priorityA.score;
+      });
   }, [clientes, busca, feedbackPorUser, filtro, oraculoPorUser, respostasPorUser]);
 
   const resumo = useMemo(() => {
@@ -210,9 +235,23 @@ function AdminClientes() {
       produto3: clientes.filter((cliente) =>
         Boolean(cliente.produto_3_liberado),
       ).length,
+      atencao: clientes.filter(
+        (cliente) =>
+          getAdminClientPriority({
+            cliente,
+            resposta: respostasPorUser.get(cliente.user_id),
+            feedback: feedbackPorUser.get(cliente.user_id),
+          }).score >= 72,
+      ).length,
       feedbacks: feedbacksProduto1.length,
     };
-  }, [clientes, feedbacksProduto1.length, oraculoPorUser, respostasPorUser]);
+  }, [
+    clientes,
+    feedbackPorUser,
+    feedbacksProduto1.length,
+    oraculoPorUser,
+    respostasPorUser,
+  ]);
 
   const filtros = [
     ["todos", "Todos"],
@@ -222,6 +261,7 @@ function AdminClientes() {
     ["produto2", "Dossiê ORI"],
     ["produto3", "Código Final"],
     ["oraculo", "Com Oráculo"],
+    ["atencao", "Atenção agora"],
     ["feedback_vista", "Alta aderência"],
     ["feedback_abstrato", "Abstrato"],
     ["feedback_risco", "Risco"],
@@ -354,6 +394,7 @@ function AdminClientes() {
             ["Com Oráculo", resumo.oraculo],
             ["Dossiê ORI", resumo.produto2],
             ["Código Final", resumo.produto3],
+            ["Atenção agora", resumo.atencao],
             ["Feedbacks", resumo.feedbacks],
           ].map(([label, value]) => (
             <div
@@ -464,6 +505,11 @@ function AdminClientes() {
               const feedback = feedbackPorUser.get(cliente.user_id);
               const feedbackInsight = getFeedbackInsight(feedback);
               const feedbackBridge = getFeedbackBridge(feedback, cliente);
+              const priority = getAdminClientPriority({
+                cliente,
+                resposta: respostasPorUser.get(cliente.user_id),
+                feedback,
+              });
               const signal = getClienteSignal(cliente);
 
               return (
@@ -650,6 +696,12 @@ function AdminClientes() {
                         style={{ color: "rgba(255,245,235,0.58)" }}
                       >
                         Próxima atenção: {signal}
+                      </p>
+                      <p
+                        className="ori-type-reading-soft mt-2 text-sm leading-relaxed"
+                        style={{ color: "rgba(255,245,235,0.66)" }}
+                      >
+                        Prioridade: {priority.label} · {priority.action}
                       </p>
                       <p
                         className="ori-type-system mt-2 text-[8px]"

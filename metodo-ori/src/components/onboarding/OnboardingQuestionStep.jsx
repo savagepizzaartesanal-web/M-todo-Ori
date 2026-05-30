@@ -87,7 +87,7 @@ function FieldRenderer({ field, value, onFieldChange, onCheckboxChange }) {
         {field.label}
       </label>
 
-      {field.type === "text" || field.type === "date" ? (
+      {field.type === "text" || field.type === "date" || field.type === "tel" ? (
         <input
           id={fieldId}
           type={field.type}
