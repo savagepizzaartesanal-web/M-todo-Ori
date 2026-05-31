@@ -3,7 +3,7 @@ import asyncio
 import httpx
 from fastapi import HTTPException, status
 
-from app.schemas.admin import AdminClienteUpdate
+from app.schemas.admin import AdminClienteEventoCreate, AdminClienteUpdate
 from app.schemas.auth import CurrentUser
 from app.services.auth_service import get_supabase_config
 
@@ -11,6 +11,7 @@ CLIENTES_TABLE = "clientes"
 PRODUTO_1_TABLE = "produto_1_respostas"
 ORACULO_TABLE = "oraculo_cartas_diarias"
 FEEDBACK_TABLE = "produto_1_feedbacks"
+ADMIN_EVENTS_TABLE = "admin_cliente_eventos"
 
 
 def get_supabase_rest_headers(current_user: CurrentUser) -> dict[str, str]:
@@ -153,6 +154,7 @@ async def fetch_admin_cliente(cliente_id: str, current_user: CurrentUser) -> dic
     produto1 = None
     oraculo = None
     feedback = None
+    eventos = []
 
     if user_id:
         async with httpx.AsyncClient(timeout=10) as client:
@@ -198,11 +200,27 @@ async def fetch_admin_cliente(cliente_id: str, current_user: CurrentUser) -> dic
         oraculo = oraculo_rows[0] if oraculo_rows else None
         feedback = feedback_rows[0] if feedback_rows else None
 
+    async with httpx.AsyncClient(timeout=10) as client:
+        eventos_response = await client.get(
+            f"{supabase_url}/rest/v1/{ADMIN_EVENTS_TABLE}",
+            params={
+                "select": "*",
+                "cliente_id": f"eq.{cliente_id}",
+                "order": "created_at.desc",
+                "limit": "30",
+            },
+            headers=headers,
+        )
+
+    if eventos_response.status_code < 400:
+        eventos = eventos_response.json()
+
     return {
         "cliente": cliente,
         "produto1_respostas": produto1,
         "oraculo_carta": oraculo,
         "produto1_feedback": feedback,
+        "eventos_admin": eventos,
     }
 
 
@@ -245,3 +263,44 @@ async def update_admin_cliente(
         )
 
     return await fetch_admin_cliente(cliente_id, current_user)
+
+
+async def create_admin_cliente_evento(
+    cliente_id: str,
+    payload: AdminClienteEventoCreate,
+    current_user: CurrentUser,
+) -> dict:
+    await ensure_admin(current_user)
+    supabase_url, _ = get_supabase_config()
+    headers = {
+        **get_supabase_rest_headers(current_user),
+        "Prefer": "return=representation",
+    }
+
+    async with httpx.AsyncClient(timeout=10) as client:
+        response = await client.post(
+            f"{supabase_url}/rest/v1/{ADMIN_EVENTS_TABLE}",
+            json={
+                "cliente_id": cliente_id,
+                "admin_user_id": current_user.user_id,
+                "event_type": payload.event_type,
+                "label": payload.label,
+                "details": payload.details,
+            },
+            headers=headers,
+        )
+
+    if response.status_code >= 400:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail="Não foi possível registrar o histórico administrativo.",
+        )
+
+    rows = response.json()
+    if not rows:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail="O histórico administrativo não confirmou o registro.",
+        )
+
+    return rows[0]

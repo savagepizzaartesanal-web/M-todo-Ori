@@ -41,10 +41,10 @@ export function getAdminClientNextBestAction({
   if (!cliente?.perfil_onboarding_concluido) {
     return {
       score: 96,
-      label: "Finalizar Entrada ORI",
-      reason: "A cliente ainda não completou o perfil inicial.",
-      action: "Enviar lembrete para concluir a Entrada ORI antes da leitura.",
-      messageGoal: "Retomar o cadastro sem explicar toda a jornada.",
+      label: "Perfil inicial pendente",
+      reason: "Entrada ORI não concluída.",
+      action: "Solicitar conclusão do perfil inicial antes da leitura.",
+      messageGoal: "Enviar lembrete curto, sem explicar todo o processo.",
       state: "sealed",
     };
   }
@@ -52,10 +52,10 @@ export function getAdminClientNextBestAction({
   if (resposta && !resposta.is_complete) {
     return {
       score: 86,
-      label: "Acompanhar leitura",
-      reason: `${firstName} iniciou o Código das Deusas e avançou ${progress || 0}%.`,
-      action: "Convidar a concluir as respostas do Produto 1.",
-      messageGoal: "Remover fricção e trazer a cliente de volta ao fluxo.",
+      label: "Leitura em andamento",
+      reason: `${firstName} iniciou o Código das Deusas e respondeu ${progress || 0}% do quiz.`,
+      action: "Solicitar conclusão das respostas do Produto 1.",
+      messageGoal: "Enviar lembrete objetivo para concluir a etapa iniciada.",
       state: "progress",
     };
   }
@@ -64,9 +64,9 @@ export function getAdminClientNextBestAction({
     return {
       score: 78,
       label: "Iniciar Código das Deusas",
-      reason: "Ainda não existe leitura revelada para esta cliente.",
-      action: "Direcionar para a primeira leitura simbólica.",
-      messageGoal: "Abrir a primeira camada sem criar excesso de explicação.",
+      reason: "Cliente ainda não tem leitura do Produto 1 registrada.",
+      action: "Direcionar para iniciar o Código das Deusas.",
+      messageGoal: "Indicar o primeiro passo com clareza.",
       state: "active",
     };
   }
@@ -74,10 +74,10 @@ export function getAdminClientNextBestAction({
   if (!feedback?.response) {
     return {
       score: 88,
-      label: "Pedir retorno da leitura",
-      reason: "Ela concluiu a leitura, mas ainda não contou como recebeu.",
-      action: "Pedir retorno antes de convidar para outra camada.",
-      messageGoal: "Entender se a leitura encontrou, confundiu ou precisa de ponte prática.",
+      label: "Resposta pós-leitura pendente",
+      reason: "Leitura concluída. Resposta pós-leitura ainda não registrada.",
+      action: "Solicitar resposta pós-leitura antes de convidar para outra camada.",
+      messageGoal: "Entender se a leitura foi clara, abstrata ou desalinhada.",
       state: "attention",
     };
   }
@@ -86,9 +86,9 @@ export function getAdminClientNextBestAction({
     return {
       score: 100,
       label: "Revisar leitura",
-      reason: "A cliente disse que não se reconheceu.",
-      action: "Acolher o retorno dela e revisar sinais antes de convidar para outra camada.",
-      messageGoal: "Diminuir ruído, pedir contexto e recuperar confiança.",
+      reason: "Cliente informou que não se reconheceu na leitura.",
+      action: "Revisar sinais antes de qualquer convite para próxima camada.",
+      messageGoal: "Pedir contexto, reduzir desalinhamento e evitar avanço prematuro.",
       state: "risk",
     };
   }
@@ -96,10 +96,10 @@ export function getAdminClientNextBestAction({
   if (feedback?.response === "fez_sentido_mas_abstrato") {
     return {
       score: 90,
-      label: "Dar exemplos concretos",
-      reason: "Ela entendeu a leitura, mas precisa ver isso em exemplos reais.",
-      action: "Enviar ponte prática antes do convite.",
-      messageGoal: "Transformar a leitura em exemplos de corpo, imagem e rotina.",
+      label: "Enviar exemplos práticos",
+      reason: "Leitura compreendida, mas ainda abstrata.",
+      action: "Enviar exemplos práticos antes do convite.",
+      messageGoal: "Conectar a leitura a corpo, imagem e rotina.",
       state: "attention",
     };
   }
@@ -112,9 +112,9 @@ export function getAdminClientNextBestAction({
     return {
       score: 82,
       label: "Convidar para Dossiê",
-      reason: "Ela se sentiu vista e pode receber um convite com cuidado.",
-      action: "Abrir abordagem de aprofundamento.",
-      messageGoal: "Conectar a força revelada com corpo, cor, cabelo e presença.",
+      reason: "Resposta positiva registrada. Cliente apta para convite ao Dossiê.",
+      action: "Enviar convite para o Dossiê ORI.",
+      messageGoal: "Explicar a próxima camada de forma objetiva e sem pressão.",
       state: "positive",
     };
   }
@@ -122,10 +122,10 @@ export function getAdminClientNextBestAction({
   if (cliente?.resultado && !cliente?.produto_2_liberado) {
     return {
       score: 72,
-      label: "Pronta para convite",
+      label: "Avaliar convite",
       reason: "Código das Deusas concluído e Dossiê ainda fechado.",
-      action: "Avaliar abordagem para próxima camada.",
-      messageGoal: "Convidar com cuidado, usando a leitura como ponte.",
+      action: "Avaliar convite para o Dossiê com base no contexto da cliente.",
+      messageGoal: "Conectar o convite ao resultado do Produto 1.",
       state: "positive",
     };
   }
@@ -134,9 +134,9 @@ export function getAdminClientNextBestAction({
     return {
       score: 48,
       label: "Acompanhar Dossiê",
-      reason: "A próxima camada já foi liberada.",
-      action: "Observar avanço antes do Código Final.",
-      messageGoal: "Acompanhar aplicação visual sem apressar o fechamento.",
+      reason: "Dossiê ORI liberado e Código Final ainda fechado.",
+      action: "Acompanhar avanço no Dossiê antes de liberar o Código Final.",
+      messageGoal: "Acompanhar execução sem antecipar a próxima etapa.",
       state: "progress",
     };
   }
@@ -145,9 +145,9 @@ export function getAdminClientNextBestAction({
     return {
       score: 28,
       label: "Ativar Oráculo",
-      reason: "A cliente ainda não tirou a carta diária de hoje.",
-      action: "Lembrar a carta diária como ritual leve de continuidade.",
-      messageGoal: "Manter vínculo sem transformar tudo em venda ou tarefa pesada.",
+      reason: "Carta diária de hoje ainda não registrada.",
+      action: "Sugerir uso do Oráculo como acompanhamento leve.",
+      messageGoal: "Manter engajamento sem criar pressão comercial.",
       state: "active",
     };
   }
@@ -166,9 +166,9 @@ export function getAdminClientNextBestAction({
   return {
     score: 10,
     label: "Sem urgência",
-    reason: "Nenhum sinal forte pedindo ação agora.",
+    reason: "Nenhuma pendência relevante identificada.",
     action: "Manter acompanhamento normal.",
-    messageGoal: "Observar sem interferir.",
+    messageGoal: "Sem necessidade de contato ativo agora.",
     state: "empty",
   };
 }
@@ -210,30 +210,30 @@ export function getAdminClientMemory({
       : onboardingProfile.mainPain || onboardingProfile.mainPainCustom;
   const mainDesire = onboardingProfile.mainDesire;
 
-  let stateText = `${preferredName} ainda está em entrada.`;
+  let stateText = `${preferredName} ainda está na etapa de entrada.`;
 
   if (!cliente?.perfil_onboarding_concluido) {
     stateText =
-      `${preferredName} ainda não concluiu o perfil inicial. O foco é destravar a Entrada ORI.`;
+      `${preferredName} ainda não concluiu o perfil inicial.`;
   } else if (resposta && !resposta.is_complete) {
     stateText =
-      `${preferredName} iniciou o Código das Deusas e avançou ${progress || 0}%.`;
+      `${preferredName} iniciou o Código das Deusas e respondeu ${progress || 0}% do quiz.`;
   } else if (cliente?.resultado) {
     stateText =
       `${preferredName} concluiu o Código das Deusas com leitura ${resultName}.`;
   }
 
-  let receptionText = "Ela ainda não contou como recebeu a leitura.";
+  let receptionText = "Resposta pós-leitura ainda pendente.";
 
   if (feedback?.response === "me_senti_vista") {
     receptionText =
-      "A leitura teve alta aderência: ela sinalizou que se sentiu vista.";
+      "Resposta positiva registrada: ela sinalizou que se sentiu vista.";
   } else if (feedback?.response === "fez_sentido_mas_abstrato") {
     receptionText =
-      "A leitura tocou, mas ainda precisa virar exemplo concreto antes do convite.";
+      "Leitura compreendida, mas ainda abstrata. Requer exemplos práticos antes do convite.";
   } else if (feedback?.response === "nao_me_reconheci") {
     receptionText =
-      "Há risco de desalinhamento: ela disse que não se reconheceu na leitura.";
+      "Risco de desalinhamento: ela informou que não se reconheceu na leitura.";
   }
 
   const contextParts = [
@@ -243,12 +243,12 @@ export function getAdminClientMemory({
   ].filter(Boolean);
 
   return {
-    title: "Agora",
+    title: "Status da cliente",
     summary: `${stateText} ${receptionText}`,
     signals: contextParts,
     nextContact:
       `${activePriority.action} ` +
-      `${activePriority.messageGoal || "Entrar pelo próximo passo, não por uma nova explicação da jornada."}`,
+      `${activePriority.messageGoal || "Orientar pelo próximo passo objetivo."}`,
   };
 }
 
@@ -267,9 +267,9 @@ export function getAdminClientApproach({
     };
   }
 
-  if (priority?.label === "Pedir retorno da leitura") {
+  if (priority?.label === "Resposta pós-leitura pendente") {
     return {
-      title: "Pedir como ela recebeu",
+      title: "Solicitar resposta pós-leitura",
       text:
         `Oi, ${firstName}. Vi que sua leitura do Código das Deusas já abriu. ` +
         "Antes de seguir para a próxima camada, queria saber como ela chegou para você: fez sentido, ficou abstrata ou não te encontrou? " +
@@ -279,7 +279,7 @@ export function getAdminClientApproach({
 
   if (priority?.state === "progress") {
     return {
-      title: "Retomada da leitura",
+      title: "Solicitar conclusão da leitura",
       text:
         `Oi, ${firstName}. Vi que você já começou sua leitura no ORI. ` +
         "Quando puder, finalize as respostas para o sistema revelar sua composição arquetípica com mais precisão.",
@@ -288,7 +288,7 @@ export function getAdminClientApproach({
 
   if (priority?.state === "positive") {
     return {
-      title: "Convite para próxima camada",
+      title: "Convite para o Dossiê",
       text:
         `Oi, ${firstName}. Sua leitura já mostrou uma direção importante. ` +
         "O próximo passo é traduzir essa força no corpo, cabelo, cor, beleza e presença. " +
@@ -298,7 +298,7 @@ export function getAdminClientApproach({
 
   if (priority?.state === "sealed") {
     return {
-      title: "Retomada da Entrada ORI",
+      title: "Solicitar conclusão da Entrada ORI",
       text:
         `Oi, ${firstName}. Vi que sua Entrada ORI ainda não foi finalizada. ` +
         "Quando você completar essa parte, consigo ler sua jornada com mais precisão e liberar a próxima etapa.",

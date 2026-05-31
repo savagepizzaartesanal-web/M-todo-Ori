@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends
 
-from app.schemas.admin import AdminClienteUpdate
+from app.schemas.admin import AdminClienteEventoCreate, AdminClienteUpdate
 from app.schemas.admin_ai import AdminAiMessageRequest, AdminAiMessageResponse
 from app.schemas.auth import CurrentUser
 from app.services.admin_ai_service import generate_admin_ai_message
 from app.services.admin_service import (
+    create_admin_cliente_evento,
     fetch_admin_cliente,
     fetch_admin_overview,
     update_admin_cliente,
@@ -37,6 +38,19 @@ async def patch_admin_cliente(
     current_user: CurrentUser = Depends(get_current_user),
 ):
     return await update_admin_cliente(
+        cliente_id=cliente_id,
+        payload=payload,
+        current_user=current_user,
+    )
+
+
+@router.post("/clientes/{cliente_id}/eventos")
+async def create_admin_evento(
+    cliente_id: str,
+    payload: AdminClienteEventoCreate,
+    current_user: CurrentUser = Depends(get_current_user),
+):
+    return await create_admin_cliente_evento(
         cliente_id=cliente_id,
         payload=payload,
         current_user=current_user,

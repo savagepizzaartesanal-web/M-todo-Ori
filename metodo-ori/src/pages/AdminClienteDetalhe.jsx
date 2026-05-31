@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 
 import { questions } from "../data/questions";
 import {
+  createAdminClienteEvento,
   generateAdminAiMessage,
   getAdminCliente,
   updateAdminCliente,
@@ -16,7 +17,6 @@ import {
 import {
   FEEDBACK_LABELS,
   getFeedbackBridge,
-  getFeedbackInsight,
 } from "../utils/feedbackInsights";
 
 function AdminClienteDetalhe() {
@@ -28,9 +28,11 @@ function AdminClienteDetalhe() {
   const [saving, setSaving] = useState(false);
   const [perfilAberto, setPerfilAberto] = useState(false);
   const [leituraAberta, setLeituraAberta] = useState(false);
+  const [oraculoAberto, setOraculoAberto] = useState(false);
   const [produto1Respostas, setProduto1Respostas] = useState(null);
   const [produto1Feedback, setProduto1Feedback] = useState(null);
   const [oraculoCarta, setOraculoCarta] = useState(null);
+  const [eventosAdmin, setEventosAdmin] = useState([]);
   const [copiedApproach, setCopiedApproach] = useState(false);
   const [aiApproach, setAiApproach] = useState(null);
   const [generatingAi, setGeneratingAi] = useState(false);
@@ -48,6 +50,7 @@ function AdminClienteDetalhe() {
       setProduto1Respostas(data.produto1_respostas || null);
       setProduto1Feedback(data.produto1_feedback || null);
       setOraculoCarta(data.oraculo_carta || null);
+      setEventosAdmin(data.eventos_admin || []);
       setAiApproach(null);
       setAiNotice("");
     } catch (error) {
@@ -56,6 +59,7 @@ function AdminClienteDetalhe() {
       setProduto1Respostas(null);
       setProduto1Feedback(null);
       setOraculoCarta(null);
+      setEventosAdmin([]);
     } finally {
       setLoading(false);
     }
@@ -65,13 +69,29 @@ function AdminClienteDetalhe() {
     Promise.resolve().then(fetchCliente);
   }, [fetchCliente]);
 
-  const updateCliente = async (updates) => {
+  const registerAdminEvent = async (eventType, label, details = {}) => {
+    if (!cliente?.id) return;
+
+    try {
+      const event = await createAdminClienteEvento(cliente.id, {
+        event_type: eventType,
+        label,
+        details,
+      });
+      setEventosAdmin((current) => [event, ...current].slice(0, 30));
+    } catch (error) {
+      console.log("Histórico administrativo indisponível:", error);
+    }
+  };
+
+  const updateCliente = async (updates, eventLabel = "Ficha atualizada") => {
     if (!cliente) return;
 
     setSaving(true);
 
     try {
       await updateAdminCliente(cliente.id, updates);
+      await registerAdminEvent("cliente_atualizada", eventLabel, { updates });
     } catch (error) {
       console.log("Erro ao atualizar cliente:", error);
     }
@@ -83,7 +103,7 @@ function AdminClienteDetalhe() {
   const handleSalvarObservacoes = () => {
     updateCliente({
       observacoes_admin: observacoes,
-    });
+    }, "Observações internas atualizadas");
   };
 
   const formatDate = (date) => {
@@ -104,6 +124,18 @@ function AdminClienteDetalhe() {
       month: "2-digit",
       year: "numeric",
     }).format(new Date(`${date}T00:00:00`));
+  };
+
+  const formatDateTime = (date) => {
+    if (!date) return "Sem data";
+
+    return new Intl.DateTimeFormat("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(new Date(date));
   };
 
   const parseOnboardingProfile = (profile) => {
@@ -280,7 +312,12 @@ function AdminClienteDetalhe() {
   const feedbackLabel = produto1Feedback
     ? FEEDBACK_LABELS[produto1Feedback.response] || produto1Feedback.response
     : "Ainda não respondeu";
-  const feedbackInsight = getFeedbackInsight(produto1Feedback);
+  const lastContactEvent = eventosAdmin.find((event) =>
+    ["mensagem_copiada", "whatsapp_aberto"].includes(event.event_type),
+  );
+  const lastAdminContact = lastContactEvent?.created_at
+    ? formatDateTime(lastContactEvent.created_at)
+    : "Sem registro";
   const feedbackBridge = getFeedbackBridge(produto1Feedback, cliente);
   const priority = getAdminClientPriority({
     cliente,
@@ -333,10 +370,14 @@ function AdminClienteDetalhe() {
         document.body.removeChild(textArea);
       }
       setCopiedApproach(true);
+      await registerAdminEvent("mensagem_copiada", "Mensagem sugerida copiada");
       window.setTimeout(() => setCopiedApproach(false), 1800);
     } catch (error) {
       console.log("Não consegui copiar a abordagem:", error);
     }
+  };
+  const handleWhatsappOpen = () => {
+    registerAdminEvent("whatsapp_aberto", "WhatsApp aberto pela ficha");
   };
   const handleGenerateAiApproach = async () => {
     setGeneratingAi(true);
@@ -469,10 +510,10 @@ function AdminClienteDetalhe() {
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4 mb-8">
         {[
-          ["Prioridade", priority.label],
-          ["Fazer", nextAction.label],
-          ["Como ela recebeu", feedbackLabel],
+          ["Etapa atual", etapaAtual],
+          ["Resposta pós-leitura", feedbackLabel],
           ["WhatsApp", contactWhatsapp || "Não informado"],
+          ["Último contato", lastAdminContact],
         ].map(([label, value]) => (
           <div
             key={label}
@@ -530,13 +571,6 @@ function AdminClienteDetalhe() {
               {memory.title}
             </p>
 
-            <h2
-              className="ori-type-revelation text-2xl mb-2"
-              style={{ color: "var(--gold-primary)", fontWeight: 620 }}
-            >
-              {priority.label}
-            </h2>
-
             <p
               className="ori-type-reading-soft text-sm leading-relaxed"
               style={{ color: "rgba(255,245,235,0.74)" }}
@@ -560,26 +594,6 @@ function AdminClienteDetalhe() {
                 ))}
               </div>
             )}
-            <div
-              className="mt-4 rounded-[16px] p-3"
-              style={{
-                background: "rgba(5,2,2,0.28)",
-                border: "1px solid rgba(242,185,104,0.09)",
-              }}
-            >
-              <p
-                className="ori-type-system mb-1 text-[8px]"
-                style={{ color: "var(--gold-soft)" }}
-              >
-                Direção de contato
-              </p>
-              <p
-                className="ori-type-reading-soft text-xs leading-relaxed"
-                style={{ color: "rgba(255,245,235,0.66)" }}
-              >
-                {memory.nextContact}
-              </p>
-            </div>
           </div>
 
           <div
@@ -593,7 +607,7 @@ function AdminClienteDetalhe() {
               className="ori-type-system text-[9px] mb-3"
               style={{ color: "var(--gold-soft)" }}
             >
-              Fazer
+              Ação recomendada
             </p>
 
             <h2
@@ -620,7 +634,7 @@ function AdminClienteDetalhe() {
                 className="ori-type-system mb-1 text-[8px]"
                 style={{ color: "rgba(242,185,104,0.72)" }}
               >
-                Fazer agora
+                Próximo passo
               </p>
               <p
                 className="ori-type-reading-soft text-xs leading-relaxed"
@@ -644,7 +658,7 @@ function AdminClienteDetalhe() {
                   className="ori-type-system text-[9px] mb-2"
                   style={{ color: "var(--gold-soft)" }}
                 >
-                  Mensagem
+                  Mensagem sugerida
                 </p>
                 <h3
                   className="ori-type-revelation text-xl"
@@ -692,6 +706,7 @@ function AdminClienteDetalhe() {
                     href={whatsappUrl}
                     target="_blank"
                     rel="noreferrer"
+                    onClick={handleWhatsappOpen}
                     className="ori-button-secondary rounded-full px-4 py-2 text-xs"
                     style={{
                       background: "rgba(120,255,160,0.08)",
@@ -736,86 +751,6 @@ function AdminClienteDetalhe() {
             </p>
           </div>
 
-          <div
-            className="ori-card-secondary rounded-[22px] p-4 md:p-5"
-            style={{
-              background: "rgba(255,255,255,0.024)",
-              border: "1px solid rgba(242,185,104,0.08)",
-            }}
-          >
-            <p
-              className="ori-type-system text-[9px] mb-3"
-              style={{ color: "var(--gold-soft)" }}
-            >
-              Produto 1
-            </p>
-
-            <p
-              className="ori-type-revelation text-xl mb-3"
-              style={{ color: "var(--gold-primary)", fontWeight: 600 }}
-            >
-              {produto1Result || "Sem resultado final"}
-            </p>
-
-            <div
-              className="h-1 rounded-full overflow-hidden"
-              style={{
-                background: "rgba(255,255,255,0.05)",
-                border: "1px solid rgba(242,185,104,0.07)",
-              }}
-            >
-              <div
-                className="h-full rounded-full"
-                style={{
-                  width: `${produto1Progress}%`,
-                  background:
-                    "linear-gradient(90deg, rgba(210,135,70,0.62), rgba(242,185,104,0.95))",
-                }}
-              />
-            </div>
-
-            <p
-              className="ori-type-reading-soft mt-3 text-xs"
-              style={{ color: "rgba(255,245,235,0.56)" }}
-            >
-              {produto1AnsweredCount} de {produto1TotalQuestions} sinais ·{" "}
-              {produto1Progress}%
-            </p>
-          </div>
-
-          <div
-            className="ori-card-secondary rounded-[22px] p-4 md:p-5"
-            style={{
-              background: "rgba(255,255,255,0.024)",
-              border: "1px solid rgba(242,185,104,0.08)",
-            }}
-          >
-            <p
-              className="ori-type-system text-[9px] mb-3"
-              style={{ color: "var(--gold-soft)" }}
-            >
-              Oráculo
-            </p>
-
-            <p
-              className="ori-type-revelation text-xl mb-2"
-              style={{
-                color: oraculoCarta
-                  ? "var(--gold-primary)"
-                  : "rgba(255,245,235,0.58)",
-                fontWeight: 600,
-              }}
-            >
-              {oraculoCardTitle}
-            </p>
-
-            <p
-              className="ori-type-reading-soft text-xs"
-              style={{ color: "rgba(255,245,235,0.56)" }}
-            >
-              {oraculoCarta ? `Última carta: ${oraculoDate}` : "Sem carta registrada"}
-            </p>
-          </div>
         </div>
       </section>
 
@@ -834,13 +769,13 @@ function AdminClienteDetalhe() {
             className="ori-type-system text-[10px] mb-3"
             style={{ color: "var(--gold-soft)" }}
           >
-            Como ela recebeu
+            Resposta pós-leitura
           </p>
           <h2
             className="ori-type-revelation text-2xl md:text-3xl mb-4"
             style={{ color: "var(--gold-primary)", fontWeight: 620 }}
           >
-            Como a cliente recebeu o Código das Deusas
+            Registro da resposta ao Código das Deusas
           </h2>
 
           <div className="grid gap-3 md:grid-cols-[0.7fr_1.3fr]">
@@ -883,55 +818,6 @@ function AdminClienteDetalhe() {
                 style={{ color: "rgba(255,245,235,0.74)" }}
               >
                 {produto1Feedback.comment || "A cliente não deixou comentário aberto."}
-              </p>
-            </div>
-          </div>
-          <div className="mt-3 grid gap-3 md:grid-cols-[0.8fr_1.2fr]">
-            <div
-              className="rounded-[22px] p-4"
-              style={{
-                background: "rgba(255,255,255,0.024)",
-                border: "1px solid rgba(242,185,104,0.08)",
-              }}
-            >
-              <p
-                className="ori-type-system text-[8px] mb-2"
-                style={{ color: "rgba(242,185,104,0.72)" }}
-              >
-                Ação sugerida
-              </p>
-              <p
-                className="ori-type-reading-soft text-sm leading-relaxed"
-                style={{ color: "rgba(255,245,235,0.74)" }}
-              >
-                {feedbackInsight.action}
-              </p>
-            </div>
-
-            <div
-              className="rounded-[22px] p-4"
-              style={{
-                background: "rgba(242,185,104,0.045)",
-                border: "1px solid rgba(242,185,104,0.12)",
-              }}
-            >
-              <p
-                className="ori-type-system text-[8px] mb-2"
-                style={{ color: "rgba(242,185,104,0.72)" }}
-              >
-                Ponte pronta
-              </p>
-              <h3
-                className="ori-type-revelation mb-2 text-lg"
-                style={{ color: "var(--gold-primary)", fontWeight: 600 }}
-              >
-                {feedbackBridge.title}
-              </h3>
-              <p
-                className="ori-type-reading-soft text-sm leading-relaxed"
-                style={{ color: "rgba(255,245,235,0.74)" }}
-              >
-                {feedbackBridge.text}
               </p>
             </div>
           </div>
@@ -1285,8 +1171,13 @@ function AdminClienteDetalhe() {
           }}
         />
 
-        <div className="relative z-10 p-6 md:p-7">
-          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-5">
+        <div className="relative z-10">
+          <button
+            type="button"
+            onClick={() => setOraculoAberto((current) => !current)}
+            className="w-full p-6 text-left md:p-7"
+          >
+            <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
             <div>
               <div className="inline-flex items-center gap-4 mb-4">
                 <div
@@ -1326,26 +1217,32 @@ function AdminClienteDetalhe() {
               </p>
             </div>
 
-            <span
-              className="ori-pill inline-flex w-fit items-center justify-center px-5 py-2.5 text-xs uppercase tracking-[0.18em]"
-              data-state={oraculoCarta ? "revealed" : "sealed"}
-              style={{
-                background: oraculoCarta
-                  ? "rgba(242,185,104,0.085)"
-                  : "rgba(255,255,255,0.026)",
-                border: oraculoCarta
-                  ? "1px solid rgba(242,185,104,0.16)"
-                  : "1px solid rgba(255,255,255,0.08)",
-                color: oraculoCarta
-                  ? "var(--gold-primary)"
-                  : "rgba(255,245,235,0.54)",
-              }}
-            >
-              {oraculoCarta ? "Registrada" : "Sem carta"}
-            </span>
-          </div>
+              <span
+                className="ori-pill inline-flex w-fit items-center justify-center px-5 py-2.5 text-xs uppercase tracking-[0.18em]"
+                data-state={oraculoCarta ? "revealed" : "sealed"}
+                style={{
+                  background: oraculoCarta
+                    ? "rgba(242,185,104,0.085)"
+                    : "rgba(255,255,255,0.026)",
+                  border: oraculoCarta
+                    ? "1px solid rgba(242,185,104,0.16)"
+                    : "1px solid rgba(255,255,255,0.08)",
+                  color: oraculoCarta
+                    ? "var(--gold-primary)"
+                    : "rgba(255,245,235,0.54)",
+                }}
+              >
+                {oraculoAberto
+                  ? "Ocultar carta"
+                  : oraculoCarta
+                    ? "Ver carta"
+                    : "Sem carta"}
+              </span>
+            </div>
+          </button>
 
-          <div className="mt-5 grid md:grid-cols-[0.7fr_1.3fr] gap-3">
+          {oraculoAberto && (
+            <div className="grid gap-3 px-6 pb-6 md:grid-cols-[0.7fr_1.3fr] md:px-7 md:pb-7">
             <div
               className="ori-card-secondary rounded-[22px] p-4"
               style={{
@@ -1397,7 +1294,8 @@ function AdminClienteDetalhe() {
                 {oraculoMessage}
               </p>
             </div>
-          </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -1538,7 +1436,9 @@ function AdminClienteDetalhe() {
                     : cliente.resultado
                       ? "Produto 1 concluído"
                       : "Cadastro recebido",
-                })
+                }, cliente.produto_2_liberado
+                  ? "Acesso ao Dossiê ORI removido"
+                  : "Dossiê ORI liberado")
               }
               className="ori-button-secondary px-6 py-4 rounded-full font-medium disabled:opacity-60"
               style={{
@@ -1570,7 +1470,9 @@ function AdminClienteDetalhe() {
                       : cliente.resultado
                         ? "Produto 1 concluído"
                         : "Cadastro recebido",
-                })
+                }, cliente.produto_3_liberado
+                  ? "Acesso ao Código Final removido"
+                  : "Código Final liberado")
               }
               className="ori-button-secondary px-6 py-4 rounded-full font-medium disabled:opacity-60"
               style={{
@@ -1595,7 +1497,7 @@ function AdminClienteDetalhe() {
               onClick={() =>
                 updateCliente({
                   status_jornada: "Dossiê enviado",
-                })
+                }, "Dossiê marcado como enviado")
               }
               className="ori-button-secondary px-6 py-4 rounded-full font-medium disabled:opacity-60"
               style={{
@@ -1612,7 +1514,7 @@ function AdminClienteDetalhe() {
               onClick={() =>
                 updateCliente({
                   status_jornada: "Finalizado",
-                })
+                }, "Jornada marcada como finalizada")
               }
               className="ori-button-secondary px-6 py-4 rounded-full font-medium disabled:opacity-60"
               style={{
@@ -1629,7 +1531,9 @@ function AdminClienteDetalhe() {
               onClick={() =>
                 updateCliente({
                   admin: !cliente.admin,
-                })
+                }, cliente.admin
+                  ? "Acesso administrativo removido"
+                  : "Acesso administrativo concedido")
               }
               className="ori-button-secondary px-6 py-4 rounded-full font-medium disabled:opacity-60"
               style={{
@@ -1647,6 +1551,68 @@ function AdminClienteDetalhe() {
           </div>
         </div>
       </div>
+
+      <section
+        className="ori-card-secondary relative mb-8 overflow-hidden rounded-[30px] p-6 md:p-7 cinematic-card"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(18,9,10,0.72), rgba(7,3,4,0.88))",
+          border: "1px solid rgba(242,185,104,0.10)",
+          backdropFilter: "blur(14px)",
+          WebkitBackdropFilter: "blur(14px)",
+        }}
+      >
+        <div className="mb-6 inline-flex items-center gap-4">
+          <div
+            className="h-px w-8"
+            style={{
+              background:
+                "linear-gradient(90deg, var(--gold-primary), transparent)",
+            }}
+          />
+          <p
+            className="ori-type-system text-[10px] md:text-xs"
+            style={{ color: "var(--gold-soft)" }}
+          >
+            Histórico administrativo
+          </p>
+        </div>
+
+        {eventosAdmin.length > 0 ? (
+          <div className="grid gap-2.5">
+            {eventosAdmin.map((event) => (
+              <div
+                key={event.id}
+                className="grid gap-1 rounded-[18px] px-4 py-3 md:grid-cols-[1fr_auto] md:items-center md:gap-4"
+                style={{
+                  background: "rgba(255,255,255,0.022)",
+                  border: "1px solid rgba(242,185,104,0.08)",
+                }}
+              >
+                <p
+                  className="ori-type-reading-soft text-sm"
+                  style={{ color: "rgba(255,245,235,0.72)" }}
+                >
+                  {event.label}
+                </p>
+                <p
+                  className="ori-type-system text-[9px]"
+                  style={{ color: "rgba(242,185,104,0.62)" }}
+                >
+                  {formatDateTime(event.created_at)}
+                </p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p
+            className="ori-type-reading-soft text-sm"
+            style={{ color: "rgba(255,245,235,0.56)" }}
+          >
+            Nenhuma ação administrativa registrada ainda.
+          </p>
+        )}
+      </section>
 
       <div
         className="ori-card-secondary relative overflow-hidden rounded-[30px] p-6 md:p-7 cinematic-card"
