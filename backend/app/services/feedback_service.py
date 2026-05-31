@@ -74,7 +74,7 @@ async def save_produto1_feedback(
         "response": payload.response,
         "comment": payload.comment,
         "resultado": payload.resultado,
-        "payload": payload.payload or {},
+        "payload": payload.payload.model_dump(mode="json") if payload.payload else {},
     }
     headers = {
         **get_supabase_rest_headers(current_user),

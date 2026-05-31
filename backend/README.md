@@ -15,7 +15,7 @@ sudo apt install python3.12-venv python3-pip
 Crie um `.env` em `backend/` com:
 
 ```env
-FRONTEND_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
+FRONTEND_ORIGINS=http://localhost:5173,http://127.0.0.1:5173,http://localhost:5177,http://127.0.0.1:5177
 APP_ENV=development
 SUPABASE_URL=sua_url_do_supabase
 SUPABASE_PUBLISHABLE_KEY=sua_chave_publicavel_do_supabase
@@ -33,6 +33,7 @@ API:
 
 - `http://localhost:8000`
 - `http://localhost:8000/health`
+- `http://localhost:8000/health/dependencies`
 - `http://localhost:8000/docs`
 
 Rotas iniciais:
@@ -46,6 +47,12 @@ Rotas iniciais:
 As respostas do Produto 1 são persistidas na tabela
 `public.produto_1_respostas` do Supabase/PostgreSQL. Rode antes o SQL
 `metodo-ori/supabase-produto-1-respostas.sql` no SQL Editor do Supabase.
+
+Para habilitar o reset completo da leitura no piloto, rode também:
+
+```txt
+metodo-ori/supabase-piloto-estabilizacao.sql
+```
 
 ## Frontend
 

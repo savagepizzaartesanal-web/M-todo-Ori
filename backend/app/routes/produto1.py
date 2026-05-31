@@ -21,6 +21,7 @@ from app.services.pdf_service import (
 from app.services.produto1_service import (
     concluir_produto1,
     get_produto1_respostas,
+    reset_produto1,
     save_produto1_respostas,
 )
 
@@ -58,6 +59,13 @@ async def concluir_leitura(
         )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@router.post("/reset")
+async def reset_leitura(
+    current_user: CurrentUser = Depends(get_current_user),
+):
+    return await reset_produto1(current_user=current_user)
 
 
 @router.get("/leitura/me", response_model=Produto1LeituraResponse)

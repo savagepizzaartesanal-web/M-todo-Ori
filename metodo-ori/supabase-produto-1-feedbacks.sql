@@ -72,8 +72,12 @@ with check (
 );
 
 drop policy if exists "produto_1_feedbacks_delete_admin_only" on public.produto_1_feedbacks;
-create policy "produto_1_feedbacks_delete_admin_only"
+drop policy if exists "produto_1_feedbacks_delete_own_or_admin" on public.produto_1_feedbacks;
+create policy "produto_1_feedbacks_delete_own_or_admin"
 on public.produto_1_feedbacks
 for delete
 to authenticated
-using (public.current_user_is_ori_admin());
+using (
+  user_id = auth.uid()
+  or public.current_user_is_ori_admin()
+);

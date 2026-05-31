@@ -1,14 +1,32 @@
-from pydantic import BaseModel, Field
+from datetime import date
+from typing import Literal
+
+from pydantic import BaseModel, ConfigDict, Field
+
+OracleCardId = Literal[
+    "essencia",
+    "sombra",
+    "imagem",
+    "presenca",
+    "caminho",
+    "limite",
+    "corpo",
+    "desejo",
+    "coerencia",
+    "travessia",
+]
 
 
 class OraculoCartaDiaRequest(BaseModel):
-    dateKey: str = Field(..., description="Data da carta no formato YYYY-MM-DD.")
-    cardId: str
-    cardTitle: str
-    revealLabel: str
-    code: str
-    message: str
-    cardOrder: list[str] = Field(default_factory=list)
+    model_config = ConfigDict(extra="forbid")
+
+    dateKey: date = Field(..., description="Data da carta no formato YYYY-MM-DD.")
+    cardId: OracleCardId
+    cardTitle: str = Field(..., min_length=2, max_length=80)
+    revealLabel: str = Field(..., min_length=2, max_length=80)
+    code: str = Field(..., min_length=1, max_length=8)
+    message: str = Field(..., min_length=2, max_length=900)
+    cardOrder: list[OracleCardId] = Field(default_factory=list, max_length=10)
 
 
 class OraculoCartaDiaResponse(BaseModel):

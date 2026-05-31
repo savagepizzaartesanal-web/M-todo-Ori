@@ -65,13 +65,13 @@ async def salvar_carta_do_dia(
     row_payload = {
         "user_id": current_user.user_id,
         "email": current_user.email,
-        "date_key": payload.dateKey,
+        "date_key": str(payload.dateKey),
         "card_id": payload.cardId,
         "card_title": payload.cardTitle,
         "reveal_label": payload.revealLabel,
         "code": payload.code,
         "message": payload.message,
-        "payload": payload.model_dump(),
+        "payload": payload.model_dump(mode="json"),
     }
     headers = {
         **get_supabase_rest_headers(current_user),

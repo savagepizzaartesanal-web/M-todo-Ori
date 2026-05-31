@@ -1,3 +1,4 @@
+import asyncio
 from datetime import UTC, datetime
 
 import httpx
@@ -15,6 +16,8 @@ from app.services.quiz_service import calculate_quiz_result, normalize_answers
 
 TABLE_NAME = "produto_1_respostas"
 CLIENTES_TABLE_NAME = "clientes"
+FEEDBACK_TABLE_NAME = "produto_1_feedbacks"
+FEEDBACK_CONTEXT = "produto-1-leitura"
 
 
 def get_supabase_rest_headers(current_user: CurrentUser) -> dict[str, str]:
@@ -227,3 +230,52 @@ async def concluir_produto1(
         result=result,
         respostas=respostas,
     )
+
+
+async def reset_produto1(
+    *,
+    current_user: CurrentUser,
+) -> dict[str, bool]:
+    supabase_url, _ = get_supabase_config()
+    headers = get_supabase_rest_headers(current_user)
+    reset_cliente_payload = {
+        "resultado": None,
+        "arquetipo_principal": None,
+        "arquetipo_secundario": None,
+        "status_jornada": "Código das Deusas reiniciado",
+        "produto_1_liberado": True,
+    }
+
+    await save_produto1_respostas(answers={}, current_user=current_user)
+
+    async with httpx.AsyncClient(timeout=8) as client:
+        cliente_response, feedback_response = await asyncio.gather(
+            client.patch(
+                f"{supabase_url}/rest/v1/{CLIENTES_TABLE_NAME}",
+                params={"user_id": f"eq.{current_user.user_id}"},
+                json=reset_cliente_payload,
+                headers=headers,
+            ),
+            client.delete(
+                f"{supabase_url}/rest/v1/{FEEDBACK_TABLE_NAME}",
+                params={
+                    "user_id": f"eq.{current_user.user_id}",
+                    "context": f"eq.{FEEDBACK_CONTEXT}",
+                },
+                headers=headers,
+            ),
+        )
+
+    if cliente_response.status_code >= 400:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail="Não foi possível reiniciar o resultado da cliente.",
+        )
+
+    if feedback_response.status_code >= 400:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail="Não foi possível limpar o feedback anterior da leitura.",
+        )
+
+    return {"reset": True}

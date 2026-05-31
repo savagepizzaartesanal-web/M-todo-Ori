@@ -1,3 +1,5 @@
+from typing import Literal
+
 from fastapi import APIRouter, Depends
 
 from app.schemas.auth import CurrentUser
@@ -13,7 +15,7 @@ router = APIRouter(prefix="/api/feedback", tags=["feedback"])
 
 @router.get("/produto-1/me", response_model=Produto1FeedbackResponse | None)
 async def read_produto1_feedback(
-    context: str = "espelho-ori",
+    context: Literal["produto-1-leitura", "espelho-ori"] = "espelho-ori",
     current_user: CurrentUser = Depends(get_current_user),
 ):
     return await get_produto1_feedback(

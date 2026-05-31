@@ -206,6 +206,12 @@ export function completeProduto1(answers) {
   });
 }
 
+export function resetProduto1() {
+  return requestAuthenticatedApi("/api/produto-1/reset", {
+    method: "POST",
+  });
+}
+
 export function getProduto1Reading() {
   return requestAuthenticatedApi("/api/produto-1/leitura/me");
 }

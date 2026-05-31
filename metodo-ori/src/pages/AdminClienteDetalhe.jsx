@@ -37,6 +37,7 @@ function AdminClienteDetalhe() {
   const [aiApproach, setAiApproach] = useState(null);
   const [generatingAi, setGeneratingAi] = useState(false);
   const [aiNotice, setAiNotice] = useState("");
+  const [historyOpen, setHistoryOpen] = useState(false);
 
   const fetchCliente = useCallback(async () => {
     setLoading(true);
@@ -208,14 +209,6 @@ function AdminClienteDetalhe() {
     );
   }
 
-  const produtoAtual = cliente.produto_3_liberado
-    ? "Código Final"
-    : cliente.produto_2_liberado
-      ? "Dossiê ORI"
-      : cliente.resultado
-        ? "Produto 1 concluído"
-        : "Lead / Produto 1";
-
   const etapaAtual =
     cliente.status_jornada ||
     (cliente.resultado ? "Produto 1 concluído" : "Cadastro recebido");
@@ -258,11 +251,9 @@ function AdminClienteDetalhe() {
   ];
 
   const chips = [
-    cliente.admin ? "Admin" : "Cliente",
-    produtoAtual,
+    cliente.admin ? "Admin" : null,
     cliente.resultado || "Sem resultado",
-    etapaAtual,
-  ];
+  ].filter(Boolean);
   const onboardingProfile = parseOnboardingProfile(cliente.perfil_onboarding);
   const onboardingItems = [
     ["Nome completo", onboardingProfile.fullName || cliente.nome],
@@ -621,28 +612,8 @@ function AdminClienteDetalhe() {
               className="ori-type-reading-soft text-sm leading-relaxed"
               style={{ color: "rgba(255,245,235,0.68)" }}
             >
-              {nextAction.reason}
+              {nextAction.action}
             </p>
-            <div
-              className="mt-4 rounded-[16px] p-3"
-              style={{
-                background: "rgba(5,2,2,0.25)",
-                border: "1px solid rgba(242,185,104,0.08)",
-              }}
-            >
-              <p
-                className="ori-type-system mb-1 text-[8px]"
-                style={{ color: "rgba(242,185,104,0.72)" }}
-              >
-                Próximo passo
-              </p>
-              <p
-                className="ori-type-reading-soft text-xs leading-relaxed"
-                style={{ color: "rgba(255,245,235,0.66)" }}
-              >
-                {nextAction.action}
-              </p>
-            </div>
           </div>
 
           <div
@@ -775,7 +746,7 @@ function AdminClienteDetalhe() {
             className="ori-type-revelation text-2xl md:text-3xl mb-4"
             style={{ color: "var(--gold-primary)", fontWeight: 620 }}
           >
-            Registro da resposta ao Código das Deusas
+            Resposta registrada pela cliente
           </h2>
 
           <div className="grid gap-3 md:grid-cols-[0.7fr_1.3fr]">
@@ -1562,24 +1533,38 @@ function AdminClienteDetalhe() {
           WebkitBackdropFilter: "blur(14px)",
         }}
       >
-        <div className="mb-6 inline-flex items-center gap-4">
-          <div
-            className="h-px w-8"
-            style={{
-              background:
-                "linear-gradient(90deg, var(--gold-primary), transparent)",
-            }}
-          />
-          <p
-            className="ori-type-system text-[10px] md:text-xs"
-            style={{ color: "var(--gold-soft)" }}
+        <button
+          type="button"
+          onClick={() => setHistoryOpen((current) => !current)}
+          className="flex w-full items-center justify-between gap-4 text-left"
+        >
+          <span className="inline-flex items-center gap-4">
+            <span
+              className="h-px w-8"
+              style={{
+                background:
+                  "linear-gradient(90deg, var(--gold-primary), transparent)",
+              }}
+            />
+            <span
+              className="ori-type-system text-[10px] md:text-xs"
+              style={{ color: "var(--gold-soft)" }}
+            >
+              Histórico administrativo
+            </span>
+          </span>
+          <span
+            className="ori-type-system text-[9px]"
+            style={{ color: "rgba(242,185,104,0.68)" }}
           >
-            Histórico administrativo
-          </p>
-        </div>
+            {historyOpen
+              ? "Ocultar"
+              : `${eventosAdmin.length} ${eventosAdmin.length === 1 ? "registro" : "registros"}`}
+          </span>
+        </button>
 
-        {eventosAdmin.length > 0 ? (
-          <div className="grid gap-2.5">
+        {historyOpen && eventosAdmin.length > 0 ? (
+          <div className="mt-6 grid gap-2.5">
             {eventosAdmin.map((event) => (
               <div
                 key={event.id}
@@ -1604,14 +1589,14 @@ function AdminClienteDetalhe() {
               </div>
             ))}
           </div>
-        ) : (
+        ) : historyOpen ? (
           <p
-            className="ori-type-reading-soft text-sm"
+            className="ori-type-reading-soft mt-6 text-sm"
             style={{ color: "rgba(255,245,235,0.56)" }}
           >
             Nenhuma ação administrativa registrada ainda.
           </p>
-        )}
+        ) : null}
       </section>
 
       <div

@@ -11,6 +11,7 @@ import {
   getProduto1Reading,
   getProduto1Answers,
   getProduto1Feedback,
+  resetProduto1,
   saveProduto1Answers,
   saveProduto1Feedback,
 } from "../services/api";
@@ -2396,7 +2397,7 @@ function QuizProduto1() {
     }
   };
 
-  const resetResultInSupabase = async () => {
+  const resetProduto1InSupabase = async () => {
     const { data: sessionData } = await supabase.auth.getSession();
     const user = sessionData?.session?.user;
 
@@ -2434,6 +2435,39 @@ function QuizProduto1() {
         console.log("Erro ao reiniciar resultado por e-mail:", emailError);
         throw emailError;
       }
+    }
+
+    const { error: respostasError } = await supabase
+      .from("produto_1_respostas")
+      .upsert(
+        {
+          user_id: user.id,
+          email: user.email || null,
+          answers: {},
+          answered_count: 0,
+          total_questions: questions.length,
+          is_complete: false,
+          result: null,
+        },
+        {
+          onConflict: "user_id",
+        },
+      );
+
+    if (respostasError) {
+      console.log("Erro ao limpar respostas persistidas:", respostasError);
+      throw respostasError;
+    }
+
+    const { error: feedbackError } = await supabase
+      .from("produto_1_feedbacks")
+      .delete()
+      .eq("user_id", user.id)
+      .eq("context", FEEDBACK_CONTEXT);
+
+    if (feedbackError) {
+      console.log("Erro ao limpar feedback anterior:", feedbackError);
+      throw feedbackError;
     }
   };
 
@@ -2631,7 +2665,17 @@ function QuizProduto1() {
     setIsResettingQuiz(true);
 
     try {
-      await resetResultInSupabase();
+      try {
+        await resetProduto1();
+        setSyncNotice("");
+      } catch (apiError) {
+        console.log("API de reinício indisponível, usando Supabase direto:", apiError);
+        setSyncNotice(
+          apiError?.userMessage ||
+            "Estamos reiniciando sua leitura pelos dados salvos.",
+        );
+        await resetProduto1InSupabase();
+      }
 
       if (storageKey) {
         localStorage.removeItem(storageKey);
@@ -3152,7 +3196,6 @@ function QuizProduto1() {
         resultado: result.nomeComposto,
         payload: {
           page: "produto-1-leitura",
-          result,
           completedAt: new Date().toISOString(),
         },
       });

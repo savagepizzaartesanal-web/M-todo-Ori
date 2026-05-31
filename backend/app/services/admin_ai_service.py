@@ -4,7 +4,10 @@ from typing import Any
 
 import httpx
 
-from app.schemas.admin_ai import AdminAiMessageRequest, AdminAiMessageResponse
+from app.schemas.admin_ai import (
+    AdminAiMessageRequest,
+    AdminAiMessageResponse,
+)
 from app.schemas.auth import CurrentUser
 from app.services.admin_service import fetch_admin_cliente
 
@@ -55,12 +58,12 @@ def _build_prompt_context(
     resposta = cliente_data.get("produto1_respostas") or {}
     feedback = cliente_data.get("produto1_feedback") or {}
     oraculo = cliente_data.get("oraculo_carta") or {}
+    eventos = cliente_data.get("eventos_admin") or []
     profile = _safe_parse_profile(cliente.get("perfil_onboarding"))
 
     context = {
         "cliente": {
             "nome": cliente.get("nome"),
-            "email": cliente.get("email"),
             "resultado": cliente.get("resultado"),
             "perfil_onboarding_concluido": cliente.get("perfil_onboarding_concluido"),
             "produto_2_liberado": cliente.get("produto_2_liberado"),
@@ -89,6 +92,14 @@ def _build_prompt_context(
             "ultima_carta": oraculo.get("card_title"),
             "data": oraculo.get("date_key"),
         },
+        "historico_administrativo_recente": [
+            {
+                "tipo": evento.get("event_type"),
+                "descricao": evento.get("label"),
+                "data": evento.get("created_at"),
+            }
+            for evento in eventos[:8]
+        ],
         "proxima_melhor_acao": {
             "rotulo": payload.next_action_label,
             "motivo": payload.next_action_reason,
@@ -214,29 +225,45 @@ async def _generate_with_gemini(
     return _parse_gemini_response(response.json())
 
 
+def _get_provider_config() -> tuple[str, str | None, str, str]:
+    provider = os.getenv("AI_PROVIDER", "openai").strip().lower()
+
+    if provider == "gemini":
+        return (
+            provider,
+            os.getenv("GEMINI_API_KEY"),
+            os.getenv("GEMINI_MODEL", "gemini-2.5-flash-lite"),
+            "IA Gemini ainda não configurada no backend. Defina GEMINI_API_KEY.",
+        )
+
+    return (
+        "openai",
+        os.getenv("OPENAI_API_KEY"),
+        os.getenv("OPENAI_MODEL", "gpt-4.1-mini"),
+        "IA OpenAI ainda não configurada no backend. Defina OPENAI_API_KEY.",
+    )
+
+
+async def _generate_structured_content(
+    provider: str,
+    api_key: str,
+    model: str,
+    system_prompt: str,
+    user_prompt: str,
+) -> dict[str, Any]:
+    if provider == "gemini":
+        return await _generate_with_gemini(api_key, model, system_prompt, user_prompt)
+
+    return await _generate_with_openai(api_key, model, system_prompt, user_prompt)
+
+
 async def generate_admin_ai_message(
     cliente_id: str,
     payload: AdminAiMessageRequest,
     current_user: CurrentUser,
 ) -> AdminAiMessageResponse:
     cliente_data = await fetch_admin_cliente(cliente_id=cliente_id, current_user=current_user)
-    provider = os.getenv("AI_PROVIDER", "openai").strip().lower()
-
-    if provider == "gemini":
-        api_key = os.getenv("GEMINI_API_KEY")
-        model = os.getenv("GEMINI_MODEL", "gemini-2.5-flash-lite")
-        missing_key_message = (
-            "IA Gemini ainda não configurada no backend. "
-            "Defina GEMINI_API_KEY para gerar mensagens personalizadas."
-        )
-    else:
-        api_key = os.getenv("OPENAI_API_KEY")
-        model = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
-        provider = "openai"
-        missing_key_message = (
-            "IA OpenAI ainda não configurada no backend. "
-            "Defina OPENAI_API_KEY para gerar mensagens personalizadas."
-        )
+    provider, api_key, model, missing_key_message = _get_provider_config()
 
     if not api_key:
         return _fallback_response(
@@ -247,20 +274,12 @@ async def generate_admin_ai_message(
     system_prompt, user_prompt = _build_message_prompts(cliente_data, payload)
 
     try:
-        parsed = (
-            await _generate_with_gemini(
-                api_key=api_key,
-                model=model,
-                system_prompt=system_prompt,
-                user_prompt=user_prompt,
-            )
-            if provider == "gemini"
-            else await _generate_with_openai(
-                api_key=api_key,
-                model=model,
-                system_prompt=system_prompt,
-                user_prompt=user_prompt,
-            )
+        parsed = await _generate_structured_content(
+            provider=provider,
+            api_key=api_key,
+            model=model,
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
         )
     except httpx.HTTPStatusError as error:
         detail = error.response.text[:240] if error.response is not None else str(error)

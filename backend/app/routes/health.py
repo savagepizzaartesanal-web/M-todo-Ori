@@ -1,3 +1,6 @@
+import os
+
+import httpx
 from fastapi import APIRouter
 
 router = APIRouter(tags=["health"])
@@ -6,3 +9,39 @@ router = APIRouter(tags=["health"])
 @router.get("/health")
 def health_check():
     return {"ok": True}
+
+
+@router.get("/health/dependencies")
+async def dependencies_health_check():
+    supabase_url = os.getenv("SUPABASE_URL", "").rstrip("/")
+    publishable_key = os.getenv("SUPABASE_PUBLISHABLE_KEY", "")
+    ai_provider = os.getenv("AI_PROVIDER", "openai").strip().lower()
+    ai_key = (
+        os.getenv("GEMINI_API_KEY")
+        if ai_provider == "gemini"
+        else os.getenv("OPENAI_API_KEY")
+    )
+    supabase_reachable = False
+
+    if supabase_url and publishable_key:
+        try:
+            async with httpx.AsyncClient(timeout=4) as client:
+                response = await client.get(
+                    f"{supabase_url}/rest/v1/",
+                    headers={"apikey": publishable_key},
+                )
+            supabase_reachable = response.status_code < 500
+        except httpx.HTTPError:
+            supabase_reachable = False
+
+    return {
+        "ok": supabase_reachable,
+        "supabase": {
+            "configured": bool(supabase_url and publishable_key),
+            "reachable": supabase_reachable,
+        },
+        "ai": {
+            "provider": ai_provider,
+            "configured": bool(ai_key),
+        },
+    }

@@ -227,13 +227,13 @@ export function getAdminClientMemory({
 
   if (feedback?.response === "me_senti_vista") {
     receptionText =
-      "Resposta positiva registrada: ela sinalizou que se sentiu vista.";
+      "Na resposta pós-leitura, ela sinalizou que se sentiu vista.";
   } else if (feedback?.response === "fez_sentido_mas_abstrato") {
     receptionText =
-      "Leitura compreendida, mas ainda abstrata. Requer exemplos práticos antes do convite.";
+      "Na resposta pós-leitura, informou que a leitura fez sentido, mas permaneceu abstrata.";
   } else if (feedback?.response === "nao_me_reconheci") {
     receptionText =
-      "Risco de desalinhamento: ela informou que não se reconheceu na leitura.";
+      "Na resposta pós-leitura, informou que não se reconheceu em alguns pontos.";
   }
 
   const contextParts = [

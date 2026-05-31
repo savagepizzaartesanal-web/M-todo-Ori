@@ -1,7 +1,10 @@
 from fastapi import APIRouter, Depends
 
 from app.schemas.admin import AdminClienteEventoCreate, AdminClienteUpdate
-from app.schemas.admin_ai import AdminAiMessageRequest, AdminAiMessageResponse
+from app.schemas.admin_ai import (
+    AdminAiMessageRequest,
+    AdminAiMessageResponse,
+)
 from app.schemas.auth import CurrentUser
 from app.services.admin_ai_service import generate_admin_ai_message
 from app.services.admin_service import (
