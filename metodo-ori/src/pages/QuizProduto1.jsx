@@ -75,6 +75,36 @@ const getResultFromCliente = (cliente) => {
   };
 };
 
+const fetchClienteByUser = async (user) => {
+  if (!user?.id) return null;
+
+  const { data, error } = await supabase
+    .from("clientes")
+    .select("resultado, arquetipo_principal, arquetipo_secundario")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (error) {
+    console.log("Erro ao buscar resultado salvo:", error);
+  }
+
+  if (data || !user.email) {
+    return data || null;
+  }
+
+  const { data: emailData, error: emailError } = await supabase
+    .from("clientes")
+    .select("resultado, arquetipo_principal, arquetipo_secundario")
+    .ilike("email", user.email)
+    .maybeSingle();
+
+  if (emailError) {
+    console.log("Erro ao buscar resultado salvo por e-mail:", emailError);
+  }
+
+  return emailData || null;
+};
+
 const loadingMessages = [
   "Tecendo sua essência...",
   "Consultando os arquétipos...",
@@ -2262,17 +2292,7 @@ function QuizProduto1() {
       }
 
       if (user?.id && !savedResult && !hasSavedAnswers) {
-        const { data, error } = await supabase
-          .from("clientes")
-          .select("resultado, arquetipo_principal, arquetipo_secundario")
-          .eq("user_id", user.id)
-          .maybeSingle();
-
-        if (error) {
-          console.log("Erro ao buscar resultado salvo:", error);
-        }
-
-        const clienteResult = getResultFromCliente(data);
+        const clienteResult = getResultFromCliente(await fetchClienteByUser(user));
 
         if (clienteResult) {
           setResult(clienteResult);
@@ -2781,6 +2801,7 @@ function QuizProduto1() {
           sombra: camadas.sombra
             ? `${camadas.sombra}\n\n${baseReport.sombra}`
             : baseReport.sombra,
+          vidaReal: camadas.vidaReal || baseReport.vidaReal,
           essenciaImagem: camadas.essenciaImagem
             ? `${baseReport.essenciaImagem}\n\n${camadas.essenciaImagem}`
             : baseReport.essenciaImagem,
@@ -2837,6 +2858,17 @@ function QuizProduto1() {
         },
         {
           number: "04",
+          theme: "gold",
+          eyebrow: "Vida Real",
+          label: "Vida real",
+          title: "Como isso aparece \nno dia a dia",
+          description:
+            "Aqui a leitura simbólica vira comportamento, decisão e pequenos sinais observáveis na rotina.",
+          content: report.vidaReal,
+          image: "/images/panels/leitura-final.png",
+        },
+        {
+          number: "05",
           theme: "red",
           eyebrow: "Percepção",
           label: "Percepção",

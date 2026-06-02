@@ -7,6 +7,36 @@ const blockMeanings = {
   "Seus Padrões": "onde a força pode virar defesa, excesso ou ruído",
 };
 
+const blockPracticalSignals = {
+  "Sua Presença":
+    "quando você chega em um lugar, muda o clima da conversa ou sente que precisa modular sua intensidade para ser recebida",
+  "Seu Estilo":
+    "quando uma roupa bonita ainda parece errada porque não sustenta o jeito como você quer se mover, ser vista ou se proteger",
+  "Seu Corpo":
+    "quando postura, conforto, movimento e sensação física dizem antes da cabeça se algo combina com você",
+  "Seus Relacionamentos":
+    "quando vínculo, troca, distância, escolha ou disponibilidade mexem diretamente com a sua segurança",
+  "Seu Mundo Interno":
+    "quando desejo, intuição, análise, imaginação ou controle definem o ritmo das suas escolhas",
+  "Seus Padrões":
+    "quando você repete uma defesa conhecida: agradar, endurecer, sumir, controlar, cuidar demais ou romper antes de nomear o incômodo",
+};
+
+const archetypePracticalActions = {
+  afrodite:
+    "escolha uma peça, gesto ou beleza que aumente prazer sem depender de aprovação externa",
+  persefone:
+    "observe uma sensação antes de explicá-la e anote o que seu corpo percebeu primeiro",
+  hera:
+    "defina onde você precisa de respeito real, não apenas de reconhecimento aparente",
+  demeter:
+    "ofereça cuidado sem assumir uma responsabilidade que não precisa ser sua",
+  athena:
+    "transforme uma percepção solta em uma decisão simples, com critério e limite",
+  artemis:
+    "preserve espaço de movimento antes de aceitar uma demanda que aperta seu território",
+};
+
 const archetypeTone = {
   afrodite: "magnetismo, prazer, beleza e desejo de conexão",
   persefone: "profundidade, intuição, recolhimento e mundo interno",
@@ -106,12 +136,21 @@ function createPersonalizedReading({ questions, answers, result }) {
         `${block.bloco.toLowerCase()} (${blockMeanings[block.bloco]})`,
     )
     .join(" e ");
+  const practicalBlockText = strongestBlocks
+    .map((block) => blockPracticalSignals[block.bloco])
+    .join(" e ");
   const principalTone =
     archetypeTone[result.principalId] || result.principal?.toLowerCase();
   const secondaryTone =
     archetypeTone[result.secundarioId] || result.secundario?.toLowerCase();
   const principalQuestions = formatQuestionList(principalEvidence);
   const secondaryQuestions = formatQuestionList(secondaryEvidence);
+  const principalAction =
+    archetypePracticalActions[result.principalId] ||
+    "escolha uma ação pequena que sustente sua força principal sem performar para o olhar externo";
+  const secondaryAction =
+    archetypePracticalActions[result.secundarioId] ||
+    "observe qual nuance da sua força secundária precisa aparecer com mais clareza";
 
   return {
     reconhecimento:
@@ -126,6 +165,11 @@ function createPersonalizedReading({ questions, answers, result }) {
       mostTenseBlock
         ? `O ponto de maior atenção aparece em ${mostTenseBlock.bloco.toLowerCase()}. Esse bloco fala de ${blockMeanings[mostTenseBlock.bloco]}, e mostra onde sua imagem pode perder clareza quando tenta compensar, se proteger ou responder demais ao ambiente.\n\nA sombra aqui não significa erro. Ela mostra o lugar onde a força nomeada precisa de mais consciência para não virar defesa, excesso ou fragmentação visual.`
         : `O ponto de atenção desta leitura está menos em uma falha específica e mais na necessidade de sustentar coerência entre essência, presença e imagem. Quando essas camadas se separam, a força nomeada pode parecer menor do que realmente é.`,
+
+    vidaReal:
+      `Na prática, ${result.nomeComposto} tende a aparecer ${practicalBlockText}.\n\n` +
+      `Alguns sinais concretos para observar:\n- Decisões: você escolhe melhor quando respeita ${principalTone}, mas sem ignorar ${secondaryTone}.\n- Relações: repare onde ${mostTenseBlock?.bloco?.toLowerCase() || "seus padrões"} faz você se adaptar, se defender ou esperar que o outro adivinhe o que está acontecendo.\n- Imagem: antes de perguntar se algo é bonito, pergunte se aquilo sustenta sua presença no corpo, no gesto e na rotina.\n\n` +
+      `Para os próximos 7 dias:\n- ${principalAction}.\n- ${secondaryAction}.\n- Antes de se vestir ou decidir algo importante, escreva em uma frase: o que eu quero sustentar hoje?`,
 
     essenciaImagem:
       `Quando cruzamos o resultado com suas respostas, a direção de imagem pede mais do que estética bonita: ela precisa traduzir o modo como você funciona. A roupa, a beleza, a cor e o gesto precisam sustentar ${principalTone}, sem apagar ${secondaryTone}.\n\nÉ aqui que começa a ponte para o Dossiê ORI: a primeira leitura nomeia a força, mas ainda não resolve sozinha como essa força deve aparecer no corpo, no rosto, no cabelo, na coloração e na rotina real.`,
@@ -145,6 +189,7 @@ export function enrichReportWithSignals({ report, questions, answers, result }) 
     reconhecimento: `${personalized.reconhecimento}\n\n${report.reconhecimento}`,
     dinamica: `${personalized.dinamica}\n\n${report.dinamica}`,
     sombra: `${personalized.sombra}\n\n${report.sombra}`,
+    vidaReal: personalized.vidaReal,
     essenciaImagem: `${report.essenciaImagem}\n\n${personalized.essenciaImagem}`,
     leituraFinal: `${report.leituraFinal}\n\n${personalized.leituraFinal}`,
   };

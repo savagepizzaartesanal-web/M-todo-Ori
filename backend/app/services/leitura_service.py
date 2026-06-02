@@ -26,6 +26,41 @@ BLOCK_MEANINGS = {
     "Seus Padrões": "onde a força pode virar defesa, excesso ou ruído",
 }
 
+BLOCK_PRACTICAL_SIGNALS = {
+    "Sua Presença": (
+        "quando você chega em um lugar, muda o clima da conversa ou sente que precisa modular "
+        "sua intensidade para ser recebida"
+    ),
+    "Seu Estilo": (
+        "quando uma roupa bonita ainda parece errada porque não sustenta o jeito como você quer "
+        "se mover, ser vista ou se proteger"
+    ),
+    "Seu Corpo": (
+        "quando postura, conforto, movimento e sensação física dizem antes da cabeça se algo "
+        "combina com você"
+    ),
+    "Seus Relacionamentos": (
+        "quando vínculo, troca, distância, escolha ou disponibilidade mexem diretamente com a "
+        "sua segurança"
+    ),
+    "Seu Mundo Interno": (
+        "quando desejo, intuição, análise, imaginação ou controle definem o ritmo das suas escolhas"
+    ),
+    "Seus Padrões": (
+        "quando você repete uma defesa conhecida: agradar, endurecer, sumir, controlar, cuidar "
+        "demais ou romper antes de nomear o incômodo"
+    ),
+}
+
+ARCHETYPE_PRACTICAL_ACTIONS = {
+    "afrodite": "escolha uma peça, gesto ou beleza que aumente prazer sem depender de aprovação externa",
+    "persefone": "observe uma sensação antes de explicá-la e anote o que seu corpo percebeu primeiro",
+    "hera": "defina onde você precisa de respeito real, não apenas de reconhecimento aparente",
+    "demeter": "ofereça cuidado sem assumir uma responsabilidade que não precisa ser sua",
+    "athena": "transforme uma percepção solta em uma decisão simples, com critério e limite",
+    "artemis": "preserve espaço de movimento antes de aceitar uma demanda que aperta seu território",
+}
+
 ARCHETYPE_TONE = {
     "afrodite": "magnetismo, prazer, beleza e desejo de conexão",
     "persefone": "profundidade, intuição, recolhimento e mundo interno",
@@ -40,18 +75,19 @@ REPORT_SECTION_ORDER = [
     ("reconhecimento", "01", "Reconhecimento"),
     ("essencia", "02", "Essência"),
     ("dinamica", "03", "Dinâmica psíquica"),
-    ("percebida", "04", "Como você é percebida"),
-    ("sombra", "05", "Sombra"),
-    ("padraoRelacional", "06", "Padrão relacional"),
-    ("caminho", "07", "Caminho de individuação"),
-    ("essenciaImagem", "08", "Essência de imagem"),
-    ("paleta", "09", "Paleta simbólica"),
-    ("modelagem", "10", "Modelagem"),
-    ("tecidos", "11", "Tecidos"),
-    ("beleza", "12", "Beleza"),
-    ("presenca", "13", "Presença"),
-    ("evitar", "14", "O que quebra seu arquétipo"),
-    ("leituraFinal", "15", "Leitura final"),
+    ("vidaReal", "04", "Como isso aparece na vida real"),
+    ("percebida", "05", "Como você é percebida"),
+    ("sombra", "06", "Sombra"),
+    ("padraoRelacional", "07", "Padrão relacional"),
+    ("caminho", "08", "Caminho de individuação"),
+    ("essenciaImagem", "09", "Essência de imagem"),
+    ("paleta", "10", "Paleta simbólica"),
+    ("modelagem", "11", "Modelagem"),
+    ("tecidos", "12", "Tecidos"),
+    ("beleza", "13", "Beleza"),
+    ("presenca", "14", "Presença"),
+    ("evitar", "15", "O que quebra seu arquétipo"),
+    ("leituraFinal", "16", "Leitura final"),
 ]
 
 
@@ -122,6 +158,7 @@ def build_complete_report(
             if camadas.get("sombra")
             else base_report.get("sombra", "")
         ),
+        "vidaReal": camadas.get("vidaReal", ""),
         "essenciaImagem": (
             f"{base_report['essenciaImagem']}\n\n{camadas['essenciaImagem']}"
             if camadas.get("essenciaImagem")
@@ -278,10 +315,21 @@ def build_personalized_layers(
         f"{block['bloco'].lower()} ({BLOCK_MEANINGS[block['bloco']]})"
         for block in strongest_blocks
     )
+    practical_block_text = " e ".join(
+        BLOCK_PRACTICAL_SIGNALS[block["bloco"]] for block in strongest_blocks
+    )
     profile_text = build_profile_text(perfil)
     result_name = result.get("nomeComposto") or "seu resultado"
     principal = result.get("principal") or "força principal"
     secondary = result.get("secundario") or "força secundária"
+    principal_action = ARCHETYPE_PRACTICAL_ACTIONS.get(
+        result.get("principalId"),
+        "escolha uma ação pequena que sustente sua força principal sem performar para o olhar externo",
+    )
+    secondary_action = ARCHETYPE_PRACTICAL_ACTIONS.get(
+        result.get("secundarioId"),
+        "observe qual nuance da sua força secundária precisa aparecer com mais clareza",
+    )
 
     highlights = [
         Produto1LeituraHighlight(
@@ -321,6 +369,17 @@ def build_personalized_layers(
             f"Esse bloco fala de {BLOCK_MEANINGS[tense_block['bloco']]}, e mostra onde sua imagem pode perder clareza "
             "quando tenta compensar, se proteger ou responder demais ao ambiente.\n\n"
             "A sombra aqui não significa erro. Ela mostra onde a força nomeada precisa de consciência para não virar defesa, excesso ou fragmentação visual."
+        ),
+        "vidaReal": (
+            f"Na prática, {result_name} tende a aparecer {practical_block_text}.\n\n"
+            "Alguns sinais concretos para observar:\n"
+            f"- Decisões: você escolhe melhor quando respeita {principal_tone}, mas sem ignorar {secondary_tone}.\n"
+            f"- Relações: repare onde {tense_block['bloco'].lower()} faz você se adaptar, se defender ou esperar que o outro adivinhe o que está acontecendo.\n"
+            "- Imagem: antes de perguntar se algo é bonito, pergunte se aquilo sustenta sua presença no corpo, no gesto e na rotina.\n\n"
+            "Para os próximos 7 dias:\n"
+            f"- {principal_action}.\n"
+            f"- {secondary_action}.\n"
+            "- Antes de se vestir ou decidir algo importante, escreva em uma frase: o que eu quero sustentar hoje?"
         ),
         "essenciaImagem": (
             f"Quando cruzamos o resultado com o seu perfil, a direção de imagem precisa responder a algo concreto: {profile_text}\n\n"

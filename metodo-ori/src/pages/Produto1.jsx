@@ -350,6 +350,14 @@ function QuizProduto1() {
                 content={report.dinamica}
               />
 
+              {report.vidaReal && (
+                <ReportSection
+                  eyebrow="Vida Real"
+                  title="Como isso aparece no dia a dia"
+                  content={report.vidaReal}
+                />
+              )}
+
               <ReportSection
                 eyebrow="Como você é percebida"
                 title="O efeito da sua imagem no outro"
