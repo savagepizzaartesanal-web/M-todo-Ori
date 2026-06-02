@@ -92,7 +92,7 @@ async def get_produto1_respostas(
     supabase_url, _ = get_supabase_config()
 
     async with httpx.AsyncClient(timeout=8) as client:
-        response = await client.get(
+        user_response = await client.get(
             f"{supabase_url}/rest/v1/{TABLE_NAME}",
             params={
                 "select": "*",
@@ -102,13 +102,30 @@ async def get_produto1_respostas(
             headers=get_supabase_rest_headers(current_user),
         )
 
-    if response.status_code >= 400:
+        email_response = None
+        if current_user.email:
+            email_response = await client.get(
+                f"{supabase_url}/rest/v1/{TABLE_NAME}",
+                params={
+                    "select": "*",
+                    "email": f"eq.{current_user.email}",
+                    "limit": "1",
+                },
+                headers=get_supabase_rest_headers(current_user),
+            )
+
+    if user_response.status_code >= 400 or (
+        email_response is not None and email_response.status_code >= 400
+    ):
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
             detail="Não foi possível consultar as respostas do Produto 1.",
         )
 
-    rows = response.json()
+    rows = user_response.json()
+
+    if not rows and email_response is not None:
+        rows = email_response.json()
 
     if not rows:
         return empty_produto1_respostas(current_user)

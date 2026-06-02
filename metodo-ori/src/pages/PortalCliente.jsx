@@ -30,6 +30,36 @@ const readQuizFromStorage = (storageKey) => {
   }
 };
 
+const fetchClienteByUser = async (user) => {
+  if (!user?.id) return null;
+
+  const { data, error } = await supabase
+    .from("clientes")
+    .select("*")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (error) {
+    console.log("Erro ao buscar cliente:", error);
+  }
+
+  if (data || !user.email) {
+    return data || null;
+  }
+
+  const { data: emailData, error: emailError } = await supabase
+    .from("clientes")
+    .select("*")
+    .ilike("email", user.email)
+    .maybeSingle();
+
+  if (emailError) {
+    console.log("Erro ao buscar cliente por e-mail:", emailError);
+  }
+
+  return emailData || null;
+};
+
 const getTodayKey = () =>
   new Intl.DateTimeFormat("en-CA", {
     timeZone: "America/Sao_Paulo",
@@ -112,15 +142,7 @@ function PortalCliente() {
         setOracleLoaded(false);
       }
 
-      const { data, error } = await supabase
-        .from("clientes")
-        .select("*")
-        .eq("user_id", user.id)
-        .maybeSingle();
-
-      if (error) {
-        console.log("Erro ao buscar cliente:", error);
-      }
+      const data = await fetchClienteByUser(user);
 
       if (data) {
         setCliente(data);
