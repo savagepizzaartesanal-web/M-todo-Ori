@@ -6,6 +6,8 @@
 2. Confirme as variaveis do frontend: `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY` e `VITE_API_URL`.
 3. Confirme as variaveis do backend: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `FRONTEND_ORIGINS`, `AI_PROVIDER` e a chave do provedor escolhido.
 4. Abra `/health` e `/health/dependencies` no backend.
+5. Rode `metodo-ori/supabase-security-audit.sql` e revise RLS, policies, grants anonimos e admins ativos.
+6. Depois da auditoria, rode `metodo-ori/supabase-security-hardening.sql` para reforcar RLS e bloquear acesso anonimo direto as tabelas sensiveis.
 
 ## Conta Nova
 
