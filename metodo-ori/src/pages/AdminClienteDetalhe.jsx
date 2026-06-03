@@ -1497,28 +1497,6 @@ function AdminClienteDetalhe() {
               Marcar como finalizado
             </button>
 
-            <button
-              disabled={saving}
-              onClick={() =>
-                updateCliente({
-                  admin: !cliente.admin,
-                }, cliente.admin
-                  ? "Acesso administrativo removido"
-                  : "Acesso administrativo concedido")
-              }
-              className="ori-button-secondary px-6 py-4 rounded-full font-medium disabled:opacity-60"
-              style={{
-                background: cliente.admin
-                  ? "rgba(183,140,255,0.12)"
-                  : "rgba(255,255,255,0.035)",
-                border: cliente.admin
-                  ? "1px solid rgba(183,140,255,0.18)"
-                  : "1px solid rgba(255,255,255,0.07)",
-                color: cliente.admin ? "#d9bdff" : "rgba(255,245,235,0.66)",
-              }}
-            >
-              {cliente.admin ? "Remover admin" : "Tornar admin"}
-            </button>
           </div>
         </div>
       </div>
