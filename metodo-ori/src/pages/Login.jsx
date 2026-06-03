@@ -412,7 +412,7 @@ function Login() {
       >
         <motion.div
           className="hidden lg:flex min-h-[78vh] items-center"
-          initial={{ opacity: 0, y: 18 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
@@ -526,7 +526,7 @@ function Login() {
             aria-describedby={
               erro ? "ori-login-error" : mensagem ? "ori-login-message" : undefined
             }
-            initial={{ opacity: 0, y: 22, scale: 0.985 }}
+            initial={false}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{
               delay: 0.12,

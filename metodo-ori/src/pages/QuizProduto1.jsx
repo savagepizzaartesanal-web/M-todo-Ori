@@ -75,6 +75,36 @@ const getResultFromCliente = (cliente) => {
   };
 };
 
+const syncCachedReadingToAccount = async ({ user, answers, result }) => {
+  if (!user?.id || !result?.nomeComposto) return;
+
+  const hasAnswers = Object.keys(answers || {}).length > 0;
+
+  if (hasAnswers) {
+    await saveProduto1Answers(answers);
+  }
+
+  const { error } = await supabase.from("clientes").upsert(
+    {
+      user_id: user.id,
+      email: user.email || null,
+      nome: user.user_metadata?.nome || null,
+      resultado: result.nomeComposto,
+      arquetipo_principal: result.principal,
+      arquetipo_secundario: result.secundario,
+      status_jornada: "Código das Deusas concluído",
+      produto_1_liberado: true,
+    },
+    {
+      onConflict: "email",
+    },
+  );
+
+  if (error) {
+    throw error;
+  }
+};
+
 const fetchClienteByUser = async (user) => {
   if (!user?.id) return null;
 
@@ -2239,6 +2269,7 @@ function QuizProduto1() {
       const parsedData = readQuizFromStorage(userStorageKey);
       let savedAnswers = parsedData?.answers || {};
       let savedResult = parsedData?.result || null;
+      const shouldSyncCachedResult = Boolean(savedResult);
       let hasSavedAnswers = Object.keys(savedAnswers).length > 0;
 
       if (user?.id) {
@@ -2278,6 +2309,21 @@ function QuizProduto1() {
       }
 
       if (user?.id && savedResult) {
+        if (shouldSyncCachedResult) {
+          syncCachedReadingToAccount({
+            user,
+            answers: savedAnswers,
+            result: savedResult,
+          })
+            .then(() => setSyncNotice(""))
+            .catch((syncError) => {
+              console.log("Não foi possível sincronizar leitura local:", syncError);
+              setSyncNotice(
+                "Sua leitura apareceu neste navegador, mas ainda não conseguimos sincronizar com sua conta.",
+              );
+            });
+        }
+
         try {
           const savedFeedback = await getProduto1Feedback(FEEDBACK_CONTEXT);
 
