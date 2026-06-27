@@ -15,6 +15,7 @@ const EspelhoOri = lazy(() => import("./pages/EspelhoOri"));
 const OraculoOri = lazy(() => import("./pages/OraculoOri"));
 const MetodoOri = lazy(() => import("./pages/MetodoOri"));
 const Login = lazy(() => import("./pages/Login"));
+const RedefinirSenha = lazy(() => import("./pages/RedefinirSenha"));
 const OnboardingOri = lazy(() => import("./pages/OnboardingOri"));
 const PortalCliente = lazy(() => import("./pages/PortalCliente"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
@@ -53,6 +54,7 @@ function App() {
       <Suspense fallback={<PageFallback />}>
         <Routes>
           <Route path="/entrar" element={<Login />} />
+          <Route path="/redefinir-senha" element={<RedefinirSenha />} />
 
           <Route
             path="/entrada-ori"

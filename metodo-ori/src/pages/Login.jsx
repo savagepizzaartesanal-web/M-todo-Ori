@@ -12,6 +12,8 @@ function Login() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
+  const [recoveryEmail, setRecoveryEmail] = useState("");
   const [erro, setErro] = useState("");
   const [mensagem, setMensagem] = useState("");
 
@@ -54,6 +56,11 @@ function Login() {
   const resetFeedback = () => {
     setErro("");
     setMensagem("");
+  };
+
+  const resetPasswordRecovery = () => {
+    setRecoveryEmail("");
+    setResetLoading(false);
   };
 
   const handleLogin = async (event) => {
@@ -221,6 +228,49 @@ function Login() {
 
     setMensagem("Cadastro criado. Agora tente entrar com seu e-mail e senha.");
     setModo("login");
+  };
+
+  const handlePasswordRecovery = async () => {
+    resetFeedback();
+
+    const emailLimpo = email.trim().toLowerCase();
+
+    if (!emailLimpo) {
+      setErro("Informe seu e-mail para receber o link de redefinição.");
+      return;
+    }
+
+    setRecoveryEmail(emailLimpo);
+  };
+
+  const sendPasswordRecovery = async () => {
+    resetFeedback();
+
+    if (!recoveryEmail) {
+      setErro("Confirme o e-mail antes de enviar o link de redefinição.");
+      return;
+    }
+
+    setResetLoading(true);
+
+    const { error } = await supabase.auth.resetPasswordForEmail(recoveryEmail, {
+      redirectTo: `${window.location.origin}/redefinir-senha`,
+    });
+
+    setResetLoading(false);
+
+    if (error) {
+      console.log("Erro ao enviar recuperação de senha:", error);
+      setErro(
+        "Não foi possível enviar o link agora. Verifique o e-mail e tente novamente.",
+      );
+      return;
+    }
+
+    setMensagem(
+      "Enviamos um link para seu e-mail. Abra a mensagem e crie uma nova senha.",
+    );
+    setRecoveryEmail("");
   };
 
   const handleSubmit = isCadastro ? handleCadastro : handleLogin;
@@ -673,6 +723,7 @@ function Login() {
                   onClick={() => {
                     setModo("login");
                     resetFeedback();
+                    resetPasswordRecovery();
                   }}
                   whileHover={{
                     y: -1,
@@ -694,6 +745,7 @@ function Login() {
                   onClick={() => {
                     setModo("cadastro");
                     resetFeedback();
+                    resetPasswordRecovery();
                   }}
                   whileHover={{
                     y: -1,
@@ -755,7 +807,10 @@ function Login() {
                       autoComplete="email"
                       inputMode="email"
                       value={email}
-                      onChange={(event) => setEmail(event.target.value)}
+                      onChange={(event) => {
+                        setEmail(event.target.value);
+                        resetPasswordRecovery();
+                      }}
                       placeholder="seunome@email.com"
                       required
                       className="ori-input w-full px-5 py-3.5 rounded-2xl outline-none transition-all duration-500"
@@ -785,7 +840,80 @@ function Login() {
                         isCadastro ? senhaReady : senha.length > 0,
                       )}
                     />
+
+                    {!isCadastro && (
+                      <div className="mt-2 flex justify-end">
+                        <motion.button
+                          type="button"
+                          disabled={resetLoading || loading}
+                          onClick={handlePasswordRecovery}
+                          whileHover={
+                            resetLoading || loading ? {} : { x: 2, opacity: 1 }
+                          }
+                          className="text-xs transition-all disabled:cursor-not-allowed disabled:opacity-60"
+                          style={{ color: "var(--gold-primary)" }}
+                        >
+                          {resetLoading
+                            ? "Enviando link..."
+                            : "Esqueci minha senha"}
+                        </motion.button>
+                      </div>
+                    )}
                   </div>
+
+                  {recoveryEmail && !isCadastro && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="rounded-2xl p-3.5 text-sm leading-relaxed"
+                      style={{
+                        background: "rgba(210,135,70,0.06)",
+                        border: "1px solid rgba(210,135,70,0.16)",
+                        color: "rgba(255,245,235,0.78)",
+                      }}
+                    >
+                      <p className="mb-3">
+                        Vamos enviar o link de redefinição para{" "}
+                        <span style={{ color: "var(--gold-primary)" }}>
+                          {recoveryEmail}
+                        </span>
+                        .
+                      </p>
+
+                      <div className="flex flex-wrap gap-2">
+                        <motion.button
+                          type="button"
+                          disabled={resetLoading}
+                          onClick={sendPasswordRecovery}
+                          whileHover={resetLoading ? {} : { y: -1 }}
+                          className="rounded-full px-4 py-2 text-xs transition-all disabled:cursor-not-allowed disabled:opacity-60"
+                          style={{
+                            background:
+                              "linear-gradient(90deg, rgba(210,135,70,0.96), rgba(242,185,104,0.92))",
+                            color: "#090506",
+                            fontWeight: 600,
+                          }}
+                        >
+                          {resetLoading
+                            ? "Enviando..."
+                            : "Confirmar e enviar link"}
+                        </motion.button>
+
+                        <button
+                          type="button"
+                          disabled={resetLoading}
+                          onClick={() => setRecoveryEmail("")}
+                          className="rounded-full px-4 py-2 text-xs transition-all disabled:cursor-not-allowed disabled:opacity-60"
+                          style={{
+                            border: "1px solid rgba(242,185,104,0.16)",
+                            color: "var(--gold-primary)",
+                          }}
+                        >
+                          Corrigir e-mail
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
 
                   {erro && (
                     <motion.div
