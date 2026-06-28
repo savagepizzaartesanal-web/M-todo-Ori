@@ -37,6 +37,33 @@ const archetypePracticalActions = {
     "preserve espaço de movimento antes de aceitar uma demanda que aperta seu território",
 };
 
+const archetypeDecisionQuestions = {
+  afrodite:
+    "isso me dá prazer real ou só tenta produzir desejo no olhar de fora?",
+  persefone:
+    "meu corpo já percebeu algo que minha cabeça ainda está tentando explicar?",
+  hera:
+    "esse lugar me reconhece de verdade ou só exige que eu sustente uma posição?",
+  demeter:
+    "esse cuidado nasce de presença ou de uma tentativa de ser necessária?",
+  athena:
+    "essa escolha tem critério claro ou virou controle para evitar vulnerabilidade?",
+  artemis:
+    "esse caminho respeita meu espaço ou começa a me prender por dentro?",
+};
+
+const archetypeImageNeeds = {
+  afrodite:
+    "prazer, presença sensorial e beleza que não precise implorar por validação",
+  persefone:
+    "profundidade, pausa e uma imagem que revele por camadas, sem se explicar demais",
+  hera: "dignidade, estrutura e uma presença que comunique valor sem endurecer",
+  demeter: "acolhimento, conforto e sustentação sem apagar contorno pessoal",
+  athena:
+    "clareza, intenção e escolhas visuais com critério, sem rigidez excessiva",
+  artemis: "movimento, território e liberdade suficiente para o corpo respirar",
+};
+
 const archetypeTone = {
   afrodite: "magnetismo, prazer, beleza e desejo de conexão",
   persefone: "profundidade, intuição, recolhimento e mundo interno",
@@ -105,6 +132,37 @@ function formatQuestionList(items) {
     .join(", ");
 }
 
+function createVidaRealText({
+  result,
+  practicalBlockText,
+  principalTone,
+  secondaryTone,
+  mostTenseBlock,
+  principalAction,
+  secondaryAction,
+}) {
+  const decisionQuestion =
+    archetypeDecisionQuestions[result.principalId] ||
+    "essa escolha sustenta minha presença ou me coloca em uma versão menor de mim?";
+  const secondaryQuestion =
+    archetypeDecisionQuestions[result.secundarioId] ||
+    "essa nuance precisa aparecer com mais verdade ou está ficando escondida?";
+  const principalImageNeed =
+    archetypeImageNeeds[result.principalId] || principalTone;
+  const secondaryImageNeed =
+    archetypeImageNeeds[result.secundarioId] || secondaryTone;
+  const tenseBlockName = mostTenseBlock?.bloco || "seus padrões";
+
+  return (
+    `Na vida real, ${result.nomeComposto} aparece menos como uma ideia e mais como um modo de reagir. ` +
+    `Ela pode surgir ${practicalBlockText}. Quando essa força está viva, você tende a perceber rapidamente se uma situação expande sua presença ou se começa a apertar seu corpo por dentro.\n\n` +
+    `Nas decisões, a pergunta silenciosa costuma ser: “${decisionQuestion}”. A resposta nem sempre vem como pensamento organizado. Às vezes aparece como impaciência, distância, vontade de recuar, necessidade de controlar ou dificuldade de permanecer em algo que parece bonito por fora, mas estreito por dentro.\n\n` +
+    `Nas relações, o ponto de atenção em ${tenseBlockName.toLowerCase()} mostra onde você pode se adaptar, se defender ou esperar que o outro adivinhe o que está acontecendo. Esse é um ponto importante da leitura: não para se cobrar, mas para perceber onde a sua força vira proteção automática.\n\n` +
+    `Na imagem, uma escolha pode estar bonita e ainda assim não funcionar. O que sustenta você precisa dar espaço para ${principalImageNeed}, sem apagar ${secondaryImageNeed}. Antes de escolher roupa, beleza ou postura, pergunte se aquilo deixa você mais presente no corpo ou se apenas encaixa você em um papel aceitável.\n\n` +
+    `Para começar a aplicar esta leitura, observe uma situação em que você quase disse sim no automático. Antes de responder, ${principalAction}. Depois, ${secondaryAction}. Se precisar de uma frase simples para reconhecer esse movimento fora da tela, use esta: “${secondaryQuestion}”.`
+  );
+}
+
 function createPersonalizedReading({ questions, answers, result }) {
   const answeredCount = Object.keys(answers || {}).length;
 
@@ -151,6 +209,15 @@ function createPersonalizedReading({ questions, answers, result }) {
   const secondaryAction =
     archetypePracticalActions[result.secundarioId] ||
     "observe qual nuance da sua força secundária precisa aparecer com mais clareza";
+  const vidaReal = createVidaRealText({
+    result,
+    practicalBlockText,
+    principalTone,
+    secondaryTone,
+    mostTenseBlock,
+    principalAction,
+    secondaryAction,
+  });
 
   return {
     reconhecimento:
@@ -166,10 +233,7 @@ function createPersonalizedReading({ questions, answers, result }) {
         ? `O ponto de maior atenção aparece em ${mostTenseBlock.bloco.toLowerCase()}. Esse bloco fala de ${blockMeanings[mostTenseBlock.bloco]}, e mostra onde sua imagem pode perder clareza quando tenta compensar, se proteger ou responder demais ao ambiente.\n\nA sombra aqui não significa erro. Ela mostra o lugar onde a força nomeada precisa de mais consciência para não virar defesa, excesso ou fragmentação visual.`
         : `O ponto de atenção desta leitura está menos em uma falha específica e mais na necessidade de sustentar coerência entre essência, presença e imagem. Quando essas camadas se separam, a força nomeada pode parecer menor do que realmente é.`,
 
-    vidaReal:
-      `Na prática, ${result.nomeComposto} tende a aparecer ${practicalBlockText}.\n\n` +
-      `Alguns sinais concretos para observar:\n- Decisões: você escolhe melhor quando respeita ${principalTone}, mas sem ignorar ${secondaryTone}.\n- Relações: repare onde ${mostTenseBlock?.bloco?.toLowerCase() || "seus padrões"} faz você se adaptar, se defender ou esperar que o outro adivinhe o que está acontecendo.\n- Imagem: antes de perguntar se algo é bonito, pergunte se aquilo sustenta sua presença no corpo, no gesto e na rotina.\n\n` +
-      `Para os próximos 7 dias:\n- ${principalAction}.\n- ${secondaryAction}.\n- Antes de se vestir ou decidir algo importante, escreva em uma frase: o que eu quero sustentar hoje?`,
+    vidaReal,
 
     essenciaImagem:
       `Quando cruzamos o resultado com suas respostas, a direção de imagem pede mais do que estética bonita: ela precisa traduzir o modo como você funciona. A roupa, a beleza, a cor e o gesto precisam sustentar ${principalTone}, sem apagar ${secondaryTone}.\n\nÉ aqui que começa a ponte para o Dossiê ORI: a primeira leitura nomeia a força, mas ainda não resolve sozinha como essa força deve aparecer no corpo, no rosto, no cabelo, na coloração e na rotina real.`,

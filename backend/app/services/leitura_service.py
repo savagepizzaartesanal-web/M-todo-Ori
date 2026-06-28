@@ -1,8 +1,12 @@
 import json
+import os
+import asyncio
+from hashlib import sha256
 from datetime import UTC, datetime
 from functools import lru_cache
 from pathlib import Path
 
+import httpx
 from fastapi import HTTPException, status
 
 from app.data.quiz import QUESTIONS
@@ -13,6 +17,10 @@ from app.schemas.produto1 import (
     Produto1LeituraResponse,
     Produto1RelatorioResponse,
     Produto1RelatorioSection,
+)
+from app.services.admin_ai_service import (
+    generate_structured_ai_content,
+    get_ai_provider_config,
 )
 from app.services.jornada_service import fetch_current_cliente
 from app.services.produto1_service import get_produto1_respostas
@@ -61,6 +69,24 @@ ARCHETYPE_PRACTICAL_ACTIONS = {
     "artemis": "preserve espaço de movimento antes de aceitar uma demanda que aperta seu território",
 }
 
+ARCHETYPE_DECISION_QUESTIONS = {
+    "afrodite": "isso me dá prazer real ou só tenta produzir desejo no olhar de fora?",
+    "persefone": "meu corpo já percebeu algo que minha cabeça ainda está tentando explicar?",
+    "hera": "esse lugar me reconhece de verdade ou só exige que eu sustente uma posição?",
+    "demeter": "esse cuidado nasce de presença ou de uma tentativa de ser necessária?",
+    "athena": "essa escolha tem critério claro ou virou controle para evitar vulnerabilidade?",
+    "artemis": "esse caminho respeita meu espaço ou começa a me prender por dentro?",
+}
+
+ARCHETYPE_IMAGE_NEEDS = {
+    "afrodite": "prazer, presença sensorial e beleza que não precise implorar por validação",
+    "persefone": "profundidade, pausa e uma imagem que revele por camadas, sem se explicar demais",
+    "hera": "dignidade, estrutura e uma presença que comunique valor sem endurecer",
+    "demeter": "acolhimento, conforto e sustentação sem apagar contorno pessoal",
+    "athena": "clareza, intenção e escolhas visuais com critério, sem rigidez excessiva",
+    "artemis": "movimento, território e liberdade suficiente para o corpo respirar",
+}
+
 ARCHETYPE_TONE = {
     "afrodite": "magnetismo, prazer, beleza e desejo de conexão",
     "persefone": "profundidade, intuição, recolhimento e mundo interno",
@@ -71,6 +97,66 @@ ARCHETYPE_TONE = {
 }
 
 REPORTS_PATH = Path(__file__).resolve().parents[1] / "data" / "reports.json"
+AI_LAYER_CACHE: dict[str, str] = {}
+AI_LAYER_MISSIONS = {
+    "dinamica": {
+        "title": "Dinâmica psíquica",
+        "mission": (
+            "traduzir o funcionamento interno em decisões, reações, sinais corporais "
+            "e formas de proteção"
+        ),
+        "focus": (
+            "explique como as duas forças operam por dentro, o que a pessoa tende a tentar "
+            "controlar ou preservar, e como isso aparece em escolhas reais"
+        ),
+        "avoid": "não repita a camada Vida real; não transforme em diagnóstico psicológico",
+    },
+    "vidaReal": {
+        "title": "Como isso aparece na vida real",
+        "mission": (
+            "mostrar a primeira aplicação concreta da leitura fora da tela, sem sugerir "
+            "atualização semanal"
+        ),
+        "focus": (
+            "traga cenas de decisão, vínculo e imagem como exercício inicial de reconhecimento; "
+            "use linguagem atemporal, como 'para começar' ou 'quando isso aparecer de novo'"
+        ),
+        "avoid": "não fale em semana atual, previsão, rotina recorrente do produto ou acompanhamento contínuo",
+    },
+    "sombra": {
+        "title": "Sombra",
+        "mission": "mostrar quando a força vira defesa, excesso ou padrão repetido",
+        "focus": (
+            "nomeie a defesa de forma concreta, mostre o custo no corpo, nos vínculos ou na imagem, "
+            "e indique um ajuste observável"
+        ),
+        "avoid": "não patologize, não use linguagem clínica e não trate sombra como erro moral",
+    },
+    "padraoRelacional": {
+        "title": "Padrão relacional",
+        "mission": (
+            "mostrar como a força aparece em vínculo, aproximação, distância, expectativa "
+            "e necessidade de segurança"
+        ),
+        "focus": (
+            "traga situações de conversa, espera, cobrança, silêncio, escolha, desejo, cuidado, "
+            "controle ou liberdade"
+        ),
+        "avoid": "não dê conselho afetivo prescritivo e não diga como a pessoa deve se relacionar",
+    },
+    "essenciaImagem": {
+        "title": "Essência de imagem",
+        "mission": "traduzir símbolo em roupa, gesto, beleza e presença visual",
+        "focus": (
+            "explique o que uma escolha visual precisa sustentar, o que pode estar bonito mas desalinhado, "
+            "e que pergunta fazer antes de escolher roupa, beleza ou postura"
+        ),
+        "avoid": (
+            "não invente análise de coloração pessoal, biotipo, proporção corporal, cabelo ou diagnóstico visual "
+            "que ainda pertence ao Dossiê ORI"
+        ),
+    },
+}
 REPORT_SECTION_ORDER = [
     ("reconhecimento", "01", "Reconhecimento"),
     ("essencia", "02", "Essência"),
@@ -281,6 +367,56 @@ def build_profile_text(perfil: Produto1LeituraPerfil) -> str:
     return "No seu perfil de entrada, você indicou que " + ", e ".join(fragments) + "."
 
 
+def build_vida_real_text(
+    *,
+    result_name: str,
+    principal_tone: str,
+    secondary_tone: str,
+    principal_id: str | None,
+    secondary_id: str | None,
+    tense_block_name: str,
+    practical_block_text: str,
+    principal_action: str,
+    secondary_action: str,
+) -> str:
+    decision_question = ARCHETYPE_DECISION_QUESTIONS.get(
+        principal_id,
+        "essa escolha sustenta minha presença ou me coloca em uma versão menor de mim?",
+    )
+    secondary_question = ARCHETYPE_DECISION_QUESTIONS.get(
+        secondary_id,
+        "essa nuance precisa aparecer com mais verdade ou está ficando escondida?",
+    )
+    principal_image_need = ARCHETYPE_IMAGE_NEEDS.get(
+        principal_id,
+        principal_tone,
+    )
+    secondary_image_need = ARCHETYPE_IMAGE_NEEDS.get(
+        secondary_id,
+        secondary_tone,
+    )
+
+    return (
+        f"Na vida real, {result_name} aparece menos como uma ideia e mais como um modo de reagir. "
+        f"Ela pode surgir {practical_block_text}. Quando essa força está viva, você tende a perceber "
+        "rapidamente se uma situação expande sua presença ou se começa a apertar seu corpo por dentro.\n\n"
+        f"Nas decisões, a pergunta silenciosa costuma ser: “{decision_question}”. "
+        f"A resposta nem sempre vem como pensamento organizado. Às vezes aparece como impaciência, "
+        "distância, vontade de recuar, necessidade de controlar ou dificuldade de permanecer em algo que "
+        "parece bonito por fora, mas estreito por dentro.\n\n"
+        f"Nas relações, o ponto de atenção em {tense_block_name.lower()} mostra onde você pode se adaptar, se defender "
+        "ou esperar que o outro adivinhe o que está acontecendo. Esse é um ponto importante da leitura: não para se "
+        "cobrar, mas para perceber onde a sua força vira proteção automática.\n\n"
+        f"Na imagem, uma escolha pode estar bonita e ainda assim não funcionar. O que sustenta você precisa "
+        f"dar espaço para {principal_image_need}, sem apagar {secondary_image_need}. Antes de escolher roupa, "
+        "beleza ou postura, pergunte se aquilo deixa você mais presente no corpo ou se apenas encaixa você "
+        "em um papel aceitável.\n\n"
+        "Para começar a aplicar esta leitura, observe uma situação em que você quase disse sim no automático. "
+        f"Antes de responder, {principal_action}. Depois, {secondary_action}. "
+        f"Se precisar de uma frase simples para reconhecer esse movimento fora da tela, use esta: “{secondary_question}”."
+    )
+
+
 def build_personalized_layers(
     *,
     result: dict | None,
@@ -330,6 +466,17 @@ def build_personalized_layers(
         result.get("secundarioId"),
         "observe qual nuance da sua força secundária precisa aparecer com mais clareza",
     )
+    vida_real_text = build_vida_real_text(
+        result_name=result_name,
+        principal_tone=principal_tone,
+        secondary_tone=secondary_tone,
+        principal_id=result.get("principalId"),
+        secondary_id=result.get("secundarioId"),
+        tense_block_name=tense_block["bloco"],
+        practical_block_text=practical_block_text,
+        principal_action=principal_action,
+        secondary_action=secondary_action,
+    )
 
     highlights = [
         Produto1LeituraHighlight(
@@ -370,17 +517,7 @@ def build_personalized_layers(
             "quando tenta compensar, se proteger ou responder demais ao ambiente.\n\n"
             "A sombra aqui não significa erro. Ela mostra onde a força nomeada precisa de consciência para não virar defesa, excesso ou fragmentação visual."
         ),
-        "vidaReal": (
-            f"Na prática, {result_name} tende a aparecer {practical_block_text}.\n\n"
-            "Alguns sinais concretos para observar:\n"
-            f"- Decisões: você escolhe melhor quando respeita {principal_tone}, mas sem ignorar {secondary_tone}.\n"
-            f"- Relações: repare onde {tense_block['bloco'].lower()} faz você se adaptar, se defender ou esperar que o outro adivinhe o que está acontecendo.\n"
-            "- Imagem: antes de perguntar se algo é bonito, pergunte se aquilo sustenta sua presença no corpo, no gesto e na rotina.\n\n"
-            "Para os próximos 7 dias:\n"
-            f"- {principal_action}.\n"
-            f"- {secondary_action}.\n"
-            "- Antes de se vestir ou decidir algo importante, escreva em uma frase: o que eu quero sustentar hoje?"
-        ),
+        "vidaReal": vida_real_text,
         "essenciaImagem": (
             f"Quando cruzamos o resultado com o seu perfil, a direção de imagem precisa responder a algo concreto: {profile_text}\n\n"
             f"A roupa, a beleza, a cor e o gesto precisam sustentar {principal_tone}, sem apagar {secondary_tone}. "
@@ -395,6 +532,235 @@ def build_personalized_layers(
     }
 
     return highlights, camadas
+
+
+def ai_reading_enabled() -> bool:
+    return os.getenv("AI_READING_ENABLED", "true").strip().lower() not in {
+        "0",
+        "false",
+        "no",
+        "off",
+    }
+
+
+def build_ai_layer_cache_key(
+    *,
+    layer_id: str,
+    result: dict,
+    answers: dict,
+    perfil: Produto1LeituraPerfil,
+    base_text: str,
+) -> str:
+    payload = {
+        "layer_id": layer_id,
+        "result": {
+            "nomeComposto": result.get("nomeComposto"),
+            "principal": result.get("principal"),
+            "secundario": result.get("secundario"),
+            "principalId": result.get("principalId"),
+            "secundarioId": result.get("secundarioId"),
+        },
+        "answers": answers,
+        "perfil": perfil.model_dump(),
+        "base_text": base_text,
+    }
+    encoded = json.dumps(payload, ensure_ascii=False, sort_keys=True).encode("utf-8")
+    return sha256(encoded).hexdigest()
+
+
+def build_ai_layer_prompts(
+    *,
+    layer_id: str,
+    result: dict,
+    answers: dict,
+    perfil: Produto1LeituraPerfil,
+    base_text: str,
+) -> tuple[str, str]:
+    mission = AI_LAYER_MISSIONS[layer_id]
+    blocks = get_block_stats(answers)
+    strongest_blocks = sorted(blocks, key=lambda item: item["average"], reverse=True)[:3]
+    tense_blocks = sorted(
+        [block for block in blocks if block["low"] or block["bloco"] == "Seus Padrões"],
+        key=lambda item: item["average"],
+        reverse=True,
+    )[:2]
+    context = {
+        "camada": {
+            "id": layer_id,
+            "titulo": mission["title"],
+            "missao": mission["mission"],
+            "foco": mission["focus"],
+            "evitar": mission["avoid"],
+        },
+        "resultado_calculado": result.get("nomeComposto"),
+        "arquetipo_principal": result.get("principal"),
+        "arquetipo_secundario": result.get("secundario"),
+        "tons_permitidos": {
+            "principal": ARCHETYPE_TONE.get(result.get("principalId")),
+            "secundario": ARCHETYPE_TONE.get(result.get("secundarioId")),
+        },
+        "perfil_entrada": perfil.model_dump(),
+        "blocos_mais_fortes": [
+            {
+                "bloco": block["bloco"],
+                "media": round(block["average"], 2),
+                "significado": BLOCK_MEANINGS.get(block["bloco"]),
+                "sinal_pratico": BLOCK_PRACTICAL_SIGNALS.get(block["bloco"]),
+            }
+            for block in strongest_blocks
+        ],
+        "blocos_de_atencao": [
+            {
+                "bloco": block["bloco"],
+                "media": round(block["average"], 2),
+                "significado": BLOCK_MEANINGS.get(block["bloco"]),
+                "respostas_baixas": [
+                    item["pergunta"] for item in block.get("low", [])[:3]
+                ],
+            }
+            for block in tense_blocks
+        ],
+        "evidencias_principal": [
+            item["question"]["pergunta"]
+            for item in get_archetype_evidence(answers, result.get("principalId"))
+        ],
+        "evidencias_secundario": [
+            item["question"]["pergunta"]
+            for item in get_archetype_evidence(answers, result.get("secundarioId"))
+        ],
+        "texto_base_da_camada": base_text,
+    }
+    system_prompt = (
+        "Você é uma assistente editorial interna do Método ORI. "
+        "Você reescreve uma camada específica de uma leitura arquetípica já calculada. "
+        "Nunca troque, questione ou recalcule o resultado arquetípico. "
+        "Sua função é deixar a camada mais concreta, reconhecível e aplicável, cumprindo apenas a missão indicada. "
+        "Use português do Brasil, tom humano, sofisticado, direto e com presença editorial. "
+        "O texto deve fazer a cliente sentir 'isso é para mim e eu entendi', sem parecer checklist. "
+        "Use corpo, gesto, vínculo, roupa, decisão e situações comuns quando fizer sentido. "
+        "Não faça diagnóstico clínico, previsão, promessa espiritual, conselho médico ou afirmação absoluta. "
+        "Não invente dados técnicos ausentes. Não fale que foi gerado por IA. "
+        "Evite linguagem de autoajuda e termos genéricos como jornada, potência, transformação e expansão. "
+        "Escreva de 3 a 5 parágrafos curtos. Não inclua título dentro do texto. "
+        "Responda apenas JSON válido com as chaves title e text."
+    )
+    user_prompt = (
+        f"Reescreva a camada {mission['title']} com base no contexto abaixo. "
+        "Use o texto base como chão autoral, mas deixe a leitura mais aterrada. "
+        "Não repita a função das outras camadas. Cumpra a missão desta camada.\n\n"
+        f"{json.dumps(context, ensure_ascii=False, indent=2)}"
+    )
+    return system_prompt, user_prompt
+
+
+async def maybe_generate_ai_layer_text(
+    *,
+    layer_id: str,
+    result: dict,
+    answers: dict,
+    perfil: Produto1LeituraPerfil,
+    base_text: str,
+    provider: str,
+    api_key: str,
+    model: str,
+) -> str:
+    clean_base_text = str(base_text or "").strip()
+
+    if not clean_base_text or layer_id not in AI_LAYER_MISSIONS:
+        return clean_base_text
+
+    cache_key = build_ai_layer_cache_key(
+        layer_id=layer_id,
+        result=result,
+        answers=answers,
+        perfil=perfil,
+        base_text=clean_base_text,
+    )
+    cached_text = AI_LAYER_CACHE.get(cache_key)
+
+    if cached_text:
+        return cached_text
+
+    system_prompt, user_prompt = build_ai_layer_prompts(
+        layer_id=layer_id,
+        result=result,
+        answers=answers,
+        perfil=perfil,
+        base_text=clean_base_text,
+    )
+
+    try:
+        parsed = await generate_structured_ai_content(
+            provider=provider,
+            api_key=api_key,
+            model=model,
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
+        )
+    except (httpx.HTTPError, KeyError, IndexError, TypeError, json.JSONDecodeError):
+        return clean_base_text
+
+    if not isinstance(parsed, dict):
+        return clean_base_text
+
+    ai_text = str(parsed.get("text") or "").strip()
+
+    if len(ai_text) < 80:
+        return clean_base_text
+
+    AI_LAYER_CACHE[cache_key] = ai_text[:3200]
+    return AI_LAYER_CACHE[cache_key]
+
+
+async def maybe_generate_ai_report_layers(
+    *,
+    report: dict | None,
+    result: dict | None,
+    answers: dict,
+    perfil: Produto1LeituraPerfil,
+) -> dict | None:
+    if not report or not result or not ai_reading_enabled():
+        return report
+
+    provider, api_key, model, _ = get_ai_provider_config()
+
+    if not api_key:
+        return report
+
+    layer_ids = [
+        "dinamica",
+        "vidaReal",
+        "sombra",
+        "padraoRelacional",
+        "essenciaImagem",
+    ]
+    tasks = [
+        maybe_generate_ai_layer_text(
+            layer_id=layer_id,
+            result=result,
+            answers=answers,
+            perfil=perfil,
+            base_text=report.get(layer_id, ""),
+            provider=provider,
+            api_key=api_key,
+            model=model,
+        )
+        for layer_id in layer_ids
+        if report.get(layer_id)
+    ]
+    task_layer_ids = [layer_id for layer_id in layer_ids if report.get(layer_id)]
+
+    if not tasks:
+        return report
+
+    generated_texts = await asyncio.gather(*tasks, return_exceptions=True)
+    next_report = {**report}
+
+    for layer_id, generated_text in zip(task_layer_ids, generated_texts, strict=False):
+        if isinstance(generated_text, str) and generated_text.strip():
+            next_report[layer_id] = generated_text
+
+    return next_report
 
 
 async def get_produto1_leitura_personalizada(
@@ -422,6 +788,16 @@ async def get_produto1_leitura_personalizada(
         perfil=perfil,
     )
     result_name = (result or {}).get("nomeComposto")
+    report = build_complete_report(
+        result_name=result_name,
+        camadas=camadas,
+    )
+    report = await maybe_generate_ai_report_layers(
+        report=report,
+        result=result,
+        answers=respostas.answers,
+        perfil=perfil,
+    )
 
     return Produto1LeituraResponse(
         user_id=current_user.user_id,
@@ -430,10 +806,7 @@ async def get_produto1_leitura_personalizada(
         perfil=perfil,
         highlights=highlights,
         camadas=camadas,
-        report=build_complete_report(
-            result_name=result_name,
-            camadas=camadas,
-        ),
+        report=report,
     )
 
 

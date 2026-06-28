@@ -1700,12 +1700,109 @@ function QuizQuestionView({
   );
 }
 
-function createGuidedReadingBlocks(paragraphs) {
-  const labels = [
-    "O que isso revela",
-    "Como isso aparece",
-    "O que observar agora",
-  ];
+const readingLayerCopy = {
+  "01": {
+    lead: "Primeiro sinal",
+    labels: ["O padrão que se repetiu", "Onde sua presença aparece", "Ponto de partida"],
+  },
+  "02": {
+    lead: "Núcleo simbólico",
+    labels: ["Forças em encontro", "O que sustenta sua composição", "Direção da essência"],
+  },
+  "03": {
+    lead: "Movimento interno",
+    labels: ["Força principal", "Força secundária", "Ponto de tensão"],
+  },
+  "04": {
+    lead: "No cotidiano",
+    labels: ["A pergunta interna", "Corpo e imagem", "Primeiro exercício"],
+  },
+  "05": {
+    lead: "Efeito da presença",
+    labels: ["Como o outro lê", "Sensação que você provoca", "Ruído possível"],
+  },
+  "06": {
+    lead: "Quando a força vira defesa",
+    labels: ["O padrão que pesa", "O custo invisível", "Ajuste possível"],
+  },
+  "07": {
+    lead: "Forma de vínculo",
+    labels: ["Como você se aproxima", "Onde você se protege", "Maturidade relacional"],
+  },
+  "08": {
+    lead: "Caminho de maturação",
+    labels: ["O que precisa amadurecer", "Imagem sem compensação", "Próximo movimento"],
+  },
+  "09": {
+    lead: "O que sustenta sua presença",
+    labels: ["Forma, cor e gesto", "Bonito, mas desalinhado", "Direção inicial"],
+  },
+  "10": {
+    lead: "Clima cromático",
+    labels: ["Cores que amplificam", "Sensação visual", "Como usar sem ruído"],
+  },
+  "11": {
+    lead: "Estrutura no corpo",
+    labels: ["Linhas que favorecem", "Caimento e proporção", "O que evitar na forma"],
+  },
+  "12": {
+    lead: "Textura e sensação",
+    labels: ["Peso visual", "Toque e movimento", "Matéria que conversa com você"],
+  },
+  "13": {
+    lead: "Expressão no rosto",
+    labels: ["Acabamento de beleza", "Cabelo e presença", "O que revela sem forçar"],
+  },
+  "14": {
+    lead: "Como você ocupa o espaço",
+    labels: ["Gesto e postura", "Presença sem excesso", "Coerência no ambiente"],
+  },
+  "15": {
+    lead: "O que quebra a leitura",
+    labels: ["Ruído visual", "Quando a imagem perde força", "Ajuste necessário"],
+  },
+  "16": {
+    lead: "Síntese da imagem",
+    labels: ["Fórmula simbólica", "Como combinar os códigos", "Uso prático"],
+  },
+  "17": {
+    lead: "Fechamento da leitura",
+    labels: ["O que fica", "Como seguir", "Próxima tradução"],
+  },
+};
+
+const readingLayerCopyByLabel = {
+  Reconhecimento: readingLayerCopy["01"],
+  Essência: readingLayerCopy["02"],
+  "Dinâmica psíquica": readingLayerCopy["03"],
+  "Vida real": readingLayerCopy["04"],
+  Percepção: readingLayerCopy["05"],
+  Sombra: readingLayerCopy["06"],
+  "Padrão relacional": readingLayerCopy["07"],
+  Individuação: readingLayerCopy["08"],
+  "Essência de imagem": readingLayerCopy["09"],
+  Paleta: readingLayerCopy["10"],
+  Modelagem: readingLayerCopy["11"],
+  Tecidos: readingLayerCopy["12"],
+  Beleza: readingLayerCopy["13"],
+  Presença: readingLayerCopy["14"],
+  Evitar: readingLayerCopy["15"],
+  Fórmula: readingLayerCopy["16"],
+  "Leitura final": readingLayerCopy["17"],
+};
+
+function getReadingLayerCopy(layer) {
+  return (
+    readingLayerCopyByLabel[layer?.label] ||
+    readingLayerCopy[layer?.number] || {
+      lead: "Ponto central",
+      labels: ["O que se abre", "Como aparece", "O que observar"],
+    }
+  );
+}
+
+function createGuidedReadingBlocks(paragraphs, layer) {
+  const labels = getReadingLayerCopy(layer).labels;
 
   if (!paragraphs.length) return [];
 
@@ -1792,8 +1889,9 @@ function ReadingLayerPanel({ layer }) {
     .split(/\n+/)
     .map((paragraph) => paragraph.trim())
     .filter(Boolean);
+  const copy = getReadingLayerCopy(layer);
   const [leadParagraph, ...bodyParagraphs] = paragraphs;
-  const guidedBlocks = createGuidedReadingBlocks(bodyParagraphs);
+  const guidedBlocks = createGuidedReadingBlocks(bodyParagraphs, layer);
   const showCompleteText = mobileMotionOff;
   const leadSplit = showCompleteText
     ? { visible: leadParagraph, hidden: "" }
@@ -1811,7 +1909,7 @@ function ReadingLayerPanel({ layer }) {
     ...(leadSplit.hidden
       ? [
           {
-            label: "Síntese principal",
+            label: copy.lead,
             paragraphs: [leadSplit.hidden],
           },
         ]
@@ -1951,7 +2049,7 @@ function ReadingLayerPanel({ layer }) {
                 className="ori-type-system ori-label-sm mb-1.5"
                 style={{ color: "var(--gold-soft)" }}
               >
-                Síntese principal
+                {copy.lead}
               </p>
 
               <p
@@ -2049,18 +2147,14 @@ function ReadingLayerPanel({ layer }) {
             </div>
 
             <div className="grid gap-3">
-              {hiddenDesktopBlocks.map((block) => (
-                <div key={`${layer.number}-deep-${block.label}`} className="space-y-2">
-                  <p
-                    className="ori-type-system ori-label-sm"
-                    style={{ color: "var(--gold-soft)" }}
-                  >
-                    {block.label}
-                  </p>
-
+              {hiddenDesktopBlocks.map((block, blockIndex) => (
+                <div
+                  key={`${layer.number}-deep-${block.label}-${blockIndex}`}
+                  className="space-y-2"
+                >
                   {block.paragraphs.map((paragraph, index) => (
                     <p
-                      key={`${layer.number}-complete-${block.label}-${index}`}
+                      key={`${layer.number}-complete-${block.label}-${blockIndex}-${index}`}
                       className="ori-type-reading-soft text-sm leading-relaxed"
                       style={{ color: "rgba(255,245,235,0.74)" }}
                     >

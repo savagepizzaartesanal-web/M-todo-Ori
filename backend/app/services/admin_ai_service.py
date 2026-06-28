@@ -244,6 +244,10 @@ def _get_provider_config() -> tuple[str, str | None, str, str]:
     )
 
 
+def get_ai_provider_config() -> tuple[str, str | None, str, str]:
+    return _get_provider_config()
+
+
 async def _generate_structured_content(
     provider: str,
     api_key: str,
@@ -255,6 +259,23 @@ async def _generate_structured_content(
         return await _generate_with_gemini(api_key, model, system_prompt, user_prompt)
 
     return await _generate_with_openai(api_key, model, system_prompt, user_prompt)
+
+
+async def generate_structured_ai_content(
+    *,
+    provider: str,
+    api_key: str,
+    model: str,
+    system_prompt: str,
+    user_prompt: str,
+) -> dict[str, Any]:
+    return await _generate_structured_content(
+        provider=provider,
+        api_key=api_key,
+        model=model,
+        system_prompt=system_prompt,
+        user_prompt=user_prompt,
+    )
 
 
 async def generate_admin_ai_message(

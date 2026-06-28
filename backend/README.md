@@ -19,6 +19,9 @@ FRONTEND_ORIGINS=http://localhost:5173,http://127.0.0.1:5173,http://localhost:51
 APP_ENV=development
 SUPABASE_URL=sua_url_do_supabase
 SUPABASE_PUBLISHABLE_KEY=sua_chave_publicavel_do_supabase
+AI_PROVIDER=gemini
+AI_READING_ENABLED=true
+GEMINI_API_KEY=sua_chave_gemini_opcional
 ```
 
 ```bash
@@ -53,6 +56,16 @@ Para habilitar o reset completo da leitura no piloto, rode também:
 ```txt
 metodo-ori/supabase-piloto-estabilizacao.sql
 ```
+
+## IA nas leituras
+
+O resultado arquetípico do Produto 1 continua sendo calculado pelas regras do
+quiz. Quando `AI_READING_ENABLED=true` e uma chave de IA está configurada, a API
+usa IA como assistente editorial interna para aterrar camadas específicas da
+leitura, como **Dinâmica psíquica**, **Vida real**, **Sombra**, **Padrão
+relacional** e **Essência de imagem**. Cada camada tem uma missão própria, para
+evitar redundância. Se a IA estiver sem chave ou indisponível, a leitura usa o
+texto determinístico de fallback.
 
 ## Frontend
 
