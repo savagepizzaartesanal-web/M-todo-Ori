@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 
+import { FEATURES } from "../config/features";
+
 function NextStepCard() {
   return (
     <section
@@ -184,9 +186,10 @@ function NextStepCard() {
         </div>
 
         <div className="flex flex-col md:flex-row md:items-center gap-4">
-          <Link
-            to="/produto-2"
-            className="
+          {FEATURES.produto2 ? (
+            <Link
+              to="/produto-2"
+              className="
               ori-journey-action
               inline-flex
               justify-center
@@ -201,15 +204,41 @@ function NextStepCard() {
               w-full
               md:w-fit
             "
-            style={{
-              background: "var(--gold-primary)",
-              color: "#090506",
-              boxShadow:
-                "0 0 42px rgba(242,185,104,0.16), inset 0 0 18px rgba(255,255,255,0.18)",
-            }}
-          >
-            Avançar para o Dossiê
-          </Link>
+              style={{
+                background: "var(--gold-primary)",
+                color: "#090506",
+                boxShadow:
+                  "0 0 42px rgba(242,185,104,0.16), inset 0 0 18px rgba(255,255,255,0.18)",
+              }}
+            >
+              Avançar para o Dossiê
+            </Link>
+          ) : (
+            <button
+              type="button"
+              disabled
+              className="
+                inline-flex
+                w-full
+                cursor-not-allowed
+                justify-center
+                rounded-full
+                px-6
+                py-3.5
+                text-sm
+                font-medium
+                opacity-70
+                md:w-fit
+              "
+              style={{
+                background: "rgba(255,255,255,0.035)",
+                border: "1px solid rgba(242,185,104,0.12)",
+                color: "rgba(255,245,235,0.58)",
+              }}
+            >
+              Dossiê em preparação
+            </button>
+          )}
 
           <p
             className="ori-type-reading-soft text-xs md:text-sm max-w-[340px]"

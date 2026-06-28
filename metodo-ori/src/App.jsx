@@ -1,10 +1,11 @@
 import { lazy, Suspense, useEffect } from "react";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Navigate, Routes, Route, useLocation } from "react-router-dom";
 
 import DashboardLayout from "./layouts/DashboardLayout";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
+import { FEATURES } from "./config/features";
 
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Produto2 = lazy(() => import("./pages/Produto2"));
@@ -178,7 +179,7 @@ function App() {
             element={
               <ProtectedRoute>
                 <DashboardLayout>
-                  <Produto2 />
+                  {FEATURES.produto2 ? <Produto2 /> : <Navigate to="/portal" replace />}
                 </DashboardLayout>
               </ProtectedRoute>
             }

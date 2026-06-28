@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { supabase } from "../lib/supabaseClient";
+import { FEATURES } from "../config/features";
 import {
   getCurrentJornada,
   getDailyOracleCard,
@@ -206,7 +207,8 @@ function PortalCliente() {
   const produto1Liberado =
     jornadaApi?.produto_1_liberado ?? cliente?.produto_1_liberado ?? true;
   const produto2Liberado =
-    jornadaApi?.produto_2_liberado ?? cliente?.produto_2_liberado ?? false;
+    FEATURES.produto2 &&
+    (jornadaApi?.produto_2_liberado ?? cliente?.produto_2_liberado ?? false);
   const produto3Liberado =
     jornadaApi?.produto_3_liberado ?? cliente?.produto_3_liberado ?? false;
   const onboardingConcluido =

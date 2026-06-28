@@ -2,6 +2,8 @@ import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 
+import { FEATURES } from "../config/features";
+
 const productPhases = [
   {
     number: "01",
@@ -34,8 +36,8 @@ const productPhases = [
       "Aqui o Método ORI cruza psique, corpo, cor, cabelo, ancestralidade, presença e rotina para transformar informação solta em coerência visual.",
     value:
       "Sua imagem deixa de parecer fragmentada e começa a ganhar forma visível, coerente e inteira.",
-    cta: "Conhecer próxima camada",
-    href: "/produto-2",
+    cta: FEATURES.produto2 ? "Conhecer próxima camada" : "Próxima camada em preparação",
+    href: FEATURES.produto2 ? "/produto-2" : "/portal",
     delivers: [
       "Base identitária integrada",
       "Leitura corporal / Kibbe",

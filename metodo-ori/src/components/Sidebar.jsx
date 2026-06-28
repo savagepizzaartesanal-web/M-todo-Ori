@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
+import { FEATURES } from "../config/features";
 import { supabase } from "../lib/supabaseClient";
 
 const mainLinks = [
   ["Portal Cliente", "/portal"],
   ["Conheça o Método", "/metodo-ori"],
   ["Código das Deusas", "/produto-1"],
-  ["Dossiê ORI", "/produto-2"],
+  FEATURES.produto2 ? ["Dossiê ORI", "/produto-2"] : null,
   ["Código Final", "/produto-3"],
   ["Espelho ORI", "/espelho-ori"],
   ["Oráculo", "/oraculo"],
-];
+].filter(Boolean);
 
 const adminLinks = [
   ["Estúdio ORI", "/admin"],

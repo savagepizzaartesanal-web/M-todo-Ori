@@ -120,9 +120,14 @@ Variaveis de ambiente necessarias:
 ```env
 VITE_SUPABASE_URL=
 VITE_SUPABASE_PUBLISHABLE_KEY=
+VITE_ENABLE_PRODUTO_2=false
 ```
 
 Use `.env.local` para desenvolvimento local. Esse arquivo nao deve ser enviado ao GitHub.
+
+Para desenvolver o Produto 2 localmente sem liberar no Vercel, use
+`VITE_ENABLE_PRODUTO_2=true` apenas no `.env.local`. Em producao, mantenha a
+variavel ausente ou definida como `false`.
 
 ## Deploy
 
@@ -136,5 +141,6 @@ Configuracao:
 - Environment Variables:
   - `VITE_SUPABASE_URL`
   - `VITE_SUPABASE_PUBLISHABLE_KEY`
+  - `VITE_ENABLE_PRODUTO_2=false`
 
 O repositorio contem `vercel.json` para permitir rotas internas do React Router em producao.

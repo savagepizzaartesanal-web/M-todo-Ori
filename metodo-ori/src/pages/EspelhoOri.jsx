@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 import { supabase } from "../lib/supabaseClient";
+import { FEATURES } from "../config/features";
 import { reports } from "../data/reports";
 import { MirrorSectionNav } from "../components/espelho/EspelhoInteractions";
 import {
@@ -489,10 +490,11 @@ function EspelhoOri() {
     "Arquétipo secundário";
 
   const produto2Liberado =
-    jornadaApi?.produto_2_liberado ?? cliente?.produto_2_liberado ?? false;
+    FEATURES.produto2 &&
+    (jornadaApi?.produto_2_liberado ?? cliente?.produto_2_liberado ?? false);
   const produto3Liberado =
     jornadaApi?.produto_3_liberado ?? cliente?.produto_3_liberado ?? false;
-  const dossieRevelado = produto2Liberado || produto3Liberado;
+  const dossieRevelado = FEATURES.produto2 && (produto2Liberado || produto3Liberado);
   const codigoFinalRevelado = produto3Liberado;
 
   const hasResult = Boolean(resultadoFinal);
