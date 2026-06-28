@@ -12,6 +12,7 @@ PRODUTO_1_TABLE = "produto_1_respostas"
 ORACULO_TABLE = "oraculo_cartas_diarias"
 FEEDBACK_TABLE = "produto_1_feedbacks"
 ADMIN_EVENTS_TABLE = "admin_cliente_eventos"
+PRODUTO_2_TABLE = "produto_2_dossies"
 
 
 def get_supabase_rest_headers(current_user: CurrentUser) -> dict[str, str]:
@@ -152,6 +153,7 @@ async def fetch_admin_cliente(cliente_id: str, current_user: CurrentUser) -> dic
     cliente = clientes[0]
     user_id = cliente.get("user_id")
     produto1 = None
+    produto2 = None
     oraculo = None
     feedback = None
     eventos = []
@@ -200,6 +202,21 @@ async def fetch_admin_cliente(cliente_id: str, current_user: CurrentUser) -> dic
         oraculo = oraculo_rows[0] if oraculo_rows else None
         feedback = feedback_rows[0] if feedback_rows else None
 
+        async with httpx.AsyncClient(timeout=10) as client:
+            produto2_response = await client.get(
+                f"{supabase_url}/rest/v1/{PRODUTO_2_TABLE}",
+                params={
+                    "select": "*",
+                    "cliente_id": f"eq.{cliente_id}",
+                    "limit": "1",
+                },
+                headers=headers,
+            )
+
+        if produto2_response.status_code < 400:
+            produto2_rows = produto2_response.json()
+            produto2 = produto2_rows[0] if produto2_rows else None
+
     async with httpx.AsyncClient(timeout=10) as client:
         eventos_response = await client.get(
             f"{supabase_url}/rest/v1/{ADMIN_EVENTS_TABLE}",
@@ -218,6 +235,7 @@ async def fetch_admin_cliente(cliente_id: str, current_user: CurrentUser) -> dic
     return {
         "cliente": cliente,
         "produto1_respostas": produto1,
+        "produto2_dossie": produto2,
         "oraculo_carta": oraculo,
         "produto1_feedback": feedback,
         "eventos_admin": eventos,

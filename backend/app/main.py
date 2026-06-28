@@ -16,6 +16,7 @@ from app.routes import (
     mapa_vivo,
     oraculo,
     produto1,
+    produto2,
     quiz,
     status,
 )
@@ -105,6 +106,7 @@ app.include_router(jornada.router)
 app.include_router(mapa_vivo.router)
 app.include_router(oraculo.router)
 app.include_router(produto1.router)
+app.include_router(produto2.router)
 app.include_router(quiz.router)
 app.include_router(status.router)
 

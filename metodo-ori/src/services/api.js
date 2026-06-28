@@ -224,6 +224,24 @@ export function downloadProduto1ReportPdf() {
   return requestAuthenticatedFile("/api/produto-1/relatorio/me/pdf");
 }
 
+export function getProduto2Dossie() {
+  return requestAuthenticatedApi("/api/produto-2/me");
+}
+
+export function saveProduto2Insumos(insumos) {
+  return requestAuthenticatedApi("/api/produto-2/insumos", {
+    method: "POST",
+    body: JSON.stringify({ insumos }),
+  });
+}
+
+export function submitProduto2Insumos(insumos) {
+  return requestAuthenticatedApi("/api/produto-2/enviar", {
+    method: "POST",
+    body: JSON.stringify({ insumos }),
+  });
+}
+
 export function getCurrentApiUser() {
   return requestAuthenticatedApi("/api/me");
 }
@@ -298,6 +316,41 @@ export function generateAdminAiMessage(clienteId, payload) {
     {
       method: "POST",
       body: JSON.stringify(payload),
+    },
+  );
+}
+
+export function getAdminProduto2(clienteId) {
+  return requestAuthenticatedApi(
+    `/api/admin/produto-2/${encodeURIComponent(clienteId)}`,
+  );
+}
+
+export function updateAdminProduto2(clienteId, updates) {
+  return requestAuthenticatedApi(
+    `/api/admin/produto-2/${encodeURIComponent(clienteId)}`,
+    {
+      method: "PUT",
+      body: JSON.stringify(updates),
+    },
+  );
+}
+
+export function publishAdminProduto2(clienteId, payload) {
+  return requestAuthenticatedApi(
+    `/api/admin/produto-2/${encodeURIComponent(clienteId)}/publicar`,
+    {
+      method: "POST",
+      body: JSON.stringify(payload),
+    },
+  );
+}
+
+export function unpublishAdminProduto2(clienteId) {
+  return requestAuthenticatedApi(
+    `/api/admin/produto-2/${encodeURIComponent(clienteId)}/despublicar`,
+    {
+      method: "POST",
     },
   );
 }
