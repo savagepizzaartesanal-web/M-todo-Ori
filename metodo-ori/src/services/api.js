@@ -2,6 +2,7 @@ import { supabase } from "../lib/supabaseClient";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 const API_TIMEOUT_MS = 12000;
+const READING_TIMEOUT_MS = 120000;
 const FILE_TIMEOUT_MS = 180000;
 
 export class OriApiError extends Error {
@@ -18,9 +19,12 @@ export class OriApiError extends Error {
   }
 }
 
-async function requestApi(path, options = {}) {
+async function requestApi(
+  path,
+  { timeoutMs = API_TIMEOUT_MS, ...options } = {},
+) {
   const controller = new AbortController();
-  const timeoutId = window.setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+  const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
   let response;
 
   try {
@@ -213,11 +217,15 @@ export function resetProduto1() {
 }
 
 export function getProduto1Reading() {
-  return requestAuthenticatedApi("/api/produto-1/leitura/me");
+  return requestAuthenticatedApi("/api/produto-1/leitura/me", {
+    timeoutMs: READING_TIMEOUT_MS,
+  });
 }
 
 export function getProduto1Report() {
-  return requestAuthenticatedApi("/api/produto-1/relatorio/me");
+  return requestAuthenticatedApi("/api/produto-1/relatorio/me", {
+    timeoutMs: READING_TIMEOUT_MS,
+  });
 }
 
 export function downloadProduto1ReportPdf() {
