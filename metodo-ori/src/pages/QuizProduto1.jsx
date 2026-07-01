@@ -333,6 +333,56 @@ function Eyebrow({ children, className = "", line = false }) {
   );
 }
 
+function ReadingBootState({ reduceMotion }) {
+  return (
+    <motion.section
+      initial={reduceMotion ? false : { opacity: 0 }}
+      animate={reduceMotion ? undefined : { opacity: 1 }}
+      transition={{ duration: 0.28 }}
+      className="flex min-h-[430px] items-center justify-center rounded-[24px] p-6 text-center md:min-h-[520px] md:rounded-[38px]"
+      style={{
+        background:
+          "radial-gradient(circle at center, rgba(210,135,70,0.10), transparent 38%), linear-gradient(135deg, var(--wine-deep), rgba(5,2,2,0.98))",
+        border: "1px solid var(--copper-soft)",
+        boxShadow:
+          "0 0 90px rgba(210,135,70,0.08), inset 0 0 70px rgba(255,255,255,0.014)",
+      }}
+      aria-live="polite"
+      aria-busy="true"
+    >
+      <div>
+        <motion.div
+          className="mx-auto mb-6 h-9 w-9 rounded-full"
+          style={{
+            border: "1px solid rgba(242,185,104,0.22)",
+            borderTopColor: colors.gold,
+            boxShadow: "0 0 24px rgba(242,185,104,0.12)",
+          }}
+          animate={reduceMotion ? undefined : { rotate: 360 }}
+          transition={{
+            duration: 1.1,
+            ease: "linear",
+            repeat: Infinity,
+          }}
+        />
+        <Eyebrow className="mb-3">Câmara de Leitura ORI</Eyebrow>
+        <h1
+          className="ori-type-revelation text-2xl md:text-4xl"
+          style={{ color: colors.gold }}
+        >
+          Abrindo sua leitura...
+        </h1>
+        <p
+          className="ori-type-reading-soft mt-3 text-sm md:text-base"
+          style={{ color: colors.soft }}
+        >
+          Estamos buscando o que já está salvo na sua conta.
+        </p>
+      </div>
+    </motion.section>
+  );
+}
+
 function LoadingDossie({ loadingRef, reduceMotion }) {
   const analysisSteps = [
     {
@@ -3568,7 +3618,11 @@ function QuizProduto1() {
           </div>
         </header>
 
-        {(isLoadingResult || isLoadingPreview) && (
+        {!hasLoadedStorage && (
+          <ReadingBootState reduceMotion={reduceMotion} />
+        )}
+
+        {hasLoadedStorage && (isLoadingResult || isLoadingPreview) && (
           <LoadingDossie
             loadingStep={loadingStep}
             loadingRef={loadingRef}
@@ -3576,7 +3630,7 @@ function QuizProduto1() {
           />
         )}
 
-        {showQuiz && !result && !isLoadingPreview && (
+        {hasLoadedStorage && showQuiz && !result && !isLoadingPreview && (
           <div ref={quizRef} className="scroll-mt-8">
             {!hasStarted && (
               <QuizIntro
@@ -3618,7 +3672,7 @@ function QuizProduto1() {
           </div>
         )}
 
-        {result && !isLoadingPreview && (
+        {hasLoadedStorage && result && !isLoadingPreview && (
           <>
             <div className="mt-4 fade-up">
               <div ref={resultRef} className="scroll-mt-10">
