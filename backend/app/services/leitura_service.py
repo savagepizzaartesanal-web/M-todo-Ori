@@ -707,6 +707,14 @@ async def maybe_generate_ai_layer_text(
             system_prompt=system_prompt,
             user_prompt=user_prompt,
         )
+    except httpx.HTTPStatusError as error:
+        status_code = error.response.status_code
+        detail = error.response.text.replace("\n", " ")[:500]
+        print(
+            "AI reading layer fallback: "
+            f"layer={layer_id} reason=HTTPStatusError status={status_code} detail={detail}"
+        )
+        return clean_base_text
     except (httpx.HTTPError, KeyError, IndexError, TypeError, json.JSONDecodeError) as error:
         print(f"AI reading layer fallback: layer={layer_id} reason={type(error).__name__}")
         return clean_base_text

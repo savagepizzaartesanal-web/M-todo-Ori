@@ -196,7 +196,7 @@ async def _generate_with_gemini(
                 "Content-Type": "application/json",
             },
             json={
-                "system_instruction": {
+                "systemInstruction": {
                     "parts": [{"text": system_prompt}],
                 },
                 "contents": [
@@ -208,8 +208,8 @@ async def _generate_with_gemini(
                 "generationConfig": {
                     "temperature": 0.55,
                     "maxOutputTokens": 360,
-                    "response_mime_type": "application/json",
-                    "response_json_schema": {
+                    "responseMimeType": "application/json",
+                    "responseJsonSchema": {
                         "type": "object",
                         "properties": {
                             "title": {"type": "string"},
