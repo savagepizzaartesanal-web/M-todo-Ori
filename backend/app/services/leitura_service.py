@@ -106,7 +106,7 @@ AI_GUIDE_PATH = (
     / "method_ori_product1_ai.json"
 )
 AI_LAYER_CACHE: dict[str, str] = {}
-AI_PROMPT_VERSION = "product1-full-reading-v1"
+AI_PROMPT_VERSION = "product1-full-reading-v2"
 AI_REQUEST_SEMAPHORE = asyncio.Semaphore(1)
 AI_RETRYABLE_STATUS_CODES = {429, 502, 503, 504}
 AI_MAX_ATTEMPTS = 3
@@ -197,7 +197,8 @@ AI_LAYER_MISSIONS = {
         "mission": "traduzir símbolo em roupa, gesto, beleza e presença visual",
         "focus": (
             "explique o que uma escolha visual precisa sustentar, o que pode estar bonito mas desalinhado, "
-            "e que pergunta fazer antes de escolher roupa, beleza ou postura"
+            "e que pergunta fazer antes de escolher roupa, beleza ou postura; abra com delicadeza "
+            "a curiosidade sobre como essa essência será lida tecnicamente no Dossiê ORI"
         ),
         "avoid": (
             "não invente análise de coloração pessoal, biotipo, proporção corporal, cabelo ou diagnóstico visual "
@@ -266,7 +267,8 @@ AI_LAYER_MISSIONS = {
         "mission": "integrar a leitura em uma síntese emocional, estratégica e memorável",
         "focus": (
             "retome a tensão central, reconheça o momento da cliente e indique a passagem da "
-            "consciência para uma imagem mais coerente"
+            "consciência para uma imagem mais coerente; conclua com um convite afetuoso e claro "
+            "para o Dossiê ORI como próxima etapa de corpo, cores, cabelo e presença real"
         ),
         "avoid": "não repetir literalmente as seções anteriores nem antecipar a entrega do Dossiê ORI",
     },
@@ -945,16 +947,25 @@ def build_ai_report_prompts(
     system_prompt = (
         "Você é a editora interna do Método ORI by Telúrica. "
         "Sua tarefa é transformar uma leitura arquetípica já calculada em uma entrega única, "
-        "profunda, coerente e pessoal. O resultado calculado e os textos-base são soberanos: "
+        "profunda, coerente, pessoal e afetuosa. Escreva como se o próprio Método ORI estivesse "
+        "conversando com a cliente: fale diretamente com você, acolha sem infantilizar e revele "
+        "detalhes importantes com palavras que qualquer pessoa consiga entender. "
+        "O resultado calculado e os textos-base são soberanos: "
         "não recalcule arquétipos, não troque conclusões e não apague conteúdo autoral relevante. "
         "Use as evidências do teste para aprofundar reconhecimento, nunca para alegar diagnóstico. "
         "Faça as camadas conversarem entre si, mas não repita frases, exemplos ou conclusões. "
         "A profundidade deve vir de tensão interna, consequência, nuance, sinais observáveis e "
-        "integração entre as duas forças, não de linguagem abstrata. "
+        "integração entre as duas forças, não de linguagem abstrata. Em cada camada narrativa, "
+        "explique como uma força modifica, protege, desafia ou revela a outra; não entregue apenas "
+        "uma soma de adjetivos dos dois arquétipos. Quando usar um conceito simbólico, traduza-o "
+        "imediatamente para uma cena, sensação, escolha ou comportamento compreensível. "
         "Use português do Brasil, tom humano, sofisticado, direto e acolhedor. "
         "Não use linguagem clínica, previsão, promessa espiritual, tendência de moda ou corpo ideal. "
         "Não invente Kibbe, cartela de coloração, análise capilar, ancestralidade ou dados visuais. "
-        "Não mencione inteligência artificial, backend, Produto 1 ou Produto 2. "
+        "Não mencione inteligência artificial, backend, Produto 1 ou Produto 2. Você pode nomear "
+        "o Dossiê ORI, mas sem fazer propaganda repetitiva: nas camadas de imagem, crie apenas "
+        "curiosidade sobre a leitura técnica que ainda falta; deixe o único convite direto para "
+        "a Leitura final. "
         "Não inclua títulos dentro dos textos. "
         "Nas camadas narrativas, escreva de 3 a 5 parágrafos curtos e densos. "
         "Nas camadas de imagem, escreva de 2 a 4 parágrafos aplicáveis, preservando os elementos "
