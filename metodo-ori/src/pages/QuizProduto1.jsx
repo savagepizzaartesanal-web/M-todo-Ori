@@ -335,51 +335,67 @@ function Eyebrow({ children, className = "", line = false }) {
 
 function ReadingBootState({ reduceMotion }) {
   return (
-    <motion.section
+    <motion.div
       initial={reduceMotion ? false : { opacity: 0 }}
       animate={reduceMotion ? undefined : { opacity: 1 }}
       transition={{ duration: 0.28 }}
-      className="flex min-h-[430px] items-center justify-center rounded-[24px] p-6 text-center md:min-h-[520px] md:rounded-[38px]"
-      style={{
-        background:
-          "radial-gradient(circle at center, rgba(210,135,70,0.10), transparent 38%), linear-gradient(135deg, var(--wine-deep), rgba(5,2,2,0.98))",
-        border: "1px solid var(--copper-soft)",
-        boxShadow:
-          "0 0 90px rgba(210,135,70,0.08), inset 0 0 70px rgba(255,255,255,0.014)",
-      }}
+      className="relative flex min-h-[58vh] items-center justify-center px-6 pb-16 text-center"
       aria-live="polite"
       aria-busy="true"
     >
-      <div>
+      <div
+        className="pointer-events-none absolute left-1/2 top-1/2 h-52 w-52 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(242,185,104,0.09), transparent 68%)",
+        }}
+      />
+
+      <div className="relative">
         <motion.div
-          className="mx-auto mb-6 h-9 w-9 rounded-full"
+          className="relative mx-auto mb-7 flex h-14 w-14 items-center justify-center rounded-full"
           style={{
-            border: "1px solid rgba(242,185,104,0.22)",
-            borderTopColor: colors.gold,
-            boxShadow: "0 0 24px rgba(242,185,104,0.12)",
+            border: "1px solid rgba(242,185,104,0.18)",
+            background: "rgba(242,185,104,0.025)",
+            boxShadow:
+              "0 0 38px rgba(242,185,104,0.08), inset 0 0 24px rgba(242,185,104,0.035)",
           }}
-          animate={reduceMotion ? undefined : { rotate: 360 }}
+          animate={
+            reduceMotion
+              ? undefined
+              : {
+                  scale: [1, 1.045, 1],
+                  opacity: [0.72, 1, 0.72],
+                }
+          }
           transition={{
-            duration: 1.1,
-            ease: "linear",
+            duration: 2.2,
+            ease: "easeInOut",
             repeat: Infinity,
           }}
-        />
-        <Eyebrow className="mb-3">Câmara de Leitura ORI</Eyebrow>
+        >
+          <span
+            className="ori-type-system text-[11px] tracking-[0.22em]"
+            style={{ color: colors.goldSoft }}
+          >
+            ORI
+          </span>
+        </motion.div>
+
         <h1
-          className="ori-type-revelation text-2xl md:text-4xl"
+          className="ori-type-revelation text-2xl md:text-3xl"
           style={{ color: colors.gold }}
         >
           Abrindo sua leitura...
         </h1>
         <p
-          className="ori-type-reading-soft mt-3 text-sm md:text-base"
-          style={{ color: colors.soft }}
+          className="ori-type-reading-soft mt-3 text-xs md:text-sm"
+          style={{ color: "rgba(255,245,235,0.50)" }}
         >
-          Estamos buscando o que já está salvo na sua conta.
+          Só um instante.
         </p>
       </div>
-    </motion.section>
+    </motion.div>
   );
 }
 
