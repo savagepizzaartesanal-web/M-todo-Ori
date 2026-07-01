@@ -1,6 +1,7 @@
 import json
 import os
 import asyncio
+from difflib import SequenceMatcher
 from hashlib import sha256
 from datetime import UTC, datetime
 from functools import lru_cache
@@ -106,7 +107,40 @@ AI_GUIDE_PATH = (
     / "method_ori_product1_ai.json"
 )
 AI_LAYER_CACHE: dict[str, str] = {}
-AI_PROMPT_VERSION = "product1-full-reading-v2"
+AI_PROMPT_VERSION = "product1-full-reading-v3"
+AI_READING_BATCHES = [
+    [
+        "reconhecimento",
+        "essencia",
+        "dinamica",
+        "vidaReal",
+        "percebida",
+        "sombra",
+        "padraoRelacional",
+        "caminho",
+    ],
+    [
+        "essenciaImagem",
+        "paleta",
+        "modelagem",
+        "tecidos",
+        "beleza",
+        "presenca",
+        "evitar",
+        "leituraFinal",
+    ],
+]
+AI_NARRATIVE_LAYERS = {
+    "reconhecimento",
+    "essencia",
+    "dinamica",
+    "vidaReal",
+    "percebida",
+    "sombra",
+    "padraoRelacional",
+    "caminho",
+    "leituraFinal",
+}
 AI_REQUEST_SEMAPHORE = asyncio.Semaphore(1)
 AI_RETRYABLE_STATUS_CODES = {429, 502, 503, 504}
 AI_MAX_ATTEMPTS = 3
@@ -785,6 +819,37 @@ def was_ai_report_generated_in_cache(
     return True
 
 
+def get_report_layer_text(report: dict, layer_id: str) -> str:
+    value = report.get(layer_id)
+
+    if isinstance(value, list):
+        return "\n".join(str(item) for item in value)
+
+    return str(value or "")
+
+
+def validate_ai_layer_depth(
+    *,
+    layer_id: str,
+    generated_text: str,
+    base_text: str,
+) -> tuple[bool, str]:
+    clean_generated = " ".join(generated_text.lower().split())
+    clean_base = " ".join(base_text.lower().split())
+    minimum_length = 700 if layer_id in AI_NARRATIVE_LAYERS else 500
+
+    if len(generated_text) < minimum_length:
+        return False, f"shallow_text length={len(generated_text)} min={minimum_length}"
+
+    if clean_base:
+        similarity = SequenceMatcher(None, clean_generated, clean_base).ratio()
+
+        if similarity >= 0.82:
+            return False, f"copied_base similarity={similarity:.2f}"
+
+    return True, ""
+
+
 def build_ai_layer_prompts(
     *,
     layer_id: str,
@@ -952,6 +1017,10 @@ def build_ai_report_prompts(
         "detalhes importantes com palavras que qualquer pessoa consiga entender. "
         "O resultado calculado e os textos-base são soberanos: "
         "não recalcule arquétipos, não troque conclusões e não apague conteúdo autoral relevante. "
+        "O texto-base é uma fonte de fatos e direção, não um rascunho para copiar. Produza uma "
+        "interpretação nova: não repita a estrutura, a ordem dos parágrafos nem frases inteiras "
+        "do texto-base. A nova camada precisa acrescentar relações, consequências e detalhes "
+        "que não estavam explicitados no original. "
         "Use as evidências do teste para aprofundar reconhecimento, nunca para alegar diagnóstico. "
         "Faça as camadas conversarem entre si, mas não repita frases, exemplos ou conclusões. "
         "A profundidade deve vir de tensão interna, consequência, nuance, sinais observáveis e "
@@ -967,14 +1036,17 @@ def build_ai_report_prompts(
         "curiosidade sobre a leitura técnica que ainda falta; deixe o único convite direto para "
         "a Leitura final. "
         "Não inclua títulos dentro dos textos. "
-        "Nas camadas narrativas, escreva de 3 a 5 parágrafos curtos e densos. "
-        "Nas camadas de imagem, escreva de 2 a 4 parágrafos aplicáveis, preservando os elementos "
+        "Nas camadas narrativas, escreva de 4 a 6 parágrafos curtos e densos, com pelo menos "
+        "700 caracteres por camada. Nas camadas de imagem, escreva de 3 a 5 parágrafos aplicáveis, "
+        "com pelo menos 500 caracteres por camada, preservando os elementos "
         "concretos do texto-base. Responda somente com o JSON solicitado."
     )
     user_prompt = (
         "Reescreva todas as camadas como partes de uma mesma leitura. "
-        "Use o contexto compartilhado para personalizar e o texto-base de cada camada como chão autoral. "
-        "A cliente deve sentir continuidade, profundidade e especificidade do início ao fim.\n\n"
+        "Use o contexto compartilhado para personalizar e o texto-base de cada camada somente como "
+        "referência autoral. Não devolva o texto-base ampliado: entregue uma interpretação nova, "
+        "mais íntima, explicada e reveladora. A cliente deve sentir continuidade, profundidade e "
+        "especificidade do início ao fim.\n\n"
         f"CONTEXTO COMPARTILHADO\n{json.dumps(shared_context, ensure_ascii=False, indent=2)}\n\n"
         f"CAMADAS\n{json.dumps(layers, ensure_ascii=False, indent=2)}"
     )
@@ -1126,77 +1198,109 @@ async def maybe_generate_ai_report_layers(
     if not missing_layers:
         return next_report
 
-    system_prompt, user_prompt, response_schema = build_ai_report_prompts(
-        layer_ids=missing_layers,
-        report=report,
-        result=result,
-        answers=answers,
-        perfil=perfil,
-    )
+    pending_batches = [
+        [layer_id for layer_id in batch if layer_id in missing_layers]
+        for batch in AI_READING_BATCHES
+    ]
+    pending_batches = [batch for batch in pending_batches if batch]
 
-    parsed = None
+    for batch_index, batch_layers in enumerate(pending_batches, start=1):
+        system_prompt, user_prompt, response_schema = build_ai_report_prompts(
+            layer_ids=batch_layers,
+            report=report,
+            result=result,
+            answers=answers,
+            perfil=perfil,
+        )
+        parsed = None
 
-    for attempt in range(1, AI_MAX_ATTEMPTS + 1):
-        try:
-            async with AI_REQUEST_SEMAPHORE:
-                parsed = await generate_structured_ai_content(
-                    provider=provider,
-                    api_key=api_key,
-                    model=model,
-                    system_prompt=system_prompt,
-                    user_prompt=user_prompt,
-                    response_schema=response_schema,
-                    max_output_tokens=7600,
+        for attempt in range(1, AI_MAX_ATTEMPTS + 1):
+            try:
+                async with AI_REQUEST_SEMAPHORE:
+                    parsed = await generate_structured_ai_content(
+                        provider=provider,
+                        api_key=api_key,
+                        model=model,
+                        system_prompt=system_prompt,
+                        user_prompt=user_prompt,
+                        response_schema=response_schema,
+                        max_output_tokens=5000,
+                    )
+                break
+            except httpx.HTTPStatusError as error:
+                status_code = error.response.status_code
+                should_retry = (
+                    status_code in AI_RETRYABLE_STATUS_CODES
+                    and attempt < AI_MAX_ATTEMPTS
+                    and (status_code != 429 or attempt == 1)
                 )
-            break
-        except httpx.HTTPStatusError as error:
-            status_code = error.response.status_code
-            should_retry = (
-                status_code in AI_RETRYABLE_STATUS_CODES
-                and attempt < AI_MAX_ATTEMPTS
-                and (status_code != 429 or attempt == 1)
+
+                if should_retry:
+                    wait_seconds = get_ai_retry_wait_seconds(error, attempt)
+                    print(
+                        "AI reading batch retry: "
+                        f"batch={batch_index}/{len(pending_batches)} "
+                        f"status={status_code} "
+                        f"attempt={attempt + 1}/{AI_MAX_ATTEMPTS} "
+                        f"wait={wait_seconds}s"
+                    )
+                    await asyncio.sleep(wait_seconds)
+                    continue
+
+                detail = error.response.text.replace("\n", " ")[:500]
+                print(
+                    "AI reading batch fallback: "
+                    f"batch={batch_index}/{len(pending_batches)} "
+                    f"reason=HTTPStatusError status={status_code} "
+                    f"attempts={attempt} detail={detail}"
+                )
+                return next_report
+            except (
+                httpx.HTTPError,
+                KeyError,
+                IndexError,
+                TypeError,
+                json.JSONDecodeError,
+            ) as error:
+                print(
+                    "AI reading batch fallback: "
+                    f"batch={batch_index}/{len(pending_batches)} "
+                    f"reason={type(error).__name__} attempts={attempt}"
+                )
+                return next_report
+
+        if not isinstance(parsed, dict):
+            print(
+                "AI reading batch fallback: "
+                f"batch={batch_index}/{len(pending_batches)} reason=invalid_payload"
+            )
+            return next_report
+
+        for layer_id in batch_layers:
+            ai_text = sanitize_customer_reading_text(
+                str(parsed.get(layer_id) or "").strip()
+            )
+            is_valid, reason = validate_ai_layer_depth(
+                layer_id=layer_id,
+                generated_text=ai_text,
+                base_text=get_report_layer_text(report, layer_id),
             )
 
-            if should_retry:
-                wait_seconds = get_ai_retry_wait_seconds(error, attempt)
+            if not is_valid:
                 print(
-                    "AI reading batch retry: "
-                    f"status={status_code} attempt={attempt + 1}/{AI_MAX_ATTEMPTS} "
-                    f"wait={wait_seconds}s"
+                    f"AI reading batch rejected: layer={layer_id} reason={reason}"
                 )
-                await asyncio.sleep(wait_seconds)
                 continue
 
-            detail = error.response.text.replace("\n", " ")[:500]
+            AI_LAYER_CACHE[cache_keys[layer_id]] = ai_text[:5000]
+            next_report[layer_id] = AI_LAYER_CACHE[cache_keys[layer_id]]
             print(
-                "AI reading batch fallback: "
-                f"reason=HTTPStatusError status={status_code} "
-                f"attempts={attempt} detail={detail}"
+                "AI reading layer generated: "
+                f"layer={layer_id} source=batch batch={batch_index}"
             )
-            return next_report
-        except (httpx.HTTPError, KeyError, IndexError, TypeError, json.JSONDecodeError) as error:
-            print(
-                "AI reading batch fallback: "
-                f"reason={type(error).__name__} attempts={attempt}"
-            )
-            return next_report
 
-    if not isinstance(parsed, dict):
-        print("AI reading batch fallback: reason=invalid_payload")
-        return next_report
-
-    for layer_id in missing_layers:
-        ai_text = sanitize_customer_reading_text(
-            str(parsed.get(layer_id) or "").strip()
-        )
-
-        if len(ai_text) < 80:
-            print(f"AI reading batch skipped: layer={layer_id} reason=short_text")
-            continue
-
-        AI_LAYER_CACHE[cache_keys[layer_id]] = ai_text[:5000]
-        next_report[layer_id] = AI_LAYER_CACHE[cache_keys[layer_id]]
-        print(f"AI reading layer generated: layer={layer_id} source=batch")
+        if batch_index < len(pending_batches):
+            await asyncio.sleep(3)
 
     return next_report
 
