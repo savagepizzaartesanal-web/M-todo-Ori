@@ -746,18 +746,38 @@ def is_complete_ai_report(report: dict, base_report: dict) -> bool:
 
     for layer_id in required_layers:
         generated_text = report.get(layer_id)
-        base_value = base_report.get(layer_id)
-        base_text = (
-            "\n".join(str(item) for item in base_value)
-            if isinstance(base_value, list)
-            else str(base_value or "")
-        )
 
         if (
             not isinstance(generated_text, str)
             or len(generated_text.strip()) < 80
-            or generated_text.strip() == base_text.strip()
         ):
+            return False
+
+    return True
+
+
+def was_ai_report_generated_in_cache(
+    *,
+    report: dict,
+    base_report: dict,
+    result: dict,
+    answers: dict,
+    perfil: Produto1LeituraPerfil,
+) -> bool:
+    required_layers = [
+        key for key, _, _ in REPORT_SECTION_ORDER if base_report.get(key)
+    ]
+
+    for layer_id in required_layers:
+        cache_key = build_ai_layer_cache_key(
+            layer_id=layer_id,
+            result=result,
+            answers=answers,
+            perfil=perfil,
+            base_text=base_report.get(layer_id, ""),
+        )
+
+        if AI_LAYER_CACHE.get(cache_key) != report.get(layer_id):
             return False
 
     return True
@@ -1225,7 +1245,17 @@ async def get_produto1_leitura_personalizada(
                 perfil=perfil,
             )
 
-            if isinstance(report, dict) and is_complete_ai_report(report, base_report):
+            if (
+                isinstance(report, dict)
+                and is_complete_ai_report(report, base_report)
+                and was_ai_report_generated_in_cache(
+                    report=report,
+                    base_report=base_report,
+                    result=result,
+                    answers=respostas.answers,
+                    perfil=perfil,
+                )
+            ):
                 await save_produto1_ai_report(
                     report=report,
                     report_key=report_key,
