@@ -24,6 +24,9 @@ class Produto1RespostasResponse(BaseModel):
 
 class Produto1RespostasStoredResponse(Produto1RespostasResponse):
     answers: dict[str, int]
+    ai_report: dict | None = Field(default=None, exclude=True)
+    ai_report_key: str | None = Field(default=None, exclude=True)
+    ai_report_generated_at: datetime | None = Field(default=None, exclude=True)
 
 
 class Produto1ConclusaoResponse(BaseModel):

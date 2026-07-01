@@ -155,7 +155,9 @@ async def _generate_with_openai(
     user_prompt: str,
     max_output_tokens: int = 360,
 ) -> dict[str, Any]:
-    async with httpx.AsyncClient(timeout=45) as client:
+    timeout_seconds = 90 if max_output_tokens > 1000 else 45
+
+    async with httpx.AsyncClient(timeout=timeout_seconds) as client:
         response = await client.post(
             "https://api.openai.com/v1/chat/completions",
             headers={
@@ -190,8 +192,9 @@ async def _generate_with_gemini(
         "https://generativelanguage.googleapis.com/v1beta/models/"
         f"{model}:generateContent"
     )
+    timeout_seconds = 90 if max_output_tokens > 1000 else 45
 
-    async with httpx.AsyncClient(timeout=45) as client:
+    async with httpx.AsyncClient(timeout=timeout_seconds) as client:
         response = await client.post(
             url,
             headers={

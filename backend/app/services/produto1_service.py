@@ -60,6 +60,9 @@ def empty_produto1_respostas(current_user: CurrentUser) -> Produto1RespostasStor
         is_complete=False,
         saved_at=datetime.now(UTC),
         result=None,
+        ai_report=None,
+        ai_report_key=None,
+        ai_report_generated_at=None,
     )
 
 
@@ -82,7 +85,46 @@ def row_to_response(row: dict, current_user: CurrentUser) -> Produto1RespostasSt
         is_complete=bool(row.get("is_complete")),
         saved_at=parse_saved_at(row),
         result=row.get("result"),
+        ai_report=row.get("ai_report"),
+        ai_report_key=row.get("ai_report_key"),
+        ai_report_generated_at=row.get("ai_report_generated_at"),
     )
+
+
+async def save_produto1_ai_report(
+    *,
+    report: dict,
+    report_key: str,
+    current_user: CurrentUser,
+) -> bool:
+    supabase_url, _ = get_supabase_config()
+    headers = {
+        **get_supabase_rest_headers(current_user),
+        "Prefer": "return=minimal",
+    }
+    payload = {
+        "ai_report": report,
+        "ai_report_key": report_key,
+        "ai_report_generated_at": datetime.now(UTC).isoformat(),
+    }
+
+    async with httpx.AsyncClient(timeout=8) as client:
+        response = await client.patch(
+            f"{supabase_url}/rest/v1/{TABLE_NAME}",
+            params={"user_id": f"eq.{current_user.user_id}"},
+            json=payload,
+            headers=headers,
+        )
+
+    if response.status_code >= 400:
+        print(
+            "AI reading persistence skipped: "
+            f"status={response.status_code} detail={response.text[:300]}"
+        )
+        return False
+
+    print("AI reading persisted")
+    return True
 
 
 async def get_produto1_respostas(

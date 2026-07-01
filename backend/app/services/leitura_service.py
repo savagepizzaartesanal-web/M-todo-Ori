@@ -23,7 +23,10 @@ from app.services.admin_ai_service import (
     get_ai_provider_config,
 )
 from app.services.jornada_service import fetch_current_cliente
-from app.services.produto1_service import get_produto1_respostas
+from app.services.produto1_service import (
+    get_produto1_respostas,
+    save_produto1_ai_report,
+)
 
 BLOCK_MEANINGS = {
     "Sua Presença": "como sua presença chega antes da explicação",
@@ -103,10 +106,29 @@ AI_GUIDE_PATH = (
     / "method_ori_product1_ai.json"
 )
 AI_LAYER_CACHE: dict[str, str] = {}
+AI_PROMPT_VERSION = "product1-full-reading-v1"
 AI_REQUEST_SEMAPHORE = asyncio.Semaphore(1)
 AI_RETRYABLE_STATUS_CODES = {502, 503, 504}
 AI_MAX_ATTEMPTS = 3
 AI_LAYER_MISSIONS = {
+    "reconhecimento": {
+        "title": "Reconhecimento",
+        "mission": "abrir a leitura com uma cena interna reconhecível e pessoal",
+        "focus": (
+            "mostre a tensão central entre as duas forças e conecte-a aos sinais mais "
+            "fortes do teste e ao momento informado pela cliente"
+        ),
+        "avoid": "não resuma todo o relatório e não comece com definição enciclopédica",
+    },
+    "essencia": {
+        "title": "Essência",
+        "mission": "nomear o núcleo vivo da combinação arquetípica",
+        "focus": (
+            "explique o que cada força busca, o que nasce do encontro entre elas e qual "
+            "qualidade singular organiza a presença"
+        ),
+        "avoid": "não tratar os arquétipos como duas listas separadas de características",
+    },
     "dinamica": {
         "title": "Dinâmica psíquica",
         "mission": (
@@ -131,6 +153,15 @@ AI_LAYER_MISSIONS = {
         ),
         "avoid": "não fale em semana atual, previsão, rotina recorrente do produto ou acompanhamento contínuo",
     },
+    "percebida": {
+        "title": "Como você é percebida",
+        "mission": "traduzir o impacto inicial e a leitura que outras pessoas podem fazer",
+        "focus": (
+            "diferencie intenção interna de efeito externo e mostre como presença, silêncio, "
+            "ritmo, proximidade e postura podem ser interpretados"
+        ),
+        "avoid": "não afirmar o que todas as pessoas pensam nem reduzir percepção a elogios",
+    },
     "sombra": {
         "title": "Sombra",
         "mission": "mostrar quando a força vira defesa, excesso ou padrão repetido",
@@ -152,6 +183,15 @@ AI_LAYER_MISSIONS = {
         ),
         "avoid": "não dê conselho afetivo prescritivo e não diga como a pessoa deve se relacionar",
     },
+    "caminho": {
+        "title": "Caminho de individuação",
+        "mission": "mostrar como integrar conscientemente as duas forças",
+        "focus": (
+            "nomeie a passagem entre automatismo e escolha, com perguntas e movimentos "
+            "internos que preservem ambas as forças"
+        ),
+        "avoid": "não prometer cura, não prescrever terapia e não usar linguagem de autoajuda",
+    },
     "essenciaImagem": {
         "title": "Essência de imagem",
         "mission": "traduzir símbolo em roupa, gesto, beleza e presença visual",
@@ -163,6 +203,72 @@ AI_LAYER_MISSIONS = {
             "não invente análise de coloração pessoal, biotipo, proporção corporal, cabelo ou diagnóstico visual "
             "que ainda pertence ao Dossiê ORI"
         ),
+    },
+    "paleta": {
+        "title": "Paleta simbólica",
+        "mission": "traduzir a combinação em atmosferas cromáticas arquetípicas",
+        "focus": (
+            "preserve as cores do texto-base e explique intenção, contraste, profundidade "
+            "e ocasião de uso como linguagem simbólica"
+        ),
+        "avoid": "não apresentar cartela de coloração pessoal nem afirmar subtom de pele",
+    },
+    "modelagem": {
+        "title": "Modelagem",
+        "mission": "traduzir a combinação em linha, estrutura, movimento e proporção visual",
+        "focus": (
+            "preserve as direções do texto-base e explique o que cada construção comunica "
+            "e como equilibrar as duas forças"
+        ),
+        "avoid": "não diagnosticar Kibbe, formato corporal, peso ou correção de corpo",
+    },
+    "tecidos": {
+        "title": "Tecidos",
+        "mission": "explicar como textura, peso, brilho e movimento sustentam a presença",
+        "focus": (
+            "preserve os materiais do texto-base e conecte sensação tátil, queda e acabamento "
+            "ao equilíbrio arquetípico"
+        ),
+        "avoid": "não criar regras universais nem transformar a seção em lista de compras",
+    },
+    "beleza": {
+        "title": "Beleza",
+        "mission": "traduzir a essência em intenção de beleza sem fechar diagnóstico técnico",
+        "focus": (
+            "trabalhe acabamento, intensidade, contraste simbólico, gesto e coerência entre "
+            "rosto, cabelo e presença a partir do texto-base"
+        ),
+        "avoid": (
+            "não diagnosticar coloração, formato de rosto, textura capilar nem prescrever "
+            "mudança permanente"
+        ),
+    },
+    "presenca": {
+        "title": "Presença",
+        "mission": "mostrar como sustentar o arquétipo no corpo e na comunicação não verbal",
+        "focus": (
+            "desenvolva postura, ritmo, ocupação do espaço, olhar, voz e gesto em situações "
+            "reais, sem criar uma personagem"
+        ),
+        "avoid": "não ensinar performance artificial nem impor feminilidade padronizada",
+    },
+    "evitar": {
+        "title": "O que quebra seu arquétipo",
+        "mission": "nomear escolhas que criam ruído entre identidade e imagem",
+        "focus": (
+            "explique por que os excessos ou apagamentos do texto-base enfraquecem a presença "
+            "e ofereça critérios de revisão, sem proibições rígidas"
+        ),
+        "avoid": "não humilhar escolhas anteriores, ditar tendências ou criar regras de certo e errado",
+    },
+    "leituraFinal": {
+        "title": "Leitura final",
+        "mission": "integrar a leitura em uma síntese emocional, estratégica e memorável",
+        "focus": (
+            "retome a tensão central, reconheça o momento da cliente e indique a passagem da "
+            "consciência para uma imagem mais coerente"
+        ),
+        "avoid": "não repetir literalmente as seções anteriores nem antecipar a entrega do Dossiê ORI",
     },
 }
 REPORT_SECTION_ORDER = [
@@ -593,6 +699,49 @@ def build_ai_layer_cache_key(
     return sha256(encoded).hexdigest()
 
 
+def build_ai_report_cache_key(
+    *,
+    report: dict,
+    result: dict,
+    answers: dict,
+    perfil: Produto1LeituraPerfil,
+) -> str:
+    payload = {
+        "prompt_version": AI_PROMPT_VERSION,
+        "guide": load_product1_ai_guide(),
+        "report": report,
+        "result": result,
+        "answers": answers,
+        "perfil": perfil.model_dump(),
+    }
+    encoded = json.dumps(payload, ensure_ascii=False, sort_keys=True).encode("utf-8")
+    return sha256(encoded).hexdigest()
+
+
+def is_complete_ai_report(report: dict, base_report: dict) -> bool:
+    required_layers = [
+        key for key, _, _ in REPORT_SECTION_ORDER if base_report.get(key)
+    ]
+
+    for layer_id in required_layers:
+        generated_text = report.get(layer_id)
+        base_value = base_report.get(layer_id)
+        base_text = (
+            "\n".join(str(item) for item in base_value)
+            if isinstance(base_value, list)
+            else str(base_value or "")
+        )
+
+        if (
+            not isinstance(generated_text, str)
+            or len(generated_text.strip()) < 80
+            or generated_text.strip() == base_text.strip()
+        ):
+            return False
+
+    return True
+
+
 def build_ai_layer_prompts(
     *,
     layer_id: str,
@@ -682,6 +831,107 @@ def build_ai_layer_prompts(
         f"{json.dumps(context, ensure_ascii=False, indent=2)}"
     )
     return system_prompt, user_prompt
+
+
+def build_ai_report_prompts(
+    *,
+    layer_ids: list[str],
+    report: dict,
+    result: dict,
+    answers: dict,
+    perfil: Produto1LeituraPerfil,
+) -> tuple[str, str, dict]:
+    blocks = get_block_stats(answers)
+    strongest_blocks = sorted(blocks, key=lambda item: item["average"], reverse=True)[:3]
+    tense_blocks = sorted(
+        [block for block in blocks if block["low"] or block["bloco"] == "Seus Padrões"],
+        key=lambda item: item["average"],
+        reverse=True,
+    )[:3]
+    shared_context = {
+        "versao_editorial": AI_PROMPT_VERSION,
+        "resultado_calculado": result.get("nomeComposto"),
+        "arquetipo_principal": result.get("principal"),
+        "arquetipo_secundario": result.get("secundario"),
+        "tons_permitidos": {
+            "principal": ARCHETYPE_TONE.get(result.get("principalId")),
+            "secundario": ARCHETYPE_TONE.get(result.get("secundarioId")),
+        },
+        "perfil_entrada": perfil.model_dump(),
+        "blocos_mais_fortes": [
+            {
+                "bloco": block["bloco"],
+                "media": round(block["average"], 2),
+                "significado": BLOCK_MEANINGS.get(block["bloco"]),
+                "sinal_pratico": BLOCK_PRACTICAL_SIGNALS.get(block["bloco"]),
+                "respostas_altas": [
+                    item["pergunta"] for item in block.get("high", [])[:3]
+                ],
+            }
+            for block in strongest_blocks
+        ],
+        "blocos_de_atencao": [
+            {
+                "bloco": block["bloco"],
+                "media": round(block["average"], 2),
+                "significado": BLOCK_MEANINGS.get(block["bloco"]),
+                "respostas_baixas": [
+                    item["pergunta"] for item in block.get("low", [])[:3]
+                ],
+            }
+            for block in tense_blocks
+        ],
+        "evidencias_principal": [
+            item["question"]["pergunta"]
+            for item in get_archetype_evidence(answers, result.get("principalId"))
+        ],
+        "evidencias_secundario": [
+            item["question"]["pergunta"]
+            for item in get_archetype_evidence(answers, result.get("secundarioId"))
+        ],
+        "diretrizes_editoriais_metodo_ori": load_product1_ai_guide(),
+    }
+    layers = {
+        layer_id: {
+            "titulo": AI_LAYER_MISSIONS[layer_id]["title"],
+            "missao": AI_LAYER_MISSIONS[layer_id]["mission"],
+            "foco": AI_LAYER_MISSIONS[layer_id]["focus"],
+            "evitar": AI_LAYER_MISSIONS[layer_id]["avoid"],
+            "texto_base_autoral": report.get(layer_id, ""),
+        }
+        for layer_id in layer_ids
+    }
+    system_prompt = (
+        "Você é a editora interna do Método ORI by Telúrica. "
+        "Sua tarefa é transformar uma leitura arquetípica já calculada em uma entrega única, "
+        "profunda, coerente e pessoal. O resultado calculado e os textos-base são soberanos: "
+        "não recalcule arquétipos, não troque conclusões e não apague conteúdo autoral relevante. "
+        "Use as evidências do teste para aprofundar reconhecimento, nunca para alegar diagnóstico. "
+        "Faça as camadas conversarem entre si, mas não repita frases, exemplos ou conclusões. "
+        "A profundidade deve vir de tensão interna, consequência, nuance, sinais observáveis e "
+        "integração entre as duas forças, não de linguagem abstrata. "
+        "Use português do Brasil, tom humano, sofisticado, direto e acolhedor. "
+        "Não use linguagem clínica, previsão, promessa espiritual, tendência de moda ou corpo ideal. "
+        "Não invente Kibbe, cartela de coloração, análise capilar, ancestralidade ou dados visuais. "
+        "Não mencione inteligência artificial, backend, Produto 1 ou Produto 2. "
+        "Não inclua títulos dentro dos textos. "
+        "Nas camadas narrativas, escreva de 3 a 5 parágrafos curtos e densos. "
+        "Nas camadas de imagem, escreva de 2 a 4 parágrafos aplicáveis, preservando os elementos "
+        "concretos do texto-base. Responda somente com o JSON solicitado."
+    )
+    user_prompt = (
+        "Reescreva todas as camadas como partes de uma mesma leitura. "
+        "Use o contexto compartilhado para personalizar e o texto-base de cada camada como chão autoral. "
+        "A cliente deve sentir continuidade, profundidade e especificidade do início ao fim.\n\n"
+        f"CONTEXTO COMPARTILHADO\n{json.dumps(shared_context, ensure_ascii=False, indent=2)}\n\n"
+        f"CAMADAS\n{json.dumps(layers, ensure_ascii=False, indent=2)}"
+    )
+    response_schema = {
+        "type": "object",
+        "properties": {layer_id: {"type": "string"} for layer_id in layer_ids},
+        "required": layer_ids,
+    }
+    return system_prompt, user_prompt, response_schema
 
 
 async def maybe_generate_ai_layer_text(
@@ -794,13 +1044,7 @@ async def maybe_generate_ai_report_layers(
     if not api_key:
         return report
 
-    layer_ids = [
-        "dinamica",
-        "vidaReal",
-        "sombra",
-        "padraoRelacional",
-        "essenciaImagem",
-    ]
+    layer_ids = [key for key, _, _ in REPORT_SECTION_ORDER]
     requested_layers = [layer_id for layer_id in layer_ids if report.get(layer_id)]
 
     if not requested_layers:
@@ -829,41 +1073,13 @@ async def maybe_generate_ai_report_layers(
     if not missing_layers:
         return next_report
 
-    layer_prompts = []
-    system_prompt = ""
-
-    for index, layer_id in enumerate(missing_layers):
-        layer_system_prompt, layer_user_prompt = build_ai_layer_prompts(
-            layer_id=layer_id,
-            result=result,
-            answers=answers,
-            perfil=perfil,
-            base_text=report.get(layer_id, ""),
-            include_editorial_guide=index == 0,
-        )
-        system_prompt = layer_system_prompt
-        layer_prompts.append(f"CAMADA {layer_id}\n{layer_user_prompt}")
-
-    system_prompt = system_prompt.replace(
-        "Responda apenas JSON válido com as chaves title e text.",
-        (
-            "Responda apenas um JSON válido. Cada chave deve ser o identificador "
-            "da camada solicitado e cada valor deve ser somente o texto reescrito."
-        ),
+    system_prompt, user_prompt, response_schema = build_ai_report_prompts(
+        layer_ids=missing_layers,
+        report=report,
+        result=result,
+        answers=answers,
+        perfil=perfil,
     )
-    user_prompt = (
-        "Reescreva todas as camadas abaixo em uma única resposta. Preserve a missão "
-        "individual de cada uma e evite repetir o mesmo conteúdo entre elas.\n\n"
-        + "\n\n---\n\n".join(layer_prompts)
-    )
-    response_schema = {
-        "type": "object",
-        "properties": {
-            layer_id: {"type": "string"}
-            for layer_id in missing_layers
-        },
-        "required": missing_layers,
-    }
 
     parsed = None
 
@@ -877,7 +1093,7 @@ async def maybe_generate_ai_report_layers(
                     system_prompt=system_prompt,
                     user_prompt=user_prompt,
                     response_schema=response_schema,
-                    max_output_tokens=2400,
+                    max_output_tokens=7600,
                 )
             break
         except httpx.HTTPStatusError as error:
@@ -924,7 +1140,7 @@ async def maybe_generate_ai_report_layers(
             print(f"AI reading batch skipped: layer={layer_id} reason=short_text")
             continue
 
-        AI_LAYER_CACHE[cache_keys[layer_id]] = ai_text[:3200]
+        AI_LAYER_CACHE[cache_keys[layer_id]] = ai_text[:5000]
         next_report[layer_id] = AI_LAYER_CACHE[cache_keys[layer_id]]
         print(f"AI reading layer generated: layer={layer_id} source=batch")
 
@@ -956,16 +1172,42 @@ async def get_produto1_leitura_personalizada(
         perfil=perfil,
     )
     result_name = (result or {}).get("nomeComposto")
-    report = build_complete_report(
+    base_report = build_complete_report(
         result_name=result_name,
         camadas=camadas,
     )
-    report = await maybe_generate_ai_report_layers(
-        report=report,
-        result=result,
-        answers=respostas.answers,
-        perfil=perfil,
-    )
+    report = base_report
+
+    if base_report and result:
+        report_key = build_ai_report_cache_key(
+            report=base_report,
+            result=result,
+            answers=respostas.answers,
+            perfil=perfil,
+        )
+        stored_report = respostas.ai_report
+
+        if (
+            respostas.ai_report_key == report_key
+            and isinstance(stored_report, dict)
+            and is_complete_ai_report(stored_report, base_report)
+        ):
+            report = stored_report
+            print("AI reading loaded from persistence")
+        else:
+            report = await maybe_generate_ai_report_layers(
+                report=base_report,
+                result=result,
+                answers=respostas.answers,
+                perfil=perfil,
+            )
+
+            if isinstance(report, dict) and is_complete_ai_report(report, base_report):
+                await save_produto1_ai_report(
+                    report=report,
+                    report_key=report_key,
+                    current_user=current_user,
+                )
 
     return Produto1LeituraResponse(
         user_id=current_user.user_id,
