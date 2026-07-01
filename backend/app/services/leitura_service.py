@@ -98,6 +98,9 @@ ARCHETYPE_TONE = {
 
 REPORTS_PATH = Path(__file__).resolve().parents[1] / "data" / "reports.json"
 AI_LAYER_CACHE: dict[str, str] = {}
+AI_REQUEST_SEMAPHORE = asyncio.Semaphore(2)
+AI_RETRYABLE_STATUS_CODES = {429, 502, 503, 504}
+AI_MAX_ATTEMPTS = 3
 AI_LAYER_MISSIONS = {
     "dinamica": {
         "title": "Dinâmica psíquica",
@@ -699,25 +702,49 @@ async def maybe_generate_ai_layer_text(
         base_text=clean_base_text,
     )
 
-    try:
-        parsed = await generate_structured_ai_content(
-            provider=provider,
-            api_key=api_key,
-            model=model,
-            system_prompt=system_prompt,
-            user_prompt=user_prompt,
-        )
-    except httpx.HTTPStatusError as error:
-        status_code = error.response.status_code
-        detail = error.response.text.replace("\n", " ")[:500]
-        print(
-            "AI reading layer fallback: "
-            f"layer={layer_id} reason=HTTPStatusError status={status_code} detail={detail}"
-        )
-        return clean_base_text
-    except (httpx.HTTPError, KeyError, IndexError, TypeError, json.JSONDecodeError) as error:
-        print(f"AI reading layer fallback: layer={layer_id} reason={type(error).__name__}")
-        return clean_base_text
+    parsed = None
+
+    for attempt in range(1, AI_MAX_ATTEMPTS + 1):
+        try:
+            async with AI_REQUEST_SEMAPHORE:
+                parsed = await generate_structured_ai_content(
+                    provider=provider,
+                    api_key=api_key,
+                    model=model,
+                    system_prompt=system_prompt,
+                    user_prompt=user_prompt,
+                )
+            break
+        except httpx.HTTPStatusError as error:
+            status_code = error.response.status_code
+            should_retry = (
+                status_code in AI_RETRYABLE_STATUS_CODES
+                and attempt < AI_MAX_ATTEMPTS
+            )
+
+            if should_retry:
+                wait_seconds = attempt * 2
+                print(
+                    "AI reading layer retry: "
+                    f"layer={layer_id} status={status_code} "
+                    f"attempt={attempt + 1}/{AI_MAX_ATTEMPTS} wait={wait_seconds}s"
+                )
+                await asyncio.sleep(wait_seconds)
+                continue
+
+            detail = error.response.text.replace("\n", " ")[:500]
+            print(
+                "AI reading layer fallback: "
+                f"layer={layer_id} reason=HTTPStatusError "
+                f"status={status_code} attempts={attempt} detail={detail}"
+            )
+            return clean_base_text
+        except (httpx.HTTPError, KeyError, IndexError, TypeError, json.JSONDecodeError) as error:
+            print(
+                "AI reading layer fallback: "
+                f"layer={layer_id} reason={type(error).__name__} attempts={attempt}"
+            )
+            return clean_base_text
 
     if not isinstance(parsed, dict):
         print(f"AI reading layer fallback: layer={layer_id} reason=invalid_payload")
