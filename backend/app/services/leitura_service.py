@@ -98,8 +98,8 @@ ARCHETYPE_TONE = {
 
 REPORTS_PATH = Path(__file__).resolve().parents[1] / "data" / "reports.json"
 AI_LAYER_CACHE: dict[str, str] = {}
-AI_REQUEST_SEMAPHORE = asyncio.Semaphore(2)
-AI_RETRYABLE_STATUS_CODES = {429, 502, 503, 504}
+AI_REQUEST_SEMAPHORE = asyncio.Semaphore(1)
+AI_RETRYABLE_STATUS_CODES = {502, 503, 504}
 AI_MAX_ATTEMPTS = 3
 AI_LAYER_MISSIONS = {
     "dinamica": {
@@ -783,31 +783,131 @@ async def maybe_generate_ai_report_layers(
         "padraoRelacional",
         "essenciaImagem",
     ]
-    tasks = [
-        maybe_generate_ai_layer_text(
+    requested_layers = [layer_id for layer_id in layer_ids if report.get(layer_id)]
+
+    if not requested_layers:
+        return report
+
+    next_report = {**report}
+    missing_layers: list[str] = []
+    cache_keys: dict[str, str] = {}
+
+    for layer_id in requested_layers:
+        cache_key = build_ai_layer_cache_key(
             layer_id=layer_id,
             result=result,
             answers=answers,
             perfil=perfil,
             base_text=report.get(layer_id, ""),
-            provider=provider,
-            api_key=api_key,
-            model=model,
         )
-        for layer_id in layer_ids
-        if report.get(layer_id)
-    ]
-    task_layer_ids = [layer_id for layer_id in layer_ids if report.get(layer_id)]
+        cache_keys[layer_id] = cache_key
+        cached_text = AI_LAYER_CACHE.get(cache_key)
 
-    if not tasks:
-        return report
+        if cached_text:
+            next_report[layer_id] = cached_text
+        else:
+            missing_layers.append(layer_id)
 
-    generated_texts = await asyncio.gather(*tasks, return_exceptions=True)
-    next_report = {**report}
+    if not missing_layers:
+        return next_report
 
-    for layer_id, generated_text in zip(task_layer_ids, generated_texts, strict=False):
-        if isinstance(generated_text, str) and generated_text.strip():
-            next_report[layer_id] = generated_text
+    layer_prompts = []
+    system_prompt = ""
+
+    for layer_id in missing_layers:
+        layer_system_prompt, layer_user_prompt = build_ai_layer_prompts(
+            layer_id=layer_id,
+            result=result,
+            answers=answers,
+            perfil=perfil,
+            base_text=report.get(layer_id, ""),
+        )
+        system_prompt = layer_system_prompt
+        layer_prompts.append(f"CAMADA {layer_id}\n{layer_user_prompt}")
+
+    system_prompt = system_prompt.replace(
+        "Responda apenas JSON válido com as chaves title e text.",
+        (
+            "Responda apenas um JSON válido. Cada chave deve ser o identificador "
+            "da camada solicitado e cada valor deve ser somente o texto reescrito."
+        ),
+    )
+    user_prompt = (
+        "Reescreva todas as camadas abaixo em uma única resposta. Preserve a missão "
+        "individual de cada uma e evite repetir o mesmo conteúdo entre elas.\n\n"
+        + "\n\n---\n\n".join(layer_prompts)
+    )
+    response_schema = {
+        "type": "object",
+        "properties": {
+            layer_id: {"type": "string"}
+            for layer_id in missing_layers
+        },
+        "required": missing_layers,
+    }
+
+    parsed = None
+
+    for attempt in range(1, AI_MAX_ATTEMPTS + 1):
+        try:
+            async with AI_REQUEST_SEMAPHORE:
+                parsed = await generate_structured_ai_content(
+                    provider=provider,
+                    api_key=api_key,
+                    model=model,
+                    system_prompt=system_prompt,
+                    user_prompt=user_prompt,
+                    response_schema=response_schema,
+                    max_output_tokens=2400,
+                )
+            break
+        except httpx.HTTPStatusError as error:
+            status_code = error.response.status_code
+            should_retry = (
+                status_code in AI_RETRYABLE_STATUS_CODES
+                and attempt < AI_MAX_ATTEMPTS
+            )
+
+            if should_retry:
+                wait_seconds = attempt * 2
+                print(
+                    "AI reading batch retry: "
+                    f"status={status_code} attempt={attempt + 1}/{AI_MAX_ATTEMPTS} "
+                    f"wait={wait_seconds}s"
+                )
+                await asyncio.sleep(wait_seconds)
+                continue
+
+            detail = error.response.text.replace("\n", " ")[:500]
+            print(
+                "AI reading batch fallback: "
+                f"reason=HTTPStatusError status={status_code} "
+                f"attempts={attempt} detail={detail}"
+            )
+            return next_report
+        except (httpx.HTTPError, KeyError, IndexError, TypeError, json.JSONDecodeError) as error:
+            print(
+                "AI reading batch fallback: "
+                f"reason={type(error).__name__} attempts={attempt}"
+            )
+            return next_report
+
+    if not isinstance(parsed, dict):
+        print("AI reading batch fallback: reason=invalid_payload")
+        return next_report
+
+    for layer_id in missing_layers:
+        ai_text = sanitize_customer_reading_text(
+            str(parsed.get(layer_id) or "").strip()
+        )
+
+        if len(ai_text) < 80:
+            print(f"AI reading batch skipped: layer={layer_id} reason=short_text")
+            continue
+
+        AI_LAYER_CACHE[cache_keys[layer_id]] = ai_text[:3200]
+        next_report[layer_id] = AI_LAYER_CACHE[cache_keys[layer_id]]
+        print(f"AI reading layer generated: layer={layer_id} source=batch")
 
     return next_report
 

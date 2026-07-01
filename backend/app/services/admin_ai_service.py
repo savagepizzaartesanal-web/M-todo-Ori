@@ -153,8 +153,9 @@ async def _generate_with_openai(
     model: str,
     system_prompt: str,
     user_prompt: str,
+    max_output_tokens: int = 360,
 ) -> dict[str, Any]:
-    async with httpx.AsyncClient(timeout=18) as client:
+    async with httpx.AsyncClient(timeout=45) as client:
         response = await client.post(
             "https://api.openai.com/v1/chat/completions",
             headers={
@@ -168,7 +169,7 @@ async def _generate_with_openai(
                     {"role": "user", "content": user_prompt},
                 ],
                 "temperature": 0.55,
-                "max_tokens": 360,
+                "max_tokens": max_output_tokens,
                 "response_format": {"type": "json_object"},
             },
         )
@@ -182,13 +183,15 @@ async def _generate_with_gemini(
     model: str,
     system_prompt: str,
     user_prompt: str,
+    response_schema: dict[str, Any] | None = None,
+    max_output_tokens: int = 360,
 ) -> dict[str, Any]:
     url = (
         "https://generativelanguage.googleapis.com/v1beta/models/"
         f"{model}:generateContent"
     )
 
-    async with httpx.AsyncClient(timeout=18) as client:
+    async with httpx.AsyncClient(timeout=45) as client:
         response = await client.post(
             url,
             headers={
@@ -207,9 +210,9 @@ async def _generate_with_gemini(
                 ],
                 "generationConfig": {
                     "temperature": 0.55,
-                    "maxOutputTokens": 360,
+                    "maxOutputTokens": max_output_tokens,
                     "responseMimeType": "application/json",
-                    "responseJsonSchema": {
+                    "responseJsonSchema": response_schema or {
                         "type": "object",
                         "properties": {
                             "title": {"type": "string"},
@@ -254,11 +257,26 @@ async def _generate_structured_content(
     model: str,
     system_prompt: str,
     user_prompt: str,
+    response_schema: dict[str, Any] | None = None,
+    max_output_tokens: int = 360,
 ) -> dict[str, Any]:
     if provider == "gemini":
-        return await _generate_with_gemini(api_key, model, system_prompt, user_prompt)
+        return await _generate_with_gemini(
+            api_key,
+            model,
+            system_prompt,
+            user_prompt,
+            response_schema=response_schema,
+            max_output_tokens=max_output_tokens,
+        )
 
-    return await _generate_with_openai(api_key, model, system_prompt, user_prompt)
+    return await _generate_with_openai(
+        api_key,
+        model,
+        system_prompt,
+        user_prompt,
+        max_output_tokens=max_output_tokens,
+    )
 
 
 async def generate_structured_ai_content(
@@ -268,6 +286,8 @@ async def generate_structured_ai_content(
     model: str,
     system_prompt: str,
     user_prompt: str,
+    response_schema: dict[str, Any] | None = None,
+    max_output_tokens: int = 360,
 ) -> dict[str, Any]:
     return await _generate_structured_content(
         provider=provider,
@@ -275,6 +295,8 @@ async def generate_structured_ai_content(
         model=model,
         system_prompt=system_prompt,
         user_prompt=user_prompt,
+        response_schema=response_schema,
+        max_output_tokens=max_output_tokens,
     )
 
 
