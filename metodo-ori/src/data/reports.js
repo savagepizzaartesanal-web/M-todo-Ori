@@ -34,7 +34,7 @@ const baseReports = {
     caminho:
       "Seu caminho está em transformar magnetismo em escolha, não em necessidade. E transformar sensibilidade em consciência, não em dissolução.\n\nAfrodite consciente permite prazer, beleza e desejo sem depender de validação. Perséfone consciente permite profundidade, recolhimento e intuição sem desaparecer no mundo interno.\n\nSua síntese é: revelar sem se entregar inteira. Atrair sem se moldar. Sentir profundamente sem se perder no que sente.",
     essenciaImagem:
-      "Sua imagem ideal não precisa ser óbvia, literal ou excessivamente exposta. Ela funciona melhor quando sugere, cria curiosidade e mistura suavidade, profundidade e sensualidade velada.\n\nNo Produto 1, os primeiros códigos visuais são fluidez, névoa, textura, movimento, luminosidade baixa, contraste sutil, transparências controladas e elementos que deixam algo por descobrir.\n\nO que favorece você é uma estética com camadas: algo que acompanha o corpo, mas não entrega tudo; algo que toca o olhar, mas não implora por ele.",
+      "Sua imagem ideal não precisa ser óbvia, literal ou excessivamente exposta. Ela funciona melhor quando sugere, cria curiosidade e mistura suavidade, profundidade e sensualidade velada.\n\nNesta leitura arquetípica, os primeiros códigos visuais são fluidez, névoa, textura, movimento, luminosidade baixa, contraste sutil, transparências controladas e elementos que deixam algo por descobrir.\n\nO que favorece você é uma estética com camadas: algo que acompanha o corpo, mas não entrega tudo; algo que toca o olhar, mas não implora por ele.",
     paleta:
       "Sua direção cromática pede tons emocionais, profundos e levemente enevoados.\n\nBase Perséfone: lavanda, cinza suave, azul acinzentado, lilás profundo, off-white frio, tons de névoa e ameixa suave.\n\nCamada Afrodite: vinho, rosa queimado, rosé profundo, dourado suave, nude frio, malva e brilho perolado discreto.\n\nSua cor não deve gritar. Ela deve criar atmosfera.",
     modelagem:
@@ -79,7 +79,7 @@ const baseReports = {
     caminho:
       "Seu caminho está em desejar sem depender e se comprometer sem controlar.\n\nAfrodite consciente permite prazer, beleza e magnetismo como expressão. Hera consciente sustenta dignidade, vínculo e posição sem transformar amor em disputa por legitimidade.\n\nSua síntese é ser desejada sem se medir por isso, ser escolhida sem precisar se provar e ocupar lugar sem guerrear por legitimidade.",
     essenciaImagem:
-      "Sua imagem pede elegância que atrai e presença que sustenta posição. Você não precisa exagerar para ser percebida: sua estética funciona melhor quando une poder, intenção e sensualidade controlada.\n\nNo Produto 1, seus primeiros códigos visuais são estrutura, brilho estratégico, feminilidade adulta, recortes conscientes, acabamento refinado e aura de valor.\n\nO ponto ideal está na tensão entre atração e respeito. Sua imagem precisa parecer escolhida, não improvisada.",
+      "Sua imagem pede elegância que atrai e presença que sustenta posição. Você não precisa exagerar para ser percebida: sua estética funciona melhor quando une poder, intenção e sensualidade controlada.\n\nNesta leitura arquetípica, seus primeiros códigos visuais são estrutura, brilho estratégico, feminilidade adulta, recortes conscientes, acabamento refinado e aura de valor.\n\nO ponto ideal está na tensão entre atração e respeito. Sua imagem precisa parecer escolhida, não improvisada.",
     paleta:
       "Sua lógica cromática nasce do encontro entre base soberana e magnetismo sensual.\n\nBase Hera: preto, off-white, marfim, bege sofisticado, azul profundo, marinho, taupe elegante e cinza quente refinado.\n\nCamada Afrodite: vermelho fechado, vinho, bordô, ameixa quente, rosé profundo, dourado e cobre sofisticado.\n\nSua cor deve parecer intencional, madura e simbolicamente forte.",
     modelagem:
@@ -123,7 +123,7 @@ const baseReports = {
     caminho:
       "Seu crescimento não está em endurecer, deixar de amar ou abandonar sua natureza acolhedora. Seu caminho está em refinar a consciência dessas duas forças.\n\nAfrodite consciente recebe prazer sem culpa e sustenta o próprio desejo. Deméter consciente cuida sem carregar e ama sem se responsabilizar por tudo.\n\nSua síntese é amar sem se sacrificar, nutrir sem se apagar e acolher sem transformar o outro em centro.",
     essenciaImagem:
-      "Sua imagem ideal transmite calor, suavidade e magnetismo emocional. Ela não precisa dominar o ambiente. Ela envolve.\n\nNo Produto 1, seus primeiros códigos visuais são textura, maciez, tons quentes, linhas acolhedoras, feminilidade natural e sensualidade habitável.\n\nSua estética precisa tocar antes de impressionar.",
+      "Sua imagem ideal transmite calor, suavidade e magnetismo emocional. Ela não precisa dominar o ambiente. Ela envolve.\n\nNesta leitura arquetípica, seus primeiros códigos visuais são textura, maciez, tons quentes, linhas acolhedoras, feminilidade natural e sensualidade habitável.\n\nSua estética precisa tocar antes de impressionar.",
     paleta:
       "Sua paleta simbólica funciona melhor quando aquece, aproxima e humaniza.\n\nBase Deméter: terracota, bege quente, caramelo, areia dourada, oliva suave, marrom mel, creme amanteigado e argila.\n\nCamada Afrodite: rosa queimado, coral suave, pêssego aquecido, vinho macio, canela rosada, cobre, dourado quente e vermelho queimado.\n\nSua cor ideal não grita. Ela convida.",
     modelagem:
@@ -168,7 +168,7 @@ const baseReports = {
     caminho:
       "Seu caminho está em permitir sentir sem analisar tudo e usar sua inteligência sem bloquear a emoção.\n\nAthena consciente oferece discernimento, clareza, estratégia e escolha. Afrodite consciente oferece prazer, magnetismo, presença e corpo vivo.\n\nA Sedutora Estratégica amadurece quando entende que vulnerabilidade não é falta de inteligência.",
     essenciaImagem:
-      "Sua imagem ideal é minimalista com magnetismo. Menos excesso, mais intenção. O impacto vem da precisão.\n\nNo Produto 1, seus primeiros códigos visuais são linhas limpas, recortes estratégicos, contraste controlado, sensualidade sutil, acabamento inteligente e estética com leitura.\n\nSua imagem precisa ser pensada, mas não sem vida. Estratégica, mas não fria.",
+      "Sua imagem ideal é minimalista com magnetismo. Menos excesso, mais intenção. O impacto vem da precisão.\n\nNesta leitura arquetípica, seus primeiros códigos visuais são linhas limpas, recortes estratégicos, contraste controlado, sensualidade sutil, acabamento inteligente e estética com leitura.\n\nSua imagem precisa ser pensada, mas não sem vida. Estratégica, mas não fria.",
     paleta:
       "Sua paleta simbólica pede clareza, contraste e magnetismo controlado.\n\nBase Athena: preto, branco, cinza, grafite, azul profundo, marinho, prata fria e tons neutros limpos.\n\nCamada Afrodite: vinho, vermelho fechado, rosé sofisticado, nude elegante, ameixa discreto, brilho pontual e metalizados sutis.\n\nSua paleta precisa comunicar inteligência com presença.",
     modelagem:
@@ -213,7 +213,7 @@ const baseReports = {
     caminho:
       "Seu caminho está em descobrir que liberdade e vínculo não precisam ser opostos. Você não precisa desaparecer para continuar sendo você.\n\nAfrodite consciente permite desejo e conexão sem transformar atração em dependência. Artemis consciente sustenta autonomia sem transformar independência em isolamento.\n\nSua síntese é pertencer a si mesma sem precisar negar toda aproximação.",
     essenciaImagem:
-      "Sua imagem ideal mistura sensualidade natural, força e movimento. Ela funciona melhor quando transmite autenticidade e instinto, não perfeição excessiva.\n\nNo Produto 1, seus primeiros códigos visuais são textura, liberdade, assimetria, corpo em movimento, materiais naturais, contraste terroso e sensualidade não polida demais.\n\nSua imagem precisa parecer viva, não domada.",
+      "Sua imagem ideal mistura sensualidade natural, força e movimento. Ela funciona melhor quando transmite autenticidade e instinto, não perfeição excessiva.\n\nNesta leitura arquetípica, seus primeiros códigos visuais são textura, liberdade, assimetria, corpo em movimento, materiais naturais, contraste terroso e sensualidade não polida demais.\n\nSua imagem precisa parecer viva, não domada.",
     paleta:
       "Sua paleta simbólica pede terra, intensidade e magnetismo natural.\n\nBase Artemis: oliva, verde musgo, areia, marrom profundo, ferrugem, grafite, tons de pedra e couro envelhecido.\n\nCamada Afrodite: vinho, vermelho queimado, cobre, dourado envelhecido, bronze, ameixa escuro e preto.\n\nSua cor ideal comunica instinto com presença.",
     modelagem:
@@ -258,7 +258,7 @@ const baseReports = {
     caminho:
       "Seu caminho está em transformar reserva em presença consciente, não em defesa.\n\nHera consciente sustenta dignidade sem depender de reconhecimento externo. Perséfone consciente preserva profundidade sem desaparecer dentro dela.\n\nSua síntese é revelar com critério, não se esconder por medo.",
     essenciaImagem:
-      "Sua imagem ideal não precisa competir para ser percebida. Ela existe no campo da profundidade, da dignidade e da presença que se revela por camadas.\n\nNo Produto 1, seus primeiros códigos visuais são sofisticação silenciosa, mistério, contraste profundo, elegância reservada, tecidos densos, linhas limpas e presença emocional contida.",
+      "Sua imagem ideal não precisa competir para ser percebida. Ela existe no campo da profundidade, da dignidade e da presença que se revela por camadas.\n\nNesta leitura arquetípica, seus primeiros códigos visuais são sofisticação silenciosa, mistério, contraste profundo, elegância reservada, tecidos densos, linhas limpas e presença emocional contida.",
     paleta:
       "Sua paleta simbólica pede profundidade, sofisticação e mistério emocional.\n\nBase Hera: preto, marinho, vinho profundo, grafite, cinza escuro, off-white sofisticado, azul petróleo e ameixa.\n\nCamada Perséfone: lilás profundo, lavanda acinzentado, roxo fechado, prata envelhecida, rosa antigo, tons de névoa e azul noturno.",
     modelagem:
@@ -348,7 +348,7 @@ const baseReports = {
     caminho:
       "Seu caminho está em integrar intuição e razão sem se esconder atrás de nenhuma das duas.\n\nPerséfone consciente permite sentir profundamente sem se dissolver. Athena consciente permite compreender sem controlar tudo.\n\nSua síntese é perceber sem se perder, analisar sem se desconectar e compreender sem abandonar a experiência viva.",
     essenciaImagem:
-      "Sua imagem ideal comunica profundidade limpa: uma estética silenciosa, inteligente e levemente enigmática.\n\nNo Produto 1, seus primeiros códigos visuais são linhas limpas, tons profundos ou enevoados, texturas sutis, contraste controlado, pouca informação visual e detalhes que revelam intenção.",
+      "Sua imagem ideal comunica profundidade limpa: uma estética silenciosa, inteligente e levemente enigmática.\n\nNesta leitura arquetípica, seus primeiros códigos visuais são linhas limpas, tons profundos ou enevoados, texturas sutis, contraste controlado, pouca informação visual e detalhes que revelam intenção.",
     paleta:
       "Sua paleta simbólica pede silêncio, profundidade e lucidez.\n\nBase Perséfone: lavanda acinzentado, azul noite, lilás profundo, ameixa suave, cinza névoa, malva e tons frios velados.\n\nCamada Athena: branco frio, preto, grafite, azul marinho, prata, cinza claro e off-white limpo.",
     modelagem:
@@ -438,7 +438,7 @@ const baseReports = {
     caminho:
       "Seu caminho está em integrar força e receptividade.\n\nAthena consciente oferece lucidez, estratégia e visão. Artemis consciente oferece liberdade, território e movimento.\n\nA Autônoma Absoluta amadurece quando entende que independência não precisa excluir apoio.",
     essenciaImagem:
-      "Sua imagem ideal comunica autonomia, precisão e movimento. Ela não precisa ser excessivamente feminina, ornamental ou emocional. Ela precisa parecer funcional, forte e consciente.\n\nNo Produto 1, seus primeiros códigos visuais são linhas limpas, estrutura, praticidade refinada, elementos utilitários, contraste, peças bem cortadas e estética sem excesso.",
+      "Sua imagem ideal comunica autonomia, precisão e movimento. Ela não precisa ser excessivamente feminina, ornamental ou emocional. Ela precisa parecer funcional, forte e consciente.\n\nNesta leitura arquetípica, seus primeiros códigos visuais são linhas limpas, estrutura, praticidade refinada, elementos utilitários, contraste, peças bem cortadas e estética sem excesso.",
     paleta:
       "Sua paleta simbólica pede clareza, contraste e território.\n\nBase Athena: preto, branco, grafite, cinza, azul marinho, prata, off-white limpo e tons frios estruturados.\n\nCamada Artemis: verde oliva, verde musgo, areia, marrom profundo, caqui, tons de pedra, ferrugem e couro.",
     modelagem:
@@ -483,7 +483,7 @@ const baseReports = {
     caminho:
       "Seu caminho está em transformar cuidado em escolha, não em função automática.\n\nDeméter consciente cuida sem carregar. Athena consciente organiza sem controlar.\n\nA Cuidadora Estratégica amadurece quando entende que sua utilidade não é a medida do seu valor.",
     essenciaImagem:
-      "Sua imagem ideal comunica cuidado, organização e confiança. Ela precisa parecer acolhedora, mas também competente.\n\nNo Produto 1, seus primeiros códigos visuais são linhas limpas, conforto estruturado, tecidos agradáveis, praticidade refinada, tons naturais organizados e uma estética de presença confiável.",
+      "Sua imagem ideal comunica cuidado, organização e confiança. Ela precisa parecer acolhedora, mas também competente.\n\nNesta leitura arquetípica, seus primeiros códigos visuais são linhas limpas, conforto estruturado, tecidos agradáveis, praticidade refinada, tons naturais organizados e uma estética de presença confiável.",
     paleta:
       "Sua paleta simbólica pede naturalidade, clareza e estabilidade.\n\nBase Deméter: creme, bege, areia, terracota suave, oliva, marrom claro, caramelo e verde seco.\n\nCamada Athena: branco limpo, cinza claro, azul marinho, grafite suave, off-white, preto pontual e tons neutros organizados.",
     modelagem:
@@ -528,7 +528,7 @@ const baseReports = {
     caminho:
       "Seu caminho está em transformar cuidado em escolha e autoridade em presença, não em peso.\n\nDeméter consciente nutre sem carregar. Hera consciente ocupa lugar sem depender de validação externa.\n\nSua síntese é cuidar sem se sacrificar, ocupar lugar sem controlar e sustentar vínculos sem se tornar invisível dentro deles.",
     essenciaImagem:
-      "Sua imagem ideal comunica acolhimento com autoridade. Ela precisa parecer confiável, madura, feminina e estruturada.\n\nNo Produto 1, seus primeiros códigos visuais são presença estável, linhas estruturadas, tons quentes e nobres, tecidos com peso, feminilidade madura e acabamento que comunica cuidado consigo.",
+      "Sua imagem ideal comunica acolhimento com autoridade. Ela precisa parecer confiável, madura, feminina e estruturada.\n\nNesta leitura arquetípica, seus primeiros códigos visuais são presença estável, linhas estruturadas, tons quentes e nobres, tecidos com peso, feminilidade madura e acabamento que comunica cuidado consigo.",
     paleta:
       "Sua paleta simbólica pede calor, estrutura e dignidade.\n\nBase Deméter: terracota, caramelo, creme, bege quente, marrom mel, oliva, areia dourada e argila.\n\nCamada Hera: vinho, azul profundo, marinho, preto pontual, dourado, off-white sofisticado, taupe e verde escuro.",
     modelagem:
@@ -573,7 +573,7 @@ const baseReports = {
     caminho:
       "Seu caminho está em integrar cuidado e liberdade sem transformar um no oposto do outro.\n\nDeméter consciente cuida sem carregar. Artemis consciente preserva território sem fugir.\n\nSua síntese é cuidar com limite, proteger sem controlar e amar sem perder território.",
     essenciaImagem:
-      "Sua imagem ideal mistura força natural, acolhimento e movimento. Ela precisa parecer viva, resistente, feminina e instintiva.\n\nNo Produto 1, seus primeiros códigos visuais são materiais naturais, textura, conforto com presença, peças funcionais refinadas, tons terrosos, movimento e feminilidade não frágil.",
+      "Sua imagem ideal mistura força natural, acolhimento e movimento. Ela precisa parecer viva, resistente, feminina e instintiva.\n\nNesta leitura arquetípica, seus primeiros códigos visuais são materiais naturais, textura, conforto com presença, peças funcionais refinadas, tons terrosos, movimento e feminilidade não frágil.",
     paleta:
       "Sua paleta simbólica pede terra, calor e força natural.\n\nBase Deméter: terracota, caramelo, bege quente, creme, marrom mel, areia, argila e oliva suave.\n\nCamada Artemis: verde musgo, verde oliva, caqui, ferrugem, marrom profundo, preto pontual, couro e tons de pedra.",
     modelagem:
@@ -618,7 +618,7 @@ const baseReports = {
     caminho:
       "Seu caminho está em sustentar autoridade sem virar rigidez.\n\nHera consciente ocupa lugar com dignidade. Athena consciente cria clareza, estratégia e escolha sem precisar controlar cada movimento.\n\nSua síntese é ocupar lugar sem endurecer, liderar sem controlar e ser lúcida sem se afastar do afeto.",
     essenciaImagem:
-      "Sua imagem ideal comunica poder refinado, clareza e elegância estratégica.\n\nNo Produto 1, seus primeiros códigos visuais são alfaiataria, linhas limpas, estrutura, acabamento impecável, cores sóbrias, acessórios com peso simbólico e estética de posição.",
+      "Sua imagem ideal comunica poder refinado, clareza e elegância estratégica.\n\nNesta leitura arquetípica, seus primeiros códigos visuais são alfaiataria, linhas limpas, estrutura, acabamento impecável, cores sóbrias, acessórios com peso simbólico e estética de posição.",
     paleta:
       "Sua paleta simbólica pede sobriedade, contraste e valor.\n\nBase Hera: preto, marinho, vinho fechado, off-white sofisticado, taupe, azul profundo, grafite e dourado discreto.\n\nCamada Athena: branco limpo, cinza, prata, azul aço, carvão, tons frios estruturados e neutros precisos.",
     modelagem:
@@ -663,7 +663,7 @@ const baseReports = {
     caminho:
       "Seu caminho está em integrar dignidade e liberdade sem transformar uma em defesa da outra.\n\nHera consciente ocupa lugar com valor. Artemis consciente preserva autonomia sem fugir.\n\nSua síntese é ocupar lugar sem se aprisionar, amar sem se submeter e ser livre sem se fechar.",
     essenciaImagem:
-      "Sua imagem ideal comunica autoridade, força e liberdade. Ela não deve parecer dócil, frágil ou excessivamente domesticada.\n\nNo Produto 1, seus primeiros códigos visuais são estrutura, presença, textura forte, contraste, peças com território, silhuetas firmes, elementos utilitários refinados e elegância com força.",
+      "Sua imagem ideal comunica autoridade, força e liberdade. Ela não deve parecer dócil, frágil ou excessivamente domesticada.\n\nNesta leitura arquetípica, seus primeiros códigos visuais são estrutura, presença, textura forte, contraste, peças com território, silhuetas firmes, elementos utilitários refinados e elegância com força.",
     paleta:
       "Sua paleta simbólica pede força, território e dignidade.\n\nBase Hera: preto, vinho profundo, marinho, azul petróleo, off-white sofisticado, dourado envelhecido, grafite e verde escuro.\n\nCamada Artemis: oliva, verde musgo, marrom profundo, ferrugem, caqui, couro, areia escura e tons de pedra.",
     modelagem:

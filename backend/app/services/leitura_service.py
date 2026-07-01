@@ -543,6 +543,15 @@ def ai_reading_enabled() -> bool:
     }
 
 
+def sanitize_customer_reading_text(text: str) -> str:
+    return (
+        text.replace("No Produto 1,", "Nesta leitura arquetípica,")
+        .replace("no Produto 1,", "nesta leitura arquetípica,")
+        .replace("Produto 1", "leitura arquetípica")
+        .replace("Produto 2", "Dossiê ORI")
+    )
+
+
 def build_ai_layer_cache_key(
     *,
     layer_id: str,
@@ -640,6 +649,7 @@ def build_ai_layer_prompts(
         "Use corpo, gesto, vínculo, roupa, decisão e situações comuns quando fizer sentido. "
         "Não faça diagnóstico clínico, previsão, promessa espiritual, conselho médico ou afirmação absoluta. "
         "Não invente dados técnicos ausentes. Não fale que foi gerado por IA. "
+        "Não mencione nomes internos como Produto 1, Produto 2, camada técnica ou backend. "
         "Evite linguagem de autoajuda e termos genéricos como jornada, potência, transformação e expansão. "
         "Escreva de 3 a 5 parágrafos curtos. Não inclua título dentro do texto. "
         "Responda apenas JSON válido com as chaves title e text."
@@ -697,18 +707,22 @@ async def maybe_generate_ai_layer_text(
             system_prompt=system_prompt,
             user_prompt=user_prompt,
         )
-    except (httpx.HTTPError, KeyError, IndexError, TypeError, json.JSONDecodeError):
+    except (httpx.HTTPError, KeyError, IndexError, TypeError, json.JSONDecodeError) as error:
+        print(f"AI reading layer fallback: layer={layer_id} reason={type(error).__name__}")
         return clean_base_text
 
     if not isinstance(parsed, dict):
+        print(f"AI reading layer fallback: layer={layer_id} reason=invalid_payload")
         return clean_base_text
 
-    ai_text = str(parsed.get("text") or "").strip()
+    ai_text = sanitize_customer_reading_text(str(parsed.get("text") or "").strip())
 
     if len(ai_text) < 80:
+        print(f"AI reading layer fallback: layer={layer_id} reason=short_text")
         return clean_base_text
 
     AI_LAYER_CACHE[cache_key] = ai_text[:3200]
+    print(f"AI reading layer generated: layer={layer_id}")
     return AI_LAYER_CACHE[cache_key]
 
 

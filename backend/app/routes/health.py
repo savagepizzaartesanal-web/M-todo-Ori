@@ -3,6 +3,8 @@ import os
 import httpx
 from fastapi import APIRouter
 
+from app.services.leitura_service import ai_reading_enabled
+
 router = APIRouter(tags=["health"])
 
 
@@ -43,5 +45,6 @@ async def dependencies_health_check():
         "ai": {
             "provider": ai_provider,
             "configured": bool(ai_key),
+            "reading_enabled": ai_reading_enabled(),
         },
     }
