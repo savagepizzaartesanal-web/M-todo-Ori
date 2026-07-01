@@ -97,6 +97,11 @@ ARCHETYPE_TONE = {
 }
 
 REPORTS_PATH = Path(__file__).resolve().parents[1] / "data" / "reports.json"
+AI_GUIDE_PATH = (
+    Path(__file__).resolve().parents[1]
+    / "data"
+    / "method_ori_product1_ai.json"
+)
 AI_LAYER_CACHE: dict[str, str] = {}
 AI_REQUEST_SEMAPHORE = asyncio.Semaphore(1)
 AI_RETRYABLE_STATUS_CODES = {502, 503, 504}
@@ -215,6 +220,14 @@ def load_base_reports() -> dict:
         return {}
 
     return json.loads(REPORTS_PATH.read_text(encoding="utf-8"))
+
+
+@lru_cache
+def load_product1_ai_guide() -> dict:
+    if not AI_GUIDE_PATH.exists():
+        return {}
+
+    return json.loads(AI_GUIDE_PATH.read_text(encoding="utf-8"))
 
 
 def build_complete_report(
@@ -587,6 +600,7 @@ def build_ai_layer_prompts(
     answers: dict,
     perfil: Produto1LeituraPerfil,
     base_text: str,
+    include_editorial_guide: bool = True,
 ) -> tuple[str, str]:
     mission = AI_LAYER_MISSIONS[layer_id]
     blocks = get_block_stats(answers)
@@ -642,9 +656,13 @@ def build_ai_layer_prompts(
         ],
         "texto_base_da_camada": base_text,
     }
+
+    if include_editorial_guide:
+        context["diretrizes_editoriais_metodo_ori"] = load_product1_ai_guide()
     system_prompt = (
         "Você é uma assistente editorial interna do Método ORI. "
         "Você reescreve uma camada específica de uma leitura arquetípica já calculada. "
+        "Siga integralmente as diretrizes editoriais recebidas no contexto. "
         "Nunca troque, questione ou recalcule o resultado arquetípico. "
         "Sua função é deixar a camada mais concreta, reconhecível e aplicável, cumprindo apenas a missão indicada. "
         "Use português do Brasil, tom humano, sofisticado, direto e com presença editorial. "
@@ -814,13 +832,14 @@ async def maybe_generate_ai_report_layers(
     layer_prompts = []
     system_prompt = ""
 
-    for layer_id in missing_layers:
+    for index, layer_id in enumerate(missing_layers):
         layer_system_prompt, layer_user_prompt = build_ai_layer_prompts(
             layer_id=layer_id,
             result=result,
             answers=answers,
             perfil=perfil,
             base_text=report.get(layer_id, ""),
+            include_editorial_guide=index == 0,
         )
         system_prompt = layer_system_prompt
         layer_prompts.append(f"CAMADA {layer_id}\n{layer_user_prompt}")
