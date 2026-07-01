@@ -108,7 +108,7 @@ AI_GUIDE_PATH = (
 AI_LAYER_CACHE: dict[str, str] = {}
 AI_PROMPT_VERSION = "product1-full-reading-v1"
 AI_REQUEST_SEMAPHORE = asyncio.Semaphore(1)
-AI_RETRYABLE_STATUS_CODES = {502, 503, 504}
+AI_RETRYABLE_STATUS_CODES = {429, 502, 503, 504}
 AI_MAX_ATTEMPTS = 3
 AI_LAYER_MISSIONS = {
     "reconhecimento": {
@@ -674,6 +674,27 @@ def sanitize_customer_reading_text(text: str) -> str:
     )
 
 
+def get_ai_retry_wait_seconds(
+    error: httpx.HTTPStatusError,
+    attempt: int,
+) -> int:
+    if error.response.status_code == 429:
+        try:
+            details = error.response.json().get("error", {}).get("details", [])
+
+            for detail in details:
+                raw_delay = str(detail.get("retryDelay") or "").removesuffix("s")
+
+                if raw_delay:
+                    return min(60, max(2, int(float(raw_delay)) + 1))
+        except (TypeError, ValueError, json.JSONDecodeError):
+            pass
+
+        return 60
+
+    return attempt * 5
+
+
 def build_ai_layer_cache_key(
     *,
     layer_id: str,
@@ -988,10 +1009,11 @@ async def maybe_generate_ai_layer_text(
             should_retry = (
                 status_code in AI_RETRYABLE_STATUS_CODES
                 and attempt < AI_MAX_ATTEMPTS
+                and (status_code != 429 or attempt == 1)
             )
 
             if should_retry:
-                wait_seconds = attempt * 2
+                wait_seconds = get_ai_retry_wait_seconds(error, attempt)
                 print(
                     "AI reading layer retry: "
                     f"layer={layer_id} status={status_code} "
@@ -1101,10 +1123,11 @@ async def maybe_generate_ai_report_layers(
             should_retry = (
                 status_code in AI_RETRYABLE_STATUS_CODES
                 and attempt < AI_MAX_ATTEMPTS
+                and (status_code != 429 or attempt == 1)
             )
 
             if should_retry:
-                wait_seconds = attempt * 2
+                wait_seconds = get_ai_retry_wait_seconds(error, attempt)
                 print(
                     "AI reading batch retry: "
                     f"status={status_code} attempt={attempt + 1}/{AI_MAX_ATTEMPTS} "
