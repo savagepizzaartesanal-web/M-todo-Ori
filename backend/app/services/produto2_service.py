@@ -566,6 +566,9 @@ async def update_admin_produto2(
     if not updates:
         return await get_admin_produto2(cliente_id=cliente_id, current_user=current_user)
 
+    if "ia_rascunho" in updates:
+        updates["ia_revisado_em"] = datetime.now(UTC).isoformat()
+
     row = await upsert_produto2_row(
         cliente_id=cliente_id,
         payload=updates,

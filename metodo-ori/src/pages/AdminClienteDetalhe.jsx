@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
+import Produto2ReviewPanel from "../components/Produto2ReviewPanel";
 import { questions } from "../data/questions";
 import {
   createAdminClienteEvento,
@@ -536,6 +537,8 @@ function AdminClienteDetalhe() {
           </div>
         ))}
       </div>
+
+      <Produto2ReviewPanel clienteId={cliente.id} />
 
       <section
         className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[30px] p-5 md:p-7 mb-8 cinematic-card"

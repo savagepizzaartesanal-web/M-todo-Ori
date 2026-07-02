@@ -4,6 +4,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 const API_TIMEOUT_MS = 12000;
 const READING_TIMEOUT_MS = 120000;
 const FILE_TIMEOUT_MS = 180000;
+const AI_DRAFT_TIMEOUT_MS = 240000;
 
 export class OriApiError extends Error {
   constructor(message, options = {}) {
@@ -340,6 +341,16 @@ export function updateAdminProduto2(clienteId, updates) {
     {
       method: "PUT",
       body: JSON.stringify(updates),
+    },
+  );
+}
+
+export function generateAdminProduto2AiDraft(clienteId) {
+  return requestAuthenticatedApi(
+    `/api/admin/produto-2/${encodeURIComponent(clienteId)}/rascunho-ia`,
+    {
+      method: "POST",
+      timeoutMs: AI_DRAFT_TIMEOUT_MS,
     },
   );
 }

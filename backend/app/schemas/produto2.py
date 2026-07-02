@@ -20,6 +20,7 @@ class Produto2AdminUpdateRequest(BaseModel):
     analise_preliminar: dict[str, Any] | None = None
     diagnosticos: dict[str, Any] | None = None
     dossie: dict[str, Any] | None = None
+    ia_rascunho: dict[str, Any] | None = None
 
 
 class Produto2DossieResponse(BaseModel):
