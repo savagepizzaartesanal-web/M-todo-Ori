@@ -245,6 +245,10 @@ def row_to_admin_response(
     return Produto2AdminResponse(
         **row_to_response(row, cliente).model_dump(),
         cliente=cliente,
+        ia_rascunho=row.get("ia_rascunho") or {},
+        ia_versao=row.get("ia_versao"),
+        ia_gerado_em=row.get("ia_gerado_em"),
+        ia_revisado_em=row.get("ia_revisado_em"),
     )
 
 
@@ -587,6 +591,7 @@ async def publish_admin_produto2(
             "diagnosticos": payload.diagnosticos,
             "dossie": payload.dossie,
             "publicado_em": publicado_em,
+            "ia_revisado_em": publicado_em,
         },
         current_user=current_user,
     )

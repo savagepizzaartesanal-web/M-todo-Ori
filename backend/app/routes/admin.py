@@ -7,6 +7,7 @@ from app.schemas.admin_ai import (
 )
 from app.schemas.auth import CurrentUser
 from app.schemas.produto2 import (
+    Produto2AiDraftResponse,
     Produto2AdminResponse,
     Produto2AdminUpdateRequest,
     Produto2PublishRequest,
@@ -25,6 +26,7 @@ from app.services.produto2_service import (
     unpublish_admin_produto2,
     update_admin_produto2,
 )
+from app.services.produto2_ai_service import generate_admin_produto2_ai_draft
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
@@ -113,6 +115,20 @@ async def put_admin_produto2(
     return await update_admin_produto2(
         cliente_id=cliente_id,
         payload=payload,
+        current_user=current_user,
+    )
+
+
+@router.post(
+    "/produto-2/{cliente_id}/rascunho-ia",
+    response_model=Produto2AiDraftResponse,
+)
+async def generate_produto2_ai_draft(
+    cliente_id: str,
+    current_user: CurrentUser = Depends(get_current_user),
+):
+    return await generate_admin_produto2_ai_draft(
+        cliente_id=cliente_id,
         current_user=current_user,
     )
 

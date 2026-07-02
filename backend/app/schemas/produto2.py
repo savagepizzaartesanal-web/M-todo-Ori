@@ -39,6 +39,10 @@ class Produto2DossieResponse(BaseModel):
 
 class Produto2AdminResponse(Produto2DossieResponse):
     cliente: dict[str, Any] | None = None
+    ia_rascunho: dict[str, Any] = Field(default_factory=dict)
+    ia_versao: str | None = None
+    ia_gerado_em: datetime | None = None
+    ia_revisado_em: datetime | None = None
 
 
 class Produto2PublishRequest(BaseModel):
@@ -46,3 +50,10 @@ class Produto2PublishRequest(BaseModel):
 
     diagnosticos: dict[str, Any] = Field(default_factory=dict)
     dossie: dict[str, Any] = Field(default_factory=dict)
+
+
+class Produto2AiDraftResponse(BaseModel):
+    cliente_id: str
+    ia_rascunho: dict[str, Any] = Field(default_factory=dict)
+    ia_versao: str
+    ia_gerado_em: datetime

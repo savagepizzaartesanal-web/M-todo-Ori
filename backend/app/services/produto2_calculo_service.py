@@ -90,31 +90,19 @@ def _score_choice(value: Any, negative: str = "A", positive: str = "C") -> int:
 def calculate_kibbe(insumos: dict[str, Any]) -> dict[str, Any]:
     estrutura = insumos.get("estrutura_corporal") or {}
     scores = {key: 0 for key in KIBBE_KEYS.values()}
+    answered_count = 0
 
     for field in KIBBE_FIELDS:
         letter = _choice_letter(estrutura.get(field))
         if letter:
             scores[KIBBE_KEYS[letter]] += 1
-
-    ancestralidade = _lower(
-        estrutura.get("ancestralidade_fisica")
-        or _get(insumos, "dados_base.autoidentificacao_racial")
-    )
-
-    if "africana" in ancestralidade or "negra" in ancestralidade or "parda" in ancestralidade:
-        scores["natural"] += 2
-        scores["romantic"] += 2
-    if "indigena" in ancestralidade or "indígena" in ancestralidade:
-        scores["natural"] += 2
-        scores["gamine"] += 1
-    if "europeia" in ancestralidade or "branca" in ancestralidade or "mista" in ancestralidade:
-        scores["dramatic"] += 1
+            answered_count += 1
 
     max_score = max(scores.values()) if scores else 0
     leaders = [key for key, value in scores.items() if value == max_score and value > 0]
 
     suggestion = "Inconclusivo"
-    if leaders:
+    if len(leaders) == 1:
         leader = leaders[0]
         if leader == "dramatic":
             suggestion = "Soft Dramatic" if scores["romantic"] >= 3 else "Dramatic"
@@ -139,9 +127,13 @@ def calculate_kibbe(insumos: dict[str, Any]) -> dict[str, Any]:
 
     return {
         "pontuacoes": scores,
+        "respostas_validas": answered_count,
+        "total_campos": len(KIBBE_FIELDS),
+        "empate": leaders if len(leaders) > 1 else [],
         "sugestao": suggestion,
         "observacao": (
-            "Sugestao preliminar baseada nos sinais informados. "
+            "Sugestao preliminar baseada apenas nos sinais corporais informados. "
+            "Autodeclaracao racial e ancestralidade nao alteram a pontuacao Kibbe. "
             "A validacao final depende da leitura visual do admin."
         ),
     }
