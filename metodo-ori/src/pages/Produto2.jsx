@@ -14,6 +14,8 @@ import {
 } from "../data/produto2Form";
 
 const PRODUTO_2_PHOTOS_BUCKET = "produto-2-fotos";
+const PHOTO_UPLOAD_ERROR_NOTICE =
+  "Não conseguimos enviar suas imagens agora. Tente novamente em instantes — se continuar assim, chame a gente.";
 
 function cloneInsumos(source = {}) {
   return {
@@ -158,10 +160,8 @@ function FileUploadControl({ value, onChange, uploadScope, onNotice }) {
         "Imagens adicionadas. Salve e continue depois para manter este registro vinculado ao Dossiê.",
       );
     } catch (error) {
-      console.log("Erro ao enviar fotos do Produto 2:", error);
-      onNotice?.(
-        "Não conseguimos enviar as fotos agora. Verifique se o bucket do Produto 2 foi criado no Supabase.",
-      );
+      console.error("Erro ao enviar fotos do Produto 2:", error);
+      onNotice?.(PHOTO_UPLOAD_ERROR_NOTICE);
     } finally {
       setUploading(false);
     }

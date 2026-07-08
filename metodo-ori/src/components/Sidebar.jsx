@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
-import { FEATURES } from "../config/features";
 import { supabase } from "../lib/supabaseClient";
 
 const mainLinks = [
   ["Portal Cliente", "/portal"],
   ["Conheça o Método", "/metodo-ori"],
   ["Código das Deusas", "/produto-1"],
-  ["Dossiê ORI", "/produto-2", FEATURES.produto2 ? "" : "Próxima camada"],
+  ["Dossiê ORI", "/produto-2"],
   ["Código Final", "/produto-3"],
   ["Espelho ORI", "/espelho-ori"],
   ["Oráculo", "/oraculo"],
