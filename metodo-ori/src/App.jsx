@@ -119,9 +119,11 @@ function App() {
           <Route
             path="/"
             element={
-              <DashboardLayout>
-                <Dashboard />
-              </DashboardLayout>
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <Dashboard />
+                </DashboardLayout>
+              </ProtectedRoute>
             }
           />
 
