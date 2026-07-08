@@ -530,7 +530,7 @@ function ConnectedDataPanel({ insumos }) {
   const items = [
     { title: nome || "Cliente", text: contato, tag: "Cadastro" },
     { title: "Perfil", text: perfil, tag: "Conferência" },
-    { title: "Produto 1", text: arquetipos, tag: "Conectado" },
+    { title: "Primeira leitura", text: arquetipos, tag: "Conectado" },
     { title: "Ponto de partida", text: jornada, tag: "Contexto" },
   ].filter((item) => item.title || item.text);
   const summary = [
@@ -670,7 +670,7 @@ function MissingProfileHint({ insumos }) {
         className="ori-type-system text-[9px]"
         style={{ color: ready ? "var(--gold-soft)" : "rgba(183,140,255,0.80)" }}
       >
-        {ready ? "Camada pronta" : "Dados complementares"}
+        {ready ? "Dados reunidos" : "Dados complementares"}
       </p>
       <p className="text-xs" style={{ color: "var(--text-soft)" }}>
         {ready
@@ -783,15 +783,15 @@ function Produto2() {
     if (loading) {
       return {
         title: "Carregando Dossiê ORI...",
-        text: "Estamos buscando sua segunda camada.",
+        text: "Estamos buscando suas informações para continuar a leitura.",
         locked: false,
       };
     }
 
     if (!produtoLiberado) {
       return {
-        title: "Dossiê ORI ainda selado",
-        text: "Esta etapa abre quando a liberação do Produto 2 é ativada. Enquanto isso, sua primeira leitura segue como base da jornada.",
+        title: "Dossiê ORI ainda não liberado",
+        text: "Esta etapa abre quando sua próxima leitura estiver disponível. Enquanto isso, sua primeira leitura segue como base da jornada.",
         locked: true,
       };
     }
@@ -799,7 +799,7 @@ function Produto2() {
     if (status === "publicado") {
       return {
         title: "Dossiê ORI publicado",
-        text: "Sua tradução visual já está disponível para leitura.",
+        text: "Sua leitura visual já está disponível.",
         locked: false,
       };
     }
@@ -814,7 +814,7 @@ function Produto2() {
 
     return {
       title: "Dossiê ORI liberado",
-      text: "Sua segunda camada está aberta para reunir os registros que orientam o Dossiê.",
+      text: "Esta etapa está aberta para reunir os registros que vão orientar seu Dossiê.",
       locked: false,
     };
   };
@@ -880,8 +880,8 @@ function Produto2() {
             className="ori-type-reading mb-4 max-w-[500px] text-sm"
             style={{ color: "var(--text-primary)" }}
           >
-            A segunda camada traduz essência em forma: corpo, rosto, cor,
-            cabelo, beleza, presença visual e rotina real.
+            Agora vamos observar como sua primeira leitura aparece no corpo,
+            no rosto, nas cores, no cabelo, na beleza e na rotina real.
           </p>
 
           <div
@@ -898,7 +898,7 @@ function Produto2() {
               <div className="mb-3 flex items-center gap-3">
                 <StatusBadge status={status} />
                 {heroCard.locked ? (
-                  <span style={{ color: "rgba(242,185,104,0.58)" }}>selado</span>
+                  <span style={{ color: "rgba(242,185,104,0.58)" }}>não liberado</span>
                 ) : null}
               </div>
 
@@ -974,7 +974,7 @@ function Produto2() {
                     className="ori-type-system text-[9px]"
                     style={{ color: "var(--gold-soft)" }}
                   >
-                    Camada {String(stepIndex + 1).padStart(2, "0")} de{" "}
+                    Etapa {String(stepIndex + 1).padStart(2, "0")} de{" "}
                     {String(produto2Steps.length).padStart(2, "0")}
                   </p>
                 </div>
@@ -1076,7 +1076,7 @@ function Produto2() {
                   color: "var(--text-soft)",
                 }}
               >
-                Próximo
+                Próxima etapa
               </button>
             </div>
 
@@ -1157,7 +1157,7 @@ function Produto2() {
               </p>
             </AnalysisCard>
             <AnalysisCard title="Arquétipos">
-              <p>{analysis.arquetipos?.composto || "Herdado do Produto 1"}</p>
+              <p>{analysis.arquetipos?.composto || "Herdado da primeira leitura"}</p>
               <p className="mt-2 text-xs opacity-70">
                 {analysis.arquetipos?.dominante} + {analysis.arquetipos?.auxiliar}
               </p>

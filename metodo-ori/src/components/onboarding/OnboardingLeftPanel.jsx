@@ -7,17 +7,17 @@ export default function OnboardingLeftPanel({ formData }) {
     {
       label: "Nome",
       value: formData.preferredName,
-      fallback: "Ainda não nomeada",
+      fallback: "Seu nome aparecerá aqui",
     },
     {
       label: "Momento",
       value: formData.journeyStage,
-      fallback: "Ainda em reconhecimento",
+      fallback: "Seu momento aparecerá aqui",
     },
     {
       label: "Objetivo",
       value: objective,
-      fallback: "Ainda em formação",
+      fallback: "Seu objetivo aparecerá aqui",
     },
   ];
 
@@ -96,14 +96,14 @@ export default function OnboardingLeftPanel({ formData }) {
             textShadow: "0 0 42px rgba(242,185,104,0.13)",
           }}
         >
-          Crie seu perfil ORI.
+          Crie seu perfil e comece sua jornada no ORI.
         </h1>
 
         <p
           className="ori-type-reading-soft mt-3 max-w-[410px] shrink-0 text-[13px]"
           style={{ color: "rgba(255,245,235,0.62)" }}
         >
-          Essas informações ajudam a personalizar sua experiência no portal.
+          Essas informações ajudam o ORI a começar sua leitura com mais precisão.
         </p>
 
         <div className="mt-6 min-h-0">

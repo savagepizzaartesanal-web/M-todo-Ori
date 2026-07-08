@@ -37,17 +37,17 @@ const colors = {
 
 const fallbackReflection = {
   fraseHero:
-    "Sua imagem revela aquilo que sua essência já sabe, mas ainda não aprendeu a expressar por completo.",
+    "Sua imagem começa a mostrar aquilo que você sente, mas ainda não conseguiu organizar em escolhas visuais.",
   reconhecimento:
-    "Sua primeira camada ainda está aguardando revelação. Quando você iniciar o Código das Deusas, o Espelho ORI começará a mostrar os padrões simbólicos que moldam sua presença, sua imagem e a forma como você ocupa o mundo.",
+    "Sua primeira leitura ainda não começou. Quando você abrir o Código das Deusas, o Espelho vai mostrar os primeiros sinais que organizam sua imagem.",
   essencia:
-    "O Espelho ORI será preenchido conforme sua jornada avançar. Cada etapa revela uma parte da sua identidade: primeiro a estrutura interna, depois a tradução visual, por fim a síntese completa da sua presença.",
+    "O Espelho ORI será preenchido conforme sua jornada avançar. Cada etapa acrescenta uma informação importante: primeiro a base interna, depois corpo, cor, cabelo e beleza, por fim a aplicação no dia a dia.",
   sombra:
-    "Antes da primeira leitura, algumas camadas permanecem ocultas. Isso não é ausência. É potencial ainda não nomeado.",
+    "Antes da primeira leitura, alguns pontos ainda não foram nomeados. Isso não é falta. É começo.",
   essenciaImagem:
     "Sua imagem será construída em etapas, respeitando sua essência, seus códigos visuais e sua forma única de ser percebida.",
   presenca:
-    "Sua presença será revelada conforme sua essência começar a ganhar linguagem visual, simbólica e estética.",
+    "Sua presença será lida conforme sua essência começar a ganhar linguagem visual, simbólica e estética.",
 };
 
 function getPreview(text = "", maxLength = 360) {
@@ -270,7 +270,7 @@ function MirrorHero() {
               textShadow: "0 0 38px rgba(242,185,104,0.10)",
             }}
           >
-            Seu Espelho ORI está tomando forma.
+            Seu Espelho ORI já começou a se organizar.
           </h1>
 
           <div
@@ -285,8 +285,8 @@ function MirrorHero() {
             className="ori-type-reading mb-4 max-w-xl text-[15px] md:mb-5 md:text-lg"
             style={{ color: "rgba(255,245,235,0.64)" }}
           >
-            Aqui você acompanha o que já foi revelado, o que está em tradução e
-            o que ainda permanece selado.
+            Aqui você vê o que já ficou claro, o que orienta sua imagem agora e
+            qual é o próximo passo.
           </p>
 
           <p
@@ -298,8 +298,8 @@ function MirrorHero() {
               letterSpacing: "-0.018em",
             }}
           >
-            Cada camada guarda uma síntese prática da sua jornada: resultado,
-            direção, ponto de atenção e próximo movimento.
+            Cada etapa reúne uma síntese simples: o que sua leitura mostrou, o
+            que merece atenção e para onde seguir.
           </p>
 
           <div className="flex flex-col gap-2.5 sm:flex-row sm:gap-3">
@@ -315,7 +315,7 @@ function MirrorHero() {
                   "0 0 34px rgba(242,185,104,0.16), inset 0 0 14px rgba(255,255,255,0.16)",
               }}
             >
-              Ver minha jornada
+              Ver minha leitura
             </a>
 
             <Link
@@ -513,13 +513,13 @@ function EspelhoOri() {
       {
         id: "essencia",
         label: "Essência",
-        eyebrow: "Primeira camada",
+        eyebrow: "Primeira leitura",
         title: hasResult
-          ? "O que sustenta sua presença"
-          : "Sua essência ainda aguarda revelação",
+          ? "O que sustenta sua imagem"
+          : "Sua primeira leitura ainda vai abrir",
         summary: hasResult
           ? getPreview(reflection.essencia, 210)
-          : "A primeira camada do seu Espelho ORI será revelada quando você iniciar o Código das Deusas.",
+          : "A primeira leitura do seu Espelho ORI será aberta quando você iniciar o Código das Deusas.",
         fullText: hasResult ? reflection.essencia : fallbackReflection.essencia,
         shows:
           "Mostra a força interna que organiza desejo, proteção, escolha e presença.",
@@ -533,10 +533,10 @@ function EspelhoOri() {
       {
         id: "presenca",
         label: "Presença",
-        eyebrow: "Segunda camada",
+        eyebrow: "Como você chega",
         title: hasResult
           ? "Como sua energia começa a ser percebida"
-          : "Sua presença será ativada em camadas",
+          : "A forma como você chega ainda será lida",
         summary: hasResult
           ? getPreview(reflection.percebida || reflection.presenca, 210)
           : "O Espelho ORI vai mostrar como sua presença começa a ser lida, sentida e percebida ao longo da jornada.",
@@ -555,13 +555,13 @@ function EspelhoOri() {
       {
         id: "imagem",
         label: "Imagem",
-        eyebrow: "Terceira camada",
+        eyebrow: "Imagem em construção",
         title: hasResult
           ? "O que começa a pedir forma"
           : "Sua imagem ainda está em construção",
         summary: hasResult
           ? getPreview(reflection.essenciaImagem, 210)
-          : "Sua imagem será construída em etapas. Primeiro a essência é revelada. Depois, ela ganha corpo, cor, cabelo, beleza e presença visual.",
+          : "Sua imagem será construída em etapas. Primeiro a base é identificada. Depois, ela ganha corpo, cor, cabelo, beleza e presença visual.",
         fullText: hasResult
           ? reflection.essenciaImagem
           : fallbackReflection.essenciaImagem,
@@ -577,13 +577,13 @@ function EspelhoOri() {
       {
         id: "sombra",
         label: "Sombra",
-        eyebrow: "Quarta camada",
+        eyebrow: "Ponto de atenção",
         title: hasResult
           ? "O ponto que pede consciência"
           : "Sua sombra ainda está oculta",
         summary: hasResult
           ? getPreview(reflection.sombra, 210)
-          : "Antes da leitura inicial, alguns padrões ainda permanecem invisíveis. A sombra não é um defeito. É uma camada esperando linguagem.",
+          : "Antes da leitura inicial, alguns padrões ainda permanecem invisíveis. A sombra não é um defeito. É um ponto esperando linguagem.",
         fullText: hasResult ? reflection.sombra : fallbackReflection.sombra,
         shows:
           "Mostra onde uma defesa antiga ainda tenta proteger sua imagem de ser vista por inteiro.",
@@ -648,7 +648,7 @@ function EspelhoOri() {
     mainPain ||
     (hasResult
       ? "A imagem ainda está aprendendo a sustentar a força que já foi nomeada."
-      : "A dor central será nomeada quando sua primeira camada abrir.");
+      : "A dor central será nomeada quando sua primeira leitura abrir.");
   const formaTitle =
     mapaVivo?.strengths?.[1]?.label ||
     mapaVivo?.strengths?.[0]?.label ||
@@ -660,9 +660,9 @@ function EspelhoOri() {
       ? "Dossiê ORI"
       : "Código das Deusas";
   const proximaCamadaText = dossieRevelado
-    ? "Sua tradução visual já pode ser consultada: corpo, cor, cabelo, beleza e presença começam a organizar escolhas reais."
+    ? "Sua direção visual já pode ser consultada: corpo, cor, cabelo, beleza e presença começam a organizar escolhas reais."
     : hasResult
-      ? "O próximo espelho mostra como essa força aparece no corpo, na cor, no cabelo, na beleza e na presença."
+      ? "A próxima etapa mostra como essa força aparece no corpo, na cor, no cabelo, na beleza e na presença."
       : "A primeira leitura revela a força simbólica que abre todo o restante da jornada.";
 
   const fallbackMapaVivoCards = mapaVivo
@@ -670,7 +670,7 @@ function EspelhoOri() {
         {
           id: "forca-ativa",
           label: "Força ativa",
-          title: mapaVivo.resultado || "Primeira camada em formação",
+          title: mapaVivo.resultado || "Primeira leitura em formação",
           text: mapaVivo.resultado
             ? "O que apareceu aqui não é um rótulo. É a força que começa a organizar sua presença, sua imagem e o modo como você se mostra."
             : "Sua primeira força ainda está sendo formada a partir dos sinais da jornada.",
@@ -703,8 +703,8 @@ function EspelhoOri() {
     : [];
 
   const fallbackMapaVivoHeadline = hasResult
-    ? `Sua primeira camada já revelou ${resultadoFinal}. Agora essa força precisa aparecer com mais verdade no jeito como você se veste, se move e ocupa presença.`
-    : "O Espelho está reunindo seus sinais para revelar a primeira camada da sua jornada.";
+    ? `Sua primeira leitura mostrou ${resultadoFinal}. Agora essa força precisa aparecer com mais verdade no jeito como você se veste, se move e ocupa presença.`
+    : "O Espelho está reunindo seus sinais para abrir a primeira leitura da sua jornada.";
   const mapaVivoReading = mapaVivo?.reading || null;
   const mapaVivoHeadline = mapaVivoReading?.headline || fallbackMapaVivoHeadline;
   const mapaVivoCards = mapaVivoReading?.cards || fallbackMapaVivoCards;
@@ -723,7 +723,7 @@ function EspelhoOri() {
       value: hasResult ? resultadoFinal : "Aguardando primeira leitura",
       text: hasResult
         ? `${principal} + ${secundario}`
-        : "Primeira força ainda selada.",
+        : "Primeira força ainda fechada.",
       impact: hasResult
         ? "Nomeia a base da presença."
         : "Abre o ponto de partida.",
@@ -766,7 +766,7 @@ function EspelhoOri() {
       image: "/images/panels/modelagem.png",
       imagePosition: "center 8%",
       imageHeight: 140,
-      value: bodyType || "Em tradução",
+      value: bodyType || "Tomando forma",
       text: bodyType
         ? "Linhas e proporções em direção."
         : "Forma, caimento e presença física.",
@@ -784,12 +784,12 @@ function EspelhoOri() {
       imageHeight: 140,
       value:
         seasonalColor ||
-        (pattonColor ? `Patton: ${pattonColor}` : "Em tradução"),
+        (pattonColor ? `Patton: ${pattonColor}` : "Tomando forma"),
       text: seasonalColor
         ? pattonColor
           ? `${seasonalColor} com leitura Patton ${pattonColor}.`
           : "Contraste e presença cromática."
-        : "Sazonal e Patton entram na tradução.",
+        : "Sazonal e Patton entram na etapa visual.",
       impact:
         seasonalColor || pattonColor
           ? "Dá eixo para cor e beleza."
@@ -803,7 +803,7 @@ function EspelhoOri() {
       caption: "Textura e acabamento",
       image: "/images/panels/beleza.png",
       imageHeight: 140,
-      value: hairDiagnosis || "Em tradução",
+      value: hairDiagnosis || "Tomando forma",
       text: hairDiagnosis
         ? "Cabelo conectado à identidade."
         : "Textura, volume, corte e cor.",
@@ -822,7 +822,7 @@ function EspelhoOri() {
       caption: "Rosto e acabamento",
       image: "/images/panels/beleza.png",
       imageHeight: 140,
-      value: "Em tradução",
+      value: "Tomando forma",
       text: "Maquiagem, acabamento e presença do rosto.",
       impact: "Conecta expressão, brilho e refinamento.",
       state: "next",
@@ -887,16 +887,16 @@ function EspelhoOri() {
       id: "revelado",
       number: "01",
       eyebrow: "Produto 1",
-      title: "Camada revelada",
+      title: "Base identificada",
       text: "",
       items: matrixItems.slice(0, 3),
     },
     {
       id: "traducao",
       number: "02",
-      eyebrow: produto2Liberado ? "Produto 2" : "Próxima camada",
+      eyebrow: produto2Liberado ? "Produto 2" : "Próxima etapa",
       title: "Tradução visual",
-      text: "A força revelada começa a ganhar corpo, cor, cabelo, beleza e assinatura.",
+      text: "A força identificada começa a ganhar corpo, cor, cabelo, beleza e assinatura.",
       items: [
         ...matrixItems.slice(3),
         matrixFutureItems.beleza,
@@ -906,7 +906,7 @@ function EspelhoOri() {
     {
       id: "aplicacao",
       number: "03",
-      eyebrow: produto3Liberado ? "Produto 3" : "Camada final",
+      eyebrow: produto3Liberado ? "Produto 3" : "Etapa final",
       title: "Aplicação",
       text: "A identidade deixa de ser direção e passa a organizar armário, fórmulas e escolhas reais.",
       items: [
@@ -933,13 +933,13 @@ function EspelhoOri() {
 
   const matrixLayerNotes = {
     revelado: "Base simbólica",
-    traducao: "Imagem em tradução",
+    traducao: "Imagem tomando forma",
     aplicacao: "Direção aplicada",
   };
 
   const mirrorSections = [
     { id: "espelho-hero", number: "01", label: "Entrada" },
-    { id: "espelho-resultados", number: "02", label: "Camadas" },
+    { id: "espelho-resultados", number: "02", label: "Leitura" },
     { id: "espelho-proxima", number: "03", label: "Próximo passo" },
   ];
 
@@ -950,7 +950,7 @@ function EspelhoOri() {
         report?.formula || "Primeira direção simbólica",
       ].filter(Boolean)
     : [
-        "A primeira camada ainda está selada.",
+        "A primeira leitura ainda está fechada.",
         "O Código das Deusas abre a base arquetípica.",
         "O Espelho começa quando sua força ganha nome.",
       ];
@@ -970,18 +970,18 @@ function EspelhoOri() {
 
   const nextCrossingTitle = produto3Liberado
     ? "O Código Final transforma direção em guarda-roupa real."
-    : "O Dossiê ORI transforma força nomeada em linguagem visual.";
+    : "O Dossiê ORI leva sua força para a imagem visível.";
   const finalCrossingText = produto3Liberado
-    ? "O Espelho ORI já revelou e traduziu sua direção visual. A próxima etapa não repete essa leitura: ela aplica essa identidade ao armário real, às escolhas, às lacunas e às fórmulas de look."
-    : "O Espelho ORI já revelou a força que sustenta sua presença. A próxima etapa não repete essa leitura: ela traduz essa força em corpo, cor, cabelo, presença e direção visual.";
+    ? "O Espelho ORI já organizou sua direção visual. A próxima etapa não repete essa leitura: ela aplica essa identidade ao armário real, às escolhas, às lacunas e às fórmulas de look."
+    : "Seu Código das Deusas revelou a força que organiza sua imagem por dentro. Agora falta ver como isso aparece na prática, no seu corpo, nas suas cores, no seu cabelo, na sua beleza e na sua presença. O Dossiê ORI existe para mostrar, com profundidade e clareza, como essa força aparece na prática. É a próxima etapa para transformar leitura em imagem real.";
 
   const nextStep = !hasResult
     ? {
-        eyebrow: "Primeira revelação",
+        eyebrow: "Primeira leitura",
         title: "Código das Deusas",
-        headline: "Antes de ver sua imagem, você precisa nomear sua essência.",
-        text: "A primeira camada revela a base arquetípica que sustenta sua presença e abre o Espelho ORI.",
-        cta: "Revelar minha primeira camada",
+        headline: "Antes de ver sua imagem, você precisa entender sua base.",
+        text: "A primeira leitura mostra a força arquetípica que sustenta sua imagem e abre o Espelho ORI.",
+        cta: "Abrir minha primeira leitura",
         link: "/produto-1",
         active: true,
       }
@@ -998,21 +998,21 @@ function EspelhoOri() {
         }
       : produto2Liberado
       ? {
-          eyebrow: "Próximo espelho liberado",
+          eyebrow: "Próxima etapa liberada",
           title: "Dossiê ORI",
           headline:
-            "Sua essência já foi nomeada. Agora ela pode ganhar imagem.",
-          text: "O Dossiê ORI traduz sua leitura em corpo, cabelo, cor, beleza, presença e assinatura visual.",
+            "Sua força já foi nomeada. Agora ela pode ganhar imagem.",
+          text: "O Dossiê ORI mostra como sua leitura aparece no corpo, no cabelo, na cor, na beleza, na presença e na assinatura visual.",
           cta: "Acessar Dossiê ORI",
           link: "/produto-2",
           active: true,
         }
       : {
-          eyebrow: "Próxima camada",
+          eyebrow: "Próxima etapa",
           title: "Dossiê ORI",
           headline:
             "Você já sabe o nome da sua força. Agora falta ver a forma que ela pode ter.",
-          text: "O próximo espelho traduz sua identidade em imagem visível: corpo, cabelo, cor, beleza, presença e linguagem estética.",
+          text: "O Dossiê ORI mostra sua identidade em imagem visível: corpo, cabelo, cor, beleza, presença e linguagem estética.",
           cta: "Dossiê ainda selado",
           link: "/portal",
           active: false,
@@ -1050,7 +1050,7 @@ function EspelhoOri() {
       status: hasResult ? "Concluído" : "Comece aqui",
       statusType: hasResult ? "done" : "active",
       short: hasResult
-        ? "Sua base simbólica foi revelada."
+        ? "Sua base simbólica foi identificada."
         : "Aqui começa a leitura da sua essência.",
       panelTitle: hasResult ? "O que você já descobriu" : "O primeiro passo",
       panelText: hasResult
@@ -1068,7 +1068,7 @@ function EspelhoOri() {
           detailTitle: hasResult
             ? `A base que já foi nomeada: ${principal} + ${secundario}`
             : "A base que já foi nomeada",
-          detailText: hasResult ? resultadoFinal : "Camada selada",
+          detailText: hasResult ? resultadoFinal : "Etapa fechada",
         },
         {
           title: "Presença",
@@ -1092,7 +1092,7 @@ function EspelhoOri() {
           detailTitle: "O ponto que pede consciência",
           detailText:
             getPreview(report?.sombra || reflection.sombra, 520) ||
-            "A sombra não é defeito. É uma camada que precisa ser vista para a imagem ficar mais inteira.",
+            "A sombra não é defeito. É um ponto que precisa ser visto para a imagem ficar mais inteira.",
         },
         {
           title: "Fórmula",
@@ -1125,7 +1125,7 @@ function EspelhoOri() {
         "Sua essência começa a ganhar forma visual.",
       panelTitle: dossieRevelado ? "O que ganhou forma visual" : "O que vem agora",
       panelText: dossieRevelado
-        ? "Seu Dossiê ORI abre as camadas de corpo, cor, cabelo, beleza e presença para consulta."
+        ? "Seu Dossiê ORI abre corpo, cor, cabelo, beleza e presença para consulta."
         : "No Dossiê ORI, vamos traduzir sua essência para a imagem real: corpo, cor, cabelo, beleza, presença e rotina.",
       receives: [
         {
@@ -1240,7 +1240,7 @@ function EspelhoOri() {
             "Como sua imagem pode ficar mais sua sem complicar sua rotina?",
           detailTitle: "Imagem na vida real",
           detailText:
-            "Esta camada fecha a jornada mostrando como a identidade pode aparecer no armário, na rotina e nas decisões práticas.",
+            "Esta etapa fecha a jornada mostrando como a identidade pode aparecer no armário, na rotina e nas decisões práticas.",
           visualLabel: "Aplicação na rotina",
         },
       ],
@@ -1453,7 +1453,7 @@ function EspelhoOri() {
                   letterSpacing: "-0.06em",
                 }}
               >
-                Primeiro a gente entende sua essência. Depois traduz isso para
+                Primeiro a gente entende sua base. Depois leva isso para
                 sua imagem.
               </h2>
 
@@ -1461,7 +1461,7 @@ function EspelhoOri() {
                 className="max-w-xl text-sm leading-relaxed md:text-base"
                 style={{ color: "rgba(255,245,235,0.58)" }}
               >
-                Aqui você vê onde está, o que já foi revelado e qual é o
+                Aqui você vê onde está, o que já ficou claro e qual é o
                 próximo passo.
               </p>
 
@@ -1732,7 +1732,7 @@ function EspelhoOri() {
                     letterSpacing: "-0.055em",
                   }}
                 >
-                  Consulte sua jornada em camadas.
+                  Veja sua jornada com clareza.
                 </h2>
               </div>
 
@@ -1741,8 +1741,8 @@ function EspelhoOri() {
                 style={{ color: "rgba(255,245,235,0.54)" }}
               >
                 {mapaVivo
-                  ? "Aqui o ORI reúne seus sinais principais e mostra o que está mais vivo na sua jornada agora."
-                  : "Aqui você acompanha o que já abriu, o que guia sua jornada e o que ainda será revelado."}
+                  ? "Aqui você acompanha os pontos centrais da sua leitura e entende o que merece atenção agora."
+                  : "Aqui você vê o que já ficou claro, o que orienta sua imagem agora e qual é o próximo passo."}
               </p>
             </div>
 
@@ -1765,7 +1765,7 @@ function EspelhoOri() {
                       letterSpacing: "0.14em",
                     }}
                   >
-                    Leitura viva da sua jornada
+                    Sua leitura, organizada de forma clara.
                   </p>
                   <p
                     className="ori-type-reading max-w-3xl text-[15px] leading-relaxed md:text-[17px]"
@@ -1792,7 +1792,7 @@ function EspelhoOri() {
                       letterSpacing: "0.14em",
                     }}
                   >
-                    Próximo espelho
+                    Próxima etapa
                   </p>
                   <h4
                     className="ori-type-revelation mb-1.5 text-lg"
@@ -2484,7 +2484,7 @@ function EspelhoOri() {
                               }}
                             >
                               <AtrioLineLabel className="mb-3">
-                                Próxima tradução
+                                Próxima etapa
                               </AtrioLineLabel>
                               <h4
                                 className="mb-3 text-2xl leading-tight md:text-[28px]"
@@ -2494,14 +2494,14 @@ function EspelhoOri() {
                                   letterSpacing: "-0.052em",
                                 }}
                               >
-                                O Dossiê transforma essência em imagem visível.
+                                O Dossiê transforma leitura em imagem visível.
                               </h4>
                               <p
                                 className="text-sm leading-relaxed md:text-base"
                                 style={{ color: "rgba(255,245,235,0.62)" }}
                               >
                                 Corpo, cor, cabelo, beleza e presença entram
-                                como camadas práticas para mostrar como sua
+                                como etapas práticas para mostrar como sua
                                 força aparece no mundo.
                               </p>
                             </div>
@@ -2559,7 +2559,7 @@ function EspelhoOri() {
                         <AtrioLineLabel className="mb-3">
                           {codigoFinalRevelado
                             ? "Aplicação liberada"
-                            : "Camada futura"}
+                            : "Etapa futura"}
                         </AtrioLineLabel>
 
                         <h4
@@ -2580,7 +2580,7 @@ function EspelhoOri() {
                           style={{ color: "rgba(255,245,235,0.58)" }}
                         >
                           {codigoFinalRevelado
-                            ? "A camada final reúne cápsula, fórmulas de look, prioridades de compra e decisões práticas para sustentar sua presença no cotidiano."
+                            ? "A etapa final reúne cápsula, fórmulas de look, prioridades de compra e decisões práticas para sustentar sua presença no cotidiano."
                             : "Essa etapa fica mais adiante. Ela leva a leitura para o armário, os looks, as compras e a rotina real."}
                         </p>
 
@@ -2723,8 +2723,8 @@ function EspelhoOri() {
                     }}
                   >
                     {hasConnectionPercent
-                      ? "Sua imagem já começou a revelar direção."
-                      : "Sua imagem já começou a revelar direção."}
+                      ? "Sua imagem já começou a mostrar direção."
+                      : "Sua imagem já começou a mostrar direção."}
                   </p>
                 </div>
 
@@ -2845,21 +2845,22 @@ function EspelhoOri() {
                     letterSpacing: "-0.06em",
                   }}
                 >
-                  Sua matriz de leitura e imagem.
+                  Seu mapa de leitura e imagem.
                 </h2>
 
                 <p
                   className="text-sm leading-relaxed max-w-xs"
                   style={{ color: colors.muted }}
                 >
-                  Acompanhe a travessia entre revelação, tradução e aplicação.
+                  Veja como sua leitura passa da base interna para a imagem e
+                  depois para a prática.
                 </p>
               </div>
 
               <div
                 className="mt-7 grid gap-3"
                 role="tablist"
-                aria-label="Camadas da matriz ORI"
+                aria-label="Etapas da matriz ORI"
               >
                 {matrixLayers.map((layer) => {
                   const isActiveLayer = selectedMatrixLayer.id === layer.id;
@@ -2870,7 +2871,7 @@ function EspelhoOri() {
                       type="button"
                       role="tab"
                       aria-selected={isActiveLayer}
-                      aria-label={`Ver camada ${layer.title}`}
+                      aria-label={`Ver etapa ${layer.title}`}
                       onClick={() => {
                         setActiveMatrixLayer(layer.id);
                         setActiveMatrixItem(layer.items[0]?.label);
@@ -3001,7 +3002,7 @@ function EspelhoOri() {
                     className="text-xs leading-relaxed md:text-sm"
                     style={{ color: "rgba(255,245,235,0.52)" }}
                   >
-                    Escolha uma etapa da camada para ver como ela aparece no seu
+                    Escolha uma etapa para ver como ela aparece no seu
                     Espelho.
                   </p>
                   <p
@@ -3017,7 +3018,7 @@ function EspelhoOri() {
                   <div
                     className="ori-premium-scroll flex w-full max-w-full snap-x flex-nowrap gap-1.5 overflow-x-auto pb-1.5 pr-4 md:gap-2.5 md:pb-2.5 md:pr-6"
                     role="tablist"
-                    aria-label={`Itens da camada ${selectedMatrixLayer.title}`}
+                    aria-label={`Itens da etapa ${selectedMatrixLayer.title}`}
                     style={{
                       scrollbarWidth: "thin",
                       scrollbarColor: "rgba(242,185,104,0.20) transparent",
@@ -3085,7 +3086,7 @@ function EspelhoOri() {
                               ? "Revelado"
                               : isSealed
                                 ? "Selado"
-                                : "Em tradução"}
+                                : "Tomando forma"}
                           </span>
                         </div>
 
@@ -3220,7 +3221,7 @@ function EspelhoOri() {
                               WebkitBackdropFilter: "blur(8px)",
                             }}
                           >
-                            Camada aberta
+                            Etapa aberta
                           </span>
                           <span
                             className="rounded-full px-3 py-1.5 text-[8px] uppercase tracking-[0.18em]"
@@ -3267,10 +3268,10 @@ function EspelhoOri() {
                               }}
                             >
                               {selectedMatrixItem.state === "revealed"
-                                ? "Camada revelada"
+                                ? "Base identificada"
                                 : selectedMatrixItem.state === "sealed"
                                   ? "Selado"
-                                  : "Em tradução"}
+                                  : "Tomando forma"}
                             </span>
                           </div>
 
@@ -3347,7 +3348,7 @@ function EspelhoOri() {
                               className="mb-2.5 text-[7px] uppercase tracking-[0.24em]"
                               style={{ color: colors.goldSoft }}
                             >
-                              O que esta camada revela
+                              O que esta etapa mostra
                             </p>
                             <p
                               className="text-[13px] leading-relaxed"
@@ -3390,7 +3391,7 @@ function EspelhoOri() {
                             className="mb-1.5 text-[7px] uppercase tracking-[0.28em]"
                             style={{ color: colors.goldSoft }}
                           >
-                            Composição da camada
+                            Composição da etapa
                           </p>
                           <p
                             className="text-lg leading-tight md:text-xl"
@@ -3505,14 +3506,14 @@ function EspelhoOri() {
                     letterSpacing: "-0.045em",
                   }}
                 >
-                  Escolha uma camada para aprofundar.
+                  Escolha um ponto da sua leitura para aprofundar.
                 </h2>
 
                 <p
                   className="text-xs md:text-sm leading-relaxed max-w-xl"
                   style={{ color: "rgba(255,245,235,0.56)" }}
                 >
-                  Toque em essência, presença, imagem ou sombra para revelar
+                  Toque em essência, presença, imagem ou sombra para ver
                   outro ângulo da sua leitura.
                 </p>
               </div>
@@ -3755,7 +3756,7 @@ function EspelhoOri() {
                       className="inline-flex w-fit items-center gap-2 text-sm transition-colors"
                       style={{ color: colors.goldSoft }}
                     >
-                      <span>Próxima camada:</span>
+                      <span>Próxima etapa:</span>
                       <span>
                       {mirrorTabs[
                         (mirrorTabs.findIndex(
@@ -3841,9 +3842,12 @@ function EspelhoOri() {
                 className="ori-mobile-preview-3 max-w-2xl text-base leading-relaxed md:text-lg"
                 style={{ color: "rgba(255,245,235,0.66)" }}
               >
-                Agora que sua base foi revelada, está na hora de entender como
-                ela aparece na prática: no seu corpo, nas suas cores, no cabelo,
-                na beleza e na presença.
+                Seu Código das Deusas revelou a força que organiza sua imagem
+                por dentro. Agora falta ver como isso aparece na prática, no seu
+                corpo, nas suas cores, no seu cabelo, na sua beleza e na sua
+                presença. O Dossiê ORI existe para mostrar, com profundidade e
+                clareza, como essa força aparece na prática. É a próxima etapa
+                para transformar leitura em imagem real.
               </p>
             </div>
 
@@ -3933,9 +3937,12 @@ function EspelhoOri() {
                 className="max-w-2xl text-base leading-relaxed md:text-lg"
                 style={{ color: "rgba(255,245,235,0.66)" }}
               >
-                Agora que sua base foi revelada, está na hora de entender como
-                ela aparece na prática: no seu corpo, nas suas cores, no cabelo,
-                na beleza e na presença.
+                Seu Código das Deusas revelou a força que organiza sua imagem
+                por dentro. Agora falta ver como isso aparece na prática, no seu
+                corpo, nas suas cores, no seu cabelo, na sua beleza e na sua
+                presença. O Dossiê ORI existe para mostrar, com profundidade e
+                clareza, como essa força aparece na prática. É a próxima etapa
+                para transformar leitura em imagem real.
               </p>
             </div>
 
@@ -4115,7 +4122,7 @@ function EspelhoOri() {
                         "0 0 34px rgba(242,185,104,0.12), inset 0 0 14px rgba(255,255,255,0.16)",
                     }}
                   >
-                    Abrir próxima camada
+                    Abrir próxima etapa
                   </Link>
                 ) : (
                   <button
@@ -4127,7 +4134,7 @@ function EspelhoOri() {
                       color: "rgba(255,245,235,0.56)",
                     }}
                   >
-                    Próxima camada selada
+                    Próxima etapa ainda fechada
                   </button>
                 )}
               </div>
@@ -4186,7 +4193,7 @@ function EspelhoOri() {
                     "0 0 42px rgba(242,185,104,0.15), inset 0 0 16px rgba(255,255,255,0.18)",
                 }}
               >
-                Abrir próxima camada
+                Abrir próxima etapa
               </Link>
             ) : (
               <button
@@ -4198,7 +4205,7 @@ function EspelhoOri() {
                   color: "rgba(255,245,235,0.56)",
                 }}
               >
-                Próxima camada selada
+                Próxima etapa ainda fechada
               </button>
             )}
 

@@ -136,9 +136,9 @@ const fetchClienteByUser = async (user) => {
 };
 
 const loadingMessages = [
-  "Tecendo sua essência...",
+  "Organizando seus primeiros sinais...",
   "Consultando os arquétipos...",
-  "Sua imagem está sendo revelada...",
+  "Sua leitura está tomando forma...",
 ];
 
 const scaleLabels = [
@@ -152,11 +152,11 @@ const scaleLabels = [
 const blockDescriptions = {
   "Sua Presença": "Como sua energia chega antes das suas palavras.",
   "Seu Estilo": "Como sua estética comunica desejo, proteção e identidade.",
-  "Seu Corpo": "Como você habita presença, movimento e sensação.",
+  "Seu Corpo": "Como seu corpo expressa movimento, conforto e sensação.",
   "Seus Relacionamentos": "Como sua energia cria vínculos, desejo e distância.",
   "Seu Mundo Interno":
     "Como seus padrões internos conduzem escolhas e percepção.",
-  "Seus Padrões": "Onde sua imagem pode revelar força, sombra e repetição.",
+  "Seus Padrões": "Onde sua imagem mostra força, defesa e repetição.",
 };
 
 const blockThemes = {
@@ -172,14 +172,14 @@ const blockThemes = {
     accent: "rgba(217,189,255,0.95)",
     glow: "rgba(183,140,255,0.22)",
     aura: "radial-gradient(circle at 76% 22%, rgba(183,140,255,0.18), transparent 34%), radial-gradient(circle at 14% 82%, rgba(242,185,104,0.08), transparent 34%)",
-    reward: "Sua estética começou a revelar desejo, proteção e linguagem.",
+    reward: "Sua estética começou a mostrar desejo, proteção e linguagem.",
   },
   "Seu Corpo": {
     symbol: "III",
     accent: "rgba(155,231,174,0.95)",
     glow: "rgba(120,255,160,0.18)",
     aura: "radial-gradient(circle at 76% 22%, rgba(120,255,160,0.12), transparent 34%), radial-gradient(circle at 14% 82%, rgba(242,185,104,0.10), transparent 34%)",
-    reward: "Seu corpo entrou na leitura como presença, ritmo e sensação.",
+    reward: "Seu corpo entrou na leitura como ritmo, conforto e sensação.",
   },
   "Seus Relacionamentos": {
     symbol: "IV",
@@ -193,7 +193,7 @@ const blockThemes = {
     accent: "rgba(168,212,255,0.96)",
     glow: "rgba(100,170,255,0.16)",
     aura: "radial-gradient(circle at 76% 22%, rgba(100,170,255,0.14), transparent 34%), radial-gradient(circle at 14% 82%, rgba(242,185,104,0.08), transparent 34%)",
-    reward: "Sua camada interna começou a ganhar nome e contorno.",
+    reward: "Seu mundo interno começou a ganhar nome e contorno.",
   },
   "Seus Padrões": {
     symbol: "VI",
@@ -209,33 +209,33 @@ const defaultBlockTheme = {
   accent: "var(--gold-primary)",
   glow: "rgba(242,185,104,0.18)",
   aura: "radial-gradient(circle at 76% 22%, rgba(242,185,104,0.14), transparent 34%), radial-gradient(circle at 14% 82%, rgba(183,140,255,0.08), transparent 34%)",
-  reward: "O espelho registrou mais um fragmento da sua leitura.",
+  reward: "O ORI registrou mais uma resposta importante da sua leitura.",
 };
 
 const blockRevealTexts = {
   "Sua Presença": {
-    title: "Primeiro reflexo revelado",
+    title: "Primeiro sinal organizado",
     text: "Sua leitura começou a perceber como sua energia chega no mundo antes mesmo das palavras. O espelho já captou um primeiro traço da sua presença.",
   },
   "Seu Estilo": {
-    title: "Segundo reflexo revelado",
+    title: "Segundo sinal organizado",
     text: "Um padrão estético começou a aparecer. Ainda não é a imagem final, mas já existe uma direção entre desejo, proteção e forma.",
   },
   "Seu Corpo": {
-    title: "Terceiro reflexo revelado",
+    title: "Terceiro sinal organizado",
     text: "O corpo começou a entrar na leitura. Movimento, postura, toque e sensação ajudam o ORI a entender como sua presença se materializa.",
   },
   "Seus Relacionamentos": {
-    title: "Quarto reflexo revelado",
+    title: "Quarto sinal organizado",
     text: "Agora o espelho percebe como você se aproxima, se protege, deseja, cuida ou preserva distância nos vínculos.",
   },
   "Seu Mundo Interno": {
-    title: "Quinto reflexo revelado",
-    text: "A camada interna começou a ganhar contorno. Suas escolhas, medos, desejos e formas de controle já estão desenhando uma estrutura simbólica.",
+    title: "Quinto sinal organizado",
+    text: "Seu mundo interno começou a ganhar contorno. Suas escolhas, medos, desejos e formas de controle já estão desenhando uma estrutura simbólica.",
   },
   "Seus Padrões": {
-    title: "Último reflexo revelado",
-    text: "Sua composição está pronta para ser traduzida. O ORI agora vai cruzar seus sinais e revelar o Código das Deusas.",
+    title: "Último sinal organizado",
+    text: "Suas respostas já formam uma direção. O ORI agora cruza seus sinais para nomear seu Código das Deusas.",
   },
 };
 
@@ -402,9 +402,9 @@ function ReadingBootState({ reduceMotion }) {
 function LoadingDossie({ loadingRef, reduceMotion }) {
   const analysisSteps = [
     {
-      label: "Presença",
+      label: "Primeiros sinais",
       detail: "primeiros sinais",
-      title: "Tecendo sua essência...",
+      title: "Organizando seus primeiros sinais...",
       note: "O espelho observa os primeiros sinais da sua presença.",
     },
     {
@@ -420,10 +420,10 @@ function LoadingDossie({ loadingRef, reduceMotion }) {
       note: "O sistema reconhece padrões de proteção, força e repetição.",
     },
     {
-      label: "Essência",
+      label: "Mundo interno",
       detail: "núcleo interno",
       title: "Cruzando seu núcleo...",
-      note: "As camadas internas começam a ganhar estrutura simbólica.",
+      note: "As respostas começam a ganhar uma direção.",
     },
     {
       label: "Arquétipos",
@@ -922,15 +922,15 @@ function QuizIntro({
   const methodSteps = [
     {
       title: "Nomear",
-      text: "A leitura identifica a força principal, a força secundária e a composição que organiza sua presença.",
+      text: "A leitura identifica a força principal, a força secundária e a composição que organiza sua imagem por dentro.",
     },
     {
       title: "Reconhecer",
-      text: "O método observa desejo, proteção, sombra, vínculos e repetição para revelar o que sustenta sua imagem por dentro.",
+      text: "O método observa desejo, proteção, sombra, vínculos e repetição para entender o que sustenta sua imagem por dentro.",
     },
     {
       title: "Abrir caminho",
-      text: "O resultado cria a base para o Espelho ORI e para as próximas camadas: corpo, cor, cabelo, beleza e guarda-roupa real.",
+      text: "O resultado cria a base para o Espelho ORI e para os próximos passos: corpo, cor, cabelo, beleza e guarda-roupa real.",
     },
   ];
 
@@ -1026,11 +1026,11 @@ function QuizIntro({
               className="ori-type-system text-[8px]"
               style={{ color: "var(--gold-soft)" }}
             >
-              O que será revelado
+              O que você vai entender
             </p>
 
             <div className="grid grid-cols-3 gap-2">
-              {["Presença", "Essência", "Direção"].map((item) => (
+              {["Como você chega", "Sua base", "Direção inicial"].map((item) => (
                 <span
                   key={item}
                   className="rounded-full px-2 py-2 text-center text-[11px]"
@@ -1125,8 +1125,8 @@ function LayerReveal({
   reduceMotion,
 }) {
   const reveal = blockRevealTexts[bloco] || {
-    title: "Camada revelada",
-    text: "O espelho captou mais um fragmento da sua leitura. Continue para tornar sua composição mais nítida.",
+    title: "Sinal organizado",
+    text: "O ORI registrou mais uma resposta importante da sua leitura. Continue para tornar sua composição mais nítida.",
   };
   const theme = blockThemes[bloco] || defaultBlockTheme;
 
@@ -1452,7 +1452,7 @@ function QuizQuestionView({
                 boxShadow: captured ? `0 0 12px ${theme.glow}` : "none",
               }}
             >
-              {captured ? "Sinal capturado" : `${blockProgress}% da camada`}
+              {captured ? "Sinal capturado" : `${blockProgress}% desta etapa`}
             </div>
           </div>
         </div>
@@ -1773,7 +1773,7 @@ const readingLayerCopy = {
   },
   "02": {
     lead: "Núcleo simbólico",
-    labels: ["Forças em encontro", "O que sustenta sua composição", "Direção da essência"],
+    labels: ["Forças em encontro", "O que sustenta sua composição", "Direção da sua base"],
   },
   "03": {
     lead: "Movimento interno",
@@ -1784,7 +1784,7 @@ const readingLayerCopy = {
     labels: ["A pergunta interna", "Corpo e imagem", "Primeiro exercício"],
   },
   "05": {
-    lead: "Efeito da presença",
+    lead: "Como você chega",
     labels: ["Como o outro lê", "Sensação que você provoca", "Ruído possível"],
   },
   "06": {
@@ -1800,7 +1800,7 @@ const readingLayerCopy = {
     labels: ["O que precisa amadurecer", "Imagem sem compensação", "Próximo movimento"],
   },
   "09": {
-    lead: "O que sustenta sua presença",
+    lead: "O que sustenta sua imagem",
     labels: ["Forma, cor e gesto", "Bonito, mas desalinhado", "Direção inicial"],
   },
   "10": {
@@ -1817,11 +1817,11 @@ const readingLayerCopy = {
   },
   "13": {
     lead: "Expressão no rosto",
-    labels: ["Acabamento de beleza", "Cabelo e presença", "O que revela sem forçar"],
+    labels: ["Acabamento de beleza", "Cabelo e expressão", "O que aparece sem esforço"],
   },
   "14": {
     lead: "Como você ocupa o espaço",
-    labels: ["Gesto e postura", "Presença sem excesso", "Coerência no ambiente"],
+    labels: ["Gesto e postura", "Chegar sem excesso", "Coerência no ambiente"],
   },
   "15": {
     lead: "O que quebra a leitura",
@@ -1833,7 +1833,7 @@ const readingLayerCopy = {
   },
   "17": {
     lead: "Fechamento da leitura",
-    labels: ["O que fica", "Como seguir", "Próxima tradução"],
+    labels: ["O que fica", "Como seguir", "Próximo passo"],
   },
 };
 
@@ -2202,7 +2202,7 @@ function ReadingLayerPanel({ layer }) {
                 className="ori-type-system ori-label-sm"
                 style={{ color: "var(--gold-soft)" }}
               >
-                Leitura completa da camada
+                Leitura completa da seção
               </p>
               <span
                 className="text-[11px]"
@@ -2305,7 +2305,7 @@ function LayerTabNavigation({ tabs, activeNumber, onSelect }) {
               type="button"
               onClick={() => onSelect(item.number)}
               aria-current={isActive ? "step" : undefined}
-              aria-label={`Abrir camada ${item.number}: ${item.label}`}
+              aria-label={`Abrir seção ${item.number}: ${item.label}`}
               data-layer-tab={item.number}
               whileHover={{ y: -2 }}
               whileTap={{ scale: 0.98 }}
@@ -2820,7 +2820,7 @@ function QuizProduto1() {
 
   const handleCalculate = () => {
     if (!isComplete) {
-      alert("Responda todos os sinais antes de revelar o seu Código ORI.");
+      alert("Responda todos os sinais antes de ver o seu Código ORI.");
       return;
     }
 
@@ -3034,20 +3034,20 @@ function QuizProduto1() {
           theme: "gold",
           eyebrow: "Reconhecimento",
           label: "Reconhecimento",
-          title: "O que existe por \ntrás da sua presença",
+          title: "O que sua leitura \ncomeça a mostrar",
           description:
-            "Esta etapa revela os padrões sutis que moldam a forma como você ocupa o mundo e é percebida à sua volta.",
+            "Esta seção mostra os padrões que influenciam como você ocupa o mundo e é percebida.",
           content: report.reconhecimento,
           image: "/images/panels/reconhecimento.png",
         },
         {
           number: "02",
           theme: "purple",
-          eyebrow: "Essência",
-          label: "Essência",
-          title: "A natureza da sua\ncomposição simbólica",
+          eyebrow: "Base interna",
+          label: "Base interna",
+          title: "A base que organiza\nsua imagem",
           description:
-            "Aqui começa a leitura da estrutura arquetípica \nque sustenta sua presença, desejos e expressão.",
+            "Aqui começa a leitura da força interna \nque aparece nos seus desejos, escolhas e expressão.",
           content: report.essencia,
           image: "/images/panels/essencia.png",
         },
@@ -3058,7 +3058,7 @@ function QuizProduto1() {
           label: "Dinâmica psíquica",
           title: "Como sua energia \nfunciona internamente",
           description:
-            "Esta camada revela como sua psique reage, \nsente, protege e se movimenta diante do mundo.",
+            "Esta seção mostra como sua psique reage, \nsente, protege e se movimenta diante do mundo.",
           content: report.dinamica,
           image: "/images/panels/dinamica-psiquica.png",
         },
@@ -3115,9 +3115,9 @@ function QuizProduto1() {
           theme: "gold",
           eyebrow: "Individuação",
           label: "Individuação",
-          title: "Seu caminho de \nevolução simbólica",
+          title: "Seu caminho de \namadurecimento",
           description:
-            "Aqui começa o movimento onde sua \nimagem deixa de compensar e começa a revelar.",
+            "Aqui começa o movimento onde sua \nimagem deixa de compensar e fica mais coerente.",
           content: report.caminho,
           image: "/images/panels/individuacao.png",
         },
@@ -3128,11 +3128,11 @@ function QuizProduto1() {
         {
           number: "08",
           theme: "purple",
-          eyebrow: "Essência de Imagem",
-          label: "Essência de imagem",
+          eyebrow: "Direção de imagem",
+          label: "Direção de imagem",
           title: "Como sua estética \nfunciona melhor",
           description:
-            "Sua estética ideal nasce quando sua \nimagem traduz sua energia sem esforço.",
+            "Sua estética ideal nasce quando sua \nimagem expressa sua energia com mais naturalidade.",
           content: report.essenciaImagem,
           image: "/images/panels/essencia-imagem.png",
         },
@@ -3141,7 +3141,7 @@ function QuizProduto1() {
           theme: "silver",
           eyebrow: "Paleta",
           label: "Paleta",
-          title: "Cores que \namplificam sua presença",
+          title: "Cores que \nfortalecem sua imagem",
           description:
             "As cores certas reforçam sua atmosfera \nnatural e aumentam sua coerência visual.",
           content: report.paleta,
@@ -3176,18 +3176,18 @@ function QuizProduto1() {
           label: "Beleza",
           title: "Expressão visual \ne acabamento",
           description:
-            "Sua beleza funciona melhor quando \namplifica sua essência ao invés de escondê-la.",
+            "Sua beleza funciona melhor quando \nreforça o que você quer comunicar.",
           content: report.beleza,
           image: "/images/panels/beleza.png",
         },
         {
           number: "13",
           theme: "gold",
-          eyebrow: "Presença",
-          label: "Presença",
+          eyebrow: "Como você chega",
+          label: "Como você chega",
           title: "A forma como sua \nenergia ocupa o espaço",
           description:
-            "Presença não é excesso. É coerência \nentre corpo, imagem e energia.",
+            "Sua imagem ganha força quando corpo, \nescolha e energia apontam para a mesma direção.",
           content: report.presenca,
           image: "/images/panels/presenca.png",
         },
@@ -3202,7 +3202,7 @@ function QuizProduto1() {
           label: "Evitar",
           title: "O que pode \nenfraquecer sua imagem",
           description:
-            "Alguns elementos estéticos rompem sua coerência simbólica e enfraquecem sua presença.",
+            "Alguns elementos estéticos rompem sua coerência visual e deixam sua imagem menos clara.",
           content: Array.isArray(report.evitar)
             ? report.evitar.join("\n")
             : report.evitar,
@@ -3213,9 +3213,9 @@ function QuizProduto1() {
           theme: "silver",
           eyebrow: "Fórmula",
           label: "Fórmula",
-          title: "A síntese simbólica \nda sua imagem",
+          title: "A síntese \nda sua imagem",
           description:
-            "Sua fórmula estética traduz visualmente \na essência da sua composição arquetípica.",
+            "Sua fórmula estética organiza visualmente \na força principal da sua leitura.",
           content: report.formula,
           image: "/images/panels/formula.png",
         },
@@ -3224,9 +3224,9 @@ function QuizProduto1() {
           theme: "red",
           eyebrow: "Leitura Final",
           label: "Leitura final",
-          title: "Sua imagem começa \na revelar sua essência",
+          title: "Sua imagem começa \na ficar mais clara",
           description:
-            "A etapa final revela o ponto onde presença, \nimagem e identidade começam a se alinhar.",
+            "A etapa final mostra onde imagem, \nidentidade e escolhas começam a se alinhar.",
           content: report.leituraFinal,
           image: "/images/panels/leitura-final.png",
         },
@@ -3249,8 +3249,8 @@ function QuizProduto1() {
     {
       id: "estrutura",
       number: "01",
-      title: "Estrutura Interna",
-      text: "Reconhecimento, essência, dinâmica e percepção.",
+      title: "Base da leitura",
+      text: "Reconhecimento, base interna, dinâmica e percepção.",
     },
     {
       id: "sombra",
@@ -3261,8 +3261,8 @@ function QuizProduto1() {
     {
       id: "imagem",
       number: "03",
-      title: "Imagem e Presença",
-      text: "Essência visual, manual estético e presença.",
+      title: "Imagem na prática",
+      text: "Direção visual, beleza, cores, corpo e presença.",
     },
     {
       id: "sintese",
@@ -3314,24 +3314,24 @@ function QuizProduto1() {
       ? activeResultLayerState.tabs[activeResultLayerIndex - 1]
       : null;
   const previousFlowLabel = previousResultLayer
-    ? "Camada anterior"
+    ? "Etapa anterior"
     : previousResultCore
       ? "Núcleo anterior"
       : null;
   const isLastResultLayerOfLastCore =
     activeResultCore === "sintese" && !hasNextResultLayer;
   const resultFlowLabel = hasNextResultLayer
-    ? "Próxima camada"
+    ? "Próxima etapa"
     : nextResultCore
       ? "Avançar para o próximo núcleo"
       : "Concluir minha leitura";
   const resultFlowText = hasNextResultLayer
-    ? "Continue pelas camadas deste núcleo antes de avançar para a próxima etapa."
+    ? "Continue pelas etapas deste núcleo antes de avançar."
     : nextResultCore
       ? `Este núcleo foi atravessado. Agora você pode seguir para ${nextResultCore.title}.`
       : resultReadingCompleted
-        ? "Sua primeira leitura foi concluída. O próximo movimento é traduzir essa força no Dossiê ORI."
-        : "Você chegou à última camada da sua primeira leitura.";
+        ? "Sua primeira leitura foi concluída. O Dossiê ORI é a próxima etapa para ver como essa força aparece no corpo, nas cores, no cabelo, na beleza e na presença."
+        : "Você chegou à última etapa da sua primeira leitura.";
 
   const scrollToReadingNavigation = () => {
     window.setTimeout(() => {
@@ -3493,7 +3493,13 @@ function QuizProduto1() {
   if (!isReadingRoute) {
     return (
       <div className="max-w-6xl mx-auto">
-        <QuizHero onPrimaryAction={() => navigate("/produto-1/leitura")} />
+        <QuizHero
+          onPrimaryAction={
+            hasLoadedStorage && !result
+              ? () => navigate("/produto-1/leitura")
+              : undefined
+          }
+        />
 
         {result && (
           <section
@@ -3509,7 +3515,7 @@ function QuizProduto1() {
                 "0 0 70px rgba(242,185,104,0.035), inset 0 0 44px rgba(255,255,255,0.010)",
             }}
           >
-            <Eyebrow line className="mb-4">Leitura já revelada</Eyebrow>
+            <Eyebrow line className="mb-4">Leitura já pronta</Eyebrow>
 
             <h2
               className="ori-type-revelation text-3xl md:text-5xl mb-4"
@@ -3526,7 +3532,7 @@ function QuizProduto1() {
               className="ori-mobile-preview-3 ori-type-reading-soft text-sm md:text-base max-w-3xl mb-5 md:mb-6"
               style={{ color: colors.soft }}
             >
-              Sua primeira camada já está salva no Portal ORI. Você pode acessar
+              Sua primeira leitura já está salva no Portal ORI. Você pode acessar
               o Espelho ORI para ver a jornada aberta ou refazer a leitura se
               quiser reiniciar seus sinais.
             </p>

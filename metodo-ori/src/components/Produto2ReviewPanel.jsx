@@ -207,7 +207,7 @@ function Produto2ReviewPanel({ clienteId }) {
     return (
       <section className="mb-8 px-1 py-8">
         <p className="ori-type-reading-soft text-sm" style={{ color: "var(--text-soft)" }}>
-          Carregando oficina do Dossiê ORI...
+          Carregando revisão do Dossiê ORI...
         </p>
       </section>
     );
@@ -250,7 +250,7 @@ function Produto2ReviewPanel({ clienteId }) {
         <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
             <h3 className="text-lg font-semibold" style={{ color: "rgba(255,245,235,0.9)" }}>1. Diagnósticos confirmados</h3>
-            <p className="mt-1 text-sm" style={{ color: "var(--text-soft)" }}>A IA deve interpretar estes dados, nunca inventá-los.</p>
+            <p className="mt-1 text-sm" style={{ color: "var(--text-soft)" }}>Use apenas diagnósticos confirmados. A IA não deve inventar dados.</p>
           </div>
           <button type="button" disabled={Boolean(action)} onClick={saveDiagnostics} className="ori-button-secondary rounded-full px-5 py-3 text-sm disabled:opacity-50">
             {action === "diagnostics" ? "Salvando..." : "Salvar diagnósticos"}

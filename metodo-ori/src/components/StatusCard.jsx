@@ -25,7 +25,7 @@ function StatusCard({ status, progresso, onIniciar }) {
             className="ori-type-system ori-label-lg mb-3 md:mb-5"
             style={{ color: "var(--gold-soft)" }}
           >
-            Ritual de Diagnóstico
+            Leitura em andamento
           </p>
 
           <h2
@@ -39,8 +39,8 @@ function StatusCard({ status, progresso, onIniciar }) {
             className="ori-mobile-preview-3 ori-type-reading-soft text-sm md:text-xl"
             style={{ color: "var(--text-soft)" }}
           >
-            Sua leitura arquetípica está sendo construída a partir da interseção
-            entre presença, imagem, padrões emocionais e identidade simbólica.
+            Suas respostas estão organizando uma primeira leitura sobre imagem,
+            desejos, padrões emocionais e formas de se proteger.
           </p>
         </div>
 

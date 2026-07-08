@@ -13,7 +13,7 @@ function Dashboard() {
   const hasResult = Boolean(result);
 
   const portalStatus = hasResult
-    ? "Leitura revelada"
+    ? "Primeira leitura pronta"
     : hasAnswers
       ? "Em andamento"
       : "Disponível";
@@ -100,9 +100,8 @@ function Dashboard() {
                 "--delay": "0.46s",
               }}
             >
-              Entre nos portais do Método ORI para revelar sua essência
-              arquetípica, traduzir sua presença em imagem e construir uma
-              estética profundamente coerente com quem você é.
+              Entre no Método ORI para entender sua base, transformar isso em
+              imagem e aplicar na vida real.
             </p>
 
             <Link
@@ -135,7 +134,7 @@ function Dashboard() {
               letterSpacing: "-0.04em",
             }}
           >
-            Sua jornada de imagem arquetípica
+            Sua jornada de imagem no ORI
           </h2>
         </div>
 
@@ -206,8 +205,8 @@ function Dashboard() {
                 className="ori-mobile-preview-3 ori-type-reading-soft text-sm mb-4 md:mb-5"
                 style={{ color: "var(--text-soft)" }}
               >
-                Revelação simbólica da sua essência arquetípica, padrões
-                emocionais, magnetismo, sombra e presença.
+                Uma leitura para entender a força que organiza sua imagem, seus
+                desejos, seus padrões e o modo como você se mostra.
               </p>
 
               {hasResult && (
@@ -289,8 +288,8 @@ function Dashboard() {
                 className="ori-mobile-preview-3 ori-type-reading-soft text-sm mb-4 md:mb-6"
                 style={{ color: "var(--text-soft)" }}
               >
-                Estrutura facial, imagem, estética, presença visual, cabelo,
-                corpo, assinatura e direção estética personalizada.
+                Corpo, rosto, cores, cabelo e beleza organizados em uma
+                direção visual clara.
               </p>
 
               <div
@@ -334,8 +333,8 @@ function Dashboard() {
                 className="ori-type-reading-soft text-sm mb-6"
                 style={{ color: "var(--text-soft)" }}
               >
-                Integração total entre identidade simbólica, presença estética,
-                posicionamento e expressão pessoal.
+                A aplicação final da sua leitura em roupas, combinações,
+                compras e escolhas reais.
               </p>
 
               <div

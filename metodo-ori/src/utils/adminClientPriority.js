@@ -76,7 +76,7 @@ export function getAdminClientNextBestAction({
       score: 88,
       label: "Resposta pós-leitura pendente",
       reason: "Leitura concluída. Resposta pós-leitura ainda não registrada.",
-      action: "Solicitar resposta pós-leitura antes de convidar para outra camada.",
+      action: "Solicitar resposta pós-leitura antes de convidar para a próxima etapa.",
       messageGoal: "Entender se a leitura foi clara, abstrata ou desalinhada.",
       state: "attention",
     };
@@ -87,7 +87,7 @@ export function getAdminClientNextBestAction({
       score: 100,
       label: "Revisar leitura",
       reason: "Cliente informou que não se reconheceu na leitura.",
-      action: "Revisar sinais antes de qualquer convite para próxima camada.",
+      action: "Revisar sinais antes de qualquer convite para o Dossiê.",
       messageGoal: "Pedir contexto, reduzir desalinhamento e evitar avanço prematuro.",
       state: "risk",
     };
@@ -114,7 +114,7 @@ export function getAdminClientNextBestAction({
       label: "Convidar para Dossiê",
       reason: "Resposta positiva registrada. Cliente apta para convite ao Dossiê.",
       action: "Enviar convite para o Dossiê ORI.",
-      messageGoal: "Explicar a próxima camada de forma objetiva e sem pressão.",
+      messageGoal: "Explicar o Dossiê como o próximo passo prático, sem pressão.",
       state: "positive",
     };
   }
@@ -243,7 +243,7 @@ export function getAdminClientMemory({
   ].filter(Boolean);
 
   return {
-    title: "Status da cliente",
+    title: "Resumo da cliente",
     summary: `${stateText} ${receptionText}`,
     signals: contextParts,
     nextContact:
@@ -271,8 +271,8 @@ export function getAdminClientApproach({
     return {
       title: "Solicitar resposta pós-leitura",
       text:
-        `Oi, ${firstName}. Vi que sua leitura do Código das Deusas já abriu. ` +
-        "Antes de seguir para a próxima camada, queria saber como ela chegou para você: fez sentido, ficou abstrata ou não te encontrou? " +
+        `Oi, ${firstName}. Vi que sua primeira leitura do Código das Deusas já ficou pronta. ` +
+        "Antes de seguir para a próxima etapa, queria saber como ela chegou para você: fez sentido, ficou abstrata ou não te encontrou? " +
         "Seu retorno me ajuda a conduzir o próximo passo com mais precisão.",
     };
   }
@@ -282,7 +282,7 @@ export function getAdminClientApproach({
       title: "Solicitar conclusão da leitura",
       text:
         `Oi, ${firstName}. Vi que você já começou sua leitura no ORI. ` +
-        "Quando puder, finalize as respostas para o sistema revelar sua composição arquetípica com mais precisão.",
+        "Quando puder, finalize as respostas para o ORI organizar sua primeira leitura com mais precisão.",
     };
   }
 
@@ -290,9 +290,9 @@ export function getAdminClientApproach({
     return {
       title: "Convite para o Dossiê",
       text:
-        `Oi, ${firstName}. Sua leitura já mostrou uma direção importante. ` +
-        "O próximo passo é traduzir essa força no corpo, cabelo, cor, beleza e presença. " +
-        "Se fizer sentido para você, posso te explicar como funciona o Dossiê ORI.",
+        `Oi, ${firstName}. Seu Código das Deusas já mostrou uma direção importante: a força que organiza sua imagem por dentro. ` +
+        "O Dossiê ORI é a próxima etapa para ver como isso aparece no corpo, nas cores, no cabelo, na beleza e na rotina real. " +
+        "Se fizer sentido para você, posso te explicar com calma como funciona.",
     };
   }
 

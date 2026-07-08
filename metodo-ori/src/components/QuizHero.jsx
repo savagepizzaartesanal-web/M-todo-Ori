@@ -140,7 +140,7 @@ function QuizHero({
         >
           Sua imagem não começa na aparência.
           <br />
-          Ela começa nos padrões que moldam sua presença.
+          Ela começa no que você deseja, protege, repete e mostra sem perceber.
         </p>
 
         <div
@@ -174,10 +174,9 @@ function QuizHero({
                 color: "var(--text-soft)",
               }}
             >
-              Nesta primeira etapa, o ORI identifica sua composição arquetípica
-              inicial: a força principal, a força secundária e o arquétipo
-              composto que organiza sua forma de desejar, se proteger, se
-              posicionar e ser percebida.
+              O ORI começa identificando a força principal e a força de apoio
+              que aparecem nas suas escolhas, nos seus desejos e nos seus modos
+              de proteção.
             </p>
 
             <p
@@ -186,10 +185,9 @@ function QuizHero({
                 color: "rgba(255,245,235,0.68)",
               }}
             >
-              Não é uma dica de estilo pronta. É a etapa que nomeia a estrutura
-              simbólica por trás da sua imagem, para que as próximas camadas
-              possam traduzir essa força em corpo, cor, cabelo, beleza e
-              presença visual.
+              Não é uma dica de estilo pronta. Essa primeira leitura cria a base
+              para os próximos passos: entender seu corpo, suas cores, seu
+              cabelo, sua beleza e sua imagem na vida real.
             </p>
           </div>
 
@@ -205,7 +203,7 @@ function QuizHero({
         <div className="hidden flex-wrap gap-2.5 mb-5 sm:flex">
           {[
             "Nomeação",
-            "Composição arquetípica",
+            "Forças principais",
             "Sombra",
             "Primeiros códigos",
           ].map((item) => (

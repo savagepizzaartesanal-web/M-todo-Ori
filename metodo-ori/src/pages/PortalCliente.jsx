@@ -219,7 +219,7 @@ function PortalCliente() {
   const hasDailyOracleCard = Boolean(dailyOracleCard?.hasCard);
 
   const statusProduto1 = hasResult
-    ? "Leitura revelada"
+    ? "Primeira leitura pronta"
     : hasAnswers
       ? "Em andamento"
       : produto1Liberado
@@ -227,7 +227,7 @@ function PortalCliente() {
         : "Aguardando liberação";
 
   const buttonProduto1 = hasResult
-    ? "Acessar leitura revelada"
+    ? "Ver minha primeira leitura"
     : hasAnswers
       ? "Continuar leitura"
       : "Iniciar Código das Deusas";
@@ -269,7 +269,7 @@ function PortalCliente() {
           className="ori-type-reading-soft mt-4 max-w-md text-sm"
           style={{ color: "rgba(255,245,235,0.58)" }}
         >
-          Estamos buscando sua leitura e suas próximas camadas.
+          Estamos buscando sua leitura e os próximos passos da sua jornada.
         </p>
       </div>
     );
@@ -281,8 +281,8 @@ function PortalCliente() {
       title: "Código das Deusas",
       description:
         hasResult
-          ? "Sua força principal, força secundária e arquétipo composto já foram nomeados. Esta é a base que sustenta as próximas camadas da sua imagem."
-          : "A primeira porta nomeia sua força arquetípica, revela sua dinâmica de presença e abre os primeiros códigos simbólicos da sua imagem.",
+          ? "Seu Código das Deusas revelou a força que organiza sua imagem por dentro. Essa é a base do que vem agora."
+          : "A primeira etapa ajuda você a entender a força que organiza sua imagem por dentro.",
       status: statusProduto1,
       released: produto1Liberado,
       active: hasResult,
@@ -323,8 +323,8 @@ function PortalCliente() {
       number: "02",
       title: "Dossiê ORI",
       description:
-        "Integra sua base arquetípica com corpo, rosto, cor, cabelo, beleza, ancestralidade estética, rotina e presença visual.",
-      status: produto2Liberado ? "Liberado" : "Próxima camada",
+        "Mostra como sua leitura aparece na prática: no corpo, no rosto, nas cores, no cabelo, na beleza e na presença.",
+      status: produto2Liberado ? "Liberado" : "Próxima etapa",
       released: produto2Liberado,
       active: produto2Liberado,
       tone: "lavender",
@@ -337,7 +337,7 @@ function PortalCliente() {
           aria-label={
             produto2Liberado
               ? "Acessar Dossiê ORI"
-              : "Dossiê ORI ainda selado"
+              : "Dossiê ORI ainda não liberado"
           }
           className="inline-flex justify-center px-5 py-3 rounded-full text-sm font-medium w-full md:w-fit transition-all disabled:opacity-60 disabled:cursor-not-allowed"
           style={{
@@ -350,7 +350,7 @@ function PortalCliente() {
             color: produto2Liberado ? "#d9bdff" : "var(--text-muted)",
           }}
         >
-          {produto2Liberado ? "Acessar Dossiê" : "Ainda selada"}
+          {produto2Liberado ? "Acessar Dossiê" : "Ainda não liberado"}
         </button>
       ),
     },
@@ -372,7 +372,7 @@ function PortalCliente() {
           aria-label={
             produto3Liberado
               ? "Acessar Código Final"
-              : "Código Final ainda selado"
+              : "Código Final ainda não liberado"
           }
           className="inline-flex justify-center px-5 py-3 rounded-full text-sm font-medium w-full md:w-fit transition-all disabled:opacity-60 disabled:cursor-not-allowed"
           style={{
@@ -387,7 +387,7 @@ function PortalCliente() {
               : "var(--text-muted)",
           }}
         >
-          {produto3Liberado ? "Acessar Código Final" : "Ainda selada"}
+          {produto3Liberado ? "Acessar Código Final" : "Ainda não liberado"}
         </button>
       ),
     },
@@ -439,8 +439,8 @@ function PortalCliente() {
   const quickEntry = hasResult
     ? {
         eyebrow: "Seu espelho inicial já abriu",
-        title: "Continue pela camada que pede direção agora.",
-        text: `${resultadoFinal} já foi nomeada. O próximo passo é observar onde essa força precisa virar imagem, escolha e presença no cotidiano.`,
+        title: "Continue pelo passo que ajuda sua imagem a ganhar direção agora.",
+        text: `${resultadoFinal} já foi nomeada. Agora o próximo passo é entender como essa força aparece nas suas escolhas, na sua imagem e na sua rotina.`,
         primaryLabel: "Abrir Espelho ORI",
         primaryTo: "/espelho-ori",
         secondaryLabel: "Ver Método ORI",
@@ -448,8 +448,8 @@ function PortalCliente() {
       }
     : {
         eyebrow: "Primeiro gesto",
-        title: "Revele a força que sua imagem tenta sustentar.",
-        text: "Antes de pensar em roupa, cor ou cabelo, o ORI começa nomeando a sua base simbólica. Essa leitura abre o mapa das próximas camadas.",
+        title: "Comece entendendo a força que organiza sua imagem.",
+        text: "Antes de pensar em roupa, cor ou cabelo, o ORI começa nomeando a sua base simbólica. Essa leitura prepara os próximos passos: Dossiê, Espelho e aplicação na vida real.",
         primaryLabel: "Começar leitura",
         primaryTo: "/produto-1",
         secondaryLabel: "Conhecer método",
@@ -513,7 +513,7 @@ function PortalCliente() {
         eyebrow: "Próximo movimento",
         title: "Conte como a leitura chegou em você.",
         text: "Antes de seguir, o ORI precisa saber se essa leitura te encontrou, ficou abstrata ou pareceu distante.",
-        action: "Deixar retorno",
+        action: "Deixe sua opinião",
         to: "/produto-1/leitura",
         state: "attention",
       };

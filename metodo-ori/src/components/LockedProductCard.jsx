@@ -22,7 +22,7 @@ function LockedProductCard({
         className="ori-type-system text-[9px] md:text-xs mb-3 md:mb-5"
         style={{ color: "var(--gold-soft)" }}
       >
-        Acesso ainda selado
+        Acesso ainda não liberado
       </p>
 
       <h1

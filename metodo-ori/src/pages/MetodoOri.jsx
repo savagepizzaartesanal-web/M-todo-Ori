@@ -9,10 +9,10 @@ const productPhases = [
     number: "01",
     title: "Código das Deusas",
     subtitle: "Leitura Arquetípica da Imagem",
-    keyPhrase: "Descubra quem é a mulher por trás da imagem.",
-    pain: "Essa etapa começa quando você sente que nenhum estilo pronto traduz sua profundidade. Você testa referências, muda de estética, tenta se reconhecer, mas algo ainda parece personagem.",
+    keyPhrase: "Entenda a força que organiza sua imagem por dentro.",
+    pain: "Essa etapa começa quando nenhum estilo pronto parece dar conta de você. Você testa referências, muda detalhes, tenta se reconhecer, mas algo ainda parece personagem.",
     whatIs:
-      "Aqui o método revela sua estrutura psíquica, sua dinâmica feminina e a energia central que organiza sua presença. Antes da roupa, existe uma forma de desejar, se proteger, seduzir e ocupar espaço.",
+      "Aqui o ORI identifica sua base simbólica: como você deseja, se protege, se expressa e ocupa espaço. Antes da roupa, existe uma força organizando sua imagem.",
     value:
       "Você deixa de tentar se encaixar em estilos prontos e começa a reconhecer a força que organiza sua imagem por dentro.",
     cta: "Iniciar Código das Deusas",
@@ -28,15 +28,15 @@ const productPhases = [
   {
     number: "02",
     title: "Dossiê ORI",
-    subtitle: "Guia da Imagem e Essência",
+    subtitle: "Guia de Imagem Integrada",
     keyPhrase:
-      "Transforme identidade em coerência visual real.",
+      "Veja como sua leitura aparece no corpo, nas cores, no cabelo e na beleza.",
     pain: "Essa etapa abre quando você até entende partes de si, mas elas não conversam. Corpo, cor, cabelo, presença e estética parecem fragmentos soltos, e a imagem ainda não parece inteira.",
     whatIs:
       "Aqui o Método ORI cruza psique, corpo, cor, cabelo, ancestralidade, presença e rotina para transformar informação solta em coerência visual.",
     value:
       "Sua imagem deixa de parecer fragmentada e começa a ganhar forma visível, coerente e inteira.",
-    cta: FEATURES.produto2 ? "Conhecer próxima camada" : "Próxima camada em preparação",
+    cta: FEATURES.produto2 ? "Conhecer o Dossiê ORI" : "Dossiê ORI em preparação",
     href: FEATURES.produto2 ? "/produto-2" : "/portal",
     delivers: [
       "Base identitária integrada",
@@ -51,7 +51,7 @@ const productPhases = [
     title: "Código Final",
     subtitle: "Imagem e Essência Aplicadas",
     keyPhrase:
-      "Sustente sua identidade no cotidiano.",
+      "Leve sua imagem para escolhas reais no dia a dia.",
     pain: "Essa etapa chega quando você já tem clareza, mas o armário real ainda não acompanha. Você compra, improvisa, mistura versões antigas e continua sentindo desgaste para se vestir.",
     whatIs:
       "Aqui a identidade revelada vira sistema de vida visual: cápsula, compras, repetição estética, combinações, lacunas e assinatura pessoal.",
@@ -87,9 +87,9 @@ const layers = [
   {
     id: "camadas",
     number: "03",
-    title: "As Camadas",
-    eyebrow: "Revelar · Traduzir · Aplicar",
-    summary: "A jornada respeita uma ordem simbólica e prática.",
+    title: "Como a jornada acontece",
+    eyebrow: "Entender · Dar forma · Aplicar",
+    summary: "A jornada respeita uma ordem clara e prática.",
   },
   {
     id: "produtos",
@@ -110,7 +110,7 @@ const layers = [
     number: "06",
     title: "Sua Jornada",
     eyebrow: "Posição no portal",
-    summary: "Cada etapa abre a próxima camada da leitura.",
+    summary: "Cada etapa prepara o próximo passo da sua imagem.",
   },
 ];
 
@@ -157,7 +157,7 @@ function ProgressRail({ activeLayer, onSelect }) {
                 type="button"
                 onClick={() => onSelect(index)}
                 aria-current={active ? "step" : undefined}
-                aria-label={`Abrir camada ${layer.number}: ${layer.title}`}
+                aria-label={`Abrir etapa ${layer.number}: ${layer.title}`}
                 className="ori-tab flex h-[38px] w-[118px] shrink-0 items-center rounded-[14px] px-2 py-1.5 text-left transition-all hover:-translate-y-0.5 md:h-[46px] md:w-[196px] md:px-3.5 md:py-2"
                 style={{
                   background: active
@@ -337,8 +337,8 @@ function ProductPhaseCard({ phase }) {
       </p>
 
       <div className="grid md:grid-cols-2 gap-3 mb-4">
-        <InfoPane title="Quando essa camada abre" text={phase.pain} />
-        <InfoPane title="O que começa a ficar claro" text={phase.whatIs} />
+        <InfoPane title="Quando essa etapa faz sentido" text={phase.pain} />
+        <InfoPane title="O que você entende aqui" text={phase.whatIs} />
       </div>
 
       <div
@@ -501,9 +501,9 @@ function MetodoOriLayer({ activeLayer, activeProduct, setActiveProduct }) {
             className="ori-type-reading text-sm md:text-base max-w-3xl"
             style={{ color: "var(--gold-primary)" }}
           >
-            O ORI começa exatamente nesse ponto: quando a imagem já não pode ser
-            resolvida só com mais uma compra, mais uma tendência ou mais uma
-            tentativa.
+            O ORI começa quando mais uma compra já não resolve. A partir daí, a
+            pergunta deixa de ser "o que eu compro?" e passa a ser "o que
+            precisa fazer sentido em mim?"
           </p>
         </div>
       </SectionShell>
@@ -527,17 +527,16 @@ function MetodoOriLayer({ activeLayer, activeProduct, setActiveProduct }) {
           className="ori-type-reading text-lg md:text-xl max-w-3xl mb-6"
           style={{ color: "var(--text-primary)" }}
         >
-          Mais do que estética. Um sistema de leitura identitária da imagem.
+          Mais do que estética: um jeito de entender sua imagem por dentro.
         </p>
 
         <p
           className="ori-type-reading-soft text-sm md:text-base max-w-3xl mb-6"
           style={{ color: "rgba(255,245,235,0.68)" }}
         >
-          O Método ORI é um sistema autoral que não trabalha a imagem como
-          superfície isolada. Ele trata a imagem como expressão da essência.
-          Cada etapa revela uma camada diferente da sua identidade, e cada uma
-          prepara o terreno da próxima.
+          O Método ORI não olha para a imagem como superfície. Ele cruza
+          símbolo, corpo, cor, cabelo, beleza e rotina para construir uma
+          direção visual que faça sentido para você.
         </p>
 
         <div className="flex flex-wrap gap-3 mb-7">
@@ -569,8 +568,8 @@ function MetodoOriLayer({ activeLayer, activeProduct, setActiveProduct }) {
             className="ori-type-reading text-base md:text-lg"
             style={{ color: "var(--gold-primary)" }}
           >
-            No ORI, imagem não é improviso. É tradução coerente daquilo que você
-            é.
+            No ORI, imagem não é improviso. É escolha visual com raiz, direção e
+            prática.
           </p>
         </div>
       </SectionShell>
@@ -581,17 +580,17 @@ function MetodoOriLayer({ activeLayer, activeProduct, setActiveProduct }) {
     const steps = [
       {
         number: "01",
-        title: "Revelar",
-        text: "Primeiro o método nomeia a força simbólica que sustenta a presença.",
+        title: "Entender a base",
+        text: "Primeiro o método nomeia a força que organiza sua imagem por dentro.",
       },
       {
         number: "02",
-        title: "Traduzir",
+        title: "Dar forma",
         text: "Depois essa força ganha corpo, cor, cabelo, beleza e direção estética.",
       },
       {
         number: "03",
-        title: "Aplicar",
+        title: "Aplicar na vida real",
         text: "Por fim, a leitura entra no guarda-roupa real e sustenta escolhas concretas.",
       },
     ];
@@ -602,7 +601,8 @@ function MetodoOriLayer({ activeLayer, activeProduct, setActiveProduct }) {
           className="ori-type-reading text-lg md:text-xl max-w-3xl mb-7"
           style={{ color: "var(--text-primary)" }}
         >
-          A sua imagem não se resolve de uma vez. Ela se revela em camadas.
+          Sua imagem não se organiza de uma vez. Primeiro você entende a base,
+          depois dá forma, depois aplica.
         </p>
 
         <div className="grid md:grid-cols-3 gap-3">
@@ -813,16 +813,15 @@ function MetodoOriLayer({ activeLayer, activeProduct, setActiveProduct }) {
               className="ori-type-revelation text-xl md:text-2xl mb-3"
               style={{ color: "var(--gold-primary)", fontWeight: 650 }}
             >
-              Porque a sua dor também aparece em camadas.
+              Porque a dificuldade não está só na roupa.
             </h3>
             <p
               className="ori-type-reading-soft text-sm md:text-base"
               style={{ color: "rgba(255,245,235,0.68)" }}
             >
-              Você não sofre apenas porque não sabe se vestir. Antes disso, pode
-              não conseguir nomear a própria força, traduzir essa força em
-              imagem ou aplicar essa imagem ao cotidiano. O Método ORI respeita
-              essa ordem: primeiro revela, depois traduz, por fim aplica.
+              Às vezes o problema não é falta de peça. É falta de direção.
+              Antes de montar looks, você precisa entender sua força, ver como
+              ela aparece na imagem e aprender a repetir isso na rotina.
             </p>
           </div>
 
@@ -868,8 +867,9 @@ function MetodoOriLayer({ activeLayer, activeProduct, setActiveProduct }) {
         className="ori-type-reading text-lg md:text-xl max-w-3xl mb-6"
         style={{ color: "var(--text-primary)" }}
       >
-        Cada etapa abre a próxima. Seu portal mostra não apenas onde você está,
-        mas o que sua próxima camada está pronta para revelar.
+        Cada etapa prepara a próxima. Seu portal mostra onde você está agora e
+        qual passo ajuda sua imagem a ficar mais clara, mais inteira e mais
+        prática.
       </p>
 
       <div
@@ -882,8 +882,8 @@ function MetodoOriLayer({ activeLayer, activeProduct, setActiveProduct }) {
         <div className="grid gap-2 md:grid-cols-3">
           {[
             ["Código das Deusas", "Concluído", "Primeira leitura"],
-            ["Dossiê ORI", "Próxima camada", "Imagem e essência"],
-            ["Código Final", "Ainda selado", "Guarda-roupa real"],
+            ["Dossiê ORI", "Próxima etapa", "Imagem e essência"],
+            ["Código Final", "Ainda não iniciado", "Guarda-roupa real"],
           ].map(([product, status, title], index) => {
             const active = index === 0;
 
@@ -959,16 +959,16 @@ function MetodoOriLayer({ activeLayer, activeProduct, setActiveProduct }) {
             letterSpacing: "-0.050em",
           }}
         >
-          Sua imagem não começa no armário. Começa na leitura.
+          Sua imagem não começa no armário. Começa no que precisa ficar claro em
+          você.
         </h3>
         <p
           className="text-sm md:text-base leading-relaxed max-w-3xl"
           style={{ color: "rgba(255,245,235,0.70)" }}
         >
-          Antes da roupa, existe presença. Antes da presença, existe uma
-          estrutura. Antes da cápsula, existe uma força que precisa ser
-          reconhecida. O Método ORI foi criado para conduzir essa travessia com
-          profundidade, clareza e coerência.
+          Antes da roupa, existe direção. Antes da cápsula, existe uma força que
+          precisa ser reconhecida. O Método ORI organiza esse caminho com
+          profundidade, clareza e aplicação real.
         </p>
       </div>
 
@@ -1012,13 +1012,13 @@ function MetodoOri() {
   const hasNextProductStep =
     isProductLayer && activeProduct < productPhases.length - 1;
   const footerText = hasNextProductStep
-    ? "Continue pelas etapas antes de avançar para a próxima camada da página."
+    ? "Continue pelas etapas antes de avançar para a próxima etapa da página."
     : activeLayer < layers.length - 1
-      ? "Avance quando esta camada fizer sentido."
+      ? "Avance quando esta etapa fizer sentido."
       : "A travessia conceitual está completa.";
   const nextButtonLabel = hasNextProductStep
     ? "Próxima etapa"
-    : "Próxima camada";
+    : "Próxima etapa";
   const scrollToReading = () => {
     window.setTimeout(() => {
       readingRef.current?.scrollIntoView({
@@ -1111,18 +1111,18 @@ function MetodoOri() {
             className="ori-type-reading text-[15px] md:text-xl max-w-3xl mb-4 md:mb-5"
             style={{ color: "var(--text-primary)" }}
           >
-            Uma jornada em camadas para revelar a força que sustenta sua imagem,
-            traduzir essa força em linguagem visual e aplicar tudo à sua vida
-            real.
+            Uma jornada para entender a força que organiza sua imagem, dar forma
+            a essa força no visual e levar tudo para a vida real.
           </p>
 
           <p
             className="ori-type-reading-soft hidden text-sm md:mb-6 md:block md:text-base max-w-2xl"
             style={{ color: "rgba(255,245,235,0.68)" }}
           >
-            O Método ORI não começa pela roupa. Primeiro, a força é nomeada.
-            Depois, ela ganha corpo, cor, cabelo, beleza e direção estética. Por
-            fim, essa identidade entra no guarda-roupa real.
+            O ORI não começa pela roupa. Primeiro, você entende o que sustenta
+            sua imagem por dentro. Depois, isso aparece no corpo, nas cores, no
+            cabelo e na beleza. Por fim, vira escolha real no armário e na
+            rotina.
           </p>
 
           <div className="flex flex-col gap-2.5 sm:flex-row sm:gap-3">
@@ -1139,7 +1139,7 @@ function MetodoOri() {
                   "0 0 38px rgba(210,135,70,0.16), inset 0 0 16px rgba(255,255,255,0.16)",
               }}
             >
-              Entender as camadas
+              Entender a jornada
             </button>
 
             <Link
@@ -1216,7 +1216,7 @@ function MetodoOri() {
               <button
                 type="button"
                 onClick={goBack}
-                aria-label="Voltar para a camada anterior"
+                aria-label="Voltar para a etapa anterior"
                 className="px-4 py-2.5 rounded-full text-xs md:text-sm"
                   style={{
                     background: "rgba(255,255,255,0.026)",
@@ -1224,7 +1224,7 @@ function MetodoOri() {
                     color: "rgba(255,245,235,0.68)",
                   }}
                 >
-                  Camada anterior
+                  Etapa anterior
                 </button>
               )}
 

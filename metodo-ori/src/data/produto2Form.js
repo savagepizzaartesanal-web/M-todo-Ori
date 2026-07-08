@@ -148,31 +148,6 @@ const visualReferencesByPath = {
 
 const optionReferenceCountsByPath = {
   "estrutura_corporal.linha_vertical": 5,
-  "estrutura_corporal.ombros": 5,
-  "estrutura_corporal.bracos_pernas": 5,
-  "estrutura_corporal.maos_pes": 5,
-  "estrutura_corporal.forma_geral": 5,
-  "estrutura_corporal.busto_tronco": 5,
-  "estrutura_corporal.cintura": 5,
-  "estrutura_corporal.quadris": 5,
-  "estrutura_corporal.mandibula": 5,
-  "estrutura_corporal.nariz": 5,
-  "estrutura_corporal.macas_rosto": 5,
-  "estrutura_corporal.olhos": 5,
-  "estrutura_corporal.labios": 5,
-  "estrutura_corporal.ancestralidade_fisica": 4,
-  "coloracao.reacao_sol": 3,
-  "coloracao.metais": 3,
-  "coloracao.profundidade": 3,
-  "coloracao.intensidade": 3,
-  "coloracao.contraste_preto_branco": 3,
-  "coloracao.azul_laranja": 3,
-  "coloracao.batons": 3,
-  "coloracao.nude": 3,
-  "coloracao.cores_vibrantes": 3,
-  "coloracao.laranja_vibrante": 3,
-  "coloracao.brilho_texturas": 3,
-  "patton.reflexo_sol": 6,
 };
 
 const addVisualReferences = (steps) =>
@@ -200,10 +175,10 @@ const addVisualReferences = (steps) =>
 const produto2RawSteps = [
   {
     id: "base",
-    eyebrow: "Início da leitura",
-    title: "Vamos começar pela sua imagem real",
+    eyebrow: "Primeiros registros",
+    title: "Vamos olhar para sua imagem real",
     description:
-      "Nesta etapa, reunimos os sinais visíveis da sua presença para aprofundar a leitura com mais precisão.",
+      "Aqui reunimos fotos e informações simples para entender como sua imagem aparece no corpo, no rosto, nas cores e na rotina.",
     fields: [
       field("uploads.fotos_validacao", "Registro da sua imagem", "fileUpload", [], {
         helper:
@@ -226,9 +201,9 @@ const produto2RawSteps = [
   },
   {
     id: "corpo",
-    eyebrow: "Estrutura",
+    eyebrow: "Corpo e rosto",
     title: "Corpo e linhas",
-    description: "Perguntas 1 a 15 do Forms para leitura de linhas, ossatura, rosto e ancestralidade física.",
+    description: "Estas respostas ajudam a observar proporção, linhas, ossatura, rosto e ancestralidade física.",
     fields: [
       radio("estrutura_corporal.linha_vertical", "1. Como é a sua linha vertical (a impressão de altura que você passa, não a sua altura real)?", [
         "A. Longa (as pessoas sempre acham que sou mais alta do que realmente sou).",
@@ -340,8 +315,8 @@ const produto2RawSteps = [
   {
     id: "cor",
     eyebrow: "Coloração",
-    title: "Cor e presença",
-    description: "Perguntas 16 a 30 do Forms para temperatura, profundidade, contraste, intensidade e Patton.",
+    title: "Cores e contraste",
+    description: "Estas respostas ajudam a entender temperatura, profundidade, contraste, intensidade e fundo de pele.",
     fields: [
       radio("coloracao.reacao_sol", "16. Temperatura: Como sua pele reage ao sol?", [
         "A. Queimo com facilidade e raramente fico bronzeada. (Frio).",
@@ -427,8 +402,8 @@ const produto2RawSteps = [
   {
     id: "cabelo",
     eyebrow: "Cabelo",
-    title: "Moldura e rotina",
-    description: "Perguntas 31 a 40 do Forms para curvatura, fio, rotina, volume e moldura visual.",
+    title: "Cabelo e rotina",
+    description: "Estas respostas ajudam a entender curvatura, fio, volume, cuidado possível e a moldura do seu rosto.",
     fields: [
       radio("cabelo.curvatura", "31. Curvatura", [
         "A. Liso (1 A/B/C)",
@@ -486,9 +461,9 @@ const produto2RawSteps = [
   },
   {
     id: "essencia",
-    eyebrow: "Síntese",
-    title: "Essência e desafio",
-    description: "O Produto 1 já conecta suas deusas; aqui você confirma percepção e desafio de estilo.",
+    eyebrow: "Síntese pessoal",
+    title: "Como você se percebe agora",
+    description: "Sua primeira leitura já trouxe uma direção. Aqui você conta o que faz sentido e qual desafio de imagem ainda precisa ser cuidado.",
     fields: [
       radio("essencia.identificacao_arquetipo_mesclado", "43. Identificação com o Arquétipo Mesclado", [
         "Sim, descreve exatamente como me sinto.",
@@ -510,7 +485,7 @@ export const produto2ConnectedFields = [
   { path: "dados_base.endereco", label: "Cidade/Estado", group: "review" },
   { path: "dados_base.idade", label: "Idade", group: "review" },
   { path: "dados_base.autoidentificacao_racial", label: "Autoidentificação racial", group: "review" },
-  { path: "jornada.resultado_produto_1", label: "Resultado do Produto 1", group: "auto" },
+  { path: "jornada.resultado_produto_1", label: "Resultado da primeira leitura", group: "auto" },
   { path: "essencia.deusa_principal", label: "Deusa principal", group: "auto" },
   { path: "essencia.deusa_auxiliar", label: "Deusa auxiliar", group: "auto" },
   { path: "essencia.arquetipo_mesclado", label: "Arquétipo composto", group: "auto" },

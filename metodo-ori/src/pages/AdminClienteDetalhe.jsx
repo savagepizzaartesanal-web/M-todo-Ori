@@ -168,7 +168,7 @@ function AdminClienteDetalhe() {
           className="ori-type-system text-[10px] md:text-xs mb-5"
           style={{ color: "var(--gold-soft)" }}
         >
-          Ficha da Cliente
+          Ficha da cliente
         </p>
 
         <h1
@@ -223,21 +223,21 @@ function AdminClienteDetalhe() {
     {
       label: "Código das Deusas",
       description: cliente.resultado
-        ? `Resultado revelado: ${cliente.resultado}`
+        ? `Primeira leitura pronta: ${cliente.resultado}`
         : "Aguardando conclusão da primeira leitura.",
       done: Boolean(cliente.resultado),
     },
     {
       label: "Dossiê ORI",
       description: cliente.produto_2_liberado
-        ? "Produto 2 liberado para acesso."
+        ? "Dossiê ORI liberado para a cliente."
         : "Aguardando liberação do Produto 2.",
       done: Boolean(cliente.produto_2_liberado),
     },
     {
       label: "Código Final",
       description: cliente.produto_3_liberado
-        ? "Produto 3 liberado para acesso."
+        ? "Código Final liberado para a cliente."
         : "Código Final ainda pendente.",
       done: Boolean(cliente.produto_3_liberado),
     },
@@ -246,7 +246,7 @@ function AdminClienteDetalhe() {
       description:
         cliente.status_jornada === "Finalizado"
           ? "Cliente marcada como finalizada."
-          : "Aprovação final pendente.",
+          : "Fechamento ainda pendente.",
       done: cliente.status_jornada === "Finalizado",
     },
   ];
@@ -450,7 +450,7 @@ function AdminClienteDetalhe() {
               className="ori-type-system text-[10px] md:text-xs"
               style={{ color: "var(--gold-soft)" }}
             >
-              Ficha da Cliente
+              Ficha da cliente
             </p>
           </div>
 
@@ -601,7 +601,7 @@ function AdminClienteDetalhe() {
               className="ori-type-system text-[9px] mb-3"
               style={{ color: "var(--gold-soft)" }}
             >
-              Ação recomendada
+              Próximo passo recomendado
             </p>
 
             <h2
@@ -749,7 +749,7 @@ function AdminClienteDetalhe() {
             className="ori-type-revelation text-2xl md:text-3xl mb-4"
             style={{ color: "var(--gold-primary)", fontWeight: 620 }}
           >
-            Resposta registrada pela cliente
+            Retorno da cliente sobre a leitura
           </h2>
 
           <div className="grid gap-3 md:grid-cols-[0.7fr_1.3fr]">
@@ -791,7 +791,7 @@ function AdminClienteDetalhe() {
                 className="ori-type-reading-soft text-sm leading-relaxed"
                 style={{ color: "rgba(255,245,235,0.74)" }}
               >
-                {produto1Feedback.comment || "A cliente não deixou comentário aberto."}
+                {produto1Feedback.comment || "A cliente não escreveu comentário aberto."}
               </p>
             </div>
           </div>

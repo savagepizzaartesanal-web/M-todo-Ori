@@ -169,13 +169,13 @@ function buildOracleCards({ hasResult, resultadoFinal, principal, secundario }) 
       code: "I",
       title: "Carta da Essência",
       subtitle: "O que sustenta você",
-      revealLabel: "Essência revelada",
+      revealLabel: "Base interna",
       image: "/images/espelho-ori/oraculo/carta-essencia.png",
       messages: hasResult
         ? [
             `${resultName} não é apenas um nome. É uma estrutura pedindo presença, escolha e sustentação.`,
             `Hoje, o Espelho lembra: você não precisa suavizar sua força para que ela seja aceita.`,
-            `Sua essência fica mais clara quando você abandona a tentativa de agradar todos os olhares.`,
+            `Sua força fica mais clara quando você abandona a tentativa de agradar todos os olhares.`,
           ]
         : ["Sua essência ainda está aguardando nome. A primeira leitura abre essa porta."],
       observe:
@@ -204,11 +204,11 @@ function buildOracleCards({ hasResult, resultadoFinal, principal, secundario }) 
       code: "III",
       title: "Carta da Imagem",
       subtitle: "O que quer ganhar forma",
-      revealLabel: "Imagem revelada",
+      revealLabel: "Imagem do dia",
       image: "/images/espelho-ori/oraculo/carta-imagem.png",
       messages: hasResult
         ? [
-            `Sua imagem não precisa criar uma nova versão de você. Ela precisa traduzir a força ${resultName}.`,
+            `Sua imagem não precisa criar uma nova versão de você. Ela precisa mostrar essa força de um jeito possível hoje.`,
             "A imagem certa não inventa presença. Ela organiza o que já existe em você.",
             "O próximo passo não é parecer melhor. É parecer mais coerente.",
           ]
@@ -221,7 +221,7 @@ function buildOracleCards({ hasResult, resultadoFinal, principal, secundario }) 
       code: "IV",
       title: "Carta da Presença",
       subtitle: "O que chega antes da fala",
-      revealLabel: "Presença revelada",
+      revealLabel: "Como você chega",
       image: "/images/espelho-ori/oraculo/carta-presenca.png",
       messages: hasResult
         ? [
@@ -229,7 +229,7 @@ function buildOracleCards({ hasResult, resultadoFinal, principal, secundario }) 
             "Hoje, observe o que você comunica antes de se explicar.",
             `A ${resultName} se torna mais forte quando o corpo deixa de pedir licença para existir.`,
           ]
-        : ["Sua presença será revelada em camadas, quando sua leitura começar a tomar forma."],
+        : ["Esse ponto fica mais claro depois da primeira leitura."],
       observe: "Observe seu ritmo, seu olhar e a forma como você entra nos espaços.",
       avoid: "Evite entrar pequena em lugares onde sua presença precisa existir inteira.",
     },
@@ -238,15 +238,15 @@ function buildOracleCards({ hasResult, resultadoFinal, principal, secundario }) 
       code: "V",
       title: "Carta do Caminho",
       subtitle: "O próximo movimento",
-      revealLabel: "Caminho revelado",
+      revealLabel: "Próximo passo",
       image: "/images/espelho-ori/oraculo/carta-caminho.png",
       messages: hasResult
         ? [
             `O próximo passo é transformar a força ${resultName} em imagem, escolha e direção visual.`,
-            "Você já viu quem é. Agora o próximo espelho pergunta: como essa força aparece no mundo?",
+            "Você já viu quem é. Agora a próxima etapa pergunta: como essa força aparece no mundo?",
             "A jornada começa quando você decide viver de forma mais coerente com o que foi revelado.",
           ]
-        : ["O próximo caminho se abre quando a primeira camada da jornada é concluída."],
+        : ["O próximo caminho se abre quando a primeira leitura for concluída."],
       observe: "Procure o próximo gesto coerente, não a resposta final.",
       avoid: "Evite pressa. A travessia precisa de integração.",
     },
@@ -254,8 +254,8 @@ function buildOracleCards({ hasResult, resultadoFinal, principal, secundario }) 
       id: "limite",
       code: "VI",
       title: "Carta do Limite",
-      subtitle: "O contorno que protege sua presença",
-      revealLabel: "Limite revelado",
+      subtitle: "O contorno que protege sua energia",
+      revealLabel: "Limite do dia",
       image: "/images/espelho-ori/oraculo/carta-limite.png",
       messages: hasResult
         ? [
@@ -265,14 +265,14 @@ function buildOracleCards({ hasResult, resultadoFinal, principal, secundario }) 
           ]
         : ["Antes da primeira leitura, seus limites ainda aguardam linguagem."],
       observe: "Veja onde você se adapta para evitar desconforto.",
-      avoid: "Evite negociar sua essência para parecer mais fácil de ler.",
+      avoid: "Evite negociar o que é importante para você para parecer mais fácil de ler.",
     },
     {
       id: "corpo",
       code: "VII",
       title: "Carta do Corpo",
-      subtitle: "O que sua presença já sente",
-      revealLabel: "Corpo revelado",
+      subtitle: "O que seu corpo já sente",
+      revealLabel: "Corpo do dia",
       image: "/images/espelho-ori/oraculo/carta-corpo.png",
       messages: hasResult
         ? [
@@ -280,7 +280,7 @@ function buildOracleCards({ hasResult, resultadoFinal, principal, secundario }) 
             "O corpo não é obstáculo da imagem. É o lugar onde a leitura precisa ganhar verdade.",
             "A forma certa cria acordo entre estrutura, conforto e presença.",
           ]
-        : ["Seu corpo entrará na leitura quando a primeira camada abrir caminho."],
+        : ["Seu corpo entrará na leitura depois da primeira leitura."],
       observe: "Escute onde sua roupa acompanha ou interrompe seu movimento.",
       avoid: "Evite corrigir o corpo quando o ajuste precisa estar na imagem.",
     },
@@ -289,7 +289,7 @@ function buildOracleCards({ hasResult, resultadoFinal, principal, secundario }) 
       code: "VIII",
       title: "Carta do Desejo",
       subtitle: "O que pede permissão",
-      revealLabel: "Desejo revelado",
+      revealLabel: "Desejo do dia",
       image: "/images/espelho-ori/oraculo/carta-desejo.png",
       messages: hasResult
         ? [
@@ -297,7 +297,7 @@ function buildOracleCards({ hasResult, resultadoFinal, principal, secundario }) 
             "Hoje, não trate seu desejo estético como excesso.",
             "Desejo sem direção vira ruído. Desejo escutado vira assinatura.",
           ]
-        : ["Seu desejo visual será lido com mais clareza depois da primeira revelação."],
+        : ["Seu desejo visual será lido com mais clareza depois da primeira leitura."],
       observe: "Perceba o que seu olhar procura sem pedir autorização.",
       avoid: "Evite transformar desejo em culpa ou distração.",
     },
@@ -305,8 +305,8 @@ function buildOracleCards({ hasResult, resultadoFinal, principal, secundario }) 
       id: "coerencia",
       code: "IX",
       title: "Carta da Coerência",
-      subtitle: "O eixo entre essência e escolha",
-      revealLabel: "Coerência revelada",
+      subtitle: "O eixo entre força e escolha",
+      revealLabel: "Coerência do dia",
       image: "/images/espelho-ori/oraculo/carta-coerencia.png",
       messages: hasResult
         ? [
@@ -323,7 +323,7 @@ function buildOracleCards({ hasResult, resultadoFinal, principal, secundario }) 
       code: "X",
       title: "Carta da Travessia",
       subtitle: "O intervalo entre antiga e nova imagem",
-      revealLabel: "Travessia revelada",
+      revealLabel: "Travessia do dia",
       image: "/images/espelho-ori/oraculo/carta-travessia.png",
       messages: hasResult
         ? [
@@ -369,8 +369,8 @@ function buildPersonalReflection({
     return [
       {
         label: "Para hoje",
-        title: "A carta ainda não abriu sua mensagem.",
-        text: "Quando você revelar a carta, esta área vira uma orientação prática para o seu dia: uma situação para observar, uma dica real e um gesto simples de imagem.",
+        title: "A carta ainda não foi aberta.",
+        text: "Quando você abrir a carta, esta área vira uma orientação prática para o seu dia: uma situação para observar, uma dica real e um gesto simples de imagem.",
       },
       {
         label: "Como voltar",
@@ -684,8 +684,8 @@ function OraculoOri() {
           </h1>
           <p className="mt-4 max-w-xl text-sm leading-relaxed md:text-base" style={{ color: colors.text }}>
             {hasResult
-              ? "Uma carta por dia para traduzir a sua leitura em gesto, presença e direção visual."
-              : "A carta diária abre depois que sua primeira leitura revela a força que sustenta sua presença."}
+              ? "Uma carta por dia para levar sua leitura para uma escolha simples, visual e possível."
+              : "A carta diária abre depois que sua primeira leitura estiver pronta."}
           </p>
           <div className="mt-5 flex flex-wrap gap-2.5">
             <Link
@@ -704,7 +704,7 @@ function OraculoOri() {
                   fontWeight: 560,
                 }}
               >
-                Revelar primeira camada
+                Começar primeira leitura
               </Link>
             )}
           </div>
@@ -857,7 +857,7 @@ function OraculoOri() {
                   : isShuffling
                     ? "Embaralhando..."
                     : hasShuffled
-                      ? "Tirar carta do dia"
+                      ? "Abrir carta do dia"
                       : "Embaralhar cartas"}
               </button>
             )}
@@ -887,13 +887,13 @@ function OraculoOri() {
                 ? selectedCard.title
                 : hasResult
                   ? "O Espelho ainda não abriu a carta de hoje."
-                  : "A carta diária ainda está selada."}
+                  : "A carta de hoje ainda não foi aberta."}
             </h2>
             <p className="mt-2 text-sm" style={{ color: colors.quiet }}>
               {selectedCard
                 ? selectedCard.subtitle
                 : hasResult
-                  ? "Toque no baralho para revelar uma orientação curta e precisa."
+                  ? "Toque no baralho para abrir uma orientação curta e precisa."
                   : "Conclua o Código das Deusas para ativar este ritual."}
             </p>
 
@@ -910,7 +910,7 @@ function OraculoOri() {
                 ? dailyOracle?.message || selectedCard.messages[0]
                 : hasResult
                   ? "Uma carta por dia. Um fragmento por vez. A revelação precisa de ritmo."
-                  : "A primeira revelação é a chave que abre as próximas camadas."}
+                  : "A primeira leitura libera os próximos passos."}
             </blockquote>
 
             <div className="mt-4 grid gap-3 md:grid-cols-2">
@@ -927,7 +927,7 @@ function OraculoOri() {
                 <p className="text-sm leading-relaxed" style={{ color: colors.text }}>
                   {selectedCard
                     ? selectedCard.avoid
-                    : "Evite forçar resposta antes da leitura revelar o ponto certo."}
+                    : "Evite forçar resposta antes de a leitura mostrar o ponto certo."}
                 </p>
               </div>
             </div>
@@ -946,7 +946,7 @@ function OraculoOri() {
         }}
       >
         <div className="mb-5 max-w-3xl">
-          <Eyebrow className="mb-3">Reflexão da sua jornada</Eyebrow>
+          <Eyebrow className="mb-3">Para olhar hoje</Eyebrow>
           <h2
             className="text-2xl leading-[1.02] md:text-4xl"
             style={{
@@ -955,7 +955,7 @@ function OraculoOri() {
               letterSpacing: "-0.06em",
             }}
           >
-            O que essa carta pode mover no seu dia.
+            O que essa carta ajuda você a perceber hoje.
           </h2>
         </div>
 

@@ -4,15 +4,15 @@ function Produto3() {
   const finalLayers = [
     {
       title: "Inventariar",
-      text: "Ler o armário real, identificar o que sustenta sua assinatura visual e separar o que só cria ruído.",
+      text: "Olhar para o armário real, entender o que funciona, o que pesa e o que já não acompanha sua imagem.",
     },
     {
       title: "Estruturar",
-      text: "Organizar cápsula, peças-base, combinações possíveis, fórmulas de look e direção de uso cotidiano.",
+      text: "Organizar peças-base, combinações possíveis, fórmulas de look e usos para a rotina.",
     },
     {
       title: "Comprar com critério",
-      text: "Definir lacunas, prioridades de compra e escolhas que completam sua imagem sem voltar ao improviso.",
+      text: "Definir o que falta, o que vale comprar primeiro e o que evita novas escolhas por impulso.",
     },
   ];
 
@@ -136,7 +136,7 @@ function Produto3() {
               textShadow: "0 0 28px rgba(0,0,0,0.45)",
             }}
           >
-            A etapa final transforma direção visual em guarda-roupa real:
+            A etapa final leva sua leitura para o guarda-roupa real:
             <br />
             cápsula, fórmulas de look, lacunas
             <br />e estratégia de compra.
@@ -146,9 +146,9 @@ function Produto3() {
             className="ori-type-reading-soft hidden text-sm md:mb-4 md:block md:text-[15px] max-w-[520px]"
             style={{ color: "var(--text-soft)" }}
           >
-            Depois da nomeação e da integração, o Código Final aplica sua
-            assinatura visual nas escolhas concretas: o que fica, o que sai, o
-            que falta e como sua imagem passa a funcionar no cotidiano.
+            Depois de entender sua força e ver como ela aparece na imagem, o
+            Código Final ajuda você a decidir o que fica, o que sai, o que
+            falta e como usar melhor o que já tem.
           </p>
 
           <div
@@ -201,7 +201,7 @@ function Produto3() {
                   letterSpacing: "-0.045em",
                 }}
               >
-                Código Final ainda selado
+                Código Final ainda não liberado
               </h2>
 
               <p
@@ -209,11 +209,12 @@ function Produto3() {
                 style={{ color: "var(--text-soft)" }}
               >
                 <span className="md:hidden">
-                  O Código Final abre quando sua imagem já tem direção.
+                  O Código Final abre quando sua leitura visual já estiver pronta.
                 </span>
                 <span className="hidden md:inline">
-                  Esta etapa abre depois que sua força foi nomeada e traduzida em
-                  imagem. O Código Final leva essa direção para o armário real.
+                  Esta etapa abre depois que sua força já foi entendida e sua
+                  imagem já ganhou direção. O Código Final leva essa direção
+                  para o armário real.
                 </span>
               </p>
             </div>
@@ -252,7 +253,7 @@ function Produto3() {
               boxShadow: "0 0 40px rgba(242,185,104,0.14)",
             }}
           >
-            Voltar para a primeira leitura
+            Ver minha primeira leitura
           </Link>
         </div>
       </section>
@@ -274,7 +275,7 @@ function Produto3() {
             className="ori-type-system text-[9px] md:text-[10px]"
             style={{ color: "var(--gold-soft)" }}
           >
-            Preview do Código Final
+            O que vem no Código Final
           </p>
         </div>
 
@@ -291,7 +292,7 @@ function Produto3() {
               className="ori-type-system mb-3"
               style={{ color: "var(--gold-soft)" }}
             >
-              Aplicação final
+              Na prática
             </p>
 
             <h2
@@ -328,7 +329,7 @@ function Produto3() {
                   className="ori-type-system mb-2"
               style={{ color: "var(--gold-soft)" }}
             >
-                  Em breve
+                  Próxima parte
             </p>
 
             <h2

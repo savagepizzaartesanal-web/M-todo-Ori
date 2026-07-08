@@ -60,7 +60,7 @@ BLOCK_CONSULTIVE_COPY = {
     },
     "Seus Padrões": {
         "title": "Padrões",
-        "form": "Seus padrões mostram onde a imagem pode se repetir por proteção. A próxima camada ajuda a separar identidade de defesa.",
+        "form": "Seus padrões mostram onde a imagem pode se repetir por proteção. A próxima etapa ajuda a separar identidade de defesa.",
         "attention": "O cuidado é confundir proteção com estilo. Nem tudo que parece seguro revela você.",
     },
 }
@@ -239,7 +239,7 @@ def build_strengths(blocks: list[MapaVivoBlockInsight], result: dict | None) -> 
             MapaVivoSignal(
                 id=f"forca-{block.id}",
                 label=block.label,
-                text=f"{block.meaning.capitalize()} apareceu como uma das camadas mais presentes.",
+                text=f"{block.meaning.capitalize()} apareceu como um dos pontos mais presentes.",
                 intensity=block.average,
                 source="quiz",
             )
@@ -322,7 +322,7 @@ def build_recommendations(
             MapaVivoRecommendation(
                 id=f"aprofundar-{dominant.id}",
                 title=f"Aprofundar {dominant.label.lower()}",
-                text=f"Use esta camada como entrada principal: {dominant.meaning}.",
+                text=f"Use este ponto como entrada principal: {dominant.meaning}.",
                 priority="media",
                 source="quiz",
             )
@@ -354,7 +354,7 @@ def build_recommendations(
         MapaVivoRecommendation(
             id="revisitar-mapa",
             title="Revisitar o mapa vivo",
-            text="Volte a este mapa quando uma nova camada da jornada abrir ou quando seu momento interno mudar.",
+            text="Volte a este mapa quando uma nova etapa da jornada abrir ou quando seu momento interno mudar.",
             priority="baixa",
             source="jornada",
         )
@@ -372,8 +372,8 @@ def build_summary(
 ) -> str:
     if not result:
         return (
-            "O Mapa Vivo ainda está em formação. Quanto mais respostas e contexto "
-            "o ORI recebe, mais precisa fica a leitura da jornada."
+            "Seu Mapa Vivo ainda está começando. Quanto mais você responde, "
+            "mais clara fica a leitura da sua jornada."
         )
 
     strongest = blocks[0].label.lower() if blocks else "seus sinais principais"
@@ -410,7 +410,7 @@ def build_phase_reading(
     strongest = blocks[0] if blocks else None
     secondary = blocks[1] if len(blocks) > 1 else strongest
     tension = tensions[0] if tensions else None
-    force_title = result_name or "Primeira camada em formação"
+    force_title = result_name or "Primeira leitura em formação"
     form_title = normalize_block_title(secondary.label if secondary else None)
     attention_title = normalize_block_title(tension.label if tension else None, "Presença")
     form_text = get_block_copy(
@@ -426,11 +426,11 @@ def build_phase_reading(
     evidence_sentence = build_evidence_sentence(secondary)
     profile_anchor = build_profile_anchor(perfil)
     translation_headline = (
-        f"Sua primeira camada revelou {result_name}. Agora essa força já pode "
+        f"Sua primeira leitura mostrou {result_name}. Agora essa força já pode "
         "ganhar corpo, cor, cabelo, beleza e presença visual."
     )
     revealed_headline = (
-        f"Sua primeira camada já revelou {result_name}. Agora essa força precisa "
+        f"Sua primeira leitura mostrou {result_name}. Agora essa força precisa "
         "aparecer com mais verdade no jeito como você se veste, se move e ocupa presença."
     )
 
@@ -446,14 +446,14 @@ def build_phase_reading(
     if phase == "nomeacao":
         return MapaVivoReading(
             phase=phase,
-            phase_label="Primeira revelação",
+            phase_label="Primeira leitura",
             headline=(
-                "O Espelho está reunindo seus sinais para revelar a força simbólica "
-                "que abre toda a sua jornada de imagem."
+                "O Espelho está reunindo seus sinais para mostrar a força simbólica "
+                "que abre sua jornada de imagem."
             ),
             next_layer_title="Código das Deusas",
             next_layer_text=(
-                "A primeira leitura nomeia a base da sua presença antes de qualquer "
+                "A primeira leitura identifica a base da sua imagem antes de qualquer "
                 "direção visual."
             ),
             cards=[
@@ -477,7 +477,7 @@ def build_phase_reading(
                     title="Escuta",
                     text=(
                         profile_anchor
-                        or "Responda a primeira camada sem tentar parecer pronta. A leitura começa onde você é mais verdadeira."
+                        or "Responda a primeira leitura sem tentar parecer pronta. A leitura começa onde você é mais verdadeira."
                     ),
                     state="next",
                 ),
@@ -494,11 +494,11 @@ def build_phase_reading(
     if phase == "traducao_aberta":
         return MapaVivoReading(
             phase=phase,
-            phase_label="Imagem em tradução",
+            phase_label="Imagem tomando forma",
             headline=translation_headline,
             next_layer_title="Dossiê ORI",
             next_layer_text=(
-                "Este é o espelho que transforma força simbólica em escolhas visuais "
+                "Esta etapa transforma força simbólica em escolhas visuais "
                 "mais concretas."
             ),
             cards=[
@@ -534,12 +534,12 @@ def build_phase_reading(
             phase=phase,
             phase_label="Imagem em aplicação",
             headline=(
-                f"{result_name} já passou da revelação para a aplicação. Agora a força "
+                f"{result_name} já passou da leitura para a aplicação. Agora a força "
                 "precisa aparecer nas escolhas reais: armário, combinações, compras e rotina."
             ),
             next_layer_title="Código Final",
             next_layer_text=(
-                "A próxima camada organiza a identidade no cotidiano, para que a imagem "
+                "A próxima etapa organiza a identidade no cotidiano, para que a imagem "
                 "não dependa só de inspiração."
             ),
             cards=[
@@ -572,11 +572,11 @@ def build_phase_reading(
 
     return MapaVivoReading(
         phase=phase,
-        phase_label="Força revelada",
+        phase_label="Base identificada",
         headline=revealed_headline,
         next_layer_title="Dossiê ORI",
         next_layer_text=(
-            "O próximo espelho mostra como essa força aparece no corpo, na cor, "
+            "A próxima etapa mostra como essa força aparece no corpo, na cor, "
             "no cabelo, na beleza e na presença."
         ),
         cards=[

@@ -2,7 +2,7 @@ import { archetypeThemes } from "../data/archetypeThemes";
 
 function ResultHero({ nome, principal, secundario, frase, imagem }) {
   const fraseFinal =
-    frase || "Sua imagem revela aquilo que sua essência já sabe.";
+    frase || "Sua imagem começa a mostrar o que já existe em você.";
 
   const fraseFormatada =
     fraseFinal ===
@@ -145,7 +145,7 @@ function ResultHero({ nome, principal, secundario, frase, imagem }) {
               textShadow: "0 0 14px rgba(242,185,104,0.10)",
             }}
           >
-            Revelação Arquetípica
+            Primeira leitura ORI
           </p>
         </div>
 
@@ -277,8 +277,8 @@ function ResultHero({ nome, principal, secundario, frase, imagem }) {
             className="ori-type-reading-soft text-sm md:text-[15px]"
             style={{ color: "rgba(255,245,235,0.72)" }}
           >
-            Esta é sua base arquetípica inicial: a força que sustenta sua
-            presença antes de virar roupa, cor, beleza e assinatura visual.
+            Esta é sua base arquetípica inicial: a força que organiza sua
+            imagem antes de virar roupa, cor, beleza e assinatura visual.
           </p>
         </div>
       </div>

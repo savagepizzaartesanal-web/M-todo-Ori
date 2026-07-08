@@ -349,7 +349,7 @@ function ReportAccordion({
                     {isOpen ? "−" : "+"}
                   </span>
 
-                  <span>{isOpen ? "Recolher camada" : "Ativar camada"}</span>
+                  <span>{isOpen ? "Fechar seção" : "Abrir seção"}</span>
                 </div>
               </div>
             </div>

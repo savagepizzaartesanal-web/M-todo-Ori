@@ -143,7 +143,7 @@ function ReportSectionVisual({ sectionId, guide }) {
         "radial-gradient(circle at 28% 24%, rgba(255,221,186,0.14), transparent 34%), linear-gradient(135deg, rgba(32,17,20,0.82), rgba(8,4,5,0.94))",
     },
     presenca: {
-      label: "Primeiras pistas de presença",
+      label: "Primeiras pistas de imagem",
       items: guide.presence,
       background:
         "radial-gradient(circle at 28% 24%, rgba(242,185,104,0.12), transparent 34%), linear-gradient(135deg, rgba(18,18,12,0.82), rgba(6,4,3,0.94))",
@@ -459,7 +459,7 @@ function Produto1Relatorio() {
                   className="ori-type-reading mt-4 max-w-3xl text-base md:text-xl"
                   style={{ color: "var(--text-primary)" }}
                 >
-                  {report.subtitle || "Sua primeira cartografia simbólica de imagem."}
+                  {report.subtitle || "Sua primeira leitura de imagem no ORI."}
                 </p>
               </div>
 

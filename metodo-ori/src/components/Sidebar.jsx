@@ -242,7 +242,7 @@ function Sidebar() {
                       className="ori-type-reading-soft text-sm"
                       style={{ color: "rgba(255,245,235,0.70)" }}
                     >
-                      Escolha sua próxima camada.
+                      Escolha seu próximo passo.
                     </p>
                   </div>
                 </div>

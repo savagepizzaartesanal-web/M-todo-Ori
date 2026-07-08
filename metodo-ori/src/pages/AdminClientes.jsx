@@ -260,9 +260,9 @@ function AdminClientes() {
     ["produto3", "Código Final"],
     ["oraculo", "Com Oráculo"],
     ["atencao", "Atenção agora"],
-    ["feedback_vista", "Alta aderência"],
-    ["feedback_abstrato", "Abstrato"],
-    ["feedback_risco", "Risco"],
+    ["feedback_vista", "Sentiu conexão"],
+    ["feedback_abstrato", "Ficou abstrato"],
+    ["feedback_risco", "Não se reconheceu"],
     ["admins", "Admins"],
   ];
 
@@ -363,8 +363,8 @@ function AdminClientes() {
                   className="ori-mobile-preview-3 ori-type-reading-soft text-sm md:text-lg max-w-2xl"
                   style={{ color: "var(--text-soft)" }}
                 >
-                  Gestão de leads, acessos, liberações e jornadas simbólicas do
-                  Método ORI.
+                  Acompanhe clientes, acessos, respostas e próximos passos
+                  dentro do Método ORI.
                 </p>
               </div>
 
@@ -436,7 +436,7 @@ function AdminClientes() {
             <input
               value={busca}
               onChange={(event) => setBusca(event.target.value)}
-              placeholder="Buscar por nome, e-mail, resultado ou status..."
+              placeholder="Buscar por nome, e-mail, leitura ou etapa..."
               className="w-full xl:max-w-[460px] px-5 py-3.5 rounded-full outline-none text-sm"
               style={{
                 background: "rgba(255,255,255,0.03)",
@@ -612,7 +612,7 @@ function AdminClientes() {
                           className="ori-type-system mt-2 text-[8px]"
                           style={{ color: "var(--gold-soft)" }}
                         >
-                          Próxima ação: {priority.action}
+                          Próximo passo: {priority.action}
                         </p>
                       </div>
 
@@ -692,7 +692,7 @@ function AdminClientes() {
                         >
                           {feedback
                             ? FEEDBACK_LABELS[feedback.response] || feedback.response
-                            : "Sem feedback"}
+                            : "Sem retorno"}
                         </div>
                       </div>
 

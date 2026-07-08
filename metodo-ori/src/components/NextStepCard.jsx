@@ -124,7 +124,7 @@ function NextStepCard() {
             className="ori-type-system text-[10px] md:text-xs"
             style={{ color: "var(--gold-soft)" }}
           >
-            Próxima Camada
+            Próxima etapa
           </p>
         </div>
 
@@ -149,7 +149,7 @@ function NextStepCard() {
             textShadow: "0 0 28px rgba(0,0,0,0.45)",
           }}
         >
-          Integração entre força, corpo e presença visual
+          Sua leitura ganhando forma visual
         </p>
 
         <p
@@ -159,9 +159,11 @@ function NextStepCard() {
             textShadow: "0 0 28px rgba(0,0,0,0.45)",
           }}
         >
-          Sua base arquetípica já foi nomeada. O próximo movimento é entender
-          como essa força aparece no corpo, no rosto, na cor, no cabelo, na
-          beleza, na presença e na rotina.
+          Seu Código das Deusas revelou a força que organiza sua imagem por
+          dentro. Agora falta ver como isso aparece na prática: no seu corpo,
+          nas suas cores, no seu cabelo, na sua beleza e na sua presença. O
+          Dossiê ORI existe para mostrar, com profundidade e clareza, como essa
+          força aparece na prática.
         </p>
 
         <div className="flex flex-wrap gap-3 mb-7 max-w-[540px]">
@@ -211,7 +213,7 @@ function NextStepCard() {
                   "0 0 42px rgba(242,185,104,0.16), inset 0 0 18px rgba(255,255,255,0.18)",
               }}
             >
-              Avançar para o Dossiê
+              Continuar para o Dossiê ORI
             </Link>
           ) : (
             <button
@@ -244,7 +246,7 @@ function NextStepCard() {
             className="ori-type-reading-soft text-xs md:text-sm max-w-[340px]"
             style={{ color: "rgba(255,245,235,0.58)" }}
           >
-            A liberação segue a sua jornada no Portal ORI.
+            Quando essa etapa estiver liberada, você poderá continuar por aqui.
           </p>
         </div>
       </div>
