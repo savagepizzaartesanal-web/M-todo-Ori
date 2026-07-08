@@ -1767,16 +1767,15 @@ function EspelhoOri() {
                   >
                     Leitura viva da sua jornada
                   </p>
-                  <h3
-                    className="ori-type-revelation text-xl md:text-[28px]"
+                  <p
+                    className="ori-type-reading max-w-3xl text-[15px] leading-relaxed md:text-[17px]"
                     style={{
-                      color: colors.headingSection,
-                      fontWeight: 620,
-                      letterSpacing: "-0.045em",
+                      color: "rgba(255,245,235,0.76)",
+                      fontWeight: 430,
                     }}
                   >
                     {mapaVivoHeadline}
-                  </h3>
+                  </p>
                 </div>
 
                 <div
