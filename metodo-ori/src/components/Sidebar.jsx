@@ -8,7 +8,7 @@ const mainLinks = [
   ["Portal Cliente", "/portal"],
   ["Conheça o Método", "/metodo-ori"],
   ["Código das Deusas", "/produto-1"],
-  FEATURES.produto2 ? ["Dossiê ORI", "/produto-2"] : null,
+  ["Dossiê ORI", "/produto-2", FEATURES.produto2 ? "" : "Próxima camada"],
   ["Código Final", "/produto-3"],
   ["Espelho ORI", "/espelho-ori"],
   ["Oráculo", "/oraculo"],
@@ -78,7 +78,7 @@ function Sidebar() {
     navigate("/entrar");
   };
 
-  const renderLink = ([label, path], variant = "gold") => {
+  const renderLink = ([label, path, badge], variant = "gold") => {
     const isPurple = variant === "purple";
     const activeColor = isPurple ? "var(--lavender-muted)" : "var(--copper-primary)";
     const activeBorder = isPurple ? "rgba(107,90,110,0.34)" : "rgba(210,135,70,0.28)";
@@ -146,8 +146,21 @@ function Sidebar() {
               }}
             />
 
-            <span className="relative z-10 pl-2 tracking-[0.035em] normal-case">
-              {label}
+            <span className="relative z-10 flex items-center justify-between gap-2 pl-2 tracking-[0.035em] normal-case">
+              <span>{label}</span>
+              {badge ? (
+                <span
+                  className="rounded-full px-2 py-1 text-[8px]"
+                  style={{
+                    background: "rgba(242,185,104,0.075)",
+                    border: "1px solid rgba(242,185,104,0.10)",
+                    color: "rgba(242,185,104,0.66)",
+                    letterSpacing: "0.02em",
+                  }}
+                >
+                  {badge}
+                </span>
+              ) : null}
             </span>
           </>
         )}

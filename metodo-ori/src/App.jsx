@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from "react";
-import { BrowserRouter, Navigate, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
 import DashboardLayout from "./layouts/DashboardLayout";
 
@@ -9,6 +9,7 @@ import { FEATURES } from "./config/features";
 
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Produto2 = lazy(() => import("./pages/Produto2"));
+const Produto2EmPreparacao = lazy(() => import("./pages/Produto2EmPreparacao"));
 const Produto3 = lazy(() => import("./pages/Produto3"));
 const QuizProduto1 = lazy(() => import("./pages/QuizProduto1"));
 const Produto1Relatorio = lazy(() => import("./pages/Produto1Relatorio"));
@@ -181,7 +182,7 @@ function App() {
             element={
               <ProtectedRoute>
                 <DashboardLayout>
-                  {FEATURES.produto2 ? <Produto2 /> : <Navigate to="/portal" replace />}
+                  {FEATURES.produto2 ? <Produto2 /> : <Produto2EmPreparacao />}
                 </DashboardLayout>
               </ProtectedRoute>
             }
