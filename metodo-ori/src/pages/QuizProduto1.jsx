@@ -27,6 +27,11 @@ const LEGACY_STORAGE_KEY = "ori_produto_1_quiz";
 const ORACLE_PANEL_BACKGROUND =
   "radial-gradient(circle at 88% 12%, rgba(242,185,104,0.09), transparent 34%), radial-gradient(circle at 8% 92%, rgba(183,140,255,0.05), transparent 34%), linear-gradient(90deg, rgba(5,2,2,0.88), rgba(5,2,2,0.68), rgba(5,2,2,0.92)), url('/images/espelho-ori/oraculo/fundo-oraculo-premium.png')";
 const FEEDBACK_CONTEXT = "produto-1-leitura";
+const REVEAL_LEVELS = {
+  PREVIEW: "preview",
+  FULL: "full",
+};
+const DEFAULT_REVEAL_LEVEL = REVEAL_LEVELS.FULL;
 
 const FEEDBACK_OPTIONS = [
   {
@@ -426,6 +431,54 @@ function CatalogUnavailableState() {
       >
         Tente novamente em instantes. Se você já tinha iniciado a leitura neste
         dispositivo, vamos usar o cache assim que ele estiver disponível.
+      </p>
+    </section>
+  );
+}
+
+function PreviewRevealState() {
+  return (
+    <section
+      className="ori-main-frame ori-card-secondary relative mt-4 overflow-hidden rounded-[24px] p-5 text-center md:rounded-[30px] md:p-7"
+      style={{
+        background:
+          "radial-gradient(circle at top right, rgba(242,185,104,0.08), transparent 36%), linear-gradient(180deg, rgba(18,9,10,0.68), rgba(5,2,2,0.90))",
+        border: "1px solid rgba(242,185,104,0.12)",
+        boxShadow:
+          "0 0 42px rgba(242,185,104,0.035), inset 0 0 28px rgba(255,255,255,0.010)",
+      }}
+    >
+      <div
+        className="absolute inset-x-6 top-0 h-px"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent, rgba(242,185,104,0.32), transparent)",
+        }}
+      />
+
+      <p
+        className="ori-type-system mb-3 text-[10px]"
+        style={{ color: "var(--gold-soft)" }}
+      >
+        Revelação inicial
+      </p>
+      <h2
+        className="ori-type-revelation text-2xl md:text-3xl"
+        style={{
+          color: "var(--gold-primary)",
+          fontWeight: 620,
+          letterSpacing: "-0.045em",
+        }}
+      >
+        Sua primeira camada foi aberta.
+      </h2>
+      <p
+        className="ori-type-reading-soft mx-auto mt-3 max-w-2xl text-sm leading-relaxed md:text-base"
+        style={{ color: "rgba(255,245,235,0.62)" }}
+      >
+        A leitura completa será liberada por aqui quando essa etapa estiver
+        disponível. Por enquanto, sua revelação inicial já fica salva na sua
+        jornada.
       </p>
     </section>
   );
@@ -2411,6 +2464,9 @@ function QuizProduto1() {
   const isLoadingPreview =
     import.meta.env.DEV &&
     new URLSearchParams(location.search).get("preview") === "loading";
+  const revealLevel = DEFAULT_REVEAL_LEVEL;
+  const isFullReveal = revealLevel === REVEAL_LEVELS.FULL;
+  const isPreviewReveal = revealLevel === REVEAL_LEVELS.PREVIEW;
   const {
     catalog: produto1Catalog,
     questions,
@@ -3769,7 +3825,9 @@ function QuizProduto1() {
 
               <SyncNotice message={syncNotice} />
 
-              {report ? (
+              {report && isPreviewReveal && <PreviewRevealState />}
+
+              {report && isFullReveal ? (
                 <div
                   className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[24px] p-3 md:rounded-[30px] md:p-4"
                   style={{
@@ -4285,7 +4343,7 @@ function QuizProduto1() {
                     </div>
                   )}
                 </div>
-              ) : (
+              ) : !report ? (
                 <div
                   className="rounded-[40px] p-10"
                   style={{
@@ -4298,7 +4356,7 @@ function QuizProduto1() {
                     Relatório completo ainda não cadastrado para este resultado.
                   </p>
                 </div>
-              )}
+              ) : null}
             </div>
           </>
         )}
