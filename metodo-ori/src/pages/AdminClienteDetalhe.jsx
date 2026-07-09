@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import Produto2ReviewPanel from "../components/Produto2ReviewPanel";
-import { questions } from "../data/questions";
+import { useProduto1Catalog } from "../hooks/useProduto1Catalog";
 import {
   createAdminClienteEvento,
   generateAdminAiMessage,
@@ -22,6 +22,7 @@ import {
 
 function AdminClienteDetalhe() {
   const { id } = useParams();
+  const { questions } = useProduto1Catalog();
 
   const [cliente, setCliente] = useState(null);
   const [observacoes, setObservacoes] = useState("");
@@ -210,9 +211,12 @@ function AdminClienteDetalhe() {
     );
   }
 
-  const etapaAtual =
-    cliente.status_jornada ||
-    (cliente.resultado ? "Produto 1 concluído" : "Cadastro recebido");
+  const getBaseJourneyStatus = () => {
+    if (cliente.resultado) return "Código das Deusas concluído";
+    if (cliente.perfil_onboarding_concluido) return "Perfil ORI criado";
+    return "Cadastro recebido";
+  };
+  const etapaAtual = cliente.status_jornada || getBaseJourneyStatus();
 
   const timeline = [
     {
@@ -244,10 +248,10 @@ function AdminClienteDetalhe() {
     {
       label: "Jornada finalizada",
       description:
-        cliente.status_jornada === "Finalizado"
+        cliente.status_jornada === "Jornada finalizada"
           ? "Cliente marcada como finalizada."
           : "Fechamento ainda pendente.",
-      done: cliente.status_jornada === "Finalizado",
+      done: cliente.status_jornada === "Jornada finalizada",
     },
   ];
 
@@ -278,9 +282,9 @@ function AdminClienteDetalhe() {
     produto1Respostas?.answered_count || Object.keys(produto1Answers).length;
   const produto1TotalQuestions =
     produto1Respostas?.total_questions || questions.length;
-  const produto1Progress = Math.round(
-    (produto1AnsweredCount / produto1TotalQuestions) * 100,
-  );
+  const produto1Progress = produto1TotalQuestions
+    ? Math.round((produto1AnsweredCount / produto1TotalQuestions) * 100)
+    : 0;
   const produto1Result =
     produto1Respostas?.result?.nomeComposto || cliente.resultado || null;
   const produto1AnswerItems = questions
@@ -1406,10 +1410,8 @@ function AdminClienteDetalhe() {
                 updateCliente({
                   produto_2_liberado: !cliente.produto_2_liberado,
                   status_jornada: !cliente.produto_2_liberado
-                    ? "Produto 2 liberado"
-                    : cliente.resultado
-                      ? "Produto 1 concluído"
-                      : "Cadastro recebido",
+                    ? "Dossiê ORI liberado"
+                    : getBaseJourneyStatus(),
                 }, cliente.produto_2_liberado
                   ? "Acesso ao Dossiê ORI removido"
                   : "Dossiê ORI liberado")
@@ -1438,12 +1440,10 @@ function AdminClienteDetalhe() {
                 updateCliente({
                   produto_3_liberado: !cliente.produto_3_liberado,
                   status_jornada: !cliente.produto_3_liberado
-                    ? "Produto 3 liberado"
+                    ? "Código Final liberado"
                     : cliente.produto_2_liberado
-                      ? "Produto 2 liberado"
-                      : cliente.resultado
-                        ? "Produto 1 concluído"
-                        : "Cadastro recebido",
+                      ? "Dossiê ORI liberado"
+                      : getBaseJourneyStatus(),
                 }, cliente.produto_3_liberado
                   ? "Acesso ao Código Final removido"
                   : "Código Final liberado")
@@ -1470,8 +1470,8 @@ function AdminClienteDetalhe() {
               disabled={saving}
               onClick={() =>
                 updateCliente({
-                  status_jornada: "Dossiê enviado",
-                }, "Dossiê marcado como enviado")
+                  status_jornada: "Dossiê ORI publicado",
+                }, "Dossiê marcado como publicado")
               }
               className="ori-button-secondary px-6 py-4 rounded-full font-medium disabled:opacity-60"
               style={{
@@ -1480,14 +1480,14 @@ function AdminClienteDetalhe() {
                 color: "#d9bdff",
               }}
             >
-              Marcar Dossiê enviado
+              Marcar Dossiê publicado
             </button>
 
             <button
               disabled={saving}
               onClick={() =>
                 updateCliente({
-                  status_jornada: "Finalizado",
+                  status_jornada: "Jornada finalizada",
                 }, "Jornada marcada como finalizada")
               }
               className="ori-button-secondary px-6 py-4 rounded-full font-medium disabled:opacity-60"

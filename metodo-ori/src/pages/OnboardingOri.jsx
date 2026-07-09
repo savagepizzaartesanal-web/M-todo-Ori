@@ -260,7 +260,7 @@ function OnboardingOri() {
               principal_dor: profilePain || null,
               objetivo_principal: completedProfile.mainDesire || null,
               momento_atual: completedProfile.journeyStage || null,
-              status_jornada: "Perfil criado",
+              status_jornada: "Perfil ORI criado",
               produto_1_liberado: true,
             },
             {

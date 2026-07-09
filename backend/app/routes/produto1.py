@@ -24,8 +24,14 @@ from app.services.produto1_service import (
     reset_produto1,
     save_produto1_respostas,
 )
+from app.services.produto1_catalogo_service import get_produto1_catalogo
 
 router = APIRouter(prefix="/api/produto-1", tags=["produto-1"])
+
+
+@router.get("/catalogo")
+async def read_catalogo_produto1():
+    return get_produto1_catalogo()
 
 
 @router.get("/respostas/me", response_model=Produto1RespostasStoredResponse)

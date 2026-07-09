@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { reports } from "../data/reports";
+import { useProduto1Catalog } from "../hooks/useProduto1Catalog";
 import { supabase } from "../lib/supabaseClient";
 import {
   getCurrentJornada,
@@ -400,6 +400,7 @@ function buildPersonalReflection({
 }
 
 function OraculoOri() {
+  const { reports } = useProduto1Catalog();
   const [cliente, setCliente] = useState(null);
   const [jornadaApi, setJornadaApi] = useState(null);
   const [localResult, setLocalResult] = useState(null);

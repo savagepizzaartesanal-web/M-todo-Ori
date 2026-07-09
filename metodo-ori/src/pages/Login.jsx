@@ -201,7 +201,7 @@ function Login() {
         produto_1_liberado: true,
         produto_2_liberado: false,
         produto_3_liberado: false,
-        status_jornada: "Produto 1",
+        status_jornada: "Código das Deusas liberado",
       },
       {
         onConflict: "email",

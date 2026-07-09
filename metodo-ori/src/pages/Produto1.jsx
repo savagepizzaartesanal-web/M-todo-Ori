@@ -1,27 +1,36 @@
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
-import { questions } from "../data/questions";
-import { reports } from "../data/reports";
 import { calculateResult } from "../services/calculateResult";
+import { useProduto1Catalog } from "../hooks/useProduto1Catalog";
 
 import ResultHero from "../components/ResultHero";
 import NextStepCard from "../components/NextStepCard";
 import ReportSection from "../components/ReportSection";
 
 function QuizProduto1() {
+  const {
+    catalog: produto1Catalog,
+    questions,
+    reports,
+    loading: catalogLoading,
+  } = useProduto1Catalog();
   const [answers, setAnswers] = useState({});
   const [result, setResult] = useState(null);
   const quizRef = useRef(null);
 
-  const groupedQuestions = questions.reduce((groups, question) => {
-    if (!groups[question.bloco]) {
-      groups[question.bloco] = [];
-    }
+  const groupedQuestions = useMemo(
+    () =>
+      questions.reduce((groups, question) => {
+        if (!groups[question.bloco]) {
+          groups[question.bloco] = [];
+        }
 
-    groups[question.bloco].push(question);
+        groups[question.bloco].push(question);
 
-    return groups;
-  }, {});
+        return groups;
+      }, {}),
+    [questions],
+  );
 
   const handleAnswer = (questionId, value) => {
     setAnswers((prev) => ({
@@ -31,7 +40,7 @@ function QuizProduto1() {
   };
 
   const handleCalculate = () => {
-    const resultado = calculateResult(questions, answers);
+    const resultado = calculateResult(questions, answers, produto1Catalog);
 
     setResult(resultado);
 
@@ -49,6 +58,16 @@ function QuizProduto1() {
   };
 
   const report = result ? reports[result.nomeComposto] : null;
+
+  if (catalogLoading && !questions.length) {
+    return (
+      <div className="max-w-6xl">
+        <p className="ori-type-reading-soft text-sm" style={{ color: "var(--text-soft)" }}>
+          Abrindo sua leitura...
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl">

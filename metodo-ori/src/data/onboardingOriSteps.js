@@ -132,7 +132,7 @@ export const onboardingSteps = [
   {
     id: "done",
     type: "success",
-    eyebrow: "Perfil criado",
+    eyebrow: "Perfil ORI criado",
     title: "Seu perfil está pronto.",
     description: "Agora o ORI já pode te guiar para a primeira leitura.",
     ctaLabel: "Entrar na minha jornada",

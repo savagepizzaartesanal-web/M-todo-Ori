@@ -2,8 +2,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
-import { questions } from "../data/questions";
-import { reports } from "../data/reports";
 import { calculateResult } from "../services/calculateResult";
 import {
   calculateQuizResult,
@@ -18,6 +16,7 @@ import {
 import { enrichReportWithSignals } from "../services/analyzeReadingSignals";
 import { archetypeImages } from "../data/archetypeImages";
 import { supabase } from "../lib/supabaseClient";
+import { useProduto1Catalog } from "../hooks/useProduto1Catalog";
 
 import QuizHero from "../components/QuizHero";
 import ResultHero from "../components/ResultHero";
@@ -61,7 +60,7 @@ const readQuizFromStorage = (storageKey) => {
   }
 };
 
-const getResultFromCliente = (cliente) => {
+const getResultFromCliente = (cliente, reports) => {
   if (!cliente?.resultado) return null;
 
   const combinacao = reports[cliente.resultado]?.combinacao || "";
@@ -285,7 +284,7 @@ function useMobileMotionOff() {
   return isMobile;
 }
 
-function getGroupedQuestions() {
+function getGroupedQuestions(questions) {
   return questions.reduce((groups, question) => {
     if (!groups[question.bloco]) groups[question.bloco] = [];
     groups[question.bloco].push(question);
@@ -293,18 +292,18 @@ function getGroupedQuestions() {
   }, {});
 }
 
-function getBlockOrder() {
+function getBlockOrder(questions) {
   return [...new Set(questions.map((question) => question.bloco))];
 }
 
-function getFirstUnansweredIndex(answers) {
+function getFirstUnansweredIndex(questions, answers) {
   const firstUnanswered = questions.findIndex(
     (question) => !answers[question.id],
   );
   return firstUnanswered === -1 ? questions.length - 1 : firstUnanswered;
 }
 
-function getAnsweredCount(answers) {
+function getAnsweredCount(questions, answers) {
   return questions.filter((question) => answers[question.id]).length;
 }
 
@@ -396,6 +395,39 @@ function ReadingBootState({ reduceMotion }) {
         </p>
       </div>
     </motion.div>
+  );
+}
+
+function CatalogUnavailableState() {
+  return (
+    <section
+      className="ori-main-frame ori-card-secondary relative mx-auto my-8 max-w-3xl overflow-hidden rounded-[24px] p-5 text-center md:rounded-[30px] md:p-7"
+      style={{
+        background:
+          "linear-gradient(180deg, rgba(18,9,10,0.74), rgba(5,2,2,0.92))",
+        border: "1px solid rgba(242,185,104,0.12)",
+      }}
+    >
+      <p
+        className="ori-type-system mb-3 text-[10px]"
+        style={{ color: "var(--gold-soft)" }}
+      >
+        Leitura indisponível
+      </p>
+      <h2
+        className="ori-type-revelation text-2xl"
+        style={{ color: "var(--gold-primary)", fontWeight: 620 }}
+      >
+        Não conseguimos abrir as perguntas agora.
+      </h2>
+      <p
+        className="ori-type-reading-soft mt-3 text-sm"
+        style={{ color: "var(--text-soft)" }}
+      >
+        Tente novamente em instantes. Se você já tinha iniciado a leitura neste
+        dispositivo, vamos usar o cache assim que ele estiver disponível.
+      </p>
+    </section>
   );
 }
 
@@ -2379,6 +2411,13 @@ function QuizProduto1() {
   const isLoadingPreview =
     import.meta.env.DEV &&
     new URLSearchParams(location.search).get("preview") === "loading";
+  const {
+    catalog: produto1Catalog,
+    questions,
+    reports,
+    loading: catalogLoading,
+    error: catalogError,
+  } = useProduto1Catalog();
 
   const [answers, setAnswers] = useState({});
   const [result, setResult] = useState(null);
@@ -2414,10 +2453,17 @@ function QuizProduto1() {
   const feedbackRef = useRef(null);
   const nextStepRef = useRef(null);
 
-  const groupedQuestions = useMemo(() => getGroupedQuestions(), []);
-  const blockOrder = useMemo(() => getBlockOrder(), []);
+  const groupedQuestions = useMemo(
+    () => getGroupedQuestions(questions),
+    [questions],
+  );
+  const blockOrder = useMemo(() => getBlockOrder(questions), [questions]);
 
   useEffect(() => {
+    if (catalogLoading || !questions.length) return undefined;
+
+    let isMounted = true;
+
     async function loadUserStorage() {
       const { data: sessionData } = await supabase.auth.getSession();
       const user = sessionData?.session?.user || null;
@@ -2464,7 +2510,7 @@ function QuizProduto1() {
           setShowQuiz(false);
           setHasStarted(false);
         } else if (hasSavedAnswers) {
-          setCurrentQuestionIndex(getFirstUnansweredIndex(savedAnswers));
+          setCurrentQuestionIndex(getFirstUnansweredIndex(questions, savedAnswers));
         }
       }
 
@@ -2498,7 +2544,10 @@ function QuizProduto1() {
       }
 
       if (user?.id && !savedResult && !hasSavedAnswers) {
-        const clienteResult = getResultFromCliente(await fetchClienteByUser(user));
+        const clienteResult = getResultFromCliente(
+          await fetchClienteByUser(user),
+          reports,
+        );
 
         if (clienteResult) {
           setResult(clienteResult);
@@ -2519,11 +2568,15 @@ function QuizProduto1() {
         }
       }
 
-      setHasLoadedStorage(true);
+      if (isMounted) setHasLoadedStorage(true);
     }
 
     loadUserStorage();
-  }, []);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [catalogLoading, questions, reports]);
 
   useEffect(() => {
     if (!hasLoadedStorage || !storageKey) return;
@@ -2551,10 +2604,13 @@ function QuizProduto1() {
   }, [isLoadingResult, isLoadingPreview]);
 
   const totalQuestions = questions.length;
-  const answeredQuestions = getAnsweredCount(answers);
-  const progress = Math.round((answeredQuestions / totalQuestions) * 100);
-  const isComplete = answeredQuestions === totalQuestions;
+  const answeredQuestions = getAnsweredCount(questions, answers);
+  const progress = totalQuestions
+    ? Math.round((answeredQuestions / totalQuestions) * 100)
+    : 0;
+  const isComplete = totalQuestions > 0 && answeredQuestions === totalQuestions;
   const currentQuestion = questions[currentQuestionIndex] || questions[0];
+  const catalogUnavailable = Boolean(catalogError) && !questions.length;
 
   const saveResultToSupabase = async (resultado) => {
     const { data: sessionData } = await supabase.auth.getSession();
@@ -2600,7 +2656,7 @@ function QuizProduto1() {
         apiError?.userMessage ||
           "A leitura foi calculada localmente. Vamos sincronizar com o ORI em seguida.",
       );
-      return calculateResult(questions, answers);
+      return calculateResult(questions, answers, produto1Catalog);
     }
   };
 
@@ -2671,7 +2727,7 @@ function QuizProduto1() {
           email: user.email || null,
           answers: {},
           answered_count: 0,
-          total_questions: questions.length,
+          total_questions: totalQuestions,
           is_complete: false,
           result: null,
         },
@@ -2702,7 +2758,7 @@ function QuizProduto1() {
     setShowQuiz(true);
     setCompletedLayer(null);
     setPendingNextIndex(null);
-    setCurrentQuestionIndex(getFirstUnansweredIndex(answers));
+    setCurrentQuestionIndex(getFirstUnansweredIndex(questions, answers));
 
     setTimeout(() => {
       quizRef.current?.scrollIntoView({
@@ -3024,7 +3080,7 @@ function QuizProduto1() {
         result,
       });
     },
-    [activeBackendReading, answers, baseReport, result],
+    [activeBackendReading, answers, baseReport, questions, result],
   );
   const archetypeVisual = result ? archetypeImages[result.nomeComposto] : null;
   const estruturaInternaTabs = report
@@ -3495,11 +3551,13 @@ function QuizProduto1() {
       <div className="max-w-6xl mx-auto">
         <QuizHero
           onPrimaryAction={
-            hasLoadedStorage && !result
+            hasLoadedStorage && !result && !catalogUnavailable
               ? () => navigate("/produto-1/leitura")
               : undefined
           }
         />
+
+        {catalogUnavailable ? <CatalogUnavailableState /> : null}
 
         {result && (
           <section
@@ -3640,9 +3698,11 @@ function QuizProduto1() {
           </div>
         </header>
 
-        {!hasLoadedStorage && (
+        {catalogUnavailable ? (
+          <CatalogUnavailableState />
+        ) : !hasLoadedStorage ? (
           <ReadingBootState reduceMotion={reduceMotion} />
-        )}
+        ) : null}
 
         {hasLoadedStorage && (isLoadingResult || isLoadingPreview) && (
           <LoadingDossie

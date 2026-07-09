@@ -152,7 +152,10 @@ export function getAdminClientNextBestAction({
     };
   }
 
-  if (cliente?.produto_3_liberado && cliente?.status_jornada !== "Finalizado") {
+  if (
+    cliente?.produto_3_liberado &&
+    cliente?.status_jornada !== "Jornada finalizada"
+  ) {
     return {
       score: 24,
       label: "Fechar jornada",

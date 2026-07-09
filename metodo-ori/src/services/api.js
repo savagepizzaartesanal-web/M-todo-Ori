@@ -193,6 +193,10 @@ export function calculateQuizResult(answers) {
   });
 }
 
+export function getProduto1Catalogo() {
+  return requestApi("/api/produto-1/catalogo");
+}
+
 export function saveProduto1Answers(answers) {
   return requestAuthenticatedApi("/api/produto-1/respostas", {
     method: "POST",

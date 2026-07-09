@@ -1041,7 +1041,10 @@ function Produto2() {
                     className="ori-type-reading-soft text-sm md:col-span-2"
                     style={{ color: "var(--text-soft)" }}
                   >
-                    Esta etapa já foi preenchida com dados da sua jornada.
+                    Usamos essa informação para calibrar sua leitura de cor e
+                    corpo com mais fidelidade à sua pele e à sua ancestralidade
+                    — em vez de aplicar uma cartela pensada para outra
+                    realidade.
                   </p>
                 ) : null}
               </div>

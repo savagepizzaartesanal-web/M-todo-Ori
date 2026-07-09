@@ -4,7 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 import { supabase } from "../lib/supabaseClient";
 import { FEATURES } from "../config/features";
-import { reports } from "../data/reports";
+import { useProduto1Catalog } from "../hooks/useProduto1Catalog";
 import { MirrorSectionNav } from "../components/espelho/EspelhoInteractions";
 import {
   getCurrentJornada,
@@ -367,6 +367,7 @@ function EspelhoOri() {
   const prefersReducedMotion = useReducedMotion();
   const mobileMotionOff = useMobileMotionOff();
   const reduceMotion = prefersReducedMotion || mobileMotionOff;
+  const { reports } = useProduto1Catalog();
 
   const [cliente, setCliente] = useState(null);
   const [jornadaApi, setJornadaApi] = useState(null);

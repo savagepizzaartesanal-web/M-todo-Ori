@@ -66,6 +66,12 @@ function AdminClientes() {
     setUpdatingId(null);
   };
 
+  const getBaseJourneyStatus = (cliente) => {
+    if (cliente.resultado) return "Código das Deusas concluído";
+    if (cliente.perfil_onboarding_concluido) return "Perfil ORI criado";
+    return "Cadastro recebido";
+  };
+
   const toggleProduto2 = async (cliente) => {
     const novoValor = !cliente.produto_2_liberado;
 
@@ -73,9 +79,7 @@ function AdminClientes() {
       produto_2_liberado: novoValor,
       status_jornada: novoValor
         ? "Dossiê ORI liberado"
-        : cliente.resultado
-          ? "Código das Deusas concluído"
-          : "Cadastro recebido",
+        : getBaseJourneyStatus(cliente),
     });
   };
 
@@ -88,9 +92,7 @@ function AdminClientes() {
         ? "Código Final liberado"
         : cliente.produto_2_liberado
           ? "Dossiê ORI liberado"
-          : cliente.resultado
-            ? "Código das Deusas concluído"
-            : "Cadastro recebido",
+          : getBaseJourneyStatus(cliente),
     });
   };
 

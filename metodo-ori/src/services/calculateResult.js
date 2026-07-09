@@ -1,5 +1,3 @@
-import { archetypes, combinations } from "../data/combinations";
-
 const initialScores = {
   afrodite: 0,
   persefone: 0,
@@ -35,7 +33,9 @@ function createTieStats() {
   }, {});
 }
 
-export function calculateResult(questions, answers) {
+export function calculateResult(questions, answers, catalog = {}) {
+  const archetypes = catalog.archetypes || {};
+  const combinations = catalog.combinations || {};
   const scores = { ...initialScores };
   const tieStats = createTieStats();
 

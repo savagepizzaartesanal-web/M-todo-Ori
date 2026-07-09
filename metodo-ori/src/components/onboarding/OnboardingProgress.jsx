@@ -14,7 +14,7 @@ export default function OnboardingProgress({
           className="ori-type-system truncate text-[10px]"
           style={{ color: "rgba(242,185,104,0.76)" }}
         >
-          {isDone ? "Perfil criado" : step?.eyebrow || "Perfil de Entrada ORI"}
+          {isDone ? "Perfil ORI criado" : step?.eyebrow || "Perfil de Entrada ORI"}
         </p>
 
         <p
