@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import SyncNotice from "../components/SyncNotice";
+import { JOURNEY_LABELS } from "../content/journeyCopy";
 import { supabase } from "../lib/supabaseClient";
 import {
   getProduto2Dossie,
@@ -503,6 +504,16 @@ function compactJoin(values) {
     .join(" · ");
 }
 
+function isPattonApplicable(insumos) {
+  const autoidentificacao = String(
+    getPathValue(insumos, "dados_base.autoidentificacao_racial") || "",
+  ).toLowerCase();
+
+  return ["negra", "preta", "parda", "miscigenada"].some((marker) =>
+    autoidentificacao.includes(marker),
+  );
+}
+
 function ConnectedDataPanel({ insumos }) {
   const [expanded, setExpanded] = useState(false);
   const nome = getPathValue(insumos, "dados_base.nome");
@@ -724,9 +735,14 @@ function Produto2() {
   const produtoLiberado = Boolean(dossie?.produto_2_liberado);
   const isSubmitted = status === "em_analise" || status === "publicado";
   const uploadScope = dossie?.cliente_id || "rascunho";
+  const pattonApplicable = isPattonApplicable(insumos);
   const visibleFields = step.fields.filter((field) => {
     if (field.path === "dados_base.autoidentificacao_racial") {
       return !getPathValue(insumos, field.path);
+    }
+
+    if (field.path.startsWith("patton.")) {
+      return pattonApplicable;
     }
 
     return true;
@@ -823,7 +839,7 @@ function Produto2() {
 
   return (
     <div className="ori-atmosphere ori-atmosphere-dossie relative max-w-[1320px] overflow-hidden">
-      <SyncNotice message={notice} label="Produto 2" />
+      <SyncNotice message={notice} label="Dossiê ORI" />
 
       <section
         className="ori-main-frame ori-hero-panel cinematic-card relative mb-5 flex min-h-[360px] items-center overflow-hidden rounded-[24px] p-4 pt-7 md:min-h-[clamp(460px,calc(100vh-120px),580px)] md:rounded-[36px] md:p-7"
@@ -1079,7 +1095,7 @@ function Produto2() {
                   color: "var(--text-soft)",
                 }}
               >
-                Próxima etapa
+                {JOURNEY_LABELS.proximoPasso}
               </button>
             </div>
 
@@ -1128,19 +1144,19 @@ function Produto2() {
               Análise preliminar
             </p>
             <h2 className="ori-type-revelation text-2xl" style={{ color: "var(--gold-primary)" }}>
-              O sistema já organizou os primeiros sinais.
+              A leitura já organizou os primeiros sinais.
             </h2>
           </div>
 
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             <AnalysisCard title="Kibbe">
-              <p>{analysis.kibbe?.sugestao || "Aguardando cálculo"}</p>
+              <p>{analysis.kibbe?.sugestao || "Aguardando leitura"}</p>
               <p className="mt-2 text-xs opacity-70">
                 {JSON.stringify(analysis.kibbe?.pontuacoes || {})}
               </p>
             </AnalysisCard>
             <AnalysisCard title="Coloração">
-              <p>{analysis.coloracao?.sugestao_cartela_sazonal || "Aguardando cálculo"}</p>
+              <p>{analysis.coloracao?.sugestao_cartela_sazonal || "Aguardando leitura"}</p>
               <p className="mt-2 text-xs opacity-70">
                 Profundidade {analysis.coloracao?.saldo_profundidade_contraste ?? "-"} ·
                 Temperatura {analysis.coloracao?.saldo_temperatura ?? "-"} · Intensidade{" "}
@@ -1154,7 +1170,7 @@ function Produto2() {
               </p>
             </AnalysisCard>
             <AnalysisCard title="Cabelo">
-              <p>{analysis.cabelo?.perfil_curvatura_densidade || "Aguardando cálculo"}</p>
+              <p>{analysis.cabelo?.perfil_curvatura_densidade || "Aguardando leitura"}</p>
               <p className="mt-2 text-xs opacity-70">
                 {analysis.cabelo?.necessidade_tratamento}
               </p>

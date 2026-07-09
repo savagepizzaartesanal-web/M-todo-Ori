@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+import { JOURNEY_STATUS } from "../constants/journeyStatus";
+import { JOURNEY_COPY, JOURNEY_LABELS } from "../content/journeyCopy";
 import { supabase } from "../lib/supabaseClient";
 import { FEATURES } from "../config/features";
 import {
@@ -116,7 +118,7 @@ function PortalCliente() {
         setJornadaApi(null);
         setSyncNotice(
           apiError?.userMessage ||
-            "Estamos usando seus dados salvos enquanto o ORI termina a sincronização.",
+            "Estamos usando seus dados salvos enquanto o ORI atualiza sua jornada.",
         );
       }
 
@@ -171,7 +173,7 @@ function PortalCliente() {
             produto_1_liberado: true,
             produto_2_liberado: false,
             produto_3_liberado: false,
-            status_jornada: "Cadastro recebido",
+            status_jornada: JOURNEY_STATUS.CADASTRO_RECEBIDO,
           },
           {
             onConflict: "email",
@@ -269,7 +271,7 @@ function PortalCliente() {
           className="ori-type-reading-soft mt-4 max-w-md text-sm"
           style={{ color: "rgba(255,245,235,0.58)" }}
         >
-          Estamos buscando sua leitura e os próximos passos da sua jornada.
+          {JOURNEY_COPY.atrio.loadedSubtitle}
         </p>
       </div>
     );
@@ -281,8 +283,8 @@ function PortalCliente() {
       title: "Código das Deusas",
       description:
         hasResult
-          ? "Seu Código das Deusas revelou a força que organiza sua imagem por dentro. Essa é a base do que vem agora."
-          : "A primeira etapa ajuda você a entender a força que organiza sua imagem por dentro.",
+          ? JOURNEY_COPY.codigoDasDeusas.completedDescription
+          : JOURNEY_COPY.codigoDasDeusas.baseDescription,
       status: statusProduto1,
       released: produto1Liberado,
       active: hasResult,
@@ -307,7 +309,7 @@ function PortalCliente() {
         <button
           type="button"
           disabled
-          aria-label="Produto 1 aguardando liberação"
+          aria-label="Código das Deusas aguardando liberação"
           className="inline-flex justify-center px-5 py-3 rounded-full text-sm font-medium w-full md:w-fit opacity-60 cursor-not-allowed"
           style={{
             background: "rgba(255,255,255,0.04)",
@@ -323,8 +325,8 @@ function PortalCliente() {
       number: "02",
       title: "Dossiê ORI",
       description:
-        "Mostra como sua leitura aparece na prática: no corpo, no rosto, nas cores, no cabelo, na beleza e na presença.",
-      status: produto2Liberado ? "Liberado" : "Próxima etapa",
+        JOURNEY_COPY.dossieOri.shortDescription,
+      status: produto2Liberado ? "Liberado" : JOURNEY_LABELS.proximoPasso,
       released: produto2Liberado,
       active: produto2Liberado,
       tone: "lavender",
@@ -440,7 +442,7 @@ function PortalCliente() {
     ? {
         eyebrow: "Seu espelho inicial já abriu",
         title: "Continue pelo passo que ajuda sua imagem a ganhar direção agora.",
-        text: `${resultadoFinal} já foi nomeada. Agora o próximo passo é entender como essa força aparece nas suas escolhas, na sua imagem e na sua rotina.`,
+        text: `${resultadoFinal} já foi nomeada. ${JOURNEY_COPY.dossieOri.nextBodyCompact}`,
         primaryLabel: "Abrir Espelho ORI",
         primaryTo: "/espelho-ori",
         secondaryLabel: "Ver Método ORI",
@@ -467,7 +469,7 @@ function PortalCliente() {
     : {
         label: "Recomendação de entrada",
         title: "Comece pelo Código das Deusas.",
-        text: "Ele funciona como a porta de entrada do sistema: primeiro nomeia sua força, depois prepara o Dossiê, o Espelho e a aplicação no guarda-roupa.",
+        text: JOURNEY_COPY.atrio.entryRecommendation,
         action: "Iniciar agora",
         to: "/produto-1",
       };
@@ -477,7 +479,7 @@ function PortalCliente() {
   const nextMovement = (() => {
     if (!onboardingConcluido && !hasAnswers && !hasResult) {
       return {
-        eyebrow: "Próximo movimento",
+        eyebrow: JOURNEY_LABELS.proximoPasso,
         title: "Finalize sua Entrada ORI.",
         text: "Esse primeiro perfil ajuda o ORI a organizar sua jornada com mais precisão antes das leituras simbólicas.",
         action: "Finalizar entrada",
@@ -488,7 +490,7 @@ function PortalCliente() {
 
     if (produto1Liberado && !hasAnswers && !hasResult) {
       return {
-        eyebrow: "Próximo movimento",
+        eyebrow: JOURNEY_LABELS.proximoPasso,
         title: "Comece pelo Código das Deusas.",
         text: "Essa leitura nomeia a força que sustenta sua imagem e abre o primeiro mapa da sua presença.",
         action: "Começar leitura",
@@ -499,7 +501,7 @@ function PortalCliente() {
 
     if (hasAnswers && !hasResult) {
       return {
-        eyebrow: "Próximo movimento",
+        eyebrow: JOURNEY_LABELS.proximoPasso,
         title: "Continue sua leitura.",
         text: "Você já iniciou o Código das Deusas. Termine as respostas para revelar sua composição arquetípica.",
         action: "Continuar leitura",
@@ -510,7 +512,7 @@ function PortalCliente() {
 
     if (hasResult && feedbackLoaded && !hasProduto1Feedback) {
       return {
-        eyebrow: "Próximo movimento",
+        eyebrow: JOURNEY_LABELS.proximoPasso,
         title: "Conte como a leitura chegou em você.",
         text: "Antes de seguir, o ORI precisa saber se essa leitura te encontrou, ficou abstrata ou pareceu distante.",
         action: "Deixe sua opinião",
@@ -521,7 +523,7 @@ function PortalCliente() {
 
     if (hasResult && oracleLoaded && !hasDailyOracleCard) {
       return {
-        eyebrow: "Próximo movimento",
+        eyebrow: JOURNEY_LABELS.proximoPasso,
         title: "Tire sua carta diária.",
         text: "A carta do dia registra o clima simbólico da sua jornada e ajuda você a observar o movimento de hoje.",
         action: "Abrir Oráculo",

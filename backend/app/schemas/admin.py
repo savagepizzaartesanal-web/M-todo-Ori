@@ -2,13 +2,15 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from app.constants.journey_status import JourneyStatus
+
 
 class AdminClienteUpdate(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     produto_2_liberado: bool | None = None
     produto_3_liberado: bool | None = None
-    status_jornada: str | None = None
+    status_jornada: JourneyStatus | None = None
     observacoes_admin: str | None = None
 
 

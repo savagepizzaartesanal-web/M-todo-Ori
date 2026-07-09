@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import Produto2ReviewPanel from "../components/Produto2ReviewPanel";
+import { JOURNEY_STATUS } from "../constants/journeyStatus";
 import { useProduto1Catalog } from "../hooks/useProduto1Catalog";
 import {
   createAdminClienteEvento,
@@ -212,9 +213,9 @@ function AdminClienteDetalhe() {
   }
 
   const getBaseJourneyStatus = () => {
-    if (cliente.resultado) return "Código das Deusas concluído";
-    if (cliente.perfil_onboarding_concluido) return "Perfil ORI criado";
-    return "Cadastro recebido";
+    if (cliente.resultado) return JOURNEY_STATUS.CODIGO_DAS_DEUSAS_CONCLUIDO;
+    if (cliente.perfil_onboarding_concluido) return JOURNEY_STATUS.ENTRADA_ORI_CONCLUIDA;
+    return JOURNEY_STATUS.CADASTRO_RECEBIDO;
   };
   const etapaAtual = cliente.status_jornada || getBaseJourneyStatus();
 
@@ -248,10 +249,10 @@ function AdminClienteDetalhe() {
     {
       label: "Jornada finalizada",
       description:
-        cliente.status_jornada === "Jornada finalizada"
+        cliente.status_jornada === JOURNEY_STATUS.JORNADA_FINALIZADA
           ? "Cliente marcada como finalizada."
           : "Fechamento ainda pendente.",
-      done: cliente.status_jornada === "Jornada finalizada",
+      done: cliente.status_jornada === JOURNEY_STATUS.JORNADA_FINALIZADA,
     },
   ];
 
@@ -1410,7 +1411,7 @@ function AdminClienteDetalhe() {
                 updateCliente({
                   produto_2_liberado: !cliente.produto_2_liberado,
                   status_jornada: !cliente.produto_2_liberado
-                    ? "Dossiê ORI liberado"
+                    ? JOURNEY_STATUS.DOSSIE_ORI_LIBERADO
                     : getBaseJourneyStatus(),
                 }, cliente.produto_2_liberado
                   ? "Acesso ao Dossiê ORI removido"
@@ -1440,9 +1441,9 @@ function AdminClienteDetalhe() {
                 updateCliente({
                   produto_3_liberado: !cliente.produto_3_liberado,
                   status_jornada: !cliente.produto_3_liberado
-                    ? "Código Final liberado"
+                    ? JOURNEY_STATUS.CODIGO_FINAL_LIBERADO
                     : cliente.produto_2_liberado
-                      ? "Dossiê ORI liberado"
+                      ? JOURNEY_STATUS.DOSSIE_ORI_LIBERADO
                       : getBaseJourneyStatus(),
                 }, cliente.produto_3_liberado
                   ? "Acesso ao Código Final removido"
@@ -1470,7 +1471,7 @@ function AdminClienteDetalhe() {
               disabled={saving}
               onClick={() =>
                 updateCliente({
-                  status_jornada: "Dossiê ORI publicado",
+                  status_jornada: JOURNEY_STATUS.DOSSIE_ORI_PUBLICADO,
                 }, "Dossiê marcado como publicado")
               }
               className="ori-button-secondary px-6 py-4 rounded-full font-medium disabled:opacity-60"
@@ -1487,7 +1488,7 @@ function AdminClienteDetalhe() {
               disabled={saving}
               onClick={() =>
                 updateCliente({
-                  status_jornada: "Jornada finalizada",
+                  status_jornada: JOURNEY_STATUS.JORNADA_FINALIZADA,
                 }, "Jornada marcada como finalizada")
               }
               className="ori-button-secondary px-6 py-4 rounded-full font-medium disabled:opacity-60"

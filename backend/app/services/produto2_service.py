@@ -5,6 +5,7 @@ from typing import Any
 import httpx
 from fastapi import HTTPException, status
 
+from app.constants import journey_status
 from app.schemas.auth import CurrentUser
 from app.schemas.produto2 import (
     Produto2AdminResponse,
@@ -170,6 +171,7 @@ def merge_produto2_insumos_with_context(
         "dados_base.endereco",
         "dados_base.whatsapp",
         "dados_base.email",
+        "dados_base.autoidentificacao_racial",
         "essencia.deusa_principal",
         "essencia.deusa_auxiliar",
         "essencia.arquetipo_mesclado",
@@ -357,7 +359,7 @@ async def upsert_produto2_row(
     if not rows:
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
-            detail="O Supabase não confirmou o Dossiê ORI salvo.",
+            detail="Não foi possível confirmar o Dossiê ORI salvo.",
         )
 
     return rows[0]
@@ -484,6 +486,12 @@ async def save_produto2_insumos(
         },
         current_user=current_user,
     )
+    if next_status == "aguardando_insumos":
+        await update_cliente_status_jornada(
+            cliente_id=cliente_id,
+            status_jornada=journey_status.DOSSIE_ORI_EM_PREENCHIMENTO,
+            current_user=current_user,
+        )
 
     return row_to_response(row, cliente, produto1_result=produto1_result)
 
@@ -531,7 +539,7 @@ async def submit_produto2_insumos(
     )
     await update_cliente_status_jornada(
         cliente_id=cliente_id,
-        status_jornada="Dossiê ORI em análise",
+        status_jornada=journey_status.DOSSIE_ORI_EM_ANALISE,
         current_user=current_user,
     )
 
@@ -600,7 +608,7 @@ async def publish_admin_produto2(
     )
     await update_cliente_status_jornada(
         cliente_id=cliente_id,
-        status_jornada="Dossiê ORI publicado",
+        status_jornada=journey_status.DOSSIE_ORI_PUBLICADO,
         current_user=current_user,
     )
 
@@ -624,7 +632,7 @@ async def unpublish_admin_produto2(
     )
     await update_cliente_status_jornada(
         cliente_id=cliente_id,
-        status_jornada="Dossiê ORI em análise",
+        status_jornada=journey_status.DOSSIE_ORI_EM_ANALISE,
         current_user=current_user,
     )
 

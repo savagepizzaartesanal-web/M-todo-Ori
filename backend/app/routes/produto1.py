@@ -50,7 +50,10 @@ async def save_respostas(
             current_user=current_user,
         )
     except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
+        raise HTTPException(
+            status_code=400,
+            detail="Não foi possível salvar suas respostas agora.",
+        ) from exc
 
 
 @router.post("/concluir", response_model=Produto1ConclusaoResponse)
@@ -64,7 +67,10 @@ async def concluir_leitura(
             current_user=current_user,
         )
     except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
+        raise HTTPException(
+            status_code=400,
+            detail="Não foi possível concluir sua leitura agora.",
+        ) from exc
 
 
 @router.post("/reset")

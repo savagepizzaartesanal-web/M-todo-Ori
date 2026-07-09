@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 import { supabase } from "../lib/supabaseClient";
 import { FEATURES } from "../config/features";
+import { JOURNEY_COPY, JOURNEY_LABELS } from "../content/journeyCopy";
 import { useProduto1Catalog } from "../hooks/useProduto1Catalog";
 import { MirrorSectionNav } from "../components/espelho/EspelhoInteractions";
 import {
@@ -422,7 +423,7 @@ function EspelhoOri() {
         setJornadaApi(null);
         setSyncNotice(
           apiError?.userMessage ||
-            "Estamos usando seu reflexo salvo enquanto o ORI termina a sincronização.",
+            "Estamos usando seu reflexo salvo enquanto o ORI atualiza sua jornada.",
         );
       }
 
@@ -887,7 +888,7 @@ function EspelhoOri() {
     {
       id: "revelado",
       number: "01",
-      eyebrow: "Produto 1",
+      eyebrow: "Código das Deusas",
       title: "Base identificada",
       text: "",
       items: matrixItems.slice(0, 3),
@@ -895,7 +896,7 @@ function EspelhoOri() {
     {
       id: "traducao",
       number: "02",
-      eyebrow: produto2Liberado ? "Produto 2" : "Próxima etapa",
+      eyebrow: produto2Liberado ? "Dossiê ORI" : JOURNEY_LABELS.proximoPasso,
       title: "Tradução visual",
       text: "A força identificada começa a ganhar corpo, cor, cabelo, beleza e assinatura.",
       items: [
@@ -907,7 +908,7 @@ function EspelhoOri() {
     {
       id: "aplicacao",
       number: "03",
-      eyebrow: produto3Liberado ? "Produto 3" : "Etapa final",
+      eyebrow: produto3Liberado ? "Código Final" : "Etapa final",
       title: "Aplicação",
       text: "A identidade deixa de ser direção e passa a organizar armário, fórmulas e escolhas reais.",
       items: [
@@ -974,7 +975,7 @@ function EspelhoOri() {
     : "O Dossiê ORI leva sua força para a imagem visível.";
   const finalCrossingText = produto3Liberado
     ? "O Espelho ORI já organizou sua direção visual. A próxima etapa não repete essa leitura: ela aplica essa identidade ao armário real, às escolhas, às lacunas e às fórmulas de look."
-    : "Seu Código das Deusas revelou a força que organiza sua imagem por dentro. Agora falta ver como isso aparece na prática, no seu corpo, nas suas cores, no seu cabelo, na sua beleza e na sua presença. O Dossiê ORI existe para mostrar, com profundidade e clareza, como essa força aparece na prática. É a próxima etapa para transformar leitura em imagem real.";
+    : JOURNEY_COPY.dossieOri.nextBody;
 
   const nextStep = !hasResult
     ? {
@@ -999,7 +1000,7 @@ function EspelhoOri() {
         }
       : produto2Liberado
       ? {
-          eyebrow: "Próxima etapa liberada",
+          eyebrow: "Dossiê ORI liberado",
           title: "Dossiê ORI",
           headline:
             "Sua força já foi nomeada. Agora ela pode ganhar imagem.",
@@ -1009,7 +1010,7 @@ function EspelhoOri() {
           active: true,
         }
       : {
-          eyebrow: "Próxima etapa",
+          eyebrow: JOURNEY_LABELS.proximoPasso,
           title: "Dossiê ORI",
           headline:
             "Você já sabe o nome da sua força. Agora falta ver a forma que ela pode ter.",
@@ -1046,7 +1047,7 @@ function EspelhoOri() {
     {
       id: "nomeacao",
       number: "01",
-      product: "Produto 1",
+      product: "Código das Deusas",
       title: "Código das Deusas",
       status: hasResult ? "Concluído" : "Comece aqui",
       statusType: hasResult ? "done" : "active",
@@ -1118,7 +1119,7 @@ function EspelhoOri() {
     {
       id: "integracao",
       number: "02",
-      product: "Produto 2",
+      product: "Dossiê ORI",
       title: "Dossiê ORI",
       status: dossieRevelado ? "Concluído" : hasResult ? "Selado" : "Selado",
       statusType: dossieRevelado ? "done" : hasResult ? "active" : "sealed",
@@ -1185,7 +1186,7 @@ function EspelhoOri() {
     {
       id: "aplicacao",
       number: "03",
-      product: "Produto 3",
+      product: "Código Final",
       title: "Código Final",
       status: codigoFinalRevelado ? "Concluído" : "Selado",
       statusType: codigoFinalRevelado ? "done" : "sealed",
@@ -1793,7 +1794,7 @@ function EspelhoOri() {
                       letterSpacing: "0.14em",
                     }}
                   >
-                    Próxima etapa
+                    {JOURNEY_LABELS.proximoPasso}
                   </p>
                   <h4
                     className="ori-type-revelation mb-1.5 text-lg"
@@ -2485,7 +2486,7 @@ function EspelhoOri() {
                               }}
                             >
                               <AtrioLineLabel className="mb-3">
-                                Próxima etapa
+                                {JOURNEY_LABELS.proximoPasso}
                               </AtrioLineLabel>
                               <h4
                                 className="mb-3 text-2xl leading-tight md:text-[28px]"
@@ -3757,7 +3758,7 @@ function EspelhoOri() {
                       className="inline-flex w-fit items-center gap-2 text-sm transition-colors"
                       style={{ color: colors.goldSoft }}
                     >
-                      <span>Próxima etapa:</span>
+                      <span>{JOURNEY_LABELS.proximoPasso}:</span>
                       <span>
                       {mirrorTabs[
                         (mirrorTabs.findIndex(
@@ -3825,7 +3826,7 @@ function EspelhoOri() {
           <div className="relative z-10 grid gap-6 md:grid-cols-[0.62fr_0.38fr] md:items-center">
             <div>
               <AtrioLineLabel className="mb-4">
-                Próximo passo
+                {JOURNEY_LABELS.proximoPasso}
               </AtrioLineLabel>
 
               <h2
@@ -3836,19 +3837,14 @@ function EspelhoOri() {
                   letterSpacing: "-0.065em",
                 }}
               >
-                Seu próximo passo é o Dossiê ORI.
+                {JOURNEY_COPY.dossieOri.nextTitle}
               </h2>
 
               <p
                 className="ori-mobile-preview-3 max-w-2xl text-base leading-relaxed md:text-lg"
                 style={{ color: "rgba(255,245,235,0.66)" }}
               >
-                Seu Código das Deusas revelou a força que organiza sua imagem
-                por dentro. Agora falta ver como isso aparece na prática, no seu
-                corpo, nas suas cores, no seu cabelo, na sua beleza e na sua
-                presença. O Dossiê ORI existe para mostrar, com profundidade e
-                clareza, como essa força aparece na prática. É a próxima etapa
-                para transformar leitura em imagem real.
+                {JOURNEY_COPY.dossieOri.nextBody}
               </p>
             </div>
 
@@ -3920,7 +3916,7 @@ function EspelhoOri() {
                 className="mb-4 text-[9px] uppercase tracking-[0.34em]"
                 style={{ color: colors.goldSoft }}
               >
-                Próximo passo
+                {JOURNEY_LABELS.proximoPasso}
               </p>
 
               <h2
@@ -3931,19 +3927,14 @@ function EspelhoOri() {
                   letterSpacing: "-0.065em",
                 }}
               >
-                Seu próximo passo é o Dossiê ORI.
+                {JOURNEY_COPY.dossieOri.nextTitle}
               </h2>
 
               <p
                 className="max-w-2xl text-base leading-relaxed md:text-lg"
                 style={{ color: "rgba(255,245,235,0.66)" }}
               >
-                Seu Código das Deusas revelou a força que organiza sua imagem
-                por dentro. Agora falta ver como isso aparece na prática, no seu
-                corpo, nas suas cores, no seu cabelo, na sua beleza e na sua
-                presença. O Dossiê ORI existe para mostrar, com profundidade e
-                clareza, como essa força aparece na prática. É a próxima etapa
-                para transformar leitura em imagem real.
+                {JOURNEY_COPY.dossieOri.nextBody}
               </p>
             </div>
 
@@ -4135,7 +4126,7 @@ function EspelhoOri() {
                       color: "rgba(255,245,235,0.56)",
                     }}
                   >
-                    Próxima etapa ainda fechada
+                    Dossiê ORI ainda fechado
                   </button>
                 )}
               </div>
@@ -4206,7 +4197,7 @@ function EspelhoOri() {
                   color: "rgba(255,245,235,0.56)",
                 }}
               >
-                Próxima etapa ainda fechada
+                Dossiê ORI ainda fechado
               </button>
             )}
 

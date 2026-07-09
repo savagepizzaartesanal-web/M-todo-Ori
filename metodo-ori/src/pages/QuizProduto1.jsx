@@ -2,6 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
+import { JOURNEY_STATUS } from "../constants/journeyStatus";
+import { JOURNEY_COPY, JOURNEY_LABELS } from "../content/journeyCopy";
 import { calculateResult } from "../services/calculateResult";
 import {
   calculateQuizResult,
@@ -96,7 +98,7 @@ const syncCachedReadingToAccount = async ({ user, answers, result }) => {
       resultado: result.nomeComposto,
       arquetipo_principal: result.principal,
       arquetipo_secundario: result.secundario,
-      status_jornada: "Código das Deusas concluído",
+      status_jornada: JOURNEY_STATUS.CODIGO_DAS_DEUSAS_CONCLUIDO,
       produto_1_liberado: true,
     },
     {
@@ -502,7 +504,7 @@ function LoadingDossie({ loadingRef, reduceMotion }) {
       label: "Sombra",
       detail: "tensão ativa",
       title: "Lendo tensões ativas...",
-      note: "O sistema reconhece padrões de proteção, força e repetição.",
+      note: "A leitura reconhece padrões de proteção, força e repetição.",
     },
     {
       label: "Mundo interno",
@@ -665,7 +667,7 @@ function LoadingDossie({ loadingRef, reduceMotion }) {
       </div>
 
       <div className="relative z-10 w-full max-w-4xl mx-auto py-3 md:py-4">
-        <Eyebrow className="mb-2">Tecnologia ORI em análise</Eyebrow>
+        <Eyebrow className="mb-2">Leitura ORI em andamento</Eyebrow>
 
         <AnimatePresence mode="wait">
           <motion.h2
@@ -2553,7 +2555,7 @@ function QuizProduto1() {
           );
           setSyncNotice(
             apiError?.userMessage ||
-              "Estamos usando o histórico salvo neste dispositivo enquanto o ORI sincroniza.",
+              "Estamos usando o histórico salvo neste dispositivo enquanto o ORI atualiza sua jornada.",
           );
         }
       }
@@ -2581,7 +2583,7 @@ function QuizProduto1() {
             .catch((syncError) => {
               console.log("Não foi possível sincronizar leitura local:", syncError);
               setSyncNotice(
-                "Sua leitura apareceu neste navegador, mas ainda não conseguimos sincronizar com sua conta.",
+                "Sua leitura apareceu neste navegador, mas ainda não conseguimos atualizar sua conta.",
               );
             });
         }
@@ -2687,7 +2689,7 @@ function QuizProduto1() {
           resultado: resultado.nomeComposto,
           arquetipo_principal: resultado.principal,
           arquetipo_secundario: resultado.secundario,
-          status_jornada: "Código das Deusas concluído",
+          status_jornada: JOURNEY_STATUS.CODIGO_DAS_DEUSAS_CONCLUIDO,
           produto_1_liberado: true,
         },
         {
@@ -2710,7 +2712,7 @@ function QuizProduto1() {
       console.log("API do quiz indisponível, usando cálculo local:", apiError);
       setSyncNotice(
         apiError?.userMessage ||
-          "A leitura foi calculada localmente. Vamos sincronizar com o ORI em seguida.",
+          "Sua leitura foi preparada neste dispositivo. O ORI vai atualizar sua jornada em seguida.",
       );
       return calculateResult(questions, answers, produto1Catalog);
     }
@@ -2727,7 +2729,7 @@ function QuizProduto1() {
       );
       setSyncNotice(
         apiError?.userMessage ||
-          "Sua leitura foi preservada. A sincronização completa será retomada em instantes.",
+          "Sua leitura foi preservada. A atualização completa será retomada em instantes.",
       );
       const resultado = await calculateResultWithFallback();
       await saveResultToSupabase(resultado);
@@ -2748,7 +2750,7 @@ function QuizProduto1() {
       resultado: null,
       arquetipo_principal: null,
       arquetipo_secundario: null,
-      status_jornada: "Código das Deusas reiniciado",
+      status_jornada: JOURNEY_STATUS.CODIGO_DAS_DEUSAS_EM_ANDAMENTO,
       produto_1_liberado: true,
     };
 
@@ -2870,7 +2872,7 @@ function QuizProduto1() {
         console.log("API de respostas indisponível, mantendo salvamento local:", apiError);
         setSyncNotice(
           apiError?.userMessage ||
-            "Suas respostas seguem salvas neste dispositivo enquanto o ORI sincroniza.",
+            "Suas respostas seguem salvas neste dispositivo enquanto o ORI atualiza sua jornada.",
         );
       });
 
@@ -3076,7 +3078,7 @@ function QuizProduto1() {
           setBackendReading(null);
           setSyncNotice(
             apiError?.userMessage ||
-              "Estamos usando a leitura salva enquanto o ORI termina a sincronização.",
+              "Estamos usando a leitura salva enquanto o ORI atualiza sua jornada.",
           );
         }
       }
@@ -3433,7 +3435,7 @@ function QuizProduto1() {
   const isLastResultLayerOfLastCore =
     activeResultCore === "sintese" && !hasNextResultLayer;
   const resultFlowLabel = hasNextResultLayer
-    ? "Próxima etapa"
+    ? JOURNEY_LABELS.proximoPasso
     : nextResultCore
       ? "Avançar para o próximo núcleo"
       : "Concluir minha leitura";
@@ -3442,7 +3444,7 @@ function QuizProduto1() {
     : nextResultCore
       ? `Este núcleo foi atravessado. Agora você pode seguir para ${nextResultCore.title}.`
       : resultReadingCompleted
-        ? "Sua primeira leitura foi concluída. O Dossiê ORI é a próxima etapa para ver como essa força aparece no corpo, nas cores, no cabelo, na beleza e na presença."
+        ? JOURNEY_COPY.dossieOri.nextBody
         : "Você chegou à última etapa da sua primeira leitura.";
 
   const scrollToReadingNavigation = () => {
@@ -3737,7 +3739,7 @@ function QuizProduto1() {
             }}
           >
             <span style={{ color: colors.gold }}>←</span>
-            Voltar ao Produto 1
+            Voltar ao Código das Deusas
           </Link>
 
           <div

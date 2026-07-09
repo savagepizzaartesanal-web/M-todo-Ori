@@ -441,7 +441,7 @@ function OraculoOri() {
         setJornadaApi(null);
         setSyncNotice(
           apiError?.userMessage ||
-            "Estamos usando sua leitura salva enquanto o Oráculo termina a sincronização.",
+            "Estamos usando sua leitura salva enquanto o Oráculo atualiza sua jornada.",
         );
       }
 
@@ -540,7 +540,7 @@ function OraculoOri() {
         console.log("API da carta diária indisponível:", apiError);
         setSyncNotice(
           apiError?.userMessage ||
-            "A carta será consultada nos dados salvos enquanto o Oráculo sincroniza.",
+            "A carta será consultada nos dados salvos enquanto o Oráculo atualiza sua jornada.",
         );
       }
 
@@ -593,7 +593,7 @@ function OraculoOri() {
       console.log("Carta diária mantida localmente:", apiError);
       setSyncNotice(
         apiError?.userMessage ||
-          "Sua carta foi revelada neste aparelho. Vamos tentar sincronizar novamente em instantes.",
+          "Sua carta foi revelada neste aparelho. Vamos tentar atualizar sua jornada novamente em instantes.",
       );
     }
   };
@@ -658,7 +658,7 @@ function OraculoOri() {
       />
 
       <div className="mx-auto w-full max-w-[1320px] space-y-4 pb-8 md:space-y-5 md:pb-10">
-      <SyncNotice message={syncNotice} label="Oráculo em sincronização" />
+      <SyncNotice message={syncNotice} label="Oráculo em atualização" />
 
       <section
         className="ori-mobile-hero relative overflow-hidden rounded-[26px] px-4 py-5 md:rounded-[34px] md:px-8 md:py-8"

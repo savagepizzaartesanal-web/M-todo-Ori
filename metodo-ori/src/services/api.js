@@ -16,7 +16,7 @@ export class OriApiError extends Error {
     this.isNetworkError = Boolean(options.isNetworkError);
     this.userMessage =
       options.userMessage ||
-      "O ORI está demorando um pouco para sincronizar. Você pode continuar; seus dados serão preservados.";
+      "O ORI está demorando um pouco para atualizar sua jornada. Você pode continuar; seus dados serão preservados.";
   }
 }
 
@@ -42,14 +42,14 @@ async function requestApi(
 
     throw new OriApiError(
       isTimeout
-        ? "Tempo limite ao conectar com a API ORI."
-        : "Não foi possível conectar com a API ORI.",
+        ? "O ORI demorou mais que o esperado para responder."
+        : "Não foi possível atualizar a jornada ORI agora.",
       {
         isTimeout,
         isNetworkError: !isTimeout,
         userMessage: isTimeout
           ? "O ORI está acordando a leitura. Aguarde alguns segundos e tente novamente."
-          : "Não conseguimos sincronizar com o ORI agora. Você pode continuar; vamos manter o que já foi salvo.",
+          : "O ORI está demorando um pouco para atualizar sua jornada. Você pode continuar; vamos manter o que já foi salvo.",
       },
     );
   } finally {
@@ -59,14 +59,14 @@ async function requestApi(
   if (!response.ok) {
     const details = await response.text().catch(() => "");
     throw new OriApiError(
-      `Erro na API ORI: ${response.status}${details ? ` - ${details}` : ""}`,
+      `Não foi possível concluir a atualização ORI: ${response.status}${details ? ` - ${details}` : ""}`,
       {
         status: response.status,
         details,
         userMessage:
           response.status === 401
             ? "Sua sessão precisa ser atualizada. Entre novamente para continuar com segurança."
-            : "Não conseguimos concluir a sincronização agora. Tente novamente em alguns instantes.",
+            : "Não conseguimos concluir a atualização agora. Tente novamente em alguns instantes.",
       },
     );
   }
@@ -136,8 +136,8 @@ async function requestAuthenticatedFile(path, options = {}) {
 
     throw new OriApiError(
       isTimeout
-        ? "Tempo limite ao conectar com a API ORI."
-        : "Não foi possível conectar com a API ORI.",
+        ? "O ORI demorou mais que o esperado para preparar o arquivo."
+        : "Não foi possível preparar o arquivo agora.",
       {
         isTimeout,
         isNetworkError: !isTimeout,
@@ -153,7 +153,7 @@ async function requestAuthenticatedFile(path, options = {}) {
   if (!response.ok) {
     const details = await response.text().catch(() => "");
     throw new OriApiError(
-      `Erro na API ORI: ${response.status}${details ? ` - ${details}` : ""}`,
+      `Não foi possível preparar o arquivo ORI: ${response.status}${details ? ` - ${details}` : ""}`,
       {
         status: response.status,
         details,

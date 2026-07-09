@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import OnboardingShell from "../components/onboarding/OnboardingShell";
+import { JOURNEY_STATUS } from "../constants/journeyStatus";
 import { onboardingSteps } from "../data/onboardingOriSteps";
 import { supabase } from "../lib/supabaseClient";
 
@@ -260,7 +261,7 @@ function OnboardingOri() {
               principal_dor: profilePain || null,
               objetivo_principal: completedProfile.mainDesire || null,
               momento_atual: completedProfile.journeyStage || null,
-              status_jornada: "Perfil ORI criado",
+              status_jornada: JOURNEY_STATUS.ENTRADA_ORI_CONCLUIDA,
               produto_1_liberado: true,
             },
             {

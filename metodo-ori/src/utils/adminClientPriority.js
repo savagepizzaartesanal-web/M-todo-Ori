@@ -1,3 +1,5 @@
+import { JOURNEY_STATUS } from "../constants/journeyStatus";
+
 const DEFAULT_TOTAL_QUESTIONS = 36;
 
 function getProduto1Progress(resposta) {
@@ -154,7 +156,7 @@ export function getAdminClientNextBestAction({
 
   if (
     cliente?.produto_3_liberado &&
-    cliente?.status_jornada !== "Jornada finalizada"
+    cliente?.status_jornada !== JOURNEY_STATUS.JORNADA_FINALIZADA
   ) {
     return {
       score: 24,

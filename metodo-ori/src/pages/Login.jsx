@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
+import { JOURNEY_STATUS } from "../constants/journeyStatus";
 import { supabase } from "../lib/supabaseClient";
 
 function Login() {
@@ -201,7 +202,7 @@ function Login() {
         produto_1_liberado: true,
         produto_2_liberado: false,
         produto_3_liberado: false,
-        status_jornada: "Código das Deusas liberado",
+        status_jornada: JOURNEY_STATUS.ENTRADA_ORI_EM_ANDAMENTO,
       },
       {
         onConflict: "email",

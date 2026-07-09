@@ -37,4 +37,7 @@ def calculate_quiz(payload: QuizCalculateRequest):
     try:
         return calculate_quiz_result(payload.answers)
     except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
+        raise HTTPException(
+            status_code=400,
+            detail="Não foi possível preparar sua leitura agora.",
+        ) from exc

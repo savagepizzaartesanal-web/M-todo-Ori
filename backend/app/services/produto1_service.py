@@ -11,6 +11,7 @@ from app.schemas.produto1 import (
     Produto1RespostasResponse,
     Produto1RespostasStoredResponse,
 )
+from app.constants import journey_status
 from app.services.auth_service import get_supabase_config
 from app.services.quiz_service import calculate_quiz_result, normalize_answers
 
@@ -43,7 +44,7 @@ def validate_partial_answers(answers: dict[str, int]) -> dict[str, int]:
 
     if unknown:
         raise ValueError(
-            "Existem perguntas que não pertencem ao Produto 1: "
+            "Existem respostas que não pertencem ao Código das Deusas: "
             f"{', '.join(str(item) for item in unknown)}."
         )
 
@@ -161,7 +162,7 @@ async def get_produto1_respostas(
     ):
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
-            detail="Não foi possível consultar as respostas do Produto 1.",
+            detail="Não foi possível consultar as respostas do Código das Deusas.",
         )
 
     rows = user_response.json()
@@ -213,7 +214,7 @@ async def save_produto1_respostas(
     if response.status_code >= 400:
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
-            detail="Não foi possível salvar as respostas do Produto 1.",
+            detail="Não foi possível salvar as respostas do Código das Deusas.",
         )
 
     rows = response.json()
@@ -243,7 +244,7 @@ async def update_cliente_produto1_result(
         "resultado": result["nomeComposto"],
         "arquetipo_principal": result["principal"],
         "arquetipo_secundario": result["secundario"],
-        "status_jornada": "Código das Deusas concluído",
+        "status_jornada": journey_status.CODIGO_DAS_DEUSAS_CONCLUIDO,
         "produto_1_liberado": True,
     }
     headers = {
@@ -301,7 +302,7 @@ async def reset_produto1(
         "resultado": None,
         "arquetipo_principal": None,
         "arquetipo_secundario": None,
-        "status_jornada": "Código das Deusas reiniciado",
+        "status_jornada": journey_status.CODIGO_DAS_DEUSAS_EM_ANDAMENTO,
         "produto_1_liberado": True,
     }
 

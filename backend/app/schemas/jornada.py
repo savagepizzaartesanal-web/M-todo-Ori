@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 
+from app.constants.journey_status import JourneyStatus
+
 
 class JornadaStatus(BaseModel):
     entradaOri: str
@@ -16,7 +18,7 @@ class JornadaResponse(BaseModel):
     cliente_id: str | int | None = None
     nome: str | None = None
     resultado: str | None = None
-    status_jornada: str | None = None
+    status_jornada: JourneyStatus | str | None = None
     perfil_onboarding_concluido: bool = False
     produto_1_liberado: bool = True
     produto_2_liberado: bool = False

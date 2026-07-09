@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
+import { JOURNEY_STATUS } from "../constants/journeyStatus";
 import { getAdminClientes, updateAdminCliente } from "../services/api";
 import { getAdminClientPriority } from "../utils/adminClientPriority";
 import {
@@ -67,9 +68,9 @@ function AdminClientes() {
   };
 
   const getBaseJourneyStatus = (cliente) => {
-    if (cliente.resultado) return "Código das Deusas concluído";
-    if (cliente.perfil_onboarding_concluido) return "Perfil ORI criado";
-    return "Cadastro recebido";
+    if (cliente.resultado) return JOURNEY_STATUS.CODIGO_DAS_DEUSAS_CONCLUIDO;
+    if (cliente.perfil_onboarding_concluido) return JOURNEY_STATUS.ENTRADA_ORI_CONCLUIDA;
+    return JOURNEY_STATUS.CADASTRO_RECEBIDO;
   };
 
   const toggleProduto2 = async (cliente) => {
@@ -78,7 +79,7 @@ function AdminClientes() {
     await updateCliente(cliente, {
       produto_2_liberado: novoValor,
       status_jornada: novoValor
-        ? "Dossiê ORI liberado"
+        ? JOURNEY_STATUS.DOSSIE_ORI_LIBERADO
         : getBaseJourneyStatus(cliente),
     });
   };
@@ -89,9 +90,9 @@ function AdminClientes() {
     await updateCliente(cliente, {
       produto_3_liberado: novoValor,
       status_jornada: novoValor
-        ? "Código Final liberado"
+        ? JOURNEY_STATUS.CODIGO_FINAL_LIBERADO
         : cliente.produto_2_liberado
-          ? "Dossiê ORI liberado"
+          ? JOURNEY_STATUS.DOSSIE_ORI_LIBERADO
           : getBaseJourneyStatus(cliente),
     });
   };

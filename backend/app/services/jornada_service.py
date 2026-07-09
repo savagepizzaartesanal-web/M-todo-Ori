@@ -64,7 +64,7 @@ async def fetch_cliente_by_field(
     if response.status_code >= 400:
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
-            detail="Não foi possível consultar a jornada no Supabase.",
+            detail="Não foi possível consultar a jornada agora.",
         )
 
     rows = response.json()

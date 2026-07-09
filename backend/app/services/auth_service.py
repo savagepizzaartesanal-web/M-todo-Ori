@@ -16,7 +16,7 @@ def get_supabase_config() -> tuple[str, str]:
     if not supabase_url or not publishable_key:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Configuração Supabase ausente no backend.",
+            detail="Não foi possível preparar o acesso agora.",
         )
 
     return supabase_url.rstrip("/"), publishable_key

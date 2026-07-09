@@ -1,4 +1,4 @@
-function SyncNotice({ message, label = "Sincronização ORI" }) {
+function SyncNotice({ message, label = "Atualizando sua jornada" }) {
   if (!message) return null;
 
   return (

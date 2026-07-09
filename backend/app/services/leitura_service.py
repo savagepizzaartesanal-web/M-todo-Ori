@@ -1423,7 +1423,7 @@ async def get_produto1_relatorio(
     if not leitura.report or not leitura.resultado:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="A leitura do Produto 1 ainda não está pronta para relatório.",
+            detail="A leitura do Código das Deusas ainda não está pronta para relatório.",
         )
 
     report = leitura.report

@@ -180,14 +180,17 @@ const produto2RawSteps = [
     description:
       "Aqui reunimos fotos e informações simples para entender como sua imagem aparece no corpo, no rosto, nas cores e na rotina.",
     fields: [
-      field("uploads.fotos_validacao", "Registro da sua imagem", "fileUpload", [], {
+      field("uploads.fotos_validacao", "Faça aqui o upload das suas fotos (usaremos para validar suas respostas)", "fileUpload", [], {
         helper:
           "Reúna aqui os registros que vão orientar esta primeira leitura visual.",
       }),
-      field("dados_base.altura", "Sua altura", "text", [], {
+      field("dados_base.redes_sociais", "Suas redes sociais (Instagram, Tiktok, etc)", "text", [], {
+        placeholder: "@seuusuario",
+      }),
+      field("dados_base.altura", "Qual é a sua altura?", "text", [], {
         placeholder: "Ex.: 1,68 m",
       }),
-      field("dados_base.peso_aproximado", "Seu peso aproximado", "text", [], {
+      field("dados_base.peso_aproximado", "Qual é o seu peso aproximado", "text", [], {
         placeholder: "Não precisa ser exato",
       }),
       radio("dados_base.autoidentificacao_racial", "Como você se autodeclara racialmente?", [
@@ -303,7 +306,7 @@ const produto2RawSteps = [
         "D. Levemente cheios e arredondados.",
         "E. Muito cheios e muito redondos.",
       ]),
-      radio("estrutura_corporal.ancestralidade_fisica", "15. Como você percebe sua ancestralidade física no corpo?", [
+      radio("estrutura_corporal.ancestralidade_fisica", "15. Como você percebe sua ancestralidade física no corpo? (Esta pergunta ajuda a refinar sua análise estrutural, considerando como características herdadas influenciam sua silhueta real além dos padrões tradicionais.)", [
         "Predominantemente africana (ossos fortes, volume natural, curvas evidentes, densidade corporal)",
         "Predominantemente indígena (estrutura mais compacta, ossatura firme, corpo mais contido)",
         "Predominantemente europeia (estrutura mais fina, proporções alongadas ou delicadas)",
@@ -323,12 +326,12 @@ const produto2RawSteps = [
         "B. Fico vermelha no início, mas depois o bronzeado fixa (Neutro).",
         "C. Bronzeio com muita facilidade e fico com um tom dourado (Quente).",
       ]),
-      radio("coloracao.metais", "17. Teste dos Metais/Cores", [
+      radio("coloracao.metais", "17. Teste dos Metais/Cores: O que faz sua pele parecer mais \"viva\" e uniforme?", [
         "A. Acessórios prateados e tons de azul/rosa frio",
         "B. Fico bem tanto com ouro quanto com prata",
         "C. Acessórios dourados e tons de laranja/terrosos",
       ]),
-      radio("coloracao.profundidade", "18. Qual o nível de escuridão do seu conjunto?", [
+      radio("coloracao.profundidade", "18. Qual o nível de escuridão (profundidade) do conjunto (pele + olhos + cabelo natural)?", [
         "A. Claro: Tenho pouco contraste, tudo em mim é clarinho (ex: pele clara, olhos claros, cabelo loiro/castanho claro).",
         "B. Média: Não sou nem muito clara, nem muito escura.",
         "C. Escuro/Profundo: Meus olhos e cabelos são muito escuros e a pele tem presença (ex: pele retinta ou pele clara com cabelos/olhos pretos).",
@@ -338,12 +341,12 @@ const produto2RawSteps = [
         "B. Moderada / Neutra",
         "C. Brilhante/Intensa: Meus olhos têm cor/brilho vivo e minha pele tem viço. Fico ótima com cores puras e fortes (ex: batom vermelho vivo, cores neon).",
       ]),
-      radio("coloracao.contraste_preto_branco", "20. Olhando para uma foto sua em preto e branco, como aparece o contraste?", [
+      radio("coloracao.contraste_preto_branco", "20. Olhando para uma foto sua em preto e branco, qual a diferença entre a cor da sua pele e a cor do seu cabelo/olhos?", [
         "A. Baixo Contraste: Minha pele, olhos e cabelos têm tons muito parecidos (ex: tudo muito claro ou tudo muito escuro/retinto).",
         "B. Médio Contraste: Existe uma diferença clara, mas não é chocante.",
         "C. Alto Contraste: A diferença é muito grande (ex: pele muito clara e cabelo muito preto, ou dentes e olhos que \"saltam\" muito no rosto).",
       ]),
-      radio("coloracao.azul_laranja", "21. Teste das Cores (Azul vs. Laranja)", [
+      radio("coloracao.azul_laranja", "21. Teste das Cores (Azul vs. Laranja): Qual dessas cores te faz parecer mais descansada e disfarça olheiras?", [
         "A. Azul Royal / Azul Marinho: Sinto que tons frios me deixam mais elegante e com a pele uniforme. (Indica Subtom Frio)",
         "B. Não sei dizer / Não vejo diferença",
         "C. Laranja / Terracota / Amarelo Mostarda: Sinto que tons quentes me dão um \"ar de saúde\" e viço. (Indica Subtom Quente)",
@@ -353,17 +356,17 @@ const produto2RawSteps = [
         "B. Mistura de ambas / Difícil identificar:",
         "C. Esverdeadas ou Olivas",
       ]),
-      radio("coloracao.batons", "23. Reação a Batons", [
+      radio("coloracao.batons", "23. Reação a Batons: Qual tom de batom costuma receber mais elogios em você?", [
         "A. Rosa choque, Vinho ou Vermelho \"cereja\" (rosado): Tons frios e intensos.",
         "B. Tons suaves, \"cor de boca\" e sem muito brilho: Tons opacos/suaves.",
         "C. Nude amarronzado, Coral ou Vermelho \"tomate\" (alaranjado): Tons quentes.",
       ]),
-      radio("coloracao.nude", "24. Ao usar batons em tons de \"Nude\"", [
+      radio("coloracao.nude", "24. Ao usar batons em tons de \"Nude\", qual o resultado que você prefere ou que fica mais harmônico?", [
         "A. Nudes rosados ou \"cor de malva\" (Frio).",
         "B. Fico bem com vários tons, desde que não sejam extremos. (Neutro).",
         "C. Nudes amarronzados, pêssego ou \"cor de terra\" (Quente).",
       ]),
-      radio("coloracao.cores_vibrantes", "25. Como você sente que as cores vibrantes funcionam em você?", [
+      radio("coloracao.cores_vibrantes", "25. Como você sente que as cores vibrantes (como um Amarelo Canário ou um Pink) reagem no seu rosto?", [
         "A. Elas me deixam pálida ou parecem \"separadas\" do meu rosto (Indica pele de Intensidade Suave/Opaca).",
         "B. Depende muito da cor, algumas funcionam e outras não. (Moderado).",
         "C. Eu sustento bem cores fortes; elas parecem acender meu viço natural (Indica pele de Intensidade Brilhante).",
@@ -383,13 +386,13 @@ const produto2RawSteps = [
         "B. Tenho um equilíbrio; consigo transitar entre o brilho e o opaco sem grandes perdas. (Neutro)",
         "C. Minha pele tem um viço natural \"aceso\"; fico muito melhor com brilhos, acessórios polidos, pedras brilhantes e maquiagem iluminada.",
       ]),
-      radio("patton.tom_fundo", "29. Tom de Fundo", [
+      radio("patton.tom_fundo", "29: Tom de Fundo. --> Instrução: Observe a nuance que mais se destaca na sua pele sob a luz do dia.", [
         "A. Azulada/Arroxeada: Sinto que minha pele tem uma sombra profunda, quase azul em certos ângulos. (Blues/Jazz)",
         "B. Acinzentada/Rosada: Minha pele é mais clara ou média, com um fundo que puxa para o cinza ou rosa frio. (Nilo)",
         "C. Dourada/Amarelada: Minha pele brilha como ouro no sol. (Calypso/Saara)",
         "D. Avermelhada/Jambo: Minha pele tem um calor avermelhado intenso, cor de terra quente. (Spice)",
       ]),
-      radio("patton.reflexo_sol", "30. Validação de Fundo", [
+      radio("patton.reflexo_sol", "30. Validação de Fundo: Ao observar sua pele no sol, qual \"reflexo\" é mais nítido?", [
         "A. Fundo escuro azulado: Minha pele é retinta e profunda, com uma sombra fria que puxa para o azul. (Blues)",
         "B. Fundo escuro chocolate/arroxeado: Minha pele é escura e intensa, com um fundo marrom profundo e frio. (Jazz)",
         "C. Fundo claro acinzentado ou rosado: Minha pele é clara ou média, com uma nuance fria, oliva e suave. (Nilo)",
@@ -405,24 +408,24 @@ const produto2RawSteps = [
     title: "Cabelo e rotina",
     description: "Estas respostas ajudam a entender curvatura, fio, volume, cuidado possível e a moldura do seu rosto.",
     fields: [
-      radio("cabelo.curvatura", "31. Curvatura", [
+      radio("cabelo.curvatura", "31. Curvatura:", [
         "A. Liso (1 A/B/C)",
         "B. Ondulado (2 A/B/C)",
         "C. Cacheado (3 A/B/C)",
         "D. Crespo (4 A/B/C)",
         "E. Não sei / Estou em transição",
       ]),
-      radio("cabelo.espessura_fio", "32. Espessura do Fio", [
+      radio("cabelo.espessura_fio", "32. Espessura do Fio: Ao pegar um único fio de cabelo, como você o sente entre os dedos?", [
         "A. Fino (quase não sinto, quebra com facilidade).",
         "B. Médio.",
         "C. Grosso (sinto o fio bem presente, é resistente).",
       ]),
-      radio("cabelo.porosidade_absorcao", "33. Porosidade e Absorção", [
+      radio("cabelo.porosidade_absorcao", "33. Porosidade e Absorção: Como seu cabelo reage à água e aos produtos?", [
         "A. Demora muito para secar (Baixa porosidade - as cutículas são muito fechadas).",
         "B. Absorve bem a água e seca em tempo normal (Porosidade média).",
         "C. Demora para molhar, mas \"bebe\" o produto e seca muito rápido (Alta porosidade - o fio está com as cutículas abertas/danificadas).",
       ]),
-      radio("cabelo.densidade", "34. Densidade", [
+      radio("cabelo.densidade", "34. Densidade: Se você fizer um rabo de cavalo, qual a sensação de volume na base?", [
         "A. Pouco cabelo (consigo dar muitas voltas com o elástico).",
         "B. Quantidade média.",
         "C. Muito cabelo (o elástico mal consegue dar duas voltas, sinto \"muito peso\").",
@@ -452,7 +455,7 @@ const produto2RawSteps = [
         "B. Gostaria de aprender a lidar com o volume/frizz sem \"brigar\" com ele.",
         "C. Gostaria de mudar radicalmente (cor, corte ou textura) para me sentir mais eu mesma.",
       ]),
-      radio("cabelo.percepcao_moldura", "40. Percepção de Moldura", [
+      radio("cabelo.percepcao_moldura", "40. Percepção de Moldura: Você sente que seu cabelo hoje \"conversa\" com quem você é internamente?", [
         "A. Sim, sinto que ele é minha marca registrada e me representa 100%.",
         "B. Às vezes sim, às vezes não. Ainda estou em busca da minha melhor versão.",
         "C. Não, sinto que ele esconde quem eu sou ou que ainda não encontrei o corte/estilo certo.",
@@ -465,13 +468,13 @@ const produto2RawSteps = [
     title: "Como você se percebe agora",
     description: "Sua primeira leitura já trouxe uma direção. Aqui você conta o que faz sentido e qual desafio de imagem ainda precisa ser cuidado.",
     fields: [
-      radio("essencia.identificacao_arquetipo_mesclado", "43. Identificação com o Arquétipo Mesclado", [
+      radio("essencia.identificacao_arquetipo_mesclado", "43. Identificação com o Arquétipo Mesclado: No seu \"Mapa dos Arquétipos\", você se identificou com o nome da combinação sugerida? (Ex: Selvagem Magnética, Musa Enigmática, Soberana Estratégica...)", [
         "Sim, descreve exatamente como me sinto.",
         "Em partes, sinto que uma deusa domina muito mais que a outra.",
         "Não, ainda me sinto confusa sobre essa combinação.",
       ]),
-      field("desafio_imagem.dificuldade_atual", "44. Desafio de Estilo", "textarea"),
-      field("espaco_telurica", "45. Espaço Telúrica", "textarea"),
+      field("desafio_imagem.dificuldade_atual", "44. Desafio de Estilo: Qual a sua maior dificuldade ao se vestir hoje ou o que mais te incomoda na sua imagem atual?", "textarea"),
+      field("espaco_telurica", "45. Espaço Telúrica: Há algo mais sobre sua história, seu corpo ou sua ancestralidade que você gostaria de compartilhar para que seu dossiê seja ainda mais especial?", "textarea"),
     ],
   },
 ];

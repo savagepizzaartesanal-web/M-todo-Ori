@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 import { FEATURES } from "../config/features";
+import { JOURNEY_COPY, JOURNEY_LABELS } from "../content/journeyCopy";
 
 function NextStepCard() {
   return (
@@ -124,7 +125,7 @@ function NextStepCard() {
             className="ori-type-system text-[10px] md:text-xs"
             style={{ color: "var(--gold-soft)" }}
           >
-            Próxima etapa
+            {JOURNEY_LABELS.proximoPasso}
           </p>
         </div>
 
@@ -159,11 +160,7 @@ function NextStepCard() {
             textShadow: "0 0 28px rgba(0,0,0,0.45)",
           }}
         >
-          Seu Código das Deusas revelou a força que organiza sua imagem por
-          dentro. Agora falta ver como isso aparece na prática: no seu corpo,
-          nas suas cores, no seu cabelo, na sua beleza e na sua presença. O
-          Dossiê ORI existe para mostrar, com profundidade e clareza, como essa
-          força aparece na prática.
+          {JOURNEY_COPY.dossieOri.nextBodyCompact}
         </p>
 
         <div className="flex flex-wrap gap-3 mb-7 max-w-[540px]">

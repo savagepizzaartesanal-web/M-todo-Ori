@@ -5,6 +5,7 @@ from typing import Any
 import httpx
 from fastapi import HTTPException, status
 
+from app.constants import journey_status
 from app.schemas.auth import CurrentUser
 from app.schemas.produto3 import (
     Produto3AdminResponse,
@@ -358,7 +359,7 @@ async def upsert_produto3_row(
     if not rows:
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
-            detail="O Supabase não confirmou o Código Final salvo.",
+            detail="Não foi possível confirmar o Código Final salvo.",
         )
 
     return rows[0]
@@ -481,6 +482,12 @@ async def save_produto3_insumos(
         },
         current_user=current_user,
     )
+    if next_status == "aguardando_inventario":
+        await update_cliente_status_jornada(
+            cliente_id=cliente_id,
+            status_jornada=journey_status.CODIGO_FINAL_EM_PREENCHIMENTO,
+            current_user=current_user,
+        )
 
     return row_to_response(
         row,
@@ -534,7 +541,7 @@ async def submit_produto3_insumos(
     )
     await update_cliente_status_jornada(
         cliente_id=cliente_id,
-        status_jornada="Código Final em análise",
+        status_jornada=journey_status.CODIGO_FINAL_EM_ANALISE,
         current_user=current_user,
     )
 
@@ -608,7 +615,7 @@ async def publish_admin_produto3(
     )
     await update_cliente_status_jornada(
         cliente_id=cliente_id,
-        status_jornada="Código Final publicado",
+        status_jornada=journey_status.CODIGO_FINAL_PUBLICADO,
         current_user=current_user,
     )
 
@@ -632,9 +639,8 @@ async def unpublish_admin_produto3(
     )
     await update_cliente_status_jornada(
         cliente_id=cliente_id,
-        status_jornada="Código Final em análise",
+        status_jornada=journey_status.CODIGO_FINAL_EM_ANALISE,
         current_user=current_user,
     )
 
     return row_to_admin_response(row, cliente)
-

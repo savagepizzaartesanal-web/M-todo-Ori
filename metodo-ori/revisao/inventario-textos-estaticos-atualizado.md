@@ -1,0 +1,3677 @@
+# Inventário completo atualizado de textos estáticos visíveis - Método ORI
+
+Gerado a partir do estado atual do repositório. A base bruta foi atualizada em `metodo-ori/revisao/revisao-comunicacao-textos-sistema.json`; este Markdown filtra trechos internos óbvios de console, JSX capturado por engano e prompts internos que não são interface.
+
+- Trechos únicos da extração bruta: `3343`
+- Trechos mantidos neste inventário visível/revisável: `3256`
+- Escopo: login/cadastro, onboarding, Portal/Átrio ORI, Produto 1 completo, Relatório/PDF, Espelho ORI, Oráculo, Produto 2, Produto 3, página do método, componentes compartilhados, dados editoriais e telas de admin.
+- Observação: textos dinâmicos vindos do banco, nomes de clientes, valores digitados e conteúdos publicados manualmente pelo admin aparecem como variáveis ou fontes de conteúdo, não como texto estático fixo.
+
+## Sinalizações
+
+### Palavras técnicas/de sistema visíveis ou revisáveis
+
+| Termo | Ocorrências | Exemplos |
+| --- | ---: | --- |
+| sistema | 2 | `backend/app/data/reports.json:1` “A Cuidadora Estratégica nasce do encontro entre acolhimento e lucidez. Existe em você uma capacidade de perceber necessidades antes que elas sejam ditas, organizar soluções e oferecer suporte de forma prática. Você costuma notar o que falta, o que está fora do lugar, o que precisa ser ajustado e o que pode aliviar a vida de alguém. Deméter traz cuidado, nutrição, cuidado afetivo, vínculo e sustentação. Athena traz estratégia, clareza, inteligência, organização e visão de sistema. Juntas, elas formam uma mulher que não apenas sente a necessidade do outro. Ela entende o que precisa ser feito.”<br>`backend/app/data/reports.json:1` “Nos vínculos, você tende a valorizar clareza, compromisso, lealdade e coerência. Relações ambíguas, desorganizadas ou emocionalmente instáveis podem te cansar rapidamente. O risco é tentar organizar o vínculo como um sistema. Você pode querer clareza antes da hora, resposta antes do processo e coerência antes que o outro consiga elaborar o que sente.” |
+| cálculo/calculado | 5 | `metodo-ori/src/data/reportVisualGuides.js:86` “calor calculado”<br>`metodo-ori/src/data/reportVisualGuides.js:266` “calcula impacto”<br>`backend/app/data/reports.json:1` “A sombra da Sedutora Estratégica aparece quando a mente tenta controlar o desejo. Athena pode transformar tudo em análise, cálculo e controle. Afrodite pode usar charme como forma de conduzir a situação sem se expor de verdade. Você pode pensar demais antes de sentir, seduzir mantendo distância ou analisar emoções em vez de vivê-las.”<br>`backend/app/data/reports.json:1` “Sua força não está em ser a mais intensa, nem a mais emocional, nem a mais óbvia. Está em perceber, escolher e agir com precisão. A Sedutora Estratégica amadurece quando permite que o desejo exista sem precisar ser totalmente calculado. Sua beleza ganha força na união entre lucidez e magnetismo: elegante sem ser fria, sensual sem ser óbvia, estratégica sem perder corpo. Seu Código das Deusas revelou a força que organiza sua imagem por dentro. Para preparar o Dossiê ORI, envie fotos com boa luz, rosto limpo, sem maquiagem, e uma roupa neutra mais ajustada ao corpo. Essas imagens ajudam a próxima leitura a observar sua presença real sem interferências: corpo, coloração, cabelo, textura, proporção, contraste e direção estética aplicada. O Dossiê ORI mostra como essa força aparece na prática: corpo, rosto, cores, cabelo, beleza e presença. É a próxima etapa para transformar leitura em imagem real.”<br>`backend/app/data/reports.json:1` “Sua modelagem pede estrutura com detalhe estratégico: blazers ajustados, calças de alfaiataria, vestidos minimalistas com recortes, saias de corte limpo, peças estruturadas, decotes calculados, fendas discretas e camisas com acabamento inteligente. A regra central é mostrar intenção sem mostrar demais.” |
+| erro ao | 0 |  |
+| sincronização/sincronizar | 0 |  |
+| API | 0 |  |
+| Supabase | 0 |  |
+| Google | 0 |  |
+| backend | 0 |  |
+| Storage/bucket | 0 |  |
+| IA/inteligência artificial | 5 | `metodo-ori/src/pages/AdminClienteDetalhe.jsx:400` “Mensagem gerada com IA. Revise antes de enviar.”<br>`metodo-ori/src/pages/AdminClienteDetalhe.jsx:407` “Não conseguimos gerar com IA agora. A mensagem base foi mantida.”<br>`metodo-ori/src/pages/AdminClienteDetalhe.jsx:669` “Gerar com IA”<br>`metodo-ori/src/components/Produto2ReviewPanel.jsx:286` “Gerar com IA”<br>`metodo-ori/src/components/Produto2ReviewPanel.jsx:253` “Use apenas diagnósticos confirmados. A IA não deve inventar dados.” |
+| admin | 11 | `metodo-ori/src/pages/AdminDashboard.jsx:239` “Painel Administrativo”<br>`metodo-ori/src/pages/AdminClientes.jsx:287` “Painel Administrativo”<br>`metodo-ori/src/pages/AdminClienteDetalhe.jsx:1534` “Histórico administrativo”<br>`backend/app/services/admin_service.py:51` “Não foi possível validar o acesso administrativo.”<br>`backend/app/services/admin_service.py:58` “Acesso administrativo necessário.”<br>`backend/app/services/admin_service.py:314` “Não foi possível registrar o histórico administrativo.” |
+
+### Mesmo conceito nomeado de formas diferentes
+
+#### Produto 1 / Código das Deusas / primeira leitura / leitura arquetípica
+- `Produto 1`: 11 ocorrência(s). `metodo-ori/src/pages/AdminDashboard.jsx:133` “A maioria das respostas indica reconhecimento. O Produto 1 está cumprindo a promessa de leitura inicial.”; `metodo-ori/src/pages/AdminDashboard.jsx:245` “Acompanhe a validação do Produto 1 e decida quais clientes pedem abordagem agora.”; `metodo-ori/src/pages/AdminDashboard.jsx:466` “Vozes recentes do Produto 1”; `metodo-ori/src/pages/AdminClienteDetalhe.jsx:978` “Produto 1 · Código das Deusas”
+- `Código das Deusas`: 70 ocorrência(s). `metodo-ori/src/pages/AdminClientes.jsx:113` “Código das Deusas concluído”; `metodo-ori/src/pages/AdminClientes.jsx:114` “Lead / Código das Deusas”; `metodo-ori/src/pages/AdminClientes.jsx:261` “Código das Deusas”; `metodo-ori/src/pages/AdminClienteDetalhe.jsx:229` “Código das Deusas”
+- `primeira leitura`: 61 ocorrência(s). `metodo-ori/src/pages/AdminClienteDetalhe.jsx:231` “Primeira leitura pronta:”; `metodo-ori/src/pages/AdminClienteDetalhe.jsx:232` “Aguardando conclusão da primeira leitura.”; `metodo-ori/src/utils/adminClientPriority.js:279` “. Vi que sua primeira leitura do Código das Deusas já ficou pronta.”; `metodo-ori/src/utils/adminClientPriority.js:290` “Quando puder, finalize as respostas para o ORI organizar sua primeira leitura com mais precisão.”
+- `Leitura arquetípica`: 23 ocorrência(s). `metodo-ori/src/pages/AdminClienteDetalhe.jsx:990` “Respostas da leitura arquetípica”; `backend/app/services/leitura_service.py:706` “Nesta leitura arquetípica,”; `backend/app/services/leitura_service.py:707` “nesta leitura arquetípica,”; `backend/app/services/leitura_service.py:708` “leitura arquetípica”
+- `leitura arquetípica`: 23 ocorrência(s). `metodo-ori/src/pages/AdminClienteDetalhe.jsx:990` “Respostas da leitura arquetípica”; `backend/app/services/leitura_service.py:706` “Nesta leitura arquetípica,”; `backend/app/services/leitura_service.py:707` “nesta leitura arquetípica,”; `backend/app/services/leitura_service.py:708` “leitura arquetípica”
+
+#### Produto 2 / Dossiê ORI / leitura visual / próxima leitura
+- `Produto 2`: 4 ocorrência(s). `metodo-ori/src/pages/AdminClienteDetalhe.jsx:239` “Aguardando liberação do Produto 2.”; `backend/app/services/leitura_service.py:709` “Produto 2”; `metodo-ori/src/components/Produto2ReviewPanel.jsx:226` “Oficina interna · Produto 2”; `metodo-ori/src/components/Produto2ReviewPanel.jsx:322` “Publicar não libera o Produto 2. O acesso da cliente permanece no controle “Liberar Dossiê ORI”.”
+- `Dossiê ORI`: 79 ocorrência(s). `metodo-ori/src/pages/AdminClientes.jsx:112` “Dossiê ORI”; `metodo-ori/src/pages/AdminClienteDetalhe.jsx:236` “Dossiê ORI”; `metodo-ori/src/pages/AdminClienteDetalhe.jsx:238` “Dossiê ORI liberado para a cliente.”; `metodo-ori/src/pages/AdminClienteDetalhe.jsx:1417` “Acesso ao Dossiê ORI removido”
+- `leitura visual`: 3 ocorrência(s). `metodo-ori/src/data/produto2Form.js:185` “Reúna aqui os registros que vão orientar esta primeira leitura visual.”; `backend/app/services/produto2_calculo_service.py:163` “Sugestao preliminar baseada nos sinais corporais informados, seguindo a pontuacao estrutural da planilha original. A validacao final depende da leitura visual do admin.”; `metodo-ori/src/pages/Produto3.jsx:211` “O Código Final abre quando sua leitura visual já estiver pronta.”
+- `próxima leitura`: 20 ocorrência(s). `metodo-ori/src/pages/EspelhoOri.jsx:2747` “A próxima leitura traduz essa direção em forma, cor e presença visual.”; `metodo-ori/src/pages/EspelhoOri.jsx:2748` “O selo se completa quando a próxima leitura trouxer dados de imagem.”; `metodo-ori/src/pages/PortalCliente.jsx:464` “Sua próxima leitura deve transformar força em direção.”; `metodo-ori/src/pages/QuizProduto1.jsx:1682` “Sinal registrado. O espelho avança para a próxima leitura...”
+
+#### Produto 3 / Código Final / Cápsula / aplicação final
+- `Código Final`: 45 ocorrência(s). `metodo-ori/src/pages/AdminClientes.jsx:111` “Código Final”; `metodo-ori/src/pages/AdminClienteDetalhe.jsx:243` “Código Final”; `metodo-ori/src/pages/AdminClienteDetalhe.jsx:245` “Código Final liberado para a cliente.”; `metodo-ori/src/pages/AdminClienteDetalhe.jsx:246` “Código Final ainda pendente.”
+- `Cápsula`: 18 ocorrência(s). `metodo-ori/src/content/journeyCopy.js:27` “O Código Final aplica sua identidade ao armário real: cápsula, fórmulas de look, prioridades de compra e escolhas com critério.”; `metodo-ori/src/pages/EspelhoOri.jsx:962` “Cápsula visual aplicada ao seu armário real”; `metodo-ori/src/pages/EspelhoOri.jsx:996` “O Código Final aplica sua identidade ao acervo, à cápsula, às fórmulas de look, às lacunas e às escolhas práticas da sua rotina.”; `metodo-ori/src/pages/EspelhoOri.jsx:1197` “Seu Código Final reúne cápsula, looks, compras e rotina para consultar na prática.”
+- `cápsula`: 18 ocorrência(s). `metodo-ori/src/content/journeyCopy.js:27` “O Código Final aplica sua identidade ao armário real: cápsula, fórmulas de look, prioridades de compra e escolhas com critério.”; `metodo-ori/src/pages/EspelhoOri.jsx:962` “Cápsula visual aplicada ao seu armário real”; `metodo-ori/src/pages/EspelhoOri.jsx:996` “O Código Final aplica sua identidade ao acervo, à cápsula, às fórmulas de look, às lacunas e às escolhas práticas da sua rotina.”; `metodo-ori/src/pages/EspelhoOri.jsx:1197` “Seu Código Final reúne cápsula, looks, compras e rotina para consultar na prática.”
+- `aplicação final`: 3 ocorrência(s). `metodo-ori/src/pages/EspelhoOri.jsx:992` “Aplicação final liberada”; `metodo-ori/src/pages/MetodoOri.jsx:61` “Ver aplicação final”; `metodo-ori/src/pages/PortalCliente.jsx:364` “Aplicação final”
+
+#### Portal / Átrio ORI / jornada
+- `Portal`: 16 ocorrência(s). `metodo-ori/src/components/Sidebar.jsx:7` “Portal Cliente”; `metodo-ori/src/components/Sidebar.jsx:314` “Sair do portal”; `metodo-ori/src/components/Sidebar.jsx:530` “Portal conectado”; `metodo-ori/src/components/Sidebar.jsx:571` “Sair do Portal”
+- `Átrio ORI`: 11 ocorrência(s). `metodo-ori/src/pages/AdminClienteDetalhe.jsx:225` “Cliente entrou no Átrio ORI.”; `metodo-ori/src/content/journeyCopy.js:2` “Átrio ORI”; `metodo-ori/src/pages/Login.jsx:521` “Átrio ORI”; `metodo-ori/src/pages/Login.jsx:702` “Entrar no Átrio ORI”
+- `jornada`: 74 ocorrência(s). `metodo-ori/src/pages/AdminClienteDetalhe.jsx:250` “Jornada finalizada”; `metodo-ori/src/pages/AdminClienteDetalhe.jsx:1314` “Timeline da Jornada”; `metodo-ori/src/pages/AdminClienteDetalhe.jsx:1402` “Ações da Jornada”; `metodo-ori/src/pages/AdminClienteDetalhe.jsx:1492` “Jornada marcada como finalizada”
+
+#### Onboarding / Entrada ORI / perfil
+- `Onboarding`: 1 ocorrência(s). `metodo-ori/src/components/onboarding/OnboardingShell.jsx:72` “oriOnboardingOrbit 42s linear infinite”
+- `Entrada ORI`: 11 ocorrência(s). `metodo-ori/src/pages/AdminClienteDetalhe.jsx:845` “Perfil de Entrada ORI”; `metodo-ori/src/utils/adminClientPriority.js:47` “Entrada ORI não concluída.”; `metodo-ori/src/utils/adminClientPriority.js:306` “Solicitar conclusão da Entrada ORI”; `metodo-ori/src/utils/adminClientPriority.js:308` “. Vi que sua Entrada ORI ainda não foi finalizada.”
+- `perfil`: 33 ocorrência(s). `metodo-ori/src/pages/AdminClienteDetalhe.jsx:275` “Perfil criado em”; `metodo-ori/src/pages/AdminClienteDetalhe.jsx:280` “Perfil ainda não preenchido”; `metodo-ori/src/pages/AdminClienteDetalhe.jsx:845` “Perfil de Entrada ORI”; `metodo-ori/src/pages/AdminClienteDetalhe.jsx:857` “Respostas do perfil inicial”
+
+#### Relatório / leitura / resultado
+- `Relatório`: 17 ocorrência(s). `backend/app/services/leitura_service.py:1426` “A leitura do Código das Deusas ainda não está pronta para relatório.”; `backend/app/services/leitura_service.py:1437` “Relatório ORI ·”; `metodo-ori/src/pages/EspelhoOri.jsx:2156` “Relatório digital”; `metodo-ori/src/pages/EspelhoOri.jsx:2172` “Abra o relatório do Código das Deusas em formato de leitura contínua.”
+- `relatório`: 17 ocorrência(s). `backend/app/services/leitura_service.py:1426` “A leitura do Código das Deusas ainda não está pronta para relatório.”; `backend/app/services/leitura_service.py:1437` “Relatório ORI ·”; `metodo-ori/src/pages/EspelhoOri.jsx:2156` “Relatório digital”; `metodo-ori/src/pages/EspelhoOri.jsx:2172` “Abra o relatório do Código das Deusas em formato de leitura contínua.”
+- `leitura`: 322 ocorrência(s). `metodo-ori/src/pages/AdminDashboard.jsx:128` “Priorizar clientes que concluíram a leitura e ainda não deram retorno.”; `metodo-ori/src/pages/AdminDashboard.jsx:133` “A maioria das respostas indica reconhecimento. O Produto 1 está cumprindo a promessa de leitura inicial.”; `metodo-ori/src/pages/AdminDashboard.jsx:138` “Há sinal de que a leitura toca, mas algumas clientes precisam enxergar melhor a aplicação concreta.”; `metodo-ori/src/pages/AdminDashboard.jsx:143` “A taxa de não reconhecimento está alta para um protótipo de leitura simbólica.”
+- `resultado`: 22 ocorrência(s). `metodo-ori/src/pages/AdminDashboard.jsx:144` “Revisar perguntas, resultado e texto de transição antes de escalar.”; `metodo-ori/src/pages/AdminClientes.jsx:632` “Sem resultado”; `metodo-ori/src/pages/AdminClienteDetalhe.jsx:261` “Sem resultado”; `metodo-ori/src/utils/adminClientPriority.js:130` “Conectar o convite ao resultado do Produto 1.”
+
+#### Oráculo / carta diária / leitura salva
+- `Oráculo`: 14 ocorrência(s). `metodo-ori/src/pages/AdminClientes.jsx:264` “Com Oráculo”; `metodo-ori/src/pages/AdminClientes.jsx:678` “Oráculo”; `metodo-ori/src/pages/AdminClienteDetalhe.jsx:1173` “Oráculo”; `metodo-ori/src/utils/adminClientPriority.js:149` “Ativar Oráculo”
+- `carta diária`: 7 ocorrência(s). `metodo-ori/src/pages/AdminClienteDetalhe.jsx:1195` “Nenhuma carta diária registrada ainda”; `metodo-ori/src/utils/adminClientPriority.js:150` “Carta diária de hoje ainda não registrada.”; `metodo-ori/src/pages/OraculoOri.jsx:689` “A carta diária abre depois que sua primeira leitura estiver pronta.”; `backend/app/services/oraculo_service.py:52` “Não foi possível consultar a carta diária.”
+- `leitura salva`: 2 ocorrência(s). `metodo-ori/src/pages/OraculoOri.jsx:444` “Estamos usando sua leitura salva enquanto o Oráculo atualiza sua jornada.”; `metodo-ori/src/pages/QuizProduto1.jsx:3081` “Estamos usando a leitura salva enquanto o ORI atualiza sua jornada.”
+
+#### Status de entrega
+- `liberado`: 21 ocorrência(s). `metodo-ori/src/pages/AdminClientes.jsx:742` “Dossiê liberado”; `metodo-ori/src/pages/AdminClientes.jsx:763` “Código liberado”; `metodo-ori/src/pages/AdminClienteDetalhe.jsx:238` “Dossiê ORI liberado para a cliente.”; `metodo-ori/src/pages/AdminClienteDetalhe.jsx:245` “Código Final liberado para a cliente.”
+- `em análise`: 4 ocorrência(s). `metodo-ori/src/constants/journeyStatus.js:10` “Dossiê ORI em análise”; `metodo-ori/src/constants/journeyStatus.js:14` “Código Final em análise”; `metodo-ori/src/pages/Produto2.jsx:460` “Em análise”; `backend/app/data/reports.json:1` “A sombra da Sedutora Estratégica aparece quando a mente tenta controlar o desejo. Athena pode transformar tudo em análise, cálculo e controle. Afrodite pode usar charme como forma de conduzir a situação sem se expor de verdade. Você pode pensar demais antes de sentir, seduzir mantendo distância ou analisar emoções em vez de vivê-las.”
+- `publicado`: 10 ocorrência(s). `metodo-ori/src/pages/AdminClienteDetalhe.jsx:1475` “Dossiê marcado como publicado”; `metodo-ori/src/pages/AdminClienteDetalhe.jsx:1483` “Marcar Dossiê publicado”; `backend/app/services/produto3_service.py:467` “Código Final publicado não pode receber novos insumos.”; `backend/app/services/produto3_service.py:521` “Código Final publicado não pode receber novo envio.”
+- `selado`: 3 ocorrência(s). `metodo-ori/src/pages/EspelhoOri.jsx:1018` “Dossiê ainda selado”; `metodo-ori/src/pages/EspelhoOri.jsx:1249` “Código Final ainda selado”; `metodo-ori/src/pages/EspelhoOri.jsx:3876` “Dossiê ORI ainda selado”
+- `disponível`: 18 ocorrência(s). `metodo-ori/src/components/ReportAccordion.jsx:295` “Camada disponível”; `metodo-ori/src/pages/OraculoOri.jsx:76` “Vista algo que te deixe menos disponível para o olhar dos outros e mais disponível para você. Contorno também é elegância.”; `metodo-ori/src/pages/PortalCliente.jsx:134` “Feedback da leitura indisponível no portal:”; `metodo-ori/src/pages/PortalCliente.jsx:143` “Carta diária indisponível no portal:”
+
+### Textos muito parecidos que poderiam ser unificados
+
+#### Repetições exatas entre arquivos
+- “Dossiê ORI” — 13 ocorrência(s): `metodo-ori/src/pages/AdminClientes.jsx:112`; `metodo-ori/src/pages/AdminClienteDetalhe.jsx:236`; `backend/app/services/leitura_service.py:709`; `metodo-ori/src/components/NextStepCard.jsx:140`; `metodo-ori/src/content/journeyCopy.js:4`; `metodo-ori/src/components/Sidebar.jsx:10`; `metodo-ori/src/pages/EspelhoOri.jsx:660`; `backend/app/services/mapa_vivo_service.py:499`
+- “Código das Deusas” — 11 ocorrência(s): `metodo-ori/src/pages/AdminClientes.jsx:261`; `metodo-ori/src/pages/AdminClienteDetalhe.jsx:229`; `metodo-ori/src/content/journeyCopy.js:3`; `metodo-ori/src/components/Sidebar.jsx:9`; `metodo-ori/src/pages/EspelhoOri.jsx:663`; `backend/app/services/mapa_vivo_service.py:454`; `metodo-ori/src/pages/MetodoOri.jsx:11`; `metodo-ori/src/pages/PortalCliente.jsx:283`
+- “Código Final” — 10 ocorrência(s): `metodo-ori/src/pages/AdminClientes.jsx:111`; `metodo-ori/src/pages/AdminClienteDetalhe.jsx:243`; `metodo-ori/src/content/journeyCopy.js:5`; `metodo-ori/src/components/Sidebar.jsx:11`; `metodo-ori/src/pages/EspelhoOri.jsx:911`; `backend/app/services/mapa_vivo_service.py:540`; `metodo-ori/src/pages/OraculoOri.jsx:360`; `metodo-ori/src/pages/MetodoOri.jsx:52`
+- “Musa Enigmática” — 9 ocorrência(s): `metodo-ori/src/data/cliente.js:4`; `metodo-ori/src/data/reportVisualGuides.js:32`; `metodo-ori/src/data/archetypeImages.js:22`; `metodo-ori/src/data/archetypeThemes.js:2`; `backend/app/services/produto2_calculo_service.py:35`; `metodo-ori/src/pages/Produto1Relatorio.jsx:19`; `backend/app/data/quiz.py:11`; `backend/app/data/reports.json:1`
+- “Amante Nutridora” — 8 ocorrência(s): `metodo-ori/src/data/reportVisualGuides.js:66`; `metodo-ori/src/data/archetypeImages.js:2`; `metodo-ori/src/data/archetypeThemes.js:18`; `backend/app/services/produto2_calculo_service.py:32`; `metodo-ori/src/pages/Produto1Relatorio.jsx:14`; `backend/app/data/quiz.py:15`; `backend/app/data/reports.json:1`; `backend/app/services/pdf_service.py:39`
+- “Autônoma Absoluta” — 8 ocorrência(s): `metodo-ori/src/data/reportVisualGuides.js:185`; `metodo-ori/src/data/archetypeImages.js:6`; `metodo-ori/src/data/archetypeThemes.js:74`; `backend/app/services/produto2_calculo_service.py:45`; `metodo-ori/src/pages/Produto1Relatorio.jsx:15`; `backend/app/data/quiz.py:39`; `backend/app/data/reports.json:1`; `backend/app/services/pdf_service.py:40`
+- “Cuidadora Estratégica” — 8 ocorrência(s): `metodo-ori/src/data/reportVisualGuides.js:202`; `metodo-ori/src/data/archetypeImages.js:10`; `metodo-ori/src/data/archetypeThemes.js:82`; `backend/app/services/produto2_calculo_service.py:43`; `metodo-ori/src/pages/Produto1Relatorio.jsx:16`; `backend/app/data/quiz.py:35`; `backend/app/data/reports.json:1`; `backend/app/services/pdf_service.py:41`
+- “Guardiã Sensível” — 8 ocorrência(s): `metodo-ori/src/data/reportVisualGuides.js:134`; `metodo-ori/src/data/archetypeImages.js:14`; `metodo-ori/src/data/archetypeThemes.js:50`; `backend/app/services/produto2_calculo_service.py:37`; `metodo-ori/src/pages/Produto1Relatorio.jsx:17`; `backend/app/data/quiz.py:23`; `backend/app/data/reports.json:1`; `backend/app/services/pdf_service.py:42`
+- “Matriarca Soberana” — 8 ocorrência(s): `metodo-ori/src/data/reportVisualGuides.js:219`; `metodo-ori/src/data/archetypeImages.js:18`; `metodo-ori/src/data/archetypeThemes.js:90`; `backend/app/services/produto2_calculo_service.py:40`; `metodo-ori/src/pages/Produto1Relatorio.jsx:18`; `backend/app/data/quiz.py:29`; `backend/app/data/reports.json:1`; `backend/app/services/pdf_service.py:43`
+- “Presença” — 8 ocorrência(s): `backend/app/services/leitura_service.py:282`; `metodo-ori/src/components/NextStepCard.jsx:167`; `metodo-ori/src/components/report/ImageManual.jsx:108`; `metodo-ori/src/pages/EspelhoOri.jsx:537`; `backend/app/services/mapa_vivo_service.py:37`; `metodo-ori/src/components/Produto2ReviewPanel.jsx:34`; `metodo-ori/src/pages/PortalCliente.jsx:410`; `metodo-ori/src/pages/Produto1.jsx:154`
+- “Protetora Selvagem” — 8 ocorrência(s): `metodo-ori/src/data/reportVisualGuides.js:236`; `metodo-ori/src/data/archetypeImages.js:26`; `metodo-ori/src/data/archetypeThemes.js:98`; `backend/app/services/produto2_calculo_service.py:44`; `metodo-ori/src/pages/Produto1Relatorio.jsx:20`; `backend/app/data/quiz.py:37`; `backend/app/data/reports.json:1`; `backend/app/services/pdf_service.py:45`
+- “Rainha Magnética” — 8 ocorrência(s): `metodo-ori/src/data/reportVisualGuides.js:49`; `metodo-ori/src/data/archetypeImages.js:30`; `metodo-ori/src/data/archetypeThemes.js:10`; `backend/app/services/produto2_calculo_service.py:31`; `metodo-ori/src/pages/Produto1Relatorio.jsx:21`; `backend/app/data/quiz.py:13`; `backend/app/data/reports.json:1`; `backend/app/services/pdf_service.py:46`
+- “Rainha Oculta” — 8 ocorrência(s): `metodo-ori/src/data/reportVisualGuides.js:117`; `metodo-ori/src/data/archetypeImages.js:34`; `metodo-ori/src/data/archetypeThemes.js:42`; `backend/app/services/produto2_calculo_service.py:36`; `metodo-ori/src/pages/Produto1Relatorio.jsx:22`; `backend/app/data/quiz.py:21`; `backend/app/data/reports.json:1`; `backend/app/services/pdf_service.py:47`
+- “Sedutora Estratégica” — 8 ocorrência(s): `metodo-ori/src/data/reportVisualGuides.js:83`; `metodo-ori/src/data/archetypeImages.js:38`; `metodo-ori/src/data/archetypeThemes.js:26`; `backend/app/services/produto2_calculo_service.py:33`; `metodo-ori/src/pages/Produto1Relatorio.jsx:23`; `backend/app/data/quiz.py:17`; `backend/app/data/reports.json:1`; `backend/app/services/pdf_service.py:48`
+- “Selvagem Intuitiva” — 8 ocorrência(s): `metodo-ori/src/data/reportVisualGuides.js:168`; `metodo-ori/src/data/archetypeImages.js:46`; `metodo-ori/src/data/archetypeThemes.js:66`; `backend/app/services/produto2_calculo_service.py:39`; `metodo-ori/src/pages/Produto1Relatorio.jsx:24`; `backend/app/data/quiz.py:27`; `backend/app/data/reports.json:1`; `backend/app/services/pdf_service.py:49`
+- “Selvagem Magnética” — 8 ocorrência(s): `metodo-ori/src/data/reportVisualGuides.js:100`; `metodo-ori/src/data/archetypeImages.js:42`; `metodo-ori/src/data/archetypeThemes.js:34`; `backend/app/services/produto2_calculo_service.py:34`; `metodo-ori/src/pages/Produto1Relatorio.jsx:25`; `backend/app/data/quiz.py:19`; `backend/app/data/reports.json:1`; `backend/app/services/pdf_service.py:50`
+- “Soberana Estratégica” — 8 ocorrência(s): `metodo-ori/src/data/reportVisualGuides.js:253`; `metodo-ori/src/data/archetypeImages.js:50`; `metodo-ori/src/data/archetypeThemes.js:106`; `backend/app/services/produto2_calculo_service.py:41`; `metodo-ori/src/pages/Produto1Relatorio.jsx:26`; `backend/app/data/quiz.py:31`; `backend/app/data/reports.json:1`; `backend/app/services/pdf_service.py:51`
+- “Soberana Indomável” — 8 ocorrência(s): `metodo-ori/src/data/reportVisualGuides.js:270`; `metodo-ori/src/data/archetypeImages.js:54`; `metodo-ori/src/data/archetypeThemes.js:114`; `backend/app/services/produto2_calculo_service.py:42`; `metodo-ori/src/pages/Produto1Relatorio.jsx:27`; `backend/app/data/quiz.py:33`; `backend/app/data/reports.json:1`; `backend/app/services/pdf_service.py:52`
+- “Visionária Sutil” — 8 ocorrência(s): `metodo-ori/src/data/reportVisualGuides.js:151`; `metodo-ori/src/data/archetypeImages.js:58`; `metodo-ori/src/data/archetypeThemes.js:58`; `backend/app/services/produto2_calculo_service.py:38`; `metodo-ori/src/pages/Produto1Relatorio.jsx:28`; `backend/app/data/quiz.py:25`; `backend/app/data/reports.json:1`; `backend/app/services/pdf_service.py:53`
+- “Próximo passo” — 6 ocorrência(s): `metodo-ori/src/content/journeyCopy.js:6`; `metodo-ori/src/pages/EspelhoOri.jsx:945`; `metodo-ori/src/pages/OraculoOri.jsx:241`; `metodo-ori/src/pages/QuizProduto1.jsx:1923`; `metodo-ori/src/pages/Produto1Relatorio.jsx:605`; `backend/app/services/pdf_service.py:375`
+- “Quero escrever com minhas palavras” — 6 ocorrência(s): `metodo-ori/src/utils/adminClientPriority.js:213`; `backend/app/services/leitura_service.py:423`; `metodo-ori/src/pages/EspelhoOri.jsx:508`; `metodo-ori/src/pages/OnboardingOri.jsx:204`; `metodo-ori/src/data/onboardingOriSteps.js:76`; `backend/app/services/produto2_service.py:124`
+- “Essência” — 5 ocorrência(s): `backend/app/services/leitura_service.py:158`; `metodo-ori/src/pages/EspelhoOri.jsx:517`; `backend/app/services/mapa_vivo_service.py:470`; `metodo-ori/src/pages/PortalCliente.jsx:405`; `metodo-ori/src/pages/Produto1.jsx:201`
+- “Método ORI” — 5 ocorrência(s): `metodo-ori/src/components/Sidebar.jsx:243`; `metodo-ori/src/components/onboarding/OnboardingLeftPanel.jsx:67`; `metodo-ori/src/pages/Login.jsx:488`; `metodo-ori/src/pages/QuizProduto1.jsx:871`; `metodo-ori/src/pages/RedefinirSenha.jsx:105`
+- “Seu Corpo” — 5 ocorrência(s): `backend/app/services/leitura_service.py:35`; `metodo-ori/src/services/analyzeReadingSignals.js:4`; `backend/app/services/mapa_vivo_service.py:29`; `metodo-ori/src/pages/QuizProduto1.jsx:161`; `backend/app/data/quiz.py:118`
+- “Seu Estilo” — 5 ocorrência(s): `backend/app/services/leitura_service.py:34`; `metodo-ori/src/services/analyzeReadingSignals.js:3`; `backend/app/services/mapa_vivo_service.py:28`; `metodo-ori/src/pages/QuizProduto1.jsx:160`; `backend/app/data/quiz.py:82`
+- “Seu Mundo Interno” — 5 ocorrência(s): `backend/app/services/leitura_service.py:37`; `metodo-ori/src/services/analyzeReadingSignals.js:6`; `backend/app/services/mapa_vivo_service.py:31`; `metodo-ori/src/pages/QuizProduto1.jsx:163`; `backend/app/data/quiz.py:190`
+- “Seus Padrões” — 5 ocorrência(s): `backend/app/services/leitura_service.py:38`; `metodo-ori/src/services/analyzeReadingSignals.js:7`; `backend/app/services/mapa_vivo_service.py:32`; `metodo-ori/src/pages/QuizProduto1.jsx:165`; `backend/app/data/quiz.py:226`
+- “Seus Relacionamentos” — 5 ocorrência(s): `backend/app/services/leitura_service.py:36`; `metodo-ori/src/services/analyzeReadingSignals.js:5`; `backend/app/services/mapa_vivo_service.py:30`; `metodo-ori/src/pages/QuizProduto1.jsx:162`; `backend/app/data/quiz.py:154`
+- “Sua Presença” — 5 ocorrência(s): `backend/app/services/leitura_service.py:33`; `metodo-ori/src/services/analyzeReadingSignals.js:2`; `backend/app/services/mapa_vivo_service.py:27`; `metodo-ori/src/pages/QuizProduto1.jsx:159`; `backend/app/data/quiz.py:46`
+- “Token de autenticação ausente.” — 5 ocorrência(s): `backend/app/services/admin_service.py:24`; `backend/app/services/auth_service.py:31`; `backend/app/services/jornada_service.py:36`; `backend/app/services/produto1_service.py:30`; `backend/app/services/produto2_service.py:33`
+- “Momento atual” — 4 ocorrência(s): `metodo-ori/src/pages/AdminClienteDetalhe.jsx:270`; `metodo-ori/src/data/produto2Form.js:495`; `metodo-ori/src/pages/Produto1Relatorio.jsx:267`; `backend/app/services/pdf_service.py:354`
+- “Primeira leitura” — 4 ocorrência(s): `metodo-ori/src/pages/EspelhoOri.jsx:518`; `backend/app/services/mapa_vivo_service.py:449`; `metodo-ori/src/pages/Produto2.jsx:544`; `metodo-ori/src/pages/MetodoOri.jsx:885`
+- “Voltar ao portal” — 4 ocorrência(s): `metodo-ori/src/pages/EspelhoOri.jsx:3889`; `metodo-ori/src/pages/Produto2.jsx:950`; `metodo-ori/src/pages/Produto2EmPreparacao.jsx:108`; `metodo-ori/src/pages/MetodoOri.jsx:1000`
+- “Arquétipo principal” — 3 ocorrência(s): `metodo-ori/src/components/ResultHero.jsx:212`; `metodo-ori/src/pages/EspelhoOri.jsx:484`; `metodo-ori/src/pages/OraculoOri.jsx:486`
+- “Arquétipo secundário” — 3 ocorrência(s): `metodo-ori/src/components/ResultHero.jsx:234`; `metodo-ori/src/pages/EspelhoOri.jsx:492`; `metodo-ori/src/pages/OraculoOri.jsx:491`
+
+#### Famílias de textos parecidos
+- Família `código deusas revelou força organiza imagem dentro` — 3 ocorrência(s): `metodo-ori/src/content/journeyCopy.js:14` “Seu Código das Deusas revelou a força que organiza sua imagem por dentro. Essa é a base para a próxima tradução da sua imagem.”; `metodo-ori/src/content/journeyCopy.js:21` “Seu Código das Deusas revelou a força que organiza sua imagem por dentro. O Dossiê ORI mostra como essa força aparece na prática: no corpo, no rosto, nas cores, no cabelo, na beleza e na presença. É a próxima etapa para transformar leitura em imagem real.”; `backend/app/data/reports.json:1` “Seu Código das Deusas revelou a força que organiza sua imagem por dentro. Para preparar o Dossiê ORI, envie fotos com boa luz, rosto limpo, sem maquiagem, e uma roupa neutra mais ajustada ao corpo. Essas imagens ajudam a próxima leitura a observar sua presença real sem interferências: corpo, coloração, cabelo, textura, proporção, contraste e direção estética aplicada. O Dossiê ORI mostra como essa força aparece na prática: corpo, rosto, cores, cabelo, beleza e presença. É a próxima etapa para transformar leitura em imagem real.”
+- Família `acolhimento conforto sustentação sem apagar contorno pessoal` — 2 ocorrência(s): `backend/app/services/leitura_service.py:89` “acolhimento, conforto e sustentação sem apagar contorno pessoal”; `metodo-ori/src/services/analyzeReadingSignals.js:61` “acolhimento, conforto e sustentação sem apagar contorno pessoal”
+- Família `agora essa força precisa aparecer com mais` — 2 ocorrência(s): `metodo-ori/src/pages/EspelhoOri.jsx:708` “. Agora essa força precisa aparecer com mais verdade no jeito como você se veste, se move e ocupa presença.”; `backend/app/services/mapa_vivo_service.py:433` “. Agora essa força precisa aparecer com mais verdade no jeito como você se veste, se move e ocupa presença.”
+- Família `antes escolher roupa beleza postura pergunte aquilo` — 2 ocorrência(s): `backend/app/services/leitura_service.py:569` “. Antes de escolher roupa, beleza ou postura, pergunte se aquilo deixa você mais presente no corpo ou se apenas encaixa você em um papel aceitável. Para começar a aplicar esta leitura, observe uma situação em que você quase disse sim no automático. Antes de responder,”; `metodo-ori/src/services/analyzeReadingSignals.js:161` “. Antes de escolher roupa, beleza ou postura, pergunte se aquilo deixa você mais presente no corpo ou se apenas encaixa você em um papel aceitável.nn”
+- Família `aparece menos como ideia mais como modo` — 2 ocorrência(s): `backend/app/services/leitura_service.py:558` “aparece menos como uma ideia e mais como um modo de reagir. Ela pode surgir”; `metodo-ori/src/services/analyzeReadingSignals.js:157` “aparece menos como uma ideia e mais como um modo de reagir.”
+- Família `apareceu aqui não rótulo força começa organizar` — 2 ocorrência(s): `metodo-ori/src/pages/EspelhoOri.jsx:677` “O que apareceu aqui não é um rótulo. É a força que começa a organizar sua presença, sua imagem e o modo como você se mostra.”; `backend/app/services/mapa_vivo_service.py:587` “O que apareceu aqui não é um rótulo. É a força que começa a organizar sua presença, sua imagem e o modo como você se mostra.”
+- Família `clareza intenção escolhas visuais com critério sem` — 2 ocorrência(s): `backend/app/services/leitura_service.py:90` “clareza, intenção e escolhas visuais com critério, sem rigidez excessiva”; `metodo-ori/src/services/analyzeReadingSignals.js:63` “clareza, intenção e escolhas visuais com critério, sem rigidez excessiva”
+- Família `como desejo controle imaginação direção operam dentro` — 2 ocorrência(s): `backend/app/services/leitura_service.py:37` “como desejo, controle, imaginação e direção operam por dentro”; `metodo-ori/src/services/analyzeReadingSignals.js:6` “como desejo, controle, imaginação e direção operam por dentro”
+- Família `cuidado não diminuir força tentando explicar demais` — 2 ocorrência(s): `metodo-ori/src/pages/EspelhoOri.jsx:692` “Cuidado para não diminuir sua força tentando explicar demais. Antes da fala, sua imagem já começa a comunicar.”; `backend/app/services/mapa_vivo_service.py:424` “Cuidado para não diminuir sua força tentando explicar demais. Antes da fala, sua imagem já começa a comunicar.”
+- Família `defina onde você precisa respeito real não` — 2 ocorrência(s): `backend/app/services/leitura_service.py:70` “defina onde você precisa de respeito real, não apenas de reconhecimento aparente”; `metodo-ori/src/services/analyzeReadingSignals.js:31` “defina onde você precisa de respeito real, não apenas de reconhecimento aparente”
+- Família `dignidade estrutura presença comunique valor sem endurecer` — 2 ocorrência(s): `backend/app/services/leitura_service.py:88` “dignidade, estrutura e uma presença que comunique valor sem endurecer”; `metodo-ori/src/services/analyzeReadingSignals.js:60` “dignidade, estrutura e uma presença que comunique valor sem endurecer”
+- Família `dinâmica interna desta leitura mostra encontro entre` — 2 ocorrência(s): `backend/app/services/leitura_service.py:667` “A dinâmica interna desta leitura mostra um encontro entre”; `metodo-ori/src/services/analyzeReadingSignals.js:228` “A dinâmica interna desta leitura mostra um encontro entre”
+- Família `ela confirmou pela recorrência sinais associados essa` — 2 ocorrência(s): `backend/app/services/leitura_service.py:664` “Ela se confirmou pela recorrência dos sinais associados a essa energia.”; `metodo-ori/src/services/analyzeReadingSignals.js:225` “: "Ela se confirmou pela recorrência dos sinais associados a essa energia."}”
+- Família `escolha ação pequena sustente força principal sem` — 2 ocorrência(s): `backend/app/services/leitura_service.py:621` “escolha uma ação pequena que sustente sua força principal sem performar para o olhar externo”; `metodo-ori/src/services/analyzeReadingSignals.js:208` “escolha uma ação pequena que sustente sua força principal sem performar para o olhar externo”
+- Família `escolha peça gesto beleza aumente prazer sem` — 2 ocorrência(s): `backend/app/services/leitura_service.py:68` “escolha uma peça, gesto ou beleza que aumente prazer sem depender de aprovação externa”; `metodo-ori/src/services/analyzeReadingSignals.js:27` “escolha uma peça, gesto ou beleza que aumente prazer sem depender de aprovação externa”
+- Família `essa escolha sustenta minha presença coloca versão` — 2 ocorrência(s): `backend/app/services/leitura_service.py:542` “essa escolha sustenta minha presença ou me coloca em uma versão menor de mim?”; `metodo-ori/src/services/analyzeReadingSignals.js:146` “essa escolha sustenta minha presença ou me coloca em uma versão menor de mim?”
+- Família `essa escolha tem critério claro virou controle` — 2 ocorrência(s): `backend/app/services/leitura_service.py:81` “essa escolha tem critério claro ou virou controle para evitar vulnerabilidade?”; `metodo-ori/src/services/analyzeReadingSignals.js:50` “essa escolha tem critério claro ou virou controle para evitar vulnerabilidade?”
+- Família `essa nuance precisa aparecer com mais verdade` — 2 ocorrência(s): `backend/app/services/leitura_service.py:546` “essa nuance precisa aparecer com mais verdade ou está ficando escondida?”; `metodo-ori/src/services/analyzeReadingSignals.js:149` “essa nuance precisa aparecer com mais verdade ou está ficando escondida?”
+- Família `esse caminho respeita meu espaço começa prender` — 2 ocorrência(s): `backend/app/services/leitura_service.py:82` “esse caminho respeita meu espaço ou começa a me prender por dentro?”; `metodo-ori/src/services/analyzeReadingSignals.js:52` “esse caminho respeita meu espaço ou começa a me prender por dentro?”
+- Família `esse cuidado nasce presença tentativa ser necessária` — 2 ocorrência(s): `backend/app/services/leitura_service.py:80` “esse cuidado nasce de presença ou de uma tentativa de ser necessária?”; `metodo-ori/src/services/analyzeReadingSignals.js:48` “esse cuidado nasce de presença ou de uma tentativa de ser necessária?”
+- Família `esse lugar reconhece verdade exige sustente posição` — 2 ocorrência(s): `backend/app/services/leitura_service.py:79` “esse lugar me reconhece de verdade ou só exige que eu sustente uma posição?”; `metodo-ori/src/services/analyzeReadingSignals.js:46` “esse lugar me reconhece de verdade ou só exige que eu sustente uma posição?”
+- Família `forma chegar fortalece com postura firme movimento` — 2 ocorrência(s): `backend/app/data/reports.json:1` “Sua forma de chegar se fortalece com postura firme, movimento decidido e olhar direto. Sua linguagem corporal ideal comunica: eu sei meu lugar, mas continuo livre. O cuidado é não usar força como barreira permanente.”; `backend/app/data/reports.json:1` “Sua forma de chegar se fortalece com postura firme, movimento objetivo e energia de quem sabe onde está indo. Sua linguagem corporal ideal comunica: eu tenho eixo, mas não preciso viver fechada.”
+- Família `força principal aponta eixo mais organiza imagem` — 2 ocorrência(s): `backend/app/services/leitura_service.py:667` “. A força principal aponta o eixo que mais organiza sua imagem; a força secundária mostra nuance, tensão e profundidade.”; `metodo-ori/src/services/analyzeReadingSignals.js:228` “. A força principal aponta o eixo que mais organiza sua imagem; a força secundária mostra a camada que dá nuance, tensão e profundidade ao resultado.nn”
+- Família `isso prazer real tenta produzir desejo olhar` — 2 ocorrência(s): `backend/app/services/leitura_service.py:77` “isso me dá prazer real ou só tenta produzir desejo no olhar de fora?”; `metodo-ori/src/services/analyzeReadingSignals.js:42` “isso me dá prazer real ou só tenta produzir desejo no olhar de fora?”
+- Família `menos etiqueta mais chave leitura ela mostra` — 2 ocorrência(s): `backend/app/services/leitura_service.py:687` “é menos uma etiqueta e mais uma chave de leitura. Ela mostra a força que organiza sua presença agora e aponta o próximo passo: traduzir essa base em imagem concreta, coerente e possível de sustentar.”; `metodo-ori/src/services/analyzeReadingSignals.js:242` “é menos uma etiqueta e mais uma chave de leitura: ela mostra a força que organiza sua presença agora e aponta o próximo passo. Depois de nomear essa base, o Dossiê ORI aprofunda a tradução para a sua imagem concreta: corpo, cor, beleza, cabelo, proporção, textura e presença visual aplicada.”
+- Família `meu corpo percebeu algo minha cabeça ainda` — 2 ocorrência(s): `backend/app/services/leitura_service.py:78` “meu corpo já percebeu algo que minha cabeça ainda está tentando explicar?”; `metodo-ori/src/services/analyzeReadingSignals.js:44` “meu corpo já percebeu algo que minha cabeça ainda está tentando explicar?”
+- Família `mostra onde imagem pode perder clareza quando` — 2 ocorrência(s): `backend/app/services/leitura_service.py:674` “, e mostra onde sua imagem pode perder clareza quando tenta compensar, se proteger ou responder demais ao ambiente. A sombra aqui não significa erro. Ela mostra onde a força nomeada precisa de consciência para não virar defesa, excesso ou fragmentação visual.”; `metodo-ori/src/services/analyzeReadingSignals.js:233` “, e mostra onde sua imagem pode perder clareza quando tenta compensar, se proteger ou responder demais ao ambiente.nnA sombra aqui não significa erro. Ela mostra o lugar onde a força nomeada precisa de mais consciência para não virar defesa, excesso ou fragmentação visual.”
+- Família `mostra onde você pode adaptar defender esperar` — 2 ocorrência(s): `backend/app/services/leitura_service.py:565` “mostra onde você pode se adaptar, se defender ou esperar que o outro adivinhe o que está acontecendo. Esse é um ponto importante da leitura: não para se cobrar, mas para perceber onde a sua força vira proteção automática. Na imagem, uma escolha pode estar bonita e ainda assim não funcionar. O que sustenta você precisa dar espaço para”; `metodo-ori/src/services/analyzeReadingSignals.js:160` “mostra onde você pode se adaptar, se defender ou esperar que o outro adivinhe o que está acontecendo. Esse é um ponto importante da leitura: não para se cobrar, mas para perceber onde a sua força vira proteção automática.nn”
+- Família `observe qual nuance força secundária precisa aparecer` — 2 ocorrência(s): `backend/app/services/leitura_service.py:625` “observe qual nuance da sua força secundária precisa aparecer com mais clareza”; `metodo-ori/src/services/analyzeReadingSignals.js:211` “observe qual nuance da sua força secundária precisa aparecer com mais clareza”
+- Família `observe sensação antes explicá anote corpo percebeu` — 2 ocorrência(s): `backend/app/services/leitura_service.py:69` “observe uma sensação antes de explicá-la e anote o que seu corpo percebeu primeiro”; `metodo-ori/src/services/analyzeReadingSignals.js:29` “observe uma sensação antes de explicá-la e anote o que seu corpo percebeu primeiro”
+- Família `ofereça cuidado sem assumir responsabilidade não precisa` — 2 ocorrência(s): `backend/app/services/leitura_service.py:71` “ofereça cuidado sem assumir uma responsabilidade que não precisa ser sua”; `metodo-ori/src/services/analyzeReadingSignals.js:33` “ofereça cuidado sem assumir uma responsabilidade que não precisa ser sua”
+- Família `onde força pode virar defesa excesso ruído` — 2 ocorrência(s): `backend/app/services/leitura_service.py:38` “onde a força pode virar defesa, excesso ou ruído”; `metodo-ori/src/services/analyzeReadingSignals.js:7` “onde a força pode virar defesa, excesso ou ruído”
+- Família `ori está demorando pouco atualizar jornada você` — 2 ocorrência(s): `metodo-ori/src/services/api.js:19` “O ORI está demorando um pouco para atualizar sua jornada. Você pode continuar; seus dados serão preservados.”; `metodo-ori/src/services/api.js:52` “O ORI está demorando um pouco para atualizar sua jornada. Você pode continuar; vamos manter o que já foi salvo.”
+- Família `prazer presença sensorial beleza não precise implorar` — 2 ocorrência(s): `backend/app/services/leitura_service.py:86` “prazer, presença sensorial e beleza que não precise implorar por validação”; `metodo-ori/src/services/analyzeReadingSignals.js:57` “prazer, presença sensorial e beleza que não precise implorar por validação”
+- Família `precisar frase simples reconhecer esse movimento fora` — 2 ocorrência(s): `backend/app/services/leitura_service.py:573` “. Se precisar de uma frase simples para reconhecer esse movimento fora da tela, use esta: “”; `metodo-ori/src/services/analyzeReadingSignals.js:162` “. Se precisar de uma frase simples para reconhecer esse movimento fora da tela, use esta: “”
+
+### Possível exposição de `error.message` bruto ou detalhe técnico
+
+| Arquivo | Linha | Trecho | Observação |
+| --- | ---: | --- | --- |
+| `metodo-ori/src/pages/Login.jsx` | 85 | `const message = error.message?.toLowerCase() \|\| "";` | Usado para mapear erro externo; revisar fallback. |
+| `metodo-ori/src/pages/Login.jsx` | 148 | `const message = error.message?.toLowerCase() \|\| "";` | Usado para mapear erro externo; revisar fallback. |
+
+## Inventário por página/arquivo
+
+## /admin
+
+### `metodo-ori/src/pages/AdminDashboard.jsx`
+
+- Linha 125 [string]: `Coletando sinais`
+- Linha 127 [string]: `Ainda precisamos de mais respostas para ler a validação com segurança.`
+- Linha 128 [string]: `Priorizar clientes que concluíram a leitura e ainda não deram retorno.`
+- Linha 131 [string]: `Produto validando bem`
+- Linha 133 [string]: `A maioria das respostas indica reconhecimento. O Produto 1 está cumprindo a promessa de leitura inicial.`
+- Linha 134 [string]: `Manter o fluxo e observar onde a cliente pede aprofundamento.`
+- Linha 136 [string]: `Pedir mais clareza prática`
+- Linha 138 [string]: `Há sinal de que a leitura toca, mas algumas clientes precisam enxergar melhor a aplicação concreta.`
+- Linha 139 [string]: `Reforçar exemplos de corpo, cor, cabelo, beleza e rotina antes do convite.`
+- Linha 141 [string]: `Revisar narrativa`
+- Linha 143 [string]: `A taxa de não reconhecimento está alta para um protótipo de leitura simbólica.`
+- Linha 144 [string]: `Revisar perguntas, resultado e texto de transição antes de escalar.`
+- Linha 233 [JSX]: `Estúdio ORI`
+- Linha 239 [JSX]: `Painel Administrativo`
+- Linha 245 [JSX]: `Acompanhe a validação do Produto 1 e decida quais clientes pedem abordagem agora.`
+- Linha 256 [JSX]: `Atenção agora`
+- Linha 263 [JSX]: `Lista completa`
+- Linha 273 [string]: `Leituras concluídas`
+- Linha 274 [string]: `Feedbacks recebidos`
+- Linha 275 [string]: `Dossiês a convidar`
+- Linha 307 [JSX]: `Validação do piloto`
+- Linha 325 [string]: `Taxa de feedback`
+- Linha 326 [string]: `Me senti vista`
+- Linha 327 [string]: `Ficou abstrato`
+- Linha 328 [string]: `Não reconheci`
+- Linha 358 [JSX]: `Próxima decisão`
+- Linha 380 [JSX]: `Ação`
+- Linha 394 [JSX]: `Ver todas`
+- Linha 417 [string]: `Cliente sem nome`
+- Linha 442 [JSX]: `Nenhuma cliente registrada ainda.`
+- Linha 460 [JSX]: `Feedbacks pós-leitura`
+- Linha 466 [JSX]: `Vozes recentes do Produto 1`
+- Linha 519 [string]: `Sem comentário aberto.`
+- Linha 531 [JSX]: `Nenhum feedback registrado ainda.`
+
+## /admin/clientes
+
+### `metodo-ori/src/pages/AdminClientes.jsx`
+
+- Linha 101 [string]: `Sem data`
+- Linha 111 [string]: `Código Final`
+- Linha 112 [string]: `Dossiê ORI`
+- Linha 113 [string]: `Código das Deusas concluído`
+- Linha 114 [string]: `Lead / Código das Deusas`
+- Linha 260 [string]: `Em andamento`
+- Linha 261 [string]: `Código das Deusas`
+- Linha 264 [string]: `Com Oráculo`
+- Linha 265 [string]: `Atenção agora`
+- Linha 266 [string]: `Sentiu conexão`
+- Linha 267 [string]: `Ficou abstrato`
+- Linha 268 [string]: `Não se reconheceu`
+- Linha 287 [JSX]: `Painel Administrativo`
+- Linha 297 [JSX]: `Carregando clientes...`
+- Linha 361 [JSX]: `Clientes ORI`
+- Linha 368 [JSX]: `Acompanhe clientes, acessos, respostas e próximos passos dentro do Método ORI.`
+- Linha 382 [JSX]: `Atualizar lista`
+- Linha 395 [string]: `Dossiês`
+- Linha 442 [string]: `Buscar por nome, e-mail, leitura ou etapa...`
+- Linha 491 [JSX]: `Nenhum cliente encontrado com esse filtro.`
+- Linha 512 [string]: `Cliente sem contato`
+- Linha 591 [string]: `Cliente sem nome`
+- Linha 632 [string]: `Sem resultado`
+- Linha 662 [string]: `Quiz não iniciado`
+- Linha 678 [template]: `Oráculo`
+- Linha 678 [string]: `Sem carta`
+- Linha 698 [string]: `Sem retorno`
+- Linha 721 [JSX]: `Abrir ficha`
+- Linha 742 [string]: `Dossiê liberado`
+- Linha 743 [string]: `Liberar Dossiê`
+- Linha 763 [string]: `Código liberado`
+- Linha 764 [string]: `Liberar Código`
+
+## /admin/clientes/:id
+
+### `metodo-ori/src/pages/AdminClienteDetalhe.jsx`
+
+- Linha 91 [string]: `Ficha atualizada`
+- Linha 110 [string]: `Observações internas atualizadas`
+- Linha 114 [string]: `Sem data`
+- Linha 172 [JSX]: `Ficha da cliente`
+- Linha 182 [JSX]: `Carregando cliente...`
+- Linha 196 [JSX]: `← Voltar para clientes`
+- Linha 209 [JSX]: `Cliente não encontrada.`
+- Linha 224 [string]: `Cadastro recebido`
+- Linha 225 [string]: `Cliente entrou no Átrio ORI.`
+- Linha 229 [string]: `Código das Deusas`
+- Linha 231 [template]: `Primeira leitura pronta:`
+- Linha 232 [string]: `Aguardando conclusão da primeira leitura.`
+- Linha 236 [string]: `Dossiê ORI`
+- Linha 238 [string]: `Dossiê ORI liberado para a cliente.`
+- Linha 239 [string]: `Aguardando liberação do Produto 2.`
+- Linha 243 [string]: `Código Final`
+- Linha 245 [string]: `Código Final liberado para a cliente.`
+- Linha 246 [string]: `Código Final ainda pendente.`
+- Linha 250 [string]: `Jornada finalizada`
+- Linha 253 [string]: `Cliente marcada como finalizada.`
+- Linha 254 [string]: `Fechamento ainda pendente.`
+- Linha 261 [string]: `Sem resultado`
+- Linha 265 [string]: `Nome completo`
+- Linha 266 [string]: `Como gosta de ser chamada`
+- Linha 267 [string]: `Data de nascimento`
+- Linha 270 [string]: `Momento atual`
+- Linha 271 [string]: `O que mais pesa`
+- Linha 272 [string]: `Descrição livre`
+- Linha 273 [string]: `Desejo principal`
+- Linha 274 [string]: `Autodeclaração racial`
+- Linha 275 [string]: `Perfil criado em`
+- Linha 279 [template]: `respostas registradas`
+- Linha 280 [string]: `Perfil ainda não preenchido`
+- Linha 301 [string]: `Sem carta registrada`
+- Linha 305 [string]: `A cliente ainda não tirou uma carta.`
+- Linha 308 [string]: `Nenhuma carta`
+- Linha 311 [string]: `Ainda não respondeu`
+- Linha 317 [string]: `Sem registro`
+- Linha 370 [string]: `Mensagem sugerida copiada`
+- Linha 373 [string]: `Não consegui copiar a abordagem:`
+- Linha 377 [string]: `WhatsApp aberto pela ficha`
+- Linha 400 [string]: `Mensagem gerada com IA. Revise antes de enviar.`
+- Linha 401 [string]: `A mensagem base foi mantida.`
+- Linha 407 [string]: `Não conseguimos gerar com IA agora. A mensagem base foi mantida.`
+- Linha 471 [string]: `Cliente sem nome`
+- Linha 510 [string]: `Etapa atual`
+- Linha 512 [string]: `Não informado`
+- Linha 513 [string]: `Último contato`
+- Linha 608 [JSX]: `Próximo passo recomendado`
+- Linha 639 [JSX]: `Mensagem sugerida`
+- Linha 669 [string]: `Gerar com IA`
+- Linha 681 [string]: `Copiar mensagem`
+- Linha 695 [JSX]: `Abrir WhatsApp`
+- Linha 750 [JSX]: `Resposta pós-leitura`
+- Linha 756 [JSX]: `Retorno da cliente sobre a leitura`
+- Linha 771 [JSX]: `Resposta rápida`
+- Linha 792 [JSX]: `Comentário aberto`
+- Linha 799 [string]: `A cliente não escreveu comentário aberto.`
+- Linha 845 [JSX]: `Perfil de Entrada ORI`
+- Linha 857 [JSX]: `Respostas do perfil inicial`
+- Linha 884 [string]: `Ocultar respostas`
+- Linha 884 [string]: `Ver respostas`
+- Linha 920 [JSX]: `Perfil de entrada ainda não preenchido por esta cliente.`
+- Linha 929 [JSX]: `Existem dados salvos, mas o perfil ainda não foi marcado como concluído.`
+- Linha 978 [JSX]: `Produto 1 · Código das Deusas`
+- Linha 990 [JSX]: `Respostas da leitura arquetípica`
+- Linha 999 [template]: `sinais respondidos`
+- Linha 1000 [string]: `Nenhuma resposta registrada ainda`
+- Linha 1038 [string]: `Ocultar sinais`
+- Linha 1038 [string]: `Ver sinais`
+- Linha 1124 [JSX]: `Nenhuma resposta do Produto 1 foi registrada para esta cliente.`
+- Linha 1173 [JSX]: `Oráculo`
+- Linha 1185 [JSX]: `Última carta da cliente`
+- Linha 1194 [template]: `Carta tirada em`
+- Linha 1195 [string]: `Nenhuma carta diária registrada ainda`
+- Linha 1215 [string]: `Ocultar carta`
+- Linha 1217 [string]: `Ver carta`
+- Linha 1218 [string]: `Sem carta`
+- Linha 1265 [JSX]: `Mensagem registrada`
+- Linha 1314 [JSX]: `Timeline da Jornada`
+- Linha 1402 [JSX]: `Ações da Jornada`
+- Linha 1417 [string]: `Acesso ao Dossiê ORI removido`
+- Linha 1418 [string]: `Dossiê ORI liberado`
+- Linha 1435 [string]: `Liberar Dossiê ORI`
+- Linha 1449 [string]: `Acesso ao Código Final removido`
+- Linha 1450 [string]: `Código Final liberado`
+- Linha 1467 [string]: `Liberar Código Final`
+- Linha 1475 [string]: `Dossiê marcado como publicado`
+- Linha 1483 [JSX]: `Marcar Dossiê publicado`
+- Linha 1492 [string]: `Jornada marcada como finalizada`
+- Linha 1500 [JSX]: `Marcar como finalizado`
+- Linha 1534 [JSX]: `Histórico administrativo`
+- Linha 1573 [JSX]: `) : historyOpen ? (`
+- Linha 1578 [JSX]: `Nenhuma ação administrativa registrada ainda.`
+- Linha 1606 [JSX]: `Observações Internas`
+- Linha 1614 [string]: `Escreva observações privadas sobre esta cliente, ajustes, próximas entregas, preferências ou pontos de atenção...`
+- Linha 1634 [string]: `Salvar observações`
+
+## /admin/clientes/:id / revisão Produto 2
+
+### `metodo-ori/src/components/Produto2ReviewPanel.jsx`
+
+- Linha 13 [string]: `Coloração pessoal`
+- Linha 15 [string]: `Ancestralidade e traços`
+- Linha 16 [string]: `Cabelo e textura`
+- Linha 21 [string]: `Base identitária`
+- Linha 22 [string]: `Arquitetura psicológica`
+- Linha 23 [string]: `Dor real`
+- Linha 24 [string]: `Lei da coerência estética`
+- Linha 25 [string]: `Onde se violenta`
+- Linha 26 [string]: `Ponto de virada`
+- Linha 27 [string]: `Estrutura corporal`
+- Linha 28 [string]: `Coloração`
+- Linha 34 [string]: `Presença`
+- Linha 35 [string]: `O que enfraquece`
+- Linha 36 [string]: `Fórmula de imagem`
+- Linha 37 [string]: `Mapa da cápsula visual`
+- Linha 67 [string]: `Ainda não registrado`
+- Linha 95 [string]: `Não foi possível carregar o espaço de revisão do Dossiê.`
+- Linha 128 [string]: `Não foi possível concluir esta ação agora. Tente novamente.`
+- Linha 144 [string]: `Diagnósticos técnicos salvos.`
+- Linha 152 [string]: `Preencha e salve ao menos um diagnóstico técnico.`
+- Linha 160 [string]: `Rascunho gerado. Revise todas as seções antes de publicar.`
+- Linha 172 [string]: `Revisão salva como rascunho privado.`
+- Linha 179 [string]: `Revise e complete as 20 seções antes de publicar.`
+- Linha 182 [string]: `Publicar esta versão do Dossiê ORI?`
+- Linha 191 [string]: `Dossiê publicado. O acesso da cliente continua controlado separadamente.`
+- Linha 197 [string]: `Retirar esta versão da área da cliente?`
+- Linha 201 [string]: `Dossiê retirado da publicação.`
+- Linha 209 [JSX]: `Carregando revisão do Dossiê ORI...`
+- Linha 226 [JSX]: `Oficina interna · Produto 2`
+- Linha 229 [JSX]: `Revisão do Dossiê ORI`
+- Linha 232 [JSX]: `Confirme a técnica, gere a base editorial e publique somente depois da revisão humana.`
+- Linha 238 [string]: `Rascunho privado`
+- Linha 252 [JSX]: `1. Diagnósticos confirmados`
+- Linha 253 [JSX]: `Use apenas diagnósticos confirmados. A IA não deve inventar dados.`
+- Linha 256 [string]: `Salvar diagnósticos`
+- Linha 270 [string]: `Registre somente o diagnóstico validado.`
+- Linha 280 [JSX]: `2. Rascunho editorial`
+- Linha 286 [string]: `Gerar com IA`
+- Linha 286 [string]: `Gerar nova versão`
+- Linha 292 [JSX]: `Seção em revisão`
+- Linha 299 [string]: `Seção anterior`
+- Linha 300 [string]: `Próxima seção`
+- Linha 315 [string]: `Esta seção aparecerá aqui após a geração ou pode ser escrita manualmente.`
+- Linha 322 [JSX]: `Publicar não libera o Produto 2. O acesso da cliente permanece no controle “Liberar Dossiê ORI”.`
+- Linha 327 [string]: `Salvar revisão`
+- Linha 335 [string]: `Publicar versão revisada`
+
+## /entrada-ori
+
+### `metodo-ori/src/pages/OnboardingOri.jsx`
+
+- Linha 29 [string]: `Não consegui recuperar a leitura de entrada:`
+- Linha 87 [string]: `Não consegui interpretar o perfil salvo:`
+- Linha 106 [string]: `Não consegui reconhecer a sessão da entrada:`
+- Linha 133 [string]: `Não consegui carregar o perfil da entrada:`
+- Linha 204 [string]: `Quero escrever com minhas palavras`
+- Linha 273 [string]: `Não foi possível salvar o perfil ORI:`
+- Linha 275 [string]: `Não consegui salvar seu perfil agora. Tente novamente em instantes.`
+
+## /entrada-ori / onboarding
+
+### `metodo-ori/src/data/onboardingOriSteps.js`
+
+- Linha 5 [string]: `Entrada ORI`
+- Linha 6 [string]: `Vamos começar pelo que ajuda o ORI a te ler melhor.`
+- Linha 8 [string]: `Primeiro, me conte seus dados principais para abrir seu perfil com cuidado.`
+- Linha 12 [string]: `Nome completo`
+- Linha 14 [string]: `Seu nome completo`
+- Linha 19 [string]: `Como você gosta de ser chamada`
+- Linha 21 [string]: `Como devo te chamar aqui dentro`
+- Linha 26 [string]: `Data de nascimento`
+- Linha 34 [string]: `Ex: São Paulo / Campinas`
+- Linha 41 [string]: `Ex: (11) 99999-9999`
+- Linha 50 [string]: `Ponto de partida`
+- Linha 51 [string]: `Como você se sente com sua imagem agora?`
+- Linha 52 [string]: `Escolha a frase que mais se aproxima do seu momento.`
+- Linha 56 [string]: `Seu momento agora`
+- Linha 60 [string]: `Estou começando a olhar para minha imagem com mais atenção`
+- Linha 61 [string]: `Tenho referências, mas ainda falta clareza`
+- Linha 62 [string]: `Já comecei minha jornada e quero aprofundar`
+- Linha 67 [string]: `O que mais te incomoda hoje?`
+- Linha 71 [string]: `Minha imagem não me representa`
+- Linha 72 [string]: `Tenho roupas, mas falta direção`
+- Linha 73 [string]: `Sinto que minha imagem não mostra minha força`
+- Linha 74 [string]: `Não sei transformar quem eu sou em escolhas visuais`
+- Linha 75 [string]: `Me perco em muitas referências`
+- Linha 76 [string]: `Quero escrever com minhas palavras`
+- Linha 81 [string]: `Me conte em poucas palavras`
+- Linha 83 [string]: `Me conte em poucas palavras o que mais pesa para você hoje`
+- Linha 96 [string]: `Direção`
+- Linha 97 [string]: `O que você quer sentir mais na sua imagem?`
+- Linha 98 [string]: `Escolha a direção que você mais deseja fortalecer agora.`
+- Linha 102 [string]: `O que você quer fortalecer`
+- Linha 106 [string]: `Mais clareza sobre o que combina comigo`
+- Linha 107 [string]: `Mais direção estética`
+- Linha 108 [string]: `Mais força na forma como eu apareço`
+- Linha 109 [string]: `Mais coerência entre quem sou e o que visto`
+- Linha 110 [string]: `Mais segurança para me vestir`
+- Linha 111 [string]: `Menos ruído e mais identidade`
+- Linha 116 [string]: `Autodeclaração racial`
+- Linha 123 [string]: `Indígena`
+- Linha 126 [string]: `Prefiro não responder`
+- Linha 130 [string]: `Finalizar e entrar no portal`
+- Linha 135 [string]: `Entrada ORI concluída`
+- Linha 136 [string]: `Seu perfil está pronto.`
+- Linha 137 [string]: `Agora o ORI já pode te guiar para a primeira leitura.`
+- Linha 138 [string]: `Entrar na minha jornada`
+
+## /entrar
+
+### `metodo-ori/src/pages/Login.jsx`
+
+- Linha 30 [string]: `Imagem simbólica`
+- Linha 30 [string]: `Leitura arquetípica`
+- Linha 30 [string]: `Presença estética`
+- Linha 87 [string]: `email not confirmed`
+- Linha 89 [string]: `Seu e-mail ainda não foi confirmado. Verifique sua caixa de entrada ou fale com a equipe ORI.`
+- Linha 94 [string]: `invalid login credentials`
+- Linha 95 [string]: `E-mail ou senha incorretos. Verifique seus dados de acesso.`
+- Linha 100 [string]: `Não foi possível acessar agora. Verifique sua conexão e tente novamente em instantes.`
+- Linha 117 [string]: `Informe seu nome para criar o acesso.`
+- Linha 122 [string]: `Informe seu e-mail para criar o acesso.`
+- Linha 127 [string]: `Crie uma senha com pelo menos 6 caracteres.`
+- Linha 153 [string]: `user already`
+- Linha 155 [string]: `Este e-mail já possui cadastro. Tente entrar no portal.`
+- Linha 161 [string]: `Seu acesso foi criado, mas ainda não conseguimos preparar o perfil da jornada. Tente entrar novamente em instantes ou fale com a equipe ORI.`
+- Linha 167 [string]: `A senha precisa ter pelo menos 6 caracteres.`
+- Linha 173 [string]: `Verifique se o e-mail foi digitado corretamente e tente novamente.`
+- Linha 179 [string]: `Não foi possível criar seu acesso agora. Tente novamente em instantes.`
+- Linha 190 [string]: `Cadastro criado. Agora tente entrar com seu e-mail e senha.`
+- Linha 218 [string]: `Seu acesso foi criado, mas o perfil da jornada ainda não ficou pronto. Tente entrar novamente em instantes ou fale com a equipe ORI.`
+- Linha 240 [string]: `Informe seu e-mail para receber o link de redefinição.`
+- Linha 251 [string]: `Confirme o e-mail antes de enviar o link de redefinição.`
+- Linha 266 [string]: `Não foi possível enviar o link agora. Verifique o e-mail e tente novamente.`
+- Linha 272 [string]: `Enviamos um link para seu e-mail. Abra a mensagem e crie uma nova senha.`
+- Linha 488 [string]: `Método ORI`
+- Linha 508 [JSX]: `Método ORI by Telúrica`
+- Linha 521 [JSX]: `Átrio ORI`
+- Linha 532 [JSX]: `Onde essência, presença e imagem ganham direção`
+- Linha 539 [JSX]: `Acesse o ambiente em que sua leitura simbólica começa a se traduzir visualmente.`
+- Linha 702 [string]: `Criar acesso ORI`
+- Linha 702 [string]: `Entrar no Átrio ORI`
+- Linha 710 [string]: `Abra sua primeira porta e inicie a leitura da sua presença.`
+- Linha 711 [string]: `Acesse sua jornada e continue de onde sua leitura parou.`
+- Linha 761 [JSX]: `Criar acesso`
+- Linha 788 [string]: `Seu nome`
+- Linha 858 [string]: `Enviando link...`
+- Linha 859 [string]: `Esqueci minha senha`
+- Linha 900 [string]: `Confirmar e enviar link`
+- Linha 965 [string]: `brightness(1.03)`
+- Linha 984 [string]: `Criando acesso...`
+- Linha 988 [string]: `Abrir minha primeira porta`
+- Linha 989 [string]: `Criar meu acesso ORI`
+- Linha 991 [string]: `Abrir meu Átrio ORI`
+- Linha 992 [string]: `Acessar o Átrio ORI`
+- Linha 1007 [string]: `Seu cadastro será registrado como lead da jornada ORI.`
+- Linha 1008 [string]: `Acesso exclusivo para clientes com jornada liberada.`
+- Linha 1016 [JSX]: `← Voltar ao início`
+
+## /espelho-ori
+
+### `metodo-ori/src/pages/EspelhoOri.jsx`
+
+- Linha 41 [string]: `Sua imagem começa a mostrar aquilo que você sente, mas ainda não conseguiu organizar em escolhas visuais.`
+- Linha 43 [string]: `Sua primeira leitura ainda não começou. Quando você abrir o Código das Deusas, o Espelho vai mostrar os primeiros sinais que organizam sua imagem.`
+- Linha 45 [string]: `O Espelho ORI será preenchido conforme sua jornada avançar. Cada etapa acrescenta uma informação importante: primeiro a base interna, depois corpo, cor, cabelo e beleza, por fim a aplicação no dia a dia.`
+- Linha 47 [string]: `Antes da primeira leitura, alguns pontos ainda não foram nomeados. Isso não é falta. É começo.`
+- Linha 49 [string]: `Sua imagem será construída em etapas, respeitando sua essência, seus códigos visuais e sua forma única de ser percebida.`
+- Linha 51 [string]: `Sua presença será lida conforme sua essência começar a ganhar linguagem visual, simbólica e estética.`
+- Linha 81 [string]: `INTUIÇÃO • LIBERDADE • MISTÉRIO`
+- Linha 250 [string]: `58% center`
+- Linha 263 [JSX]: `Espelho ORI`
+- Linha 273 [JSX]: `Seu Espelho ORI já começou a se organizar.`
+- Linha 288 [JSX]: `Aqui você vê o que já ficou claro, o que orienta sua imagem agora e qual é o próximo passo.`
+- Linha 301 [JSX]: `Cada etapa reúne uma síntese simples: o que sua leitura mostrou, o que merece atenção e para onde seguir.`
+- Linha 318 [JSX]: `Ver minha leitura`
+- Linha 333 [JSX]: `Abrir Oráculo ORI`
+- Linha 339 [string]: `hidden xl:block`
+- Linha 381 [string]: `Arquétipo`
+- Linha 426 [string]: `Estamos usando seu reflexo salvo enquanto o ORI atualiza sua jornada.`
+- Linha 484 [string]: `Arquétipo principal`
+- Linha 492 [string]: `Arquétipo secundário`
+- Linha 508 [string]: `Quero escrever com minhas palavras`
+- Linha 517 [string]: `Essência`
+- Linha 518 [string]: `Primeira leitura`
+- Linha 520 [string]: `O que sustenta sua imagem`
+- Linha 521 [string]: `Sua primeira leitura ainda vai abrir`
+- Linha 524 [string]: `A primeira leitura do seu Espelho ORI será aberta quando você iniciar o Código das Deusas.`
+- Linha 527 [string]: `Mostra a força interna que organiza desejo, proteção, escolha e presença.`
+- Linha 529 [string]: `Aparece na forma como você decide, se preserva, ocupa espaço e sustenta sua imagem.`
+- Linha 531 [string]: `Fortalece quando vira direção. Gera ruído quando tenta caber em expectativas pequenas.`
+- Linha 537 [string]: `Presença`
+- Linha 538 [string]: `Como você chega`
+- Linha 540 [string]: `Como sua energia começa a ser percebida`
+- Linha 541 [string]: `A forma como você chega ainda será lida`
+- Linha 544 [string]: `O Espelho ORI vai mostrar como sua presença começa a ser lida, sentida e percebida ao longo da jornada.`
+- Linha 549 [string]: `Mostra aquilo que chega antes da fala: ritmo, postura, gesto e campo de presença.`
+- Linha 551 [string]: `Aparece no modo como você entra nos espaços, responde ao olhar externo e sustenta sua energia.`
+- Linha 553 [string]: `Fortalece quando corpo e imagem dizem a mesma coisa. Gera ruído quando a presença pede licença demais.`
+- Linha 560 [string]: `Imagem em construção`
+- Linha 562 [string]: `O que começa a pedir forma`
+- Linha 563 [string]: `Sua imagem ainda está em construção`
+- Linha 566 [string]: `Sua imagem será construída em etapas. Primeiro a base é identificada. Depois, ela ganha corpo, cor, cabelo, beleza e presença visual.`
+- Linha 571 [string]: `Mostra como a força simbólica começa a pedir cor, textura, forma, beleza e linguagem visual.`
+- Linha 573 [string]: `Aparece nas escolhas que combinam com sua presença e nas escolhas que ainda parecem improvisadas.`
+- Linha 575 [string]: `Fortalece quando vira assinatura. Gera ruído quando vira tendência desconectada de você.`
+- Linha 582 [string]: `Ponto de atenção`
+- Linha 584 [string]: `O ponto que pede consciência`
+- Linha 585 [string]: `Sua sombra ainda está oculta`
+- Linha 588 [string]: `Antes da leitura inicial, alguns padrões ainda permanecem invisíveis. A sombra não é um defeito. É um ponto esperando linguagem.`
+- Linha 591 [string]: `Mostra onde uma defesa antiga ainda tenta proteger sua imagem de ser vista por inteiro.`
+- Linha 593 [string]: `Aparece em controle excessivo, apagamento, excesso de adaptação ou escolhas que reduzem sua força.`
+- Linha 595 [string]: `Fortalece quando é integrada. Gera ruído quando governa suas escolhas em silêncio.`
+- Linha 647 [string]: `Conexão em ativação`
+- Linha 648 [string]: `Aguardando primeira leitura`
+- Linha 652 [string]: `A imagem ainda está aprendendo a sustentar a força que já foi nomeada.`
+- Linha 653 [string]: `A dor central será nomeada quando sua primeira leitura abrir.`
+- Linha 660 [string]: `Dossiê ORI`
+- Linha 663 [string]: `Código das Deusas`
+- Linha 665 [string]: `Sua direção visual já pode ser consultada: corpo, cor, cabelo, beleza e presença começam a organizar escolhas reais.`
+- Linha 667 [string]: `A próxima etapa mostra como essa força aparece no corpo, na cor, no cabelo, na beleza e na presença.`
+- Linha 668 [string]: `A primeira leitura revela a força simbólica que abre todo o restante da jornada.`
+- Linha 674 [string]: `Força ativa`
+- Linha 675 [string]: `Primeira leitura em formação`
+- Linha 677 [string]: `O que apareceu aqui não é um rótulo. É a força que começa a organizar sua presença, sua imagem e o modo como você se mostra.`
+- Linha 678 [string]: `Sua primeira força ainda está sendo formada a partir dos sinais da jornada.`
+- Linha 683 [string]: `O que pede forma`
+- Linha 685 [template]: `está pedindo escolhas mais fiéis: menos adaptação automática, mais presença sustentada no corpo e na imagem.`
+- Linha 692 [string]: `Cuidado para não diminuir sua força tentando explicar demais. Antes da fala, sua imagem já começa a comunicar.`
+- Linha 697 [string]: `Na prática`
+- Linha 698 [string]: `Comece pela leitura`
+- Linha 698 [string]: `Uma escolha por vez`
+- Linha 700 [string]: `Na próxima escolha de imagem, observe se ela sustenta sua força ou se apenas tenta caber no olhar de fora.`
+- Linha 701 [string]: `Comece pela primeira leitura para entender qual força simbólica sustenta sua presença.`
+- Linha 708 [template]: `. Agora essa força precisa aparecer com mais verdade no jeito como você se veste, se move e ocupa presença.`
+- Linha 708 [template]: `Sua primeira leitura mostrou`
+- Linha 709 [string]: `O Espelho está reunindo seus sinais para abrir a primeira leitura da sua jornada.`
+- Linha 721 [string]: `Base simbólica`
+- Linha 723 [string]: `center 32%`
+- Linha 728 [string]: `Primeira força ainda fechada.`
+- Linha 730 [string]: `Nomeia a base da presença.`
+- Linha 731 [string]: `Abre o ponto de partida.`
+- Linha 738 [string]: `Gestual e percepção`
+- Linha 740 [string]: `center 22%`
+- Linha 742 [string]: `Primeira leitura ativa`
+- Linha 745 [string]: `Presença ainda em ativação.`
+- Linha 747 [string]: `Mostra o que chega antes da fala.`
+- Linha 748 [string]: `Revela ritmo e gesto.`
+- Linha 754 [string]: `Dor central`
+- Linha 755 [string]: `Ponto de tensão`
+- Linha 758 [string]: `Em consciência`
+- Linha 760 [string]: `Transforma ruído em direção.`
+- Linha 767 [string]: `Forma e proporção`
+- Linha 769 [string]: `center 8%`
+- Linha 771 [string]: `Tomando forma`
+- Linha 773 [string]: `Linhas e proporções em direção.`
+- Linha 774 [string]: `Forma, caimento e presença física.`
+- Linha 776 [string]: `Sustenta escolha de forma.`
+- Linha 777 [string]: `Mostra presença e ruído.`
+- Linha 784 [string]: `Sazonal e Patton`
+- Linha 792 [template]: `com leitura Patton`
+- Linha 793 [string]: `Contraste e presença cromática.`
+- Linha 794 [string]: `Sazonal e Patton entram na etapa visual.`
+- Linha 797 [string]: `Dá eixo para cor e beleza.`
+- Linha 798 [string]: `Traduz contraste e temperatura.`
+- Linha 805 [string]: `Textura e acabamento`
+- Linha 810 [string]: `Cabelo conectado à identidade.`
+- Linha 811 [string]: `Textura, volume, corte e cor.`
+- Linha 813 [string]: `Fortalece antes da roupa.`
+- Linha 814 [string]: `Alinha rosto e assinatura.`
+- Linha 824 [string]: `Rosto e acabamento`
+- Linha 828 [string]: `Maquiagem, acabamento e presença do rosto.`
+- Linha 829 [string]: `Conecta expressão, brilho e refinamento.`
+- Linha 835 [string]: `Assinatura visual`
+- Linha 836 [string]: `Síntese estética`
+- Linha 840 [string]: `Em síntese`
+- Linha 841 [string]: `O fio condutor entre essência, imagem e repetição visual.`
+- Linha 842 [string]: `Transforma direção em reconhecimento.`
+- Linha 848 [string]: `Armário`
+- Linha 849 [string]: `Aplicação real`
+- Linha 853 [string]: `Próxima aplicação`
+- Linha 854 [string]: `Peças reais, lacunas, excessos e prioridades.`
+- Linha 855 [string]: `Leva a identidade para a rotina.`
+- Linha 861 [string]: `Fórmulas`
+- Linha 862 [string]: `Looks e repetição`
+- Linha 867 [string]: `Combinações que sustentam presença sem esforço.`
+- Linha 868 [string]: `Cria consistência visual no cotidiano.`
+- Linha 875 [string]: `Escolhas e prioridade`
+- Linha 879 [string]: `O que entra, o que sai e o que deixa de dispersar.`
+- Linha 880 [string]: `Evita compra desconectada da identidade.`
+- Linha 892 [string]: `Base identificada`
+- Linha 900 [string]: `Tradução visual`
+- Linha 901 [string]: `A força identificada começa a ganhar corpo, cor, cabelo, beleza e assinatura.`
+- Linha 911 [string]: `Código Final`
+- Linha 911 [string]: `Etapa final`
+- Linha 912 [string]: `Aplicação`
+- Linha 913 [string]: `A identidade deixa de ser direção e passa a organizar armário, fórmulas e escolhas reais.`
+- Linha 938 [string]: `Imagem tomando forma`
+- Linha 939 [string]: `Direção aplicada`
+- Linha 945 [string]: `Próximo passo`
+- Linha 952 [string]: `Primeira direção simbólica`
+- Linha 955 [string]: `A primeira leitura ainda está fechada.`
+- Linha 956 [string]: `O Código das Deusas abre a base arquetípica.`
+- Linha 957 [string]: `O Espelho começa quando sua força ganha nome.`
+- Linha 962 [string]: `Cápsula visual aplicada ao seu armário real`
+- Linha 963 [string]: `Lacunas, excessos e prioridades de compra`
+- Linha 964 [string]: `Fórmulas de look para sustentar sua rotina`
+- Linha 965 [string]: `Aplicação prática da identidade no cotidiano`
+- Linha 970 [string]: `Porque direção visual só vira mudança real quando entra no armário, nas compras e na rotina.`
+- Linha 971 [string]: `Porque a força já foi nomeada. Agora ela precisa aparecer no corpo, na cor, no cabelo e na presença.`
+- Linha 974 [string]: `O Código Final transforma direção em guarda-roupa real.`
+- Linha 975 [string]: `O Dossiê ORI leva sua força para a imagem visível.`
+- Linha 977 [string]: `O Espelho ORI já organizou sua direção visual. A próxima etapa não repete essa leitura: ela aplica essa identidade ao armário real, às escolhas, às lacunas e às fórmulas de look.`
+- Linha 984 [string]: `Antes de ver sua imagem, você precisa entender sua base.`
+- Linha 985 [string]: `A primeira leitura mostra a força arquetípica que sustenta sua imagem e abre o Espelho ORI.`
+- Linha 986 [string]: `Abrir minha primeira leitura`
+- Linha 992 [string]: `Aplicação final liberada`
+- Linha 995 [string]: `Sua direção visual já pode entrar no guarda-roupa real.`
+- Linha 996 [string]: `O Código Final aplica sua identidade ao acervo, à cápsula, às fórmulas de look, às lacunas e às escolhas práticas da sua rotina.`
+- Linha 997 [string]: `Acessar Código Final`
+- Linha 1003 [string]: `Dossiê ORI liberado`
+- Linha 1006 [string]: `Sua força já foi nomeada. Agora ela pode ganhar imagem.`
+- Linha 1007 [string]: `O Dossiê ORI mostra como sua leitura aparece no corpo, no cabelo, na cor, na beleza, na presença e na assinatura visual.`
+- Linha 1008 [string]: `Acessar Dossiê ORI`
+- Linha 1016 [string]: `Você já sabe o nome da sua força. Agora falta ver a forma que ela pode ter.`
+- Linha 1017 [string]: `O Dossiê ORI mostra sua identidade em imagem visível: corpo, cabelo, cor, beleza, presença e linguagem estética.`
+- Linha 1018 [string]: `Dossiê ainda selado`
+- Linha 1052 [string]: `Comece aqui`
+- Linha 1052 [string]: `Concluído`
+- Linha 1055 [string]: `Sua base simbólica foi identificada.`
+- Linha 1056 [string]: `Aqui começa a leitura da sua essência.`
+- Linha 1057 [string]: `O primeiro passo`
+- Linha 1057 [string]: `O que você já descobriu`
+- Linha 1059 [string]: `Sua leitura mostrou quais forças simbólicas estruturam sua imagem e como elas influenciam sua presença.`
+- Linha 1060 [string]: `Antes de traduzir a imagem, a gente precisa entender qual força simbólica sustenta você.`
+- Linha 1063 [string]: `Arquétipos`
+- Linha 1066 [template]: `formam a base da sua leitura.`
+- Linha 1067 [string]: `A primeira leitura vai mostrar quais forças sustentam sua imagem.`
+- Linha 1069 [string]: `Observe onde essa força já aparece naturalmente em você.`
+- Linha 1071 [template]: `A base que já foi nomeada:`
+- Linha 1072 [string]: `A base que já foi nomeada`
+- Linha 1073 [string]: `Etapa fechada`
+- Linha 1079 [string]: `Aqui começa a leitura do modo como sua energia chega antes da fala.`
+- Linha 1081 [string]: `Que parte da sua presença você ainda tenta diminuir?`
+- Linha 1082 [string]: `Como sua presença chega`
+- Linha 1085 [string]: `Sua presença será traduzida conforme sua jornada avançar.`
+- Linha 1091 [string]: `Mostra onde sua força pode virar defesa, excesso ou ruído.`
+- Linha 1093 [string]: `O que você protege tanto que às vezes acaba escondendo?`
+- Linha 1097 [string]: `A sombra não é defeito. É um ponto que precisa ser visto para a imagem ficar mais inteira.`
+- Linha 1100 [string]: `Fórmula`
+- Linha 1103 [string]: `Resume a direção simbólica que começa a organizar sua imagem.`
+- Linha 1105 [string]: `Sua imagem está reforçando essa direção ou criando ruído?`
+- Linha 1107 [string]: `Sua primeira fórmula de imagem:`
+- Linha 1108 [string]: `Fórmula em preparação`
+- Linha 1112 [string]: `A primeira fórmula da sua imagem aparece depois da leitura arquetípica.`
+- Linha 1115 [string]: `Começar Código das Deusas`
+- Linha 1115 [string]: `Ver Código das Deusas`
+- Linha 1127 [string]: `Sua essência começa a ganhar forma visual.`
+- Linha 1128 [string]: `O que ganhou forma visual`
+- Linha 1128 [string]: `O que vem agora`
+- Linha 1130 [string]: `Seu Dossiê ORI abre corpo, cor, cabelo, beleza e presença para consulta.`
+- Linha 1131 [string]: `No Dossiê ORI, vamos traduzir sua essência para a imagem real: corpo, cor, cabelo, beleza, presença e rotina.`
+- Linha 1137 [string]: `A leitura mostra como sua identidade aparece em forma, proporção e presença corporal.`
+- Linha 1139 [string]: `Seu corpo pede leveza, estrutura, presença ou movimento?`
+- Linha 1140 [string]: `Corpo e proporções`
+- Linha 1142 [string]: `Aqui entra a tradução do Dossiê ORI para corpo, linhas, proporções e modelagens que respeitam sua presença real.`
+- Linha 1143 [string]: `Espaço para referência corporal`
+- Linha 1149 [string]: `Sua paleta mostra quais tons sustentam sua presença com mais coerência.`
+- Linha 1151 [string]: `Quais cores fazem você parecer mais inteira?`
+- Linha 1152 [string]: `Paleta e direção de cor`
+- Linha 1154 [string]: `Quando a cartela da cliente estiver definida, a imagem da paleta entra aqui como referência rápida e visual.`
+- Linha 1155 [string]: `Imagem da paleta da cliente`
+- Linha 1161 [string]: `Texturas e caimentos ajudam a imagem a comunicar a energia certa.`
+- Linha 1163 [string]: `Seu tecido aproxima, sustenta, pesa ou apaga sua presença?`
+- Linha 1164 [string]: `Tecidos e texturas`
+- Linha 1166 [string]: `Este espaço recebe referências de tecidos, brilhos, pesos e texturas que conversam com a leitura da cliente.`
+- Linha 1167 [string]: `Referências de tecidos`
+- Linha 1173 [string]: `Cabelo, acabamento e beleza deixam a leitura mais visível no rosto.`
+- Linha 1175 [string]: `Sua beleza está revelando você ou tentando corrigir você?`
+- Linha 1176 [string]: `Cabelo, beleza e acabamento`
+- Linha 1178 [string]: `Aqui entram imagens de cabelo, beleza e acabamento para mostrar de forma simples como a direção visual pode aparecer.`
+- Linha 1179 [string]: `Referências de beleza e cabelo`
+- Linha 1194 [string]: `Sua imagem entra no armário e na vida real.`
+- Linha 1195 [string]: `O que entrou na vida real`
+- Linha 1195 [string]: `O que vem depois`
+- Linha 1197 [string]: `Seu Código Final reúne cápsula, looks, compras e rotina para consultar na prática.`
+- Linha 1198 [string]: `No Código Final, você entende como levar sua identidade para o armário, os looks, as compras e a sua cápsula visual.`
+- Linha 1201 [string]: `Cápsula`
+- Linha 1204 [string]: `Organiza as peças que sustentam sua identidade no armário real.`
+- Linha 1206 [string]: `O que precisa ficar para sua imagem ganhar coerência?`
+- Linha 1207 [string]: `Mapa da cápsula visual`
+- Linha 1209 [string]: `A cápsula final junta paleta, modelagem, tecidos e rotina para transformar direção em escolha prática.`
+- Linha 1210 [string]: `Mapa visual da cápsula`
+- Linha 1216 [string]: `Mostra fórmulas de composição para vestir sua identidade com menos esforço.`
+- Linha 1218 [string]: `Que combinação já parece sua antes mesmo de explicar?`
+- Linha 1219 [string]: `Fórmulas de looks`
+- Linha 1221 [string]: `Aqui entram combinações, regras simples e fórmulas visuais para facilitar a aplicação no dia a dia.`
+- Linha 1222 [string]: `Fórmulas visuais de looks`
+- Linha 1228 [string]: `Ajuda a decidir o que entra, o que espera e o que não precisa entrar agora.`
+- Linha 1230 [string]: `Sua próxima compra resolve uma lacuna ou só cria mais ruído?`
+- Linha 1231 [string]: `Prioridades de compra`
+- Linha 1233 [string]: `A estratégia de compra evita excesso e ajuda a cliente a escolher peças que realmente sustentam a imagem.`
+- Linha 1234 [string]: `Prioridades e lacunas`
+- Linha 1240 [string]: `Leva a identidade para escolhas possíveis dentro da vida real.`
+- Linha 1242 [string]: `Como sua imagem pode ficar mais sua sem complicar sua rotina?`
+- Linha 1243 [string]: `Imagem na vida real`
+- Linha 1245 [string]: `Esta etapa fecha a jornada mostrando como a identidade pode aparecer no armário, na rotina e nas decisões práticas.`
+- Linha 1246 [string]: `Aplicação na rotina`
+- Linha 1249 [string]: `Código Final ainda selado`
+- Linha 1294 [JSX]: `Preparando seu reflexo...`
+- Linha 1315 [string]: `center center`
+- Linha 1317 [string]: `saturate(0.92) contrast(1.04)`
+- Linha 1350 [JSX]: `Voltar ao Portal`
+- Linha 1406 [string]: `hidden sm:inline`
+- Linha 1411 [string]: `hidden sm:block w-5 h-px`
+- Linha 1446 [JSX]: `Sua jornada dentro do ORI`
+- Linha 1457 [JSX]: `Primeiro a gente entende sua base. Depois leva isso para sua imagem.`
+- Linha 1465 [JSX]: `Aqui você vê onde está, o que já ficou claro e qual é o próximo passo.`
+- Linha 1725 [JSX]: `Mapa Vivo ORI`
+- Linha 1736 [JSX]: `Veja sua jornada com clareza.`
+- Linha 1746 [string]: `Aqui você acompanha os pontos centrais da sua leitura e entende o que merece atenção agora.`
+- Linha 1769 [JSX]: `Sua leitura, organizada de forma clara.`
+- Linha 2156 [JSX]: `Relatório digital`
+- Linha 2166 [JSX]: `Consulte sua leitura completa.`
+- Linha 2172 [JSX]: `Abra o relatório do Código das Deusas em formato de leitura contínua.`
+- Linha 2186 [JSX]: `Abrir relatório completo`
+- Linha 2498 [JSX]: `O Dossiê transforma leitura em imagem visível.`
+- Linha 2504 [JSX]: `Corpo, cor, cabelo, beleza e presença entram como etapas práticas para mostrar como sua força aparece no mundo.`
+- Linha 2563 [string]: `Aplicação liberada`
+- Linha 2564 [string]: `Etapa futura`
+- Linha 2576 [string]: `Sua identidade já pode virar guarda-roupa real.`
+- Linha 2577 [string]: `O Código Final aplica a leitura no armário, nos looks e na rotina.`
+- Linha 2585 [string]: `A etapa final reúne cápsula, fórmulas de look, prioridades de compra e decisões práticas para sustentar sua presença no cotidiano.`
+- Linha 2586 [string]: `Essa etapa fica mais adiante. Ela leva a leitura para o armário, os looks, as compras e a rotina real.`
+- Linha 2646 [JSX]: `Onde sua imagem está sendo lida.`
+- Linha 2653 [JSX]: `Um selo de leitura para observar conexão, tensão e próxima direção.`
+- Linha 2689 [JSX]: `Estado atual`
+- Linha 2717 [string]: `Presença em formação`
+- Linha 2728 [string]: `Sua imagem já começou a mostrar direção.`
+- Linha 2747 [string]: `A próxima leitura traduz essa direção em forma, cor e presença visual.`
+- Linha 2748 [string]: `O selo se completa quando a próxima leitura trouxer dados de imagem.`
+- Linha 2766 [JSX]: `Ponto que pede consciência`
+- Linha 2777 [JSX]: `O que hoje pede direção na sua imagem.`
+- Linha 2803 [JSX]: `O método transforma esse ponto em direção: nomeia a força, traduz a imagem e aplica coerência na vida real.`
+- Linha 2839 [JSX]: `Matriz ORI`
+- Linha 2849 [JSX]: `Seu mapa de leitura e imagem.`
+- Linha 2856 [JSX]: `Veja como sua leitura passa da base interna para a imagem e depois para a prática.`
+- Linha 2865 [string]: `Etapas da matriz ORI`
+- Linha 2876 [template]: `Ver etapa`
+- Linha 3006 [JSX]: `Escolha uma etapa para ver como ela aparece no seu Espelho.`
+- Linha 3023 [template]: `Itens da etapa`
+- Linha 3225 [JSX]: `Etapa aberta`
+- Linha 3352 [JSX]: `O que esta etapa mostra`
+- Linha 3369 [JSX]: `Como essa leitura continua`
+- Linha 3375 [JSX]: `Essa base se aprofunda conforme corpo, cor, cabelo e presença forem integrados ao método.`
+- Linha 3395 [JSX]: `Composição da etapa`
+- Linha 3432 [string]: `saturate(1.04) contrast(1.06) brightness(1.06)`
+- Linha 3462 [JSX]: `Entre presença e imagem`
+- Linha 3474 [JSX]: `Sua imagem começa onde sua presença deixa de pedir licença.`
+- Linha 3510 [JSX]: `Escolha um ponto da sua leitura para aprofundar.`
+- Linha 3517 [JSX]: `Toque em essência, presença, imagem ou sombra para ver outro ângulo da sua leitura.`
+- Linha 3526 [JSX]: `Toque para alternar`
+- Linha 3597 [string]: `tracking-[0.16em]`
+- Linha 3671 [JSX]: `Leitura aberta`
+- Linha 3697 [string]: `O que isso mostra`
+- Linha 3698 [string]: `Como isso aparece`
+- Linha 3699 [string]: `O que fortalece / gera ruído`
+- Linha 3742 [string]: `Recolher leitura`
+- Linha 3743 [string]: `Aprofundar leitura`
+- Linha 3864 [JSX]: `Continuar para o Dossiê ORI`
+- Linha 3876 [JSX]: `Dossiê ORI ainda selado`
+- Linha 3889 [JSX]: `Voltar ao portal`
+- Linha 4021 [JSX]: `O próximo passo não precisa explicar tudo. Ele só precisa mostrar por onde continuar.`
+- Linha 4034 [JSX]: `Por que importa`
+- Linha 4116 [JSX]: `Abrir próxima etapa`
+- Linha 4128 [JSX]: `Dossiê ORI ainda fechado`
+- Linha 4152 [JSX]: `Fechamento do Espelho`
+- Linha 4163 [JSX]: `Agora ela precisa ganhar forma.`
+
+## /metodo-ori
+
+### `metodo-ori/src/pages/MetodoOri.jsx`
+
+- Linha 11 [string]: `Código das Deusas`
+- Linha 12 [string]: `Leitura Arquetípica da Imagem`
+- Linha 13 [string]: `Entenda a força que organiza sua imagem por dentro.`
+- Linha 14 [string]: `Essa etapa começa quando nenhum estilo pronto parece dar conta de você. Você testa referências, muda detalhes, tenta se reconhecer, mas algo ainda parece personagem.`
+- Linha 16 [string]: `Aqui o ORI identifica sua base simbólica: como você deseja, se protege, se expressa e ocupa espaço. Antes da roupa, existe uma força organizando sua imagem.`
+- Linha 18 [string]: `Você deixa de tentar se encaixar em estilos prontos e começa a reconhecer a força que organiza sua imagem por dentro.`
+- Linha 19 [string]: `Iniciar Código das Deusas`
+- Linha 22 [string]: `Arquétipo dominante, auxiliar e composto`
+- Linha 23 [string]: `Leitura da sua dinâmica feminina`
+- Linha 24 [string]: `Sombra, desejo e mecanismo de presença`
+- Linha 25 [string]: `Como sua energia tende a ser percebida`
+- Linha 26 [string]: `Base simbólica da sua identidade visual`
+- Linha 31 [string]: `Dossiê ORI`
+- Linha 32 [string]: `Guia de Imagem Integrada`
+- Linha 34 [string]: `Veja como sua leitura aparece no corpo, nas cores, no cabelo e na beleza.`
+- Linha 35 [string]: `Essa etapa abre quando você até entende partes de si, mas elas não conversam. Corpo, cor, cabelo, presença e estética parecem fragmentos soltos, e a imagem ainda não parece inteira.`
+- Linha 37 [string]: `Aqui o Método ORI cruza psique, corpo, cor, cabelo, ancestralidade, presença e rotina para transformar informação solta em coerência visual.`
+- Linha 39 [string]: `Sua imagem deixa de parecer fragmentada e começa a ganhar forma visível, coerente e inteira.`
+- Linha 40 [string]: `Conhecer o Dossiê ORI`
+- Linha 40 [string]: `Dossiê ORI em preparação`
+- Linha 43 [string]: `Base identitária integrada`
+- Linha 45 [string]: `Direção cromática`
+- Linha 46 [string]: `Cabelo, beleza e presença visual`
+- Linha 47 [string]: `Pontos de coerência e ruído na imagem`
+- Linha 52 [string]: `Código Final`
+- Linha 53 [string]: `Imagem e Essência Aplicadas`
+- Linha 55 [string]: `Leve sua imagem para escolhas reais no dia a dia.`
+- Linha 56 [string]: `Essa etapa chega quando você já tem clareza, mas o armário real ainda não acompanha. Você compra, improvisa, mistura versões antigas e continua sentindo desgaste para se vestir.`
+- Linha 58 [string]: `Aqui a identidade revelada vira direção de vida visual: cápsula, compras, repetição estética, combinações, lacunas e assinatura pessoal.`
+- Linha 60 [string]: `Você para de improvisar imagem e começa a sustentar presença com escolhas reais.`
+- Linha 61 [string]: `Ver aplicação final`
+- Linha 64 [string]: `Filosofia da cápsula`
+- Linha 65 [string]: `Peças-base por categoria`
+- Linha 66 [string]: `Paleta da cápsula e regra de ouro`
+- Linha 67 [string]: `Fórmula da imagem aplicada`
+- Linha 68 [string]: `Direção de compra e repetição consciente`
+- Linha 77 [string]: `Quando vestir parece esforço`
+- Linha 78 [string]: `Antes da clareza`
+- Linha 79 [string]: `Situações reais que fazem a imagem parecer desalinhada.`
+- Linha 84 [string]: `O Método`
+- Linha 85 [string]: `Jornada ORI`
+- Linha 86 [string]: `Imagem como expressão da essência, não superfície isolada.`
+- Linha 91 [string]: `Como a jornada acontece`
+- Linha 92 [string]: `Entender · Dar forma · Aplicar`
+- Linha 93 [string]: `A jornada respeita uma ordem clara e prática.`
+- Linha 98 [string]: `As Etapas`
+- Linha 99 [string]: `Três portas, uma travessia`
+- Linha 100 [string]: `Cada produto responde a uma pergunta diferente da jornada.`
+- Linha 106 [string]: `O que o ORI faz e não faz`
+- Linha 107 [string]: `O método parte da presença, não da tendência.`
+- Linha 112 [string]: `Sua Jornada`
+- Linha 113 [string]: `Posição no portal`
+- Linha 114 [string]: `Cada etapa prepara o próximo passo da sua imagem.`
+- Linha 138 [JSX]: `A Jornada ORI`
+- Linha 161 [template]: `Abrir etapa`
+- Linha 202 [JSX]: `Quando vestir`
+- Linha 204 [JSX]: `esforço`
+- Linha 205 [JSX]: `parece esforço`
+- Linha 298 [JSX]: `Etapa ativa`
+- Linha 341 [string]: `Quando essa etapa faz sentido`
+- Linha 342 [string]: `O que você entende aqui`
+- Linha 356 [JSX]: `Entregas principais`
+- Linha 399 [JSX]: `O que muda depois dessa etapa`
+- Linha 444 [string]: `Você compra peças novas, mas continua sentindo que não tem roupa.`
+- Linha 445 [string]: `Seu armário está cheio, mas escolher um look simples vira uma negociação interna.`
+- Linha 446 [string]: `Você gasta tempo se arrumando e, mesmo assim, sai com a sensação de que algo não fechou.`
+- Linha 447 [string]: `Você salva referências lindas, mas quando tenta usar em você parece que não encaixa.`
+- Linha 448 [string]: `Você muda cabelo, testa cor, compra roupa, mas a sensação de identidade continua instável.`
+- Linha 449 [string]: `Você sente que existe uma mulher forte em você, mas sua imagem ainda não sustenta essa presença.`
+- Linha 457 [JSX]: `Talvez você chegue achando que precisa de mais roupa. Mas, por baixo da compra, existe uma sensação mais profunda: a imagem ainda não parece inteira.`
+- Linha 466 [JSX]: `A dor aparece na frente do espelho, no armário lotado, na demora para se arrumar, na compra que prometia resolver tudo e não resolveu. É quando a imagem vira tentativa, não direção.`
+- Linha 504 [JSX]: `O ORI começa quando mais uma compra já não resolve. A partir daí, a pergunta deixa de ser "o que eu compro?" e passa a ser "o que precisa fazer sentido em mim?"`
+- Linha 506 [string]: `o que eu compro?`
+- Linha 506 [string]: `o que precisa fazer sentido em mim?`
+- Linha 516 [string]: `arquétipo`
+- Linha 518 [string]: `coloração`
+- Linha 520 [string]: `presença visual`
+- Linha 521 [string]: `linguagem estética`
+- Linha 530 [JSX]: `Mais do que estética: um jeito de entender sua imagem por dentro.`
+- Linha 537 [JSX]: `O Método ORI não olha para a imagem como superfície. Ele cruza símbolo, corpo, cor, cabelo, beleza e rotina para construir uma direção visual que faça sentido para você.`
+- Linha 571 [JSX]: `No ORI, imagem não é improviso. É escolha visual com raiz, direção e prática.`
+- Linha 584 [string]: `Entender a base`
+- Linha 585 [string]: `Primeiro o método nomeia a força que organiza sua imagem por dentro.`
+- Linha 589 [string]: `Dar forma`
+- Linha 590 [string]: `Depois essa força ganha corpo, cor, cabelo, beleza e direção estética.`
+- Linha 594 [string]: `Aplicar na vida real`
+- Linha 595 [string]: `Por fim, a leitura entra no guarda-roupa real e sustenta escolhas concretas.`
+- Linha 604 [JSX]: `Sua imagem não se organiza de uma vez. Primeiro você entende a base, depois dá forma, depois aplica.`
+- Linha 672 [template]: `Ver produto`
+- Linha 717 [string]: `Etapa aberta`
+- Linha 747 [string]: `Quem sou eu em essência?`
+- Linha 748 [string]: `Qual é a força simbólica que estrutura minha imagem?`
+- Linha 752 [string]: `Como essa força ganha forma?`
+- Linha 753 [string]: `Como ela se traduz em corpo, cor, cabelo, presença e direção estética?`
+- Linha 757 [string]: `Como essa identidade sustenta minha vida real?`
+- Linha 758 [string]: `Como ela entra no meu armário, nas minhas escolhas e na minha rotina?`
+- Linha 762 [string]: `não corrige seu corpo`
+- Linha 763 [string]: `não entrega estética genérica`
+- Linha 764 [string]: `não separa identidade de imagem`
+- Linha 765 [string]: `não mistura etapas com funções diferentes`
+- Linha 766 [string]: `não cria personagem desconectada da sua essência`
+- Linha 816 [JSX]: `Porque a dificuldade não está só na roupa.`
+- Linha 822 [JSX]: `Às vezes o problema não é falta de peça. É falta de direção. Antes de montar looks, você precisa entender sua força, ver como ela aparece na imagem e aprender a repetir isso na rotina.`
+- Linha 840 [JSX]: `O ORI não parte da tendência.`
+- Linha 870 [JSX]: `Cada etapa prepara a próxima. Seu portal mostra onde você está agora e qual passo ajuda sua imagem a ficar mais clara, mais inteira e mais prática.`
+- Linha 885 [string]: `Concluído`
+- Linha 885 [string]: `Primeira leitura`
+- Linha 886 [string]: `Imagem e essência`
+- Linha 887 [string]: `Ainda não iniciado`
+- Linha 962 [JSX]: `Sua imagem não começa no armário. Começa no que precisa ficar claro em você.`
+- Linha 969 [JSX]: `Antes da roupa, existe direção. Antes da cápsula, existe uma força que precisa ser reconhecida. O Método ORI organiza esse caminho com profundidade, clareza e aplicação real.`
+- Linha 988 [JSX]: `Ir para minha etapa atual`
+- Linha 1000 [JSX]: `Voltar ao portal`
+- Linha 1016 [string]: `Continue pelos passos antes de avançar na página.`
+- Linha 1018 [string]: `Avance quando esta etapa fizer sentido.`
+- Linha 1019 [string]: `A travessia conceitual está completa.`
+- Linha 1094 [JSX]: `Método ORI by Telúrica`
+- Linha 1107 [JSX]: `Conheça o Método ORI`
+- Linha 1114 [JSX]: `Uma jornada para entender a força que organiza sua imagem, dar forma a essa força no visual e levar tudo para a vida real.`
+- Linha 1122 [JSX]: `O ORI não começa pela roupa. Primeiro, você entende o que sustenta sua imagem por dentro. Depois, isso aparece no corpo, nas cores, no cabelo e na beleza. Por fim, vira escolha real no armário e na rotina.`
+- Linha 1142 [JSX]: `Entender a jornada`
+- Linha 1154 [JSX]: `Ver minha etapa atual`
+- Linha 1220 [string]: `Voltar para a etapa anterior`
+- Linha 1227 [JSX]: `Etapa anterior`
+- Linha 1236 [template]: `Avançar para`
+- Linha 1261 [JSX]: `Continuar minha jornada`
+
+## /oraculo
+
+### `metodo-ori/src/pages/OraculoOri.jsx`
+
+- Linha 38 [string]: `Hoje, repare onde você está tentando parecer mais simples do que realmente é para evitar perguntas, opiniões ou julgamentos.`
+- Linha 39 [string]: `Antes de aceitar um convite, responder uma mensagem ou assumir uma tarefa, pergunte: eu quero isso ou só estou evitando desconforto?`
+- Linha 41 [string]: `Escolha uma peça que pareça fiel ao seu estado de hoje, não apenas adequada. Pode ser textura, peso, decote, cor ou um acessório com presença.`
+- Linha 45 [string]: `A carta aponta para aquele momento em que você diz que está tudo bem, mas o corpo já ficou tenso e a paciência já acabou.`
+- Linha 46 [string]: `Não responda no impulso. Escreva primeiro a resposta sincera em uma nota privada, respire e só depois decida o que realmente precisa ser dito.`
+- Linha 48 [string]: `Use algo que te dê contorno: uma terceira peça, um corte mais estruturado ou um detalhe que ajude você a se sentir protegida sem se esconder.`
+- Linha 52 [string]: `Hoje, observe se você está se arrumando para se reconhecer melhor ou só para atravessar o dia sem chamar atenção.`
+- Linha 53 [string]: `Troque uma escolha automática por uma escolha intencional: uma cor, um batom, um cabelo diferente ou um detalhe que diga 'eu estou aqui'.`
+- Linha 55 [string]: `Faça um ajuste visível, mas simples. Uma manga dobrada, um acessório central, um cabelo mais assumido ou uma peça que organize o visual.`
+- Linha 59 [string]: `A carta fala de como você entra nos lugares: se chega pedindo licença demais ou se permite ocupar o espaço com naturalidade.`
+- Linha 60 [string]: `Antes de uma conversa importante, desacelere o corpo. Ombros soltos, pés firmes, voz um pouco mais baixa e uma frase a menos para se justificar.`
+- Linha 62 [string]: `Escolha algo que melhore sua postura: uma gola, um brinco, uma estrutura no ombro ou um sapato que te coloque no próprio eixo.`
+- Linha 66 [string]: `Hoje não pede uma grande virada. Pede uma escolha pequena que coloque sua rotina um pouco mais perto da mulher que você quer sustentar.`
+- Linha 67 [string]: `Escolha uma pendência visual ou prática e resolva só o próximo passo: separar, ajustar, descartar, provar ou anotar.`
+- Linha 69 [string]: `Monte uma combinação simples que você repetiria. O caminho aparece quando algo deixa de ser inspiração e começa a virar rotina.`
+- Linha 73 [string]: `A carta fala dos 'sins' que você dá para não parecer difícil, mesmo quando por dentro já sabe que aquilo te drena.`
+- Linha 74 [string]: `Use uma resposta curta hoje: 'não consigo', 'não quero assumir isso agora' ou 'vou pensar e te respondo'. Sem palestra, sem culpa.`
+- Linha 76 [string]: `Vista algo que te deixe menos disponível para o olhar dos outros e mais disponível para você. Contorno também é elegância.`
+- Linha 80 [string]: `Hoje, seu corpo pode estar mostrando primeiro aquilo que a mente ainda tenta negociar: cansaço, incômodo, vontade ou recusa.`
+- Linha 81 [string]: `Antes de escolher roupa, pergunte ao corpo o que ele aguenta hoje. Conforto não precisa ser abandono de presença.`
+- Linha 83 [string]: `Escolha uma peça que acompanhe seu movimento real. Nada que te faça prender a respiração, se encolher ou corrigir postura o tempo todo.`
+- Linha 87 [string]: `A carta fala daquela vontade que você adia porque parece vaidade, exagero ou algo que 'não combina com a fase'.`
+- Linha 88 [string]: `Permita um desejo pequeno sem transformar isso em compra imediata: salve uma referência, teste uma cor, experimente uma forma.`
+- Linha 90 [string]: `Inclua um ponto de prazer no visual. Pode ser brilho baixo, perfume, textura gostosa, unha, boca, cabelo ou uma cor que acende seu olhar.`
+- Linha 94 [string]: `Hoje, observe onde sua imagem, agenda e energia estão contando histórias diferentes. O cansaço muitas vezes nasce dessa fragmentação.`
+- Linha 95 [string]: `Escolha uma coisa para alinhar: o que você vai vestir, o que vai recusar ou o que vai priorizar. Só uma já muda o dia.`
+- Linha 97 [string]: `Repita algo que funciona em você. Coerência não precisa ser novidade: às vezes é reconhecer uma assinatura e parar de abandoná-la.`
+- Linha 101 [string]: `A carta fala de estar entre versões: uma já ficou pequena, mas a próxima ainda não virou hábito. Isso pode parecer confusão, mas é passagem.`
+- Linha 102 [string]: `Não tente resolver a identidade inteira hoje. Escolha uma coisa antiga para pausar e uma coisa nova para testar sem compromisso.`
+- Linha 104 [string]: `Use uma peça de transição: algo que ainda pareça você, mas abra espaço para uma direção nova. Pequenas mudanças sustentam grandes viradas.`
+- Linha 162 [string]: `sua força`
+- Linha 163 [string]: `seu arquétipo principal`
+- Linha 164 [string]: `seu arquétipo secundário`
+- Linha 170 [string]: `Carta da Essência`
+- Linha 171 [string]: `O que sustenta você`
+- Linha 172 [string]: `Base interna`
+- Linha 176 [template]: `não é apenas um nome. É uma estrutura pedindo presença, escolha e sustentação.`
+- Linha 177 [string]: `Hoje, o Espelho lembra: você não precisa suavizar sua força para que ela seja aceita.`
+- Linha 178 [string]: `Sua força fica mais clara quando você abandona a tentativa de agradar todos os olhares.`
+- Linha 180 [string]: `Sua essência ainda está aguardando nome. A primeira leitura abre essa porta.`
+- Linha 182 [string]: `Observe onde você tenta diminuir a própria presença para caber melhor no olhar de fora.`
+- Linha 183 [string]: `Evite transformar sua força em explicação demais.`
+- Linha 188 [string]: `Carta da Sombra`
+- Linha 189 [string]: `O que pede consciência`
+- Linha 190 [string]: `Sombra revelada`
+- Linha 194 [template]: `A sombra da`
+- Linha 194 [template]: `aparece quando a força que protege você começa a limitar sua expansão.`
+- Linha 195 [string]: `Hoje, observe onde sua defesa já deixou de proteger e começou a impedir movimento.`
+- Linha 196 [string]: `Nem tudo que parece autocontrole é consciência. Às vezes, é medo vestido de força.`
+- Linha 198 [string]: `A sombra só pode ser lida depois que sua primeira leitura abre o espelho.`
+- Linha 199 [string]: `Perceba onde proteção virou rigidez.`
+- Linha 200 [string]: `Evite chamar de limite aquilo que talvez seja apenas medo antigo.`
+- Linha 205 [string]: `Carta da Imagem`
+- Linha 206 [string]: `O que quer ganhar forma`
+- Linha 207 [string]: `Imagem do dia`
+- Linha 211 [string]: `Sua imagem não precisa criar uma nova versão de você. Ela precisa mostrar essa força de um jeito possível hoje.`
+- Linha 212 [string]: `A imagem certa não inventa presença. Ela organiza o que já existe em você.`
+- Linha 213 [string]: `O próximo passo não é parecer melhor. É parecer mais coerente.`
+- Linha 215 [string]: `Sua imagem ainda está em silêncio. Primeiro a essência é nomeada.`
+- Linha 216 [string]: `Repare se sua aparência sustenta sua essência ou esconde sua força.`
+- Linha 217 [string]: `Evite escolher imagem apenas para resolver expectativa externa.`
+- Linha 222 [string]: `Carta da Presença`
+- Linha 223 [string]: `O que chega antes da fala`
+- Linha 224 [string]: `Como você chega`
+- Linha 228 [template]: `já desenham a forma como sua presença chega antes das palavras.`
+- Linha 229 [string]: `Hoje, observe o que você comunica antes de se explicar.`
+- Linha 230 [template]: `se torna mais forte quando o corpo deixa de pedir licença para existir.`
+- Linha 232 [string]: `Esse ponto fica mais claro depois da primeira leitura.`
+- Linha 233 [string]: `Observe seu ritmo, seu olhar e a forma como você entra nos espaços.`
+- Linha 234 [string]: `Evite entrar pequena em lugares onde sua presença precisa existir inteira.`
+- Linha 239 [string]: `Carta do Caminho`
+- Linha 240 [string]: `O próximo movimento`
+- Linha 241 [string]: `Próximo passo`
+- Linha 245 [template]: `O próximo passo é transformar a força`
+- Linha 245 [template]: `em imagem, escolha e direção visual.`
+- Linha 246 [string]: `Você já viu quem é. Agora a próxima etapa pergunta: como essa força aparece no mundo?`
+- Linha 247 [string]: `A jornada começa quando você decide viver de forma mais coerente com o que foi revelado.`
+- Linha 249 [string]: `O próximo caminho se abre quando a primeira leitura for concluída.`
+- Linha 250 [string]: `Procure o próximo gesto coerente, não a resposta final.`
+- Linha 251 [string]: `Evite pressa. A travessia precisa de integração.`
+- Linha 256 [string]: `Carta do Limite`
+- Linha 257 [string]: `O contorno que protege sua energia`
+- Linha 258 [string]: `Limite do dia`
+- Linha 262 [template]: `Nem toda imagem que agrada o outro sustenta a`
+- Linha 263 [string]: `Seu limite também é linguagem visual.`
+- Linha 264 [string]: `O limite não endurece sua imagem. Ele dá contorno para que sua força não se dissolva.`
+- Linha 266 [string]: `Antes da primeira leitura, seus limites ainda aguardam linguagem.`
+- Linha 267 [string]: `Veja onde você se adapta para evitar desconforto.`
+- Linha 268 [string]: `Evite negociar o que é importante para você para parecer mais fácil de ler.`
+- Linha 273 [string]: `Carta do Corpo`
+- Linha 274 [string]: `O que seu corpo já sente`
+- Linha 275 [string]: `Corpo do dia`
+- Linha 279 [template]: `Seu corpo já sabe quando uma imagem não sustenta a`
+- Linha 280 [string]: `O corpo não é obstáculo da imagem. É o lugar onde a leitura precisa ganhar verdade.`
+- Linha 281 [string]: `A forma certa cria acordo entre estrutura, conforto e presença.`
+- Linha 283 [string]: `Seu corpo entrará na leitura depois da primeira leitura.`
+- Linha 284 [string]: `Escute onde sua roupa acompanha ou interrompe seu movimento.`
+- Linha 285 [string]: `Evite corrigir o corpo quando o ajuste precisa estar na imagem.`
+- Linha 290 [string]: `Carta do Desejo`
+- Linha 291 [string]: `O que pede permissão`
+- Linha 292 [string]: `Desejo do dia`
+- Linha 296 [template]: `O que você deseja vestir também revela o que a`
+- Linha 296 [template]: `quer permitir.`
+- Linha 297 [string]: `Hoje, não trate seu desejo estético como excesso.`
+- Linha 298 [string]: `Desejo sem direção vira ruído. Desejo escutado vira assinatura.`
+- Linha 300 [string]: `Seu desejo visual será lido com mais clareza depois da primeira leitura.`
+- Linha 301 [string]: `Perceba o que seu olhar procura sem pedir autorização.`
+- Linha 302 [string]: `Evite transformar desejo em culpa ou distração.`
+- Linha 307 [string]: `Carta da Coerência`
+- Linha 308 [string]: `O eixo entre força e escolha`
+- Linha 309 [string]: `Coerência do dia`
+- Linha 313 [template]: `Coerência não é repetir uma estética. É reconhecer a`
+- Linha 313 [template]: `em cada escolha.`
+- Linha 314 [string]: `Sua imagem não precisa ser perfeita. Precisa ser fiel ao que sustenta você.`
+- Linha 315 [string]: `Sua assinatura nasce quando repetição vira linguagem, não prisão.`
+- Linha 317 [string]: `A coerência começa quando a primeira força é nomeada.`
+- Linha 318 [string]: `Procure o ponto comum entre aquilo que você sente, veste e comunica.`
+- Linha 319 [string]: `Evite colecionar versões desconectadas de si.`
+- Linha 324 [string]: `Carta da Travessia`
+- Linha 325 [string]: `O intervalo entre antiga e nova imagem`
+- Linha 326 [string]: `Travessia do dia`
+- Linha 330 [template]: `Entre a imagem antiga e a nova existe uma travessia. A`
+- Linha 330 [template]: `não precisa atravessar com pressa.`
+- Linha 331 [string]: `Você já não cabe no antigo, mas ainda está aprendendo a sustentar o novo.`
+- Linha 332 [string]: `A nova imagem se aproxima quando você para de punir o próprio processo.`
+- Linha 334 [string]: `Sua travessia começa quando a primeira porta se abre.`
+- Linha 335 [string]: `Observe o que já não cabe, mesmo antes de saber o que vem depois.`
+- Linha 336 [string]: `Evite exigir uma resposta final de uma fase que ainda está abrindo caminho.`
+- Linha 360 [string]: `Código Final`
+- Linha 363 [string]: `Dossiê ORI`
+- Linha 371 [string]: `Para hoje`
+- Linha 372 [string]: `A carta ainda não foi aberta.`
+- Linha 373 [string]: `Quando você abrir a carta, esta área vira uma orientação prática para o seu dia: uma situação para observar, uma dica real e um gesto simples de imagem.`
+- Linha 376 [string]: `Como voltar`
+- Linha 377 [string]: `Uma carta por dia, sem pressa.`
+- Linha 378 [string]: `A proposta é criar um pequeno ritual de retorno: abrir, reconhecer uma pista e levar uma ação possível para a vida real.`
+- Linha 385 [string]: `Na vida real`
+- Linha 386 [string]: `Onde isso pode aparecer hoje.`
+- Linha 390 [string]: `Dica do Oráculo`
+- Linha 391 [string]: `Uma ação pequena e possível.`
+- Linha 395 [string]: `Gesto de imagem`
+- Linha 396 [template]: `Leve isso para o`
+- Linha 397 [string]: `Escolha uma peça, cor ou detalhe que traduza melhor como você quer atravessar o dia.`
+- Linha 444 [string]: `Estamos usando sua leitura salva enquanto o Oráculo atualiza sua jornada.`
+- Linha 486 [string]: `Arquétipo principal`
+- Linha 491 [string]: `Arquétipo secundário`
+- Linha 543 [string]: `A carta será consultada nos dados salvos enquanto o Oráculo atualiza sua jornada.`
+- Linha 596 [string]: `Sua carta foi revelada neste aparelho. Vamos tentar atualizar sua jornada novamente em instantes.`
+- Linha 626 [JSX]: `Oráculo ORI`
+- Linha 627 [JSX]: `Abrindo a carta do dia...`
+- Linha 646 [string]: `center center`
+- Linha 648 [string]: `saturate(0.94) contrast(1.05)`
+- Linha 661 [string]: `Oráculo em atualização`
+- Linha 683 [JSX]: `Oráculo ORI.`
+- Linha 688 [string]: `Uma carta por dia para levar sua leitura para uma escolha simples, visual e possível.`
+- Linha 689 [string]: `A carta diária abre depois que sua primeira leitura estiver pronta.`
+- Linha 695 [JSX]: `Voltar ao Espelho`
+- Linha 707 [JSX]: `Começar primeira leitura`
+- Linha 747 [string]: `Preparar carta do dia`
+- Linha 804 [string]: `saturate(1.08) contrast(1.08)`
+- Linha 857 [string]: `Carta recolhida até amanhã`
+- Linha 861 [string]: `Abrir carta do dia`
+- Linha 862 [string]: `Embaralhar cartas`
+- Linha 877 [string]: `Carta do dia`
+- Linha 890 [string]: `O Espelho ainda não abriu a carta de hoje.`
+- Linha 891 [string]: `A carta de hoje ainda não foi aberta.`
+- Linha 897 [string]: `Toque no baralho para abrir uma orientação curta e precisa.`
+- Linha 898 [string]: `Conclua o Código das Deusas para ativar este ritual.`
+- Linha 913 [string]: `Uma carta por dia. Um fragmento por vez. A revelação precisa de ritmo.`
+- Linha 914 [string]: `A primeira leitura libera os próximos passos.`
+- Linha 919 [JSX]: `Como observar hoje`
+- Linha 923 [string]: `Quando a carta abrir, ela aponta um gesto simples para acompanhar o dia.`
+- Linha 927 [JSX]: `O que evitar hoje`
+- Linha 931 [string]: `Evite forçar resposta antes de a leitura mostrar o ponto certo.`
+- Linha 950 [JSX]: `Para olhar hoje`
+- Linha 958 [JSX]: `O que essa carta ajuda você a perceber hoje.`
+
+## /portal
+
+### `metodo-ori/src/pages/PortalCliente.jsx`
+
+- Linha 121 [string]: `Estamos usando seus dados salvos enquanto o ORI atualiza sua jornada.`
+- Linha 134 [string]: `Feedback da leitura indisponível no portal:`
+- Linha 143 [string]: `Carta diária indisponível no portal:`
+- Linha 224 [string]: `Primeira leitura pronta`
+- Linha 226 [string]: `Em andamento`
+- Linha 228 [string]: `Disponível`
+- Linha 232 [string]: `Ver minha primeira leitura`
+- Linha 234 [string]: `Continuar leitura`
+- Linha 235 [string]: `Iniciar Código das Deusas`
+- Linha 256 [JSX]: `Carregando Átrio`
+- Linha 266 [JSX]: `Preparando seu Átrio ORI...`
+- Linha 283 [string]: `Código das Deusas`
+- Linha 307 [JSX]: `) : !produto1Liberado ? (`
+- Linha 312 [string]: `Código das Deusas aguardando liberação`
+- Linha 319 [JSX]: `Aguardando liberação`
+- Linha 326 [string]: `Dossiê ORI`
+- Linha 341 [string]: `Acessar Dossiê ORI`
+- Linha 342 [string]: `Dossiê ORI ainda não liberado`
+- Linha 355 [string]: `Acessar Dossiê`
+- Linha 355 [string]: `Ainda não liberado`
+- Linha 361 [string]: `Código Final`
+- Linha 363 [string]: `Transforma sua direção visual em guarda-roupa real: cápsula, fórmulas de look, prioridades de compra e escolhas com critério.`
+- Linha 364 [string]: `Aplicação final`
+- Linha 376 [string]: `Acessar Código Final`
+- Linha 377 [string]: `Código Final ainda não liberado`
+- Linha 400 [string]: `Direção`
+- Linha 401 [string]: `O próximo movimento da sua jornada ORI.`
+- Linha 405 [string]: `Essência`
+- Linha 406 [string]: `A força simbólica que sustenta sua presença.`
+- Linha 410 [string]: `Presença`
+- Linha 411 [string]: `O modo como sua imagem chega antes da fala.`
+- Linha 416 [string]: `O ponto onde tentativa, ruído e desejo se misturam.`
+- Linha 421 [string]: `A tradução visual da força que já foi nomeada.`
+- Linha 426 [string]: `Forma, proporção, gesto e sustentação estética.`
+- Linha 431 [string]: `Cabelo, cor, rosto e acabamento de presença.`
+- Linha 436 [string]: `Aplicação real em peças, looks e escolhas.`
+- Linha 443 [string]: `Seu espelho inicial já abriu`
+- Linha 444 [string]: `Continue pelo passo que ajuda sua imagem a ganhar direção agora.`
+- Linha 445 [template]: `já foi nomeada.`
+- Linha 446 [string]: `Abrir Espelho ORI`
+- Linha 448 [string]: `Ver Método ORI`
+- Linha 452 [string]: `Primeiro gesto`
+- Linha 453 [string]: `Comece entendendo a força que organiza sua imagem.`
+- Linha 454 [string]: `Antes de pensar em roupa, cor ou cabelo, o ORI começa nomeando a sua base simbólica. Essa leitura prepara os próximos passos: Dossiê, Espelho e aplicação na vida real.`
+- Linha 455 [string]: `Começar leitura`
+- Linha 457 [string]: `Conhecer método`
+- Linha 463 [string]: `Recomendação personalizada`
+- Linha 464 [string]: `Sua próxima leitura deve transformar força em direção.`
+- Linha 465 [string]: `Entre pelo Espelho ORI para ver o ponto de tensão atual, a camada ativa e o que sua imagem precisa sustentar com mais precisão.`
+- Linha 466 [string]: `Ir para o espelho`
+- Linha 470 [string]: `Recomendação de entrada`
+- Linha 471 [string]: `Comece pelo Código das Deusas.`
+- Linha 473 [string]: `Iniciar agora`
+- Linha 483 [string]: `Finalize sua Entrada ORI.`
+- Linha 484 [string]: `Esse primeiro perfil ajuda o ORI a organizar sua jornada com mais precisão antes das leituras simbólicas.`
+- Linha 485 [string]: `Finalizar entrada`
+- Linha 495 [string]: `Essa leitura nomeia a força que sustenta sua imagem e abre o primeiro mapa da sua presença.`
+- Linha 505 [string]: `Continue sua leitura.`
+- Linha 506 [string]: `Você já iniciou o Código das Deusas. Termine as respostas para revelar sua composição arquetípica.`
+- Linha 516 [string]: `Conte como a leitura chegou em você.`
+- Linha 517 [string]: `Antes de seguir, o ORI precisa saber se essa leitura te encontrou, ficou abstrata ou pareceu distante.`
+- Linha 518 [string]: `Deixe sua opinião`
+- Linha 527 [string]: `Tire sua carta diária.`
+- Linha 528 [string]: `A carta do dia registra o clima simbólico da sua jornada e ajuda você a observar o movimento de hoje.`
+- Linha 529 [string]: `Abrir Oráculo`
+- Linha 642 [JSX]: `Identidade · Imagem · Presença`
+- Linha 656 [JSX]: `Átrio ORI`
+- Linha 681 [template]: `, sua jornada de identidade, imagem e presença começa aqui.`
+- Linha 682 [string]: `Sua jornada de identidade, imagem e presença começa aqui.`
+- Linha 688 [JSX]: `O Método ORI acontece em três movimentos: primeiro você nomeia sua força, depois traduz essa força em imagem e, por fim, aplica tudo ao seu guarda-roupa real.`
+- Linha 697 [JSX]: `Ele organiza o que pode estar fragmentado entre corpo, roupa, cabelo, beleza, presença e armário, para que sua imagem deixe de ser tentativa e comece a virar assinatura.`
+- Linha 770 [JSX]: `Resultado ativo`
+- Linha 823 [JSX]: `Comece pelo Código das Deusas para abrir o primeiro espelho.`
+- Linha 826 [JSX]: `Sua primeira etapa ainda está selada. Comece pelo Código das Deusas para revelar sua composição arquetípica inicial e abrir o primeiro espelho da sua jornada.`
+- Linha 1046 [JSX]: `Jornada ativa`
+- Linha 1057 [JSX]: `Mapa de tradução da sua imagem`
+
+## /portal / dados demonstrativos
+
+### `metodo-ori/src/data/cliente.js`
+
+- Linha 4 [string]: `Musa Enigmática`
+- Linha 6 [string]: `Outono Profundo`
+- Linha 8 [string]: `32 peças`
+- Linha 13 [string]: `Presença simbólica, refinada e magnética com profundidade estética estratégica.`
+
+## /produto-1, /produto-1/leitura, /quiz-produto-1
+
+### `metodo-ori/src/pages/QuizProduto1.jsx`
+
+- Linha 41 [string]: `Me senti vista`
+- Linha 42 [string]: `A leitura encontrou algo real em mim.`
+- Linha 46 [string]: `Fez sentido, mas ficou abstrato`
+- Linha 47 [string]: `Entendi a direção, mas queria mais clareza prática.`
+- Linha 51 [string]: `Não me reconheci muito`
+- Linha 52 [string]: `A leitura ainda não pareceu minha.`
+- Linha 119 [string]: `resultado, arquetipo_principal, arquetipo_secundario`
+- Linha 145 [string]: `Organizando seus primeiros sinais...`
+- Linha 146 [string]: `Consultando os arquétipos...`
+- Linha 147 [string]: `Sua leitura está tomando forma...`
+- Linha 151 [string]: `Nada a ver comigo`
+- Linha 152 [string]: `Pouco a ver comigo`
+- Linha 154 [string]: `Tem bastante a ver comigo`
+- Linha 155 [string]: `Muito forte`
+- Linha 155 [string]: `Totalmente eu`
+- Linha 159 [string]: `Como sua energia chega antes das suas palavras.`
+- Linha 159 [string]: `Sua Presença`
+- Linha 160 [string]: `Como sua estética comunica desejo, proteção e identidade.`
+- Linha 160 [string]: `Seu Estilo`
+- Linha 161 [string]: `Como seu corpo expressa movimento, conforto e sensação.`
+- Linha 161 [string]: `Seu Corpo`
+- Linha 162 [string]: `Como sua energia cria vínculos, desejo e distância.`
+- Linha 162 [string]: `Seus Relacionamentos`
+- Linha 163 [string]: `Seu Mundo Interno`
+- Linha 164 [string]: `Como seus padrões internos conduzem escolhas e percepção.`
+- Linha 165 [string]: `Onde sua imagem mostra força, defesa e repetição.`
+- Linha 165 [string]: `Seus Padrões`
+- Linha 174 [string]: `O método começou a ler o modo como sua energia chega.`
+- Linha 181 [string]: `Sua estética começou a mostrar desejo, proteção e linguagem.`
+- Linha 188 [string]: `Seu corpo entrou na leitura como ritmo, conforto e sensação.`
+- Linha 195 [string]: `O espelho começou a ver como você cria vínculo e distância.`
+- Linha 202 [string]: `Seu mundo interno começou a ganhar nome e contorno.`
+- Linha 209 [string]: `Os últimos sinais preparam a revelação do seu Código.`
+- Linha 218 [string]: `O ORI registrou mais uma resposta importante da sua leitura.`
+- Linha 223 [string]: `Primeiro sinal organizado`
+- Linha 224 [string]: `Sua leitura começou a perceber como sua energia chega no mundo antes mesmo das palavras. O espelho já captou um primeiro traço da sua presença.`
+- Linha 227 [string]: `Segundo sinal organizado`
+- Linha 228 [string]: `Um padrão estético começou a aparecer. Ainda não é a imagem final, mas já existe uma direção entre desejo, proteção e forma.`
+- Linha 231 [string]: `Terceiro sinal organizado`
+- Linha 232 [string]: `O corpo começou a entrar na leitura. Movimento, postura, toque e sensação ajudam o ORI a entender como sua presença se materializa.`
+- Linha 235 [string]: `Quarto sinal organizado`
+- Linha 236 [string]: `Agora o espelho percebe como você se aproxima, se protege, deseja, cuida ou preserva distância nos vínculos.`
+- Linha 239 [string]: `Quinto sinal organizado`
+- Linha 240 [string]: `Seu mundo interno começou a ganhar contorno. Suas escolhas, medos, desejos e formas de controle já estão desenhando uma estrutura simbólica.`
+- Linha 243 [string]: `Último sinal organizado`
+- Linha 244 [string]: `Suas respostas já formam uma direção. O ORI agora cruza seus sinais para nomear seu Código das Deusas.`
+- Linha 394 [JSX]: `Abrindo sua leitura...`
+- Linha 400 [JSX]: `Só um instante.`
+- Linha 421 [JSX]: `Leitura indisponível`
+- Linha 427 [JSX]: `Não conseguimos abrir as perguntas agora.`
+- Linha 433 [JSX]: `Tente novamente em instantes. Se você já tinha iniciado a leitura neste dispositivo, vamos usar o cache assim que ele estiver disponível.`
+- Linha 464 [JSX]: `Revelação inicial`
+- Linha 474 [JSX]: `Sua primeira camada foi aberta.`
+- Linha 480 [JSX]: `A leitura completa será liberada por aqui quando essa etapa estiver disponível. Por enquanto, sua revelação inicial já fica salva na sua jornada.`
+- Linha 492 [string]: `Primeiros sinais`
+- Linha 493 [string]: `primeiros sinais`
+- Linha 495 [string]: `O espelho observa os primeiros sinais da sua presença.`
+- Linha 499 [string]: `forma simbólica`
+- Linha 500 [string]: `Consultando sua imagem...`
+- Linha 501 [string]: `Forma, desejo e linguagem visual começam a se organizar.`
+- Linha 505 [string]: `tensão ativa`
+- Linha 506 [string]: `Lendo tensões ativas...`
+- Linha 507 [string]: `A leitura reconhece padrões de proteção, força e repetição.`
+- Linha 510 [string]: `Mundo interno`
+- Linha 511 [string]: `núcleo interno`
+- Linha 512 [string]: `Cruzando seu núcleo...`
+- Linha 513 [string]: `As respostas começam a ganhar uma direção.`
+- Linha 516 [string]: `Arquétipos`
+- Linha 517 [string]: `forças dominantes`
+- Linha 518 [string]: `Organizando arquétipos...`
+- Linha 519 [string]: `As forças dominantes se aproximam da composição final.`
+- Linha 522 [string]: `Síntese`
+- Linha 523 [string]: `código final`
+- Linha 524 [string]: `Preparando sua revelação...`
+- Linha 525 [string]: `A leitura cruza os últimos sinais para revelar seu Código.`
+- Linha 665 [JSX]: `Leitura ativa`
+- Linha 670 [JSX]: `Leitura ORI em andamento`
+- Linha 871 [string]: `Método ORI`
+- Linha 906 [string]: `Concluído`
+- Linha 908 [string]: `Em leitura`
+- Linha 909 [string]: `Em espera`
+- Linha 1012 [string]: `A leitura identifica a força principal, a força secundária e a composição que organiza sua imagem por dentro.`
+- Linha 1016 [string]: `O método observa desejo, proteção, sombra, vínculos e repetição para entender o que sustenta sua imagem por dentro.`
+- Linha 1019 [string]: `Abrir caminho`
+- Linha 1020 [string]: `O resultado cria a base para o Espelho ORI e para os próximos passos: corpo, cor, cabelo, beleza e guarda-roupa real.`
+- Linha 1042 [JSX]: `Código das Deusas`
+- Linha 1052 [JSX]: `O espelho começa lendo seus sinais.`
+- Linha 1059 [JSX]: `Responda intuitivamente. Quando você não racionaliza demais as questões, a leitura se aproxima com mais precisão dos padrões reais da sua psique, da sua presença e da imagem que começa dentro de você.`
+- Linha 1069 [JSX]: `Esta primeira etapa não entrega uma consultoria visual completa. Ela nomeia a base simbólica que depois será traduzida em corpo, cor, cabelo, beleza, presença e armário.`
+- Linha 1100 [string]: `Começar minha leitura`
+- Linha 1100 [string]: `Continuar minha leitura`
+- Linha 1115 [JSX]: `O que você vai entender`
+- Linha 1120 [string]: `Como você chega`
+- Linha 1120 [string]: `Direção inicial`
+- Linha 1120 [string]: `Sua base`
+- Linha 1146 [JSX]: `Travessia ORI`
+- Linha 1215 [string]: `Sinal organizado`
+- Linha 1216 [string]: `O ORI registrou mais uma resposta importante da sua leitura. Continue para tornar sua composição mais nítida.`
+- Linha 1292 [JSX]: `Camada registrada`
+- Linha 1324 [template]: `concluída`
+- Linha 1325 [string]: `+1 fragmento desbloqueado`
+- Linha 1326 [string]: `Espelho mais nítido`
+- Linha 1336 [string]: `0.42rem 0.74rem`
+- Linha 1368 [JSX]: `← Voltar etapa anterior`
+- Linha 1396 [string]: `Continuar leitura`
+- Linha 1396 [string]: `Preparar revelação`
+- Linha 1490 [JSX]: `Câmara de Leitura ORI`
+- Linha 1542 [template]: `% desta etapa`
+- Linha 1542 [string]: `Sinal capturado`
+- Linha 1682 [string]: `Sinal registrado. O espelho avança para a próxima leitura...`
+- Linha 1683 [string]: `Escolha a intensidade que mais se aproxima da sua verdade atual.`
+- Linha 1803 [JSX]: `Primeiro sinal desta leitura`
+- Linha 1810 [string]: `Clareza do Espelho`
+- Linha 1858 [string]: `Primeiro sinal`
+- Linha 1859 [string]: `O padrão que se repetiu`
+- Linha 1859 [string]: `Onde sua presença aparece`
+- Linha 1859 [string]: `Ponto de partida`
+- Linha 1862 [string]: `Núcleo simbólico`
+- Linha 1863 [string]: `Direção da sua base`
+- Linha 1863 [string]: `Forças em encontro`
+- Linha 1863 [string]: `O que sustenta sua composição`
+- Linha 1866 [string]: `Movimento interno`
+- Linha 1867 [string]: `Força principal`
+- Linha 1867 [string]: `Força secundária`
+- Linha 1867 [string]: `Ponto de tensão`
+- Linha 1870 [string]: `No cotidiano`
+- Linha 1871 [string]: `A pergunta interna`
+- Linha 1871 [string]: `Corpo e imagem`
+- Linha 1871 [string]: `Primeiro exercício`
+- Linha 1875 [string]: `Como o outro lê`
+- Linha 1875 [string]: `Ruído possível`
+- Linha 1875 [string]: `Sensação que você provoca`
+- Linha 1878 [string]: `Quando a força vira defesa`
+- Linha 1879 [string]: `Ajuste possível`
+- Linha 1879 [string]: `O custo invisível`
+- Linha 1879 [string]: `O padrão que pesa`
+- Linha 1882 [string]: `Forma de vínculo`
+- Linha 1883 [string]: `Como você se aproxima`
+- Linha 1883 [string]: `Maturidade relacional`
+- Linha 1883 [string]: `Onde você se protege`
+- Linha 1886 [string]: `Caminho de maturação`
+- Linha 1887 [string]: `Imagem sem compensação`
+- Linha 1887 [string]: `O que precisa amadurecer`
+- Linha 1887 [string]: `Próximo movimento`
+- Linha 1890 [string]: `O que sustenta sua imagem`
+- Linha 1891 [string]: `Bonito, mas desalinhado`
+- Linha 1891 [string]: `Forma, cor e gesto`
+- Linha 1894 [string]: `Clima cromático`
+- Linha 1895 [string]: `Como usar sem ruído`
+- Linha 1895 [string]: `Cores que amplificam`
+- Linha 1895 [string]: `Sensação visual`
+- Linha 1898 [string]: `Estrutura no corpo`
+- Linha 1899 [string]: `Caimento e proporção`
+- Linha 1899 [string]: `Linhas que favorecem`
+- Linha 1899 [string]: `O que evitar na forma`
+- Linha 1902 [string]: `Textura e sensação`
+- Linha 1903 [string]: `Matéria que conversa com você`
+- Linha 1903 [string]: `Peso visual`
+- Linha 1903 [string]: `Toque e movimento`
+- Linha 1906 [string]: `Expressão no rosto`
+- Linha 1907 [string]: `Acabamento de beleza`
+- Linha 1907 [string]: `Cabelo e expressão`
+- Linha 1907 [string]: `O que aparece sem esforço`
+- Linha 1910 [string]: `Como você ocupa o espaço`
+- Linha 1911 [string]: `Chegar sem excesso`
+- Linha 1911 [string]: `Coerência no ambiente`
+- Linha 1911 [string]: `Gesto e postura`
+- Linha 1914 [string]: `O que quebra a leitura`
+- Linha 1915 [string]: `Ajuste necessário`
+- Linha 1915 [string]: `Quando a imagem perde força`
+- Linha 1915 [string]: `Ruído visual`
+- Linha 1918 [string]: `Síntese da imagem`
+- Linha 1919 [string]: `Como combinar os códigos`
+- Linha 1919 [string]: `Fórmula simbólica`
+- Linha 1919 [string]: `Uso prático`
+- Linha 1922 [string]: `Fechamento da leitura`
+- Linha 1923 [string]: `Como seguir`
+- Linha 1923 [string]: `O que fica`
+- Linha 1923 [string]: `Próximo passo`
+- Linha 1930 [string]: `Dinâmica psíquica`
+- Linha 1931 [string]: `Vida real`
+- Linha 1934 [string]: `Padrão relacional`
+- Linha 1936 [string]: `Essência de imagem`
+- Linha 1944 [string]: `Leitura final`
+- Linha 1951 [string]: `Ponto central`
+- Linha 1952 [string]: `Como aparece`
+- Linha 1952 [string]: `O que observar`
+- Linha 1952 [string]: `O que se abre`
+- Linha 2165 [JSX]: `Camada ativa da leitura`
+- Linha 2270 [string]: `Aprofundar leitura`
+- Linha 2270 [string]: `Recolher leitura`
+- Linha 2291 [JSX]: `Leitura completa da seção`
+- Linha 2343 [JSX]: `Camada atual`
+- Linha 2367 [string]: `ori-progress h-1.5`
+- Linha 2395 [template]: `Abrir seção`
+- Linha 2558 [string]: `Estamos usando o histórico salvo neste dispositivo enquanto o ORI atualiza sua jornada.`
+- Linha 2586 [string]: `Sua leitura apareceu neste navegador, mas ainda não conseguimos atualizar sua conta.`
+- Linha 2715 [string]: `Sua leitura foi preparada neste dispositivo. O ORI vai atualizar sua jornada em seguida.`
+- Linha 2732 [string]: `Sua leitura foi preservada. A atualização completa será retomada em instantes.`
+- Linha 2875 [string]: `Suas respostas seguem salvas neste dispositivo enquanto o ORI atualiza sua jornada.`
+- Linha 2937 [string]: `Responda todos os sinais antes de ver o seu Código ORI.`
+- Linha 3000 [string]: `Deseja refazer a leitura? Suas respostas e resultado serão apagados.`
+- Linha 3015 [string]: `Estamos reiniciando sua leitura pelos dados salvos.`
+- Linha 3046 [string]: `Não foi possível reiniciar a leitura:`
+- Linha 3048 [string]: `Não foi possível reiniciar sua leitura agora. Tente novamente em instantes.`
+- Linha 3081 [string]: `Estamos usando a leitura salva enquanto o ORI atualiza sua jornada.`
+- Linha 3151 [string]: `O que sua leitura ncomeça a mostrar`
+- Linha 3153 [string]: `Esta seção mostra os padrões que influenciam como você ocupa o mundo e é percebida.`
+- Linha 3160 [string]: `Base interna`
+- Linha 3162 [string]: `A base que organizansua imagem`
+- Linha 3164 [string]: `Aqui começa a leitura da força interna nque aparece nos seus desejos, escolhas e expressão.`
+- Linha 3171 [string]: `Dinâmica Psíquica`
+- Linha 3173 [string]: `Como sua energia nfunciona internamente`
+- Linha 3175 [string]: `Esta seção mostra como sua psique reage, nsente, protege e se movimenta diante do mundo.`
+- Linha 3182 [string]: `Vida Real`
+- Linha 3184 [string]: `Como isso aparece nno dia a dia`
+- Linha 3186 [string]: `Aqui a leitura simbólica vira comportamento, decisão e pequenos sinais observáveis na rotina.`
+- Linha 3193 [string]: `Percepção`
+- Linha 3195 [string]: `Como você tende na ser percebida`
+- Linha 3197 [string]: `Sua imagem não comunica apenas aparência. nEla ativa sensações, leituras e projeções.`
+- Linha 3210 [string]: `O que pode nenfraquecer sua presença`
+- Linha 3212 [string]: `Todo arquétipo possui excessos, compensações ne mecanismos de defesa inconscientes.`
+- Linha 3219 [string]: `Padrão Relacional`
+- Linha 3221 [string]: `Como você vive nvínculos e conexões`
+- Linha 3223 [string]: `Esta leitura mostra como sua energia ncria aproximação, intimidade e pertencimento.`
+- Linha 3230 [string]: `Individuação`
+- Linha 3232 [string]: `Seu caminho de namadurecimento`
+- Linha 3234 [string]: `Aqui começa o movimento onde sua nimagem deixa de compensar e fica mais coerente.`
+- Linha 3245 [string]: `Direção de imagem`
+- Linha 3247 [string]: `Como sua estética nfunciona melhor`
+- Linha 3249 [string]: `Sua estética ideal nasce quando sua nimagem expressa sua energia com mais naturalidade.`
+- Linha 3258 [string]: `Cores que nfortalecem sua imagem`
+- Linha 3260 [string]: `As cores certas reforçam sua atmosfera nnatural e aumentam sua coerência visual.`
+- Linha 3269 [string]: `Estruturas ne caimentos ideais`
+- Linha 3271 [string]: `As formas que você veste alteram ndiretamente a percepção da sua energia.`
+- Linha 3280 [string]: `Texturas que conversam ncom sua energia`
+- Linha 3282 [string]: `Cada tecido cria uma sensação nvisual, tátil e simbólica diferente.`
+- Linha 3291 [string]: `Expressão visual ne acabamento`
+- Linha 3293 [string]: `Sua beleza funciona melhor quando nreforça o que você quer comunicar.`
+- Linha 3302 [string]: `A forma como sua nenergia ocupa o espaço`
+- Linha 3304 [string]: `Sua imagem ganha força quando corpo, nescolha e energia apontam para a mesma direção.`
+- Linha 3317 [string]: `O que pode nenfraquecer sua imagem`
+- Linha 3319 [string]: `Alguns elementos estéticos rompem sua coerência visual e deixam sua imagem menos clara.`
+- Linha 3328 [string]: `Fórmula`
+- Linha 3330 [string]: `A síntese nda sua imagem`
+- Linha 3332 [string]: `Sua fórmula estética organiza visualmente na força principal da sua leitura.`
+- Linha 3339 [string]: `Leitura Final`
+- Linha 3341 [string]: `Sua imagem começa na ficar mais clara`
+- Linha 3343 [string]: `A etapa final mostra onde imagem, nidentidade e escolhas começam a se alinhar.`
+- Linha 3366 [string]: `Base da leitura`
+- Linha 3367 [string]: `Reconhecimento, base interna, dinâmica e percepção.`
+- Linha 3372 [string]: `Sombra e Vínculos`
+- Linha 3373 [string]: `Sombra, padrão relacional e individuação.`
+- Linha 3378 [string]: `Imagem na prática`
+- Linha 3379 [string]: `Direção visual, beleza, cores, corpo e presença.`
+- Linha 3384 [string]: `Síntese Final`
+- Linha 3385 [string]: `O que evitar, fórmula e leitura final.`
+- Linha 3431 [string]: `Etapa anterior`
+- Linha 3433 [string]: `Núcleo anterior`
+- Linha 3440 [string]: `Avançar para o próximo núcleo`
+- Linha 3441 [string]: `Concluir minha leitura`
+- Linha 3443 [string]: `Continue pelas etapas deste núcleo antes de avançar.`
+- Linha 3445 [template]: `Este núcleo foi atravessado. Agora você pode seguir para`
+- Linha 3448 [string]: `Você chegou à última etapa da sua primeira leitura.`
+- Linha 3556 [string]: `Obrigada. Seu retorno foi registrado.`
+- Linha 3568 [string]: `Seu retorno não sincronizou agora, mas você pode seguir para a próxima etapa.`
+- Linha 3634 [JSX]: `Leitura já pronta`
+- Linha 3643 [JSX]: `Seu Código das Deusas já foi nomeado.`
+- Linha 3650 [JSX]: `Sua primeira leitura já está salva no Átrio ORI. Você pode acessar o Espelho ORI para ver a jornada aberta ou refazer a leitura se quiser reiniciar seus sinais.`
+- Linha 3667 [JSX]: `Ver meu Espelho ORI`
+- Linha 3682 [string]: `Refazer leitura`
+- Linha 3682 [string]: `Reiniciando leitura...`
+- Linha 3741 [JSX]: `Voltar ao Código das Deusas`
+- Linha 3760 [JSX]: `) : !hasLoadedStorage ? (`
+- Linha 3860 [JSX]: `Navegação da Leitura`
+- Linha 4070 [JSX]: `Fluxo da leitura`
+- Linha 4129 [JSX]: `Relatório digital`
+- Linha 4139 [JSX]: `Sua leitura completa em formato de consulta.`
+- Linha 4145 [JSX]: `Acesse o documento do Código das Deusas com os capítulos organizados para reler, salvar e acompanhar sua jornada depois da revelação.`
+- Linha 4160 [JSX]: `Abrir relatório digital`
+- Linha 4180 [JSX]: `Pausa da leitura`
+- Linha 4190 [JSX]: `Antes de seguir, me conta uma coisa.`
+- Linha 4196 [JSX]: `Como essa leitura chegou em você? Sua resposta ajuda o ORI a conduzir o próximo passo com mais cuidado.`
+- Linha 4287 [string]: `Quer me contar onde tocou, confundiu ou ficou distante?`
+- Linha 4300 [JSX]: `Não é uma avaliação. É só uma forma de seguir com mais cuidado.`
+- Linha 4315 [string]: `Enviar e continuar`
+- Linha 4347 [JSX]: `) : !report ? (`
+- Linha 4357 [JSX]: `Relatório completo ainda não cadastrado para este resultado.`
+
+## /produto-1/relatorio
+
+### `metodo-ori/src/pages/Produto1Relatorio.jsx`
+
+- Linha 14 [string]: `Amante Nutridora`
+- Linha 15 [string]: `Autônoma Absoluta`
+- Linha 16 [string]: `Cuidadora Estratégica`
+- Linha 17 [string]: `Guardiã Sensível`
+- Linha 18 [string]: `Matriarca Soberana`
+- Linha 19 [string]: `Musa Enigmática`
+- Linha 20 [string]: `Protetora Selvagem`
+- Linha 21 [string]: `Rainha Magnética`
+- Linha 22 [string]: `Rainha Oculta`
+- Linha 23 [string]: `Sedutora Estratégica`
+- Linha 24 [string]: `Selvagem Intuitiva`
+- Linha 25 [string]: `Selvagem Magnética`
+- Linha 26 [string]: `Soberana Estratégica`
+- Linha 27 [string]: `Soberana Indomável`
+- Linha 28 [string]: `Visionária Sutil`
+- Linha 134 [string]: `Primeiras pistas de forma`
+- Linha 140 [string]: `Primeiras pistas de beleza`
+- Linha 146 [string]: `Primeiras pistas de imagem`
+- Linha 152 [string]: `Ruídos visuais a observar`
+- Linha 248 [string]: `Não conseguimos abrir seu relatório agora. Tente novamente em alguns instantes.`
+- Linha 267 [string]: `Momento atual`
+- Linha 268 [string]: `O que mais pesa hoje`
+- Linha 269 [string]: `Objetivo principal`
+- Linha 299 [string]: `Não conseguimos baixar o PDF agora. Tente novamente em alguns instantes.`
+- Linha 317 [JSX]: `Relatório ORI`
+- Linha 323 [JSX]: `Preparando sua leitura...`
+- Linha 344 [JSX]: `Relatório indisponível`
+- Linha 350 [JSX]: `Sua leitura ainda não está pronta para relatório.`
+- Linha 357 [JSX]: `Voltar para a leitura`
+- Linha 376 [JSX]: `← Voltar para leitura`
+- Linha 386 [string]: `Baixar PDF`
+- Linha 386 [string]: `Preparando PDF...`
+- Linha 399 [JSX]: `Estamos preparando seu relatório em PDF. Nesta fase de protótipo, o arquivo pode levar alguns instantes para ficar pronto. Mantenha esta página aberta até o download começar.`
+- Linha 442 [JSX]: `Relatório digital · Código das Deusas`
+- Linha 462 [string]: `Sua primeira leitura de imagem no ORI.`
+- Linha 490 [string]: `center top`
+- Linha 605 [JSX]: `Próximo passo`
+
+## /produto-1/relatorio / guia visual
+
+### `metodo-ori/src/data/reportVisualGuides.js`
+
+- Linha 16 [string]: `Ouro queimado`
+- Linha 16 [string]: `assinatura simbólica`
+- Linha 17 [string]: `Noite profunda`
+- Linha 17 [string]: `base de presença`
+- Linha 18 [string]: `ponto de luz`
+- Linha 18 [string]: `Âmbar suave`
+- Linha 21 [string]: `Textura nobre`
+- Linha 21 [string]: `toque visual com profundidade`
+- Linha 22 [string]: `Caimento fluido`
+- Linha 22 [string]: `movimento sem excesso`
+- Linha 23 [string]: `Brilho baixo`
+- Linha 23 [string]: `luz que aparece sem gritar`
+- Linha 25 [string]: `estrutura sem rigidez`
+- Linha 25 [string]: `linhas que acompanham o corpo`
+- Linha 25 [string]: `presença com movimento`
+- Linha 26 [string]: `cabelo com presença natural`
+- Linha 26 [string]: `olhar definido com suavidade`
+- Linha 26 [string]: `pele viva`
+- Linha 27 [string]: `gesto consciente`
+- Linha 27 [string]: `imagem com intenção`
+- Linha 27 [string]: `presença contínua`
+- Linha 28 [string]: `dureza sem emoção`
+- Linha 28 [string]: `excesso de informação`
+- Linha 28 [string]: `visual genérico demais`
+- Linha 32 [string]: `Musa Enigmática`
+- Linha 34 [string]: `Lavanda enevoado`
+- Linha 34 [string]: `mistério sensível`
+- Linha 35 [string]: `Vinho frio`
+- Linha 35 [string]: `magnetismo velado`
+- Linha 36 [string]: `Azul acinzentado`
+- Linha 36 [string]: `profundidade silenciosa`
+- Linha 39 [string]: `transparência que sugere`
+- Linha 40 [string]: `Cetim fosco`
+- Linha 40 [string]: `brilho baixo e memória`
+- Linha 41 [string]: `Renda escura`
+- Linha 41 [string]: `detalhe que permanece`
+- Linha 43 [string]: `camadas leves`
+- Linha 43 [string]: `movimento antes da definição`
+- Linha 43 [string]: `sensualidade por sugestão`
+- Linha 44 [string]: `cabelo com textura e mistério`
+- Linha 44 [string]: `olhar esfumado`
+- Linha 44 [string]: `pele luminosa baixa`
+- Linha 45 [string]: `cria curiosidade`
+- Linha 45 [string]: `não se entrega inteira`
+- Linha 45 [string]: `permanece na memória`
+- Linha 46 [string]: `exposição óbvia`
+- Linha 46 [string]: `literalidade demais`
+- Linha 46 [string]: `visual rígido sem névoa`
+- Linha 49 [string]: `Rainha Magnética`
+- Linha 51 [string]: `Vinho imperial`
+- Linha 51 [string]: `desejo com posição`
+- Linha 52 [string]: `Dourado antigo`
+- Linha 52 [string]: `valor e reconhecimento`
+- Linha 53 [string]: `Marfim quente`
+- Linha 53 [string]: `presença elevada`
+- Linha 56 [string]: `peso nobre`
+- Linha 57 [string]: `Seda encorpada`
+- Linha 57 [string]: `luz que impõe`
+- Linha 58 [string]: `Metal dourado`
+- Linha 58 [string]: `ponto de autoridade`
+- Linha 60 [string]: `cintura marcada`
+- Linha 60 [string]: `coluna alongada`
+- Linha 60 [string]: `estrutura com sensualidade`
+- Linha 61 [string]: `boca presente`
+- Linha 61 [string]: `cabelo com acabamento majestoso`
+- Linha 61 [string]: `pele polida`
+- Linha 62 [string]: `atrai e define lugar`
+- Linha 62 [string]: `comunica valor`
+- Linha 62 [string]: `não pede licença`
+- Linha 63 [string]: `desleixo visual`
+- Linha 63 [string]: `peças frágeis demais`
+- Linha 63 [string]: `sensualidade sem posição`
+- Linha 66 [string]: `Amante Nutridora`
+- Linha 68 [string]: `Terracota suave`
+- Linha 68 [string]: `calor afetivo`
+- Linha 69 [string]: `Verde oliva`
+- Linha 69 [string]: `natureza e presença`
+- Linha 70 [string]: `Creme quente`
+- Linha 73 [string]: `Linho macio`
+- Linha 73 [string]: `naturalidade quente`
+- Linha 74 [string]: `Algodão`
+- Linha 74 [string]: `toque humano`
+- Linha 75 [string]: `Malha fluida`
+- Linha 75 [string]: `conforto que aproxima`
+- Linha 77 [string]: `caimento confortável`
+- Linha 77 [string]: `feminilidade habitável`
+- Linha 77 [string]: `formas envolventes`
+- Linha 78 [string]: `boca hidratada`
+- Linha 78 [string]: `cabelo natural com movimento`
+- Linha 78 [string]: `pele viçosa`
+- Linha 79 [string]: `acolhe sem apagar`
+- Linha 79 [string]: `transmite segurança emocional`
+- Linha 80 [string]: `estrutura dura`
+- Linha 80 [string]: `frieza excessiva`
+- Linha 80 [string]: `visual árido demais`
+- Linha 83 [string]: `Sedutora Estratégica`
+- Linha 85 [string]: `Chocolate profundo`
+- Linha 85 [string]: `controle e desejo`
+- Linha 86 [string]: `Cobre antigo`
+- Linha 86 [string]: `calor calculado`
+- Linha 87 [string]: `Preto acetinado`
+- Linha 87 [string]: `mistério objetivo`
+- Linha 90 [string]: `Couro macio`
+- Linha 90 [string]: `controle tátil`
+- Linha 91 [string]: `Seda escura`
+- Linha 91 [string]: `atração precisa`
+- Linha 92 [string]: `Cetim fechado`
+- Linha 92 [string]: `brilho sob domínio`
+- Linha 94 [string]: `linhas limpas`
+- Linha 94 [string]: `recortes estratégicos`
+- Linha 94 [string]: `sensualidade com direção`
+- Linha 95 [string]: `boca em tom profundo`
+- Linha 95 [string]: `olhar marcado`
+- Linha 95 [string]: `pele acetinada`
+- Linha 96 [string]: `conduz o olhar`
+- Linha 96 [string]: `escolhe o impacto`
+- Linha 96 [string]: `não revela tudo`
+- Linha 97 [string]: `excesso de ornamento`
+- Linha 97 [string]: `romantismo ingênuo`
+- Linha 97 [string]: `sensualidade sem intenção`
+- Linha 100 [string]: `Selvagem Magnética`
+- Linha 102 [string]: `Cobre queimado`
+- Linha 102 [string]: `instinto vivo`
+- Linha 103 [string]: `Terra escura`
+- Linha 103 [string]: `força primitiva`
+- Linha 104 [string]: `Dourado solar`
+- Linha 104 [string]: `calor de presença`
+- Linha 107 [string]: `Couro natural`
+- Linha 107 [string]: `território e força`
+- Linha 108 [string]: `Linho rústico`
+- Linha 108 [string]: `corpo real`
+- Linha 109 [string]: `Metal envelhecido`
+- Linha 109 [string]: `instinto lapidado`
+- Linha 111 [string]: `cintura com presença`
+- Linha 111 [string]: `formas orgânicas`
+- Linha 111 [string]: `movimento livre`
+- Linha 112 [string]: `cabelo com volume vivo`
+- Linha 112 [string]: `pele bronzeada`
+- Linha 112 [string]: `textura natural`
+- Linha 113 [string]: `energia que não se domestica`
+- Linha 113 [string]: `magnetismo físico`
+- Linha 114 [string]: `delicadeza frágil`
+- Linha 114 [string]: `polidez artificial`
+- Linha 114 [string]: `visual muito certinho`
+- Linha 117 [string]: `Rainha Oculta`
+- Linha 119 [string]: `Roxo noite`
+- Linha 119 [string]: `poder velado`
+- Linha 120 [string]: `Ouro antigo`
+- Linha 120 [string]: `nobreza contida`
+- Linha 121 [string]: `Preto profundo`
+- Linha 121 [string]: `mistério soberano`
+- Linha 124 [string]: `Veludo escuro`
+- Linha 124 [string]: `profundidade nobre`
+- Linha 125 [string]: `Seda fechada`
+- Linha 125 [string]: `silêncio refinado`
+- Linha 126 [string]: `Metal antigo`
+- Linha 126 [string]: `autoridade simbólica`
+- Linha 128 [string]: `estrutura reservada`
+- Linha 128 [string]: `linhas longas`
+- Linha 128 [string]: `presença monumental`
+- Linha 129 [string]: `acabamento polido`
+- Linha 129 [string]: `cabelo arquitetônico`
+- Linha 129 [string]: `olhar profundo`
+- Linha 130 [string]: `impõe em silêncio`
+- Linha 130 [string]: `não se explica`
+- Linha 130 [string]: `sustenta mistério`
+- Linha 131 [string]: `casualidade sem intenção`
+- Linha 131 [string]: `excesso de doçura`
+- Linha 131 [string]: `exposição direta`
+- Linha 134 [string]: `Guardiã Sensível`
+- Linha 136 [string]: `Lavanda suave`
+- Linha 137 [string]: `Creme orgânico`
+- Linha 138 [string]: `Verde claro`
+- Linha 138 [string]: `cuidado natural`
+- Linha 141 [string]: `toque afetivo`
+- Linha 142 [string]: `Tricô leve`
+- Linha 142 [string]: `presença que aquece`
+- Linha 143 [string]: `Viscose suave`
+- Linha 143 [string]: `fluidez tranquila`
+- Linha 145 [string]: `conforto com forma`
+- Linha 145 [string]: `feminilidade serena`
+- Linha 145 [string]: `linhas suaves`
+- Linha 146 [string]: `cabelo sem rigidez`
+- Linha 146 [string]: `olhos delicados`
+- Linha 146 [string]: `pele natural`
+- Linha 147 [string]: `acalma o ambiente`
+- Linha 147 [string]: `acolhe com limite`
+- Linha 147 [string]: `cuida sem se perder`
+- Linha 148 [string]: `agressividade visual`
+- Linha 148 [string]: `excesso de peso`
+- Linha 148 [string]: `frieza impessoal`
+- Linha 151 [string]: `Visionária Sutil`
+- Linha 153 [string]: `Lilás frio`
+- Linha 153 [string]: `intuição clara`
+- Linha 154 [string]: `Prata névoa`
+- Linha 154 [string]: `distância etérea`
+- Linha 155 [string]: `Azul lunar`
+- Linha 155 [string]: `visão interna`
+- Linha 158 [string]: `leveza conceitual`
+- Linha 159 [string]: `Cetim frio`
+- Linha 159 [string]: `luz futurista`
+- Linha 160 [string]: `Malha fina`
+- Linha 160 [string]: `movimento discreto`
+- Linha 162 [string]: `assimetria sutil`
+- Linha 162 [string]: `estrutura mínima`
+- Linha 162 [string]: `linhas leves`
+- Linha 163 [string]: `cabelo leve ou polido`
+- Linha 163 [string]: `luminosidade fria`
+- Linha 163 [string]: `olhar limpo`
+- Linha 164 [string]: `não força presença`
+- Linha 164 [string]: `parece ver além`
+- Linha 164 [string]: `tem silêncio inteligente`
+- Linha 165 [string]: `ornamento muito literal`
+- Linha 165 [string]: `peso visual excessivo`
+- Linha 165 [string]: `terra demais`
+- Linha 168 [string]: `Selvagem Intuitiva`
+- Linha 170 [string]: `Oliva profundo`
+- Linha 170 [string]: `liberdade instintiva`
+- Linha 171 [string]: `Lavanda cinza`
+- Linha 171 [string]: `intuição`
+- Linha 172 [string]: `Areia fria`
+- Linha 172 [string]: `território suave`
+- Linha 175 [string]: `Linho lavado`
+- Linha 175 [string]: `liberdade no corpo`
+- Linha 176 [string]: `Chiffon seco`
+- Linha 176 [string]: `mistério em movimento`
+- Linha 177 [string]: `Algodão cru`
+- Linha 177 [string]: `naturalidade sem esforço`
+- Linha 179 [string]: `camadas naturais`
+- Linha 179 [string]: `forma sem aprisionar`
+- Linha 180 [string]: `cabelo com textura orgânica`
+- Linha 180 [string]: `olhar intuitivo`
+- Linha 180 [string]: `pele real`
+- Linha 181 [string]: `não aceita captura`
+- Linha 181 [string]: `preserva território`
+- Linha 181 [string]: `sente antes de explicar`
+- Linha 182 [string]: `brilho artificial demais`
+- Linha 182 [string]: `rigidez social`
+- Linha 182 [string]: `visual domesticado`
+- Linha 185 [string]: `Autônoma Absoluta`
+- Linha 187 [string]: `Preto gráfico`
+- Linha 188 [string]: `Branco seco`
+- Linha 189 [string]: `Dourado limpo`
+- Linha 189 [string]: `precisão`
+- Linha 192 [string]: `Alfaiataria seca`
+- Linha 192 [string]: `presença sem concessão`
+- Linha 193 [string]: `Couro liso`
+- Linha 193 [string]: `autonomia visual`
+- Linha 194 [string]: `Algodão estruturado`
+- Linha 194 [string]: `clareza cotidiana`
+- Linha 196 [string]: `conforto funcional`
+- Linha 196 [string]: `estrutura limpa`
+- Linha 196 [string]: `linhas retas`
+- Linha 197 [string]: `acabamento limpo`
+- Linha 197 [string]: `cabelo prático e forte`
+- Linha 197 [string]: `olhar direto`
+- Linha 198 [string]: `movimento independente`
+- Linha 198 [string]: `não negocia contorno`
+- Linha 199 [string]: `dependência visual`
+- Linha 199 [string]: `excesso romântico`
+- Linha 199 [string]: `informação decorativa demais`
+- Linha 202 [string]: `Cuidadora Estratégica`
+- Linha 204 [string]: `acolhimento maduro`
+- Linha 205 [string]: `Marrom profundo`
+- Linha 209 [string]: `Lã fria`
+- Linha 209 [string]: `cuidado com forma`
+- Linha 210 [string]: `Algodão encorpado`
+- Linha 210 [string]: `presença confiável`
+- Linha 211 [string]: `Linho estruturado`
+- Linha 211 [string]: `naturalidade organizada`
+- Linha 213 [string]: `base confiável`
+- Linha 213 [string]: `estrutura confortável`
+- Linha 213 [string]: `linhas práticas`
+- Linha 214 [string]: `cabelo arrumado sem dureza`
+- Linha 214 [string]: `natural polido`
+- Linha 214 [string]: `olho definido`
+- Linha 215 [string]: `cuida com direção`
+- Linha 215 [string]: `gera confiança`
+- Linha 215 [string]: `organiza sem pesar`
+- Linha 216 [string]: `excesso caótico`
+- Linha 216 [string]: `fragilidade visual`
+- Linha 216 [string]: `visual frio demais`
+- Linha 219 [string]: `Matriarca Soberana`
+- Linha 221 [string]: `Cobre profundo`
+- Linha 221 [string]: `poder caloroso`
+- Linha 222 [string]: `Marrom cacau`
+- Linha 222 [string]: `base ancestral`
+- Linha 223 [string]: `Ouro envelhecido`
+- Linha 226 [string]: `Linho pesado`
+- Linha 226 [string]: `raiz e presença`
+- Linha 227 [string]: `Veludo quente`
+- Linha 227 [string]: `nobreza maternal`
+- Linha 228 [string]: `peso simbólico`
+- Linha 230 [string]: `cintura sustentada`
+- Linha 230 [string]: `estrutura ampla`
+- Linha 230 [string]: `presença firme`
+- Linha 231 [string]: `boca terrosa`
+- Linha 231 [string]: `cabelo com força natural`
+- Linha 231 [string]: `pele quente`
+- Linha 232 [string]: `não se diminui`
+- Linha 232 [string]: `protege com autoridade`
+- Linha 232 [string]: `sustenta o campo`
+- Linha 233 [string]: `infantilização`
+- Linha 233 [string]: `leveza sem base`
+- Linha 233 [string]: `visual sem firmeza`
+- Linha 236 [string]: `Protetora Selvagem`
+- Linha 238 [string]: `Verde musgo`
+- Linha 238 [string]: `território`
+- Linha 239 [string]: `Terra bruta`
+- Linha 240 [string]: `Areia quente`
+- Linha 240 [string]: `proteção`
+- Linha 243 [string]: `força funcional`
+- Linha 244 [string]: `proteção visual`
+- Linha 245 [string]: `corpo livre`
+- Linha 247 [string]: `camadas de proteção`
+- Linha 247 [string]: `estrutura utilitária`
+- Linha 248 [string]: `cabelo livre`
+- Linha 248 [string]: `olhar firme`
+- Linha 249 [string]: `ocupa território`
+- Linha 249 [string]: `protege sem pedir permissão`
+- Linha 249 [string]: `sustenta instinto`
+- Linha 250 [string]: `ornamento frágil`
+- Linha 250 [string]: `polidez excessiva`
+- Linha 250 [string]: `visual preso demais`
+- Linha 253 [string]: `Soberana Estratégica`
+- Linha 255 [string]: `Carvão`
+- Linha 256 [string]: `Ouro seco`
+- Linha 256 [string]: `posição`
+- Linha 257 [string]: `Cinza quente`
+- Linha 257 [string]: `sofisticação`
+- Linha 260 [string]: `decisão visual`
+- Linha 261 [string]: `Seda fosca`
+- Linha 261 [string]: `nobreza silenciosa`
+- Linha 262 [string]: `limite e força`
+- Linha 264 [string]: `linhas precisas`
+- Linha 264 [string]: `ombro com presença`
+- Linha 264 [string]: `proporção controlada`
+- Linha 265 [string]: `cabelo polido`
+- Linha 265 [string]: `olhar estratégico`
+- Linha 266 [string]: `calcula impacto`
+- Linha 266 [string]: `comunica autoridade`
+- Linha 266 [string]: `define o campo`
+- Linha 267 [string]: `informação sem hierarquia`
+- Linha 267 [string]: `romantização excessiva`
+- Linha 267 [string]: `visual mole demais`
+- Linha 270 [string]: `Soberana Indomável`
+- Linha 272 [string]: `valor próprio`
+- Linha 273 [string]: `Oliva escuro`
+- Linha 274 [string]: `Preto terra`
+- Linha 274 [string]: `força`
+- Linha 277 [string]: `independência`
+- Linha 278 [string]: `Linho firme`
+- Linha 278 [string]: `liberdade com forma`
+- Linha 279 [string]: `posição conquistada`
+- Linha 281 [string]: `estrutura livre`
+- Linha 281 [string]: `linhas fortes`
+- Linha 281 [string]: `movimento com autoridade`
+- Linha 282 [string]: `cabelo sem submissão`
+- Linha 282 [string]: `pele com força`
+- Linha 283 [string]: `escolhe liberdade`
+- Linha 283 [string]: `não aceita diminuição`
+- Linha 283 [string]: `ocupa valor`
+- Linha 284 [string]: `excesso de suavização`
+- Linha 284 [string]: `fragilidade performada`
+
+## /produto-2
+
+### `metodo-ori/src/pages/Produto2.jsx`
+
+- Linha 19 [string]: `Não conseguimos enviar suas imagens agora. Tente novamente em instantes — se continuar assim, chame a gente.`
+- Linha 97 [string]: `Referência externa`
+- Linha 108 [string]: `Corpo inteiro`
+- Linha 109 [string]: `frente, perfil e costas`
+- Linha 113 [string]: `sem maquiagem, cabelo preso, com blusa branca e preta`
+- Linha 117 [string]: `solto natural, raiz e textura de perto`
+- Linha 121 [string]: `um look ou peça com a qual você se reconhece`
+- Linha 161 [string]: `Imagens adicionadas. Salve e continue depois para manter este registro vinculado ao Dossiê.`
+- Linha 194 [JSX]: `O que vamos observar`
+- Linha 271 [JSX]: `Como registrar suas imagens`
+- Linha 274 [JSX]: `Prefira luz natural, sem filtros e com o mínimo de interferência visual. Quanto mais real a imagem, mais precisa a leitura.`
+- Linha 281 [JSX]: `Para corpo inteiro, use roupa ajustada ao corpo, como legging e top, ou biquíni. As fotos não precisam estar bonitas; precisam estar fiéis à sua imagem real.`
+- Linha 301 [string]: `Adicionar imagens da leitura`
+- Linha 301 [string]: `Enviando imagens...`
+- Linha 303 [JSX]: `JPG, PNG ou WEBP`
+- Linha 309 [JSX]: `Você pode selecionar várias imagens de uma vez`
+- Linha 459 [string]: `Aguardando envio`
+- Linha 460 [string]: `Em análise`
+- Linha 543 [string]: `Conferência`
+- Linha 544 [string]: `Primeira leitura`
+- Linha 545 [string]: `Ponto de partida`
+- Linha 569 [JSX]: `Jornada conectada`
+- Linha 575 [JSX]: `O que já sabemos sobre sua jornada`
+- Linha 581 [JSX]: `Veio do cadastro e da primeira leitura, então você não precisa responder de novo.`
+- Linha 617 [string]: `Ocultar detalhes`
+- Linha 617 [string]: `Ver dados conectados`
+- Linha 661 [string]: `peso aproximado`
+- Linha 663 [string]: `autoidentificação racial`
+- Linha 684 [string]: `Dados complementares`
+- Linha 684 [string]: `Dados reunidos`
+- Linha 688 [string]: `As informações principais desta etapa já foram reunidas.`
+- Linha 689 [template]: `a calibrar a leitura corporal com mais precisão.`
+- Linha 719 [string]: `Não conseguimos carregar o Dossiê ORI agora. Tente novamente em instantes.`
+- Linha 801 [string]: `, text:`
+- Linha 849 [string]: `, boxShadow:`
+- Linha 851 [string]: `, }} > <img src=`
+- Linha 879 [JSX]: `Integração`
+- Linha 887 [string]: `, fontWeight: 600, letterSpacing:`
+- Linha 891 [JSX]: `Dossiê ORI`
+- Linha 898 [JSX]: `Agora vamos observar como sua primeira leitura aparece no corpo, no rosto, nas cores, no cabelo, na beleza e na rotina real.`
+- Linha 909 [string]: `, backdropFilter:`
+- Linha 917 [JSX]: `não liberado`
+- Linha 946 [string]: `, color:`
+- Linha 950 [JSX]: `Voltar ao portal`
+- Linha 961 [JSX]: `Rever primeira leitura`
+- Linha 1059 [JSX]: `Usamos essa informação para calibrar sua leitura de cor e corpo com mais fidelidade à sua pele e à sua ancestralidade — em vez de aplicar uma cartela pensada para outra realidade.`
+- Linha 1143 [JSX]: `Análise preliminar`
+- Linha 1146 [JSX]: `A leitura já organizou os primeiros sinais.`
+- Linha 1198 [JSX]: `Entrega publicada`
+- Linha 1201 [JSX]: `Seu Dossiê ORI`
+- Linha 1220 [JSX]: `O Dossiê foi publicado, mas ainda não há blocos preenchidos.`
+
+## /produto-2 / formulário
+
+### `metodo-ori/src/data/produto2Form.js`
+
+- Linha 178 [string]: `Primeiros registros`
+- Linha 179 [string]: `Vamos olhar para sua imagem real`
+- Linha 181 [string]: `Aqui reunimos fotos e informações simples para entender como sua imagem aparece no corpo, no rosto, nas cores e na rotina.`
+- Linha 183 [string]: `Faça aqui o upload das suas fotos (usaremos para validar suas respostas)`
+- Linha 185 [string]: `Reúna aqui os registros que vão orientar esta primeira leitura visual.`
+- Linha 187 [string]: `Suas redes sociais (Instagram, Tiktok, etc)`
+- Linha 190 [string]: `Qual é a sua altura?`
+- Linha 191 [string]: `Ex.: 1,68 m`
+- Linha 193 [string]: `Qual é o seu peso aproximado`
+- Linha 194 [string]: `Não precisa ser exato`
+- Linha 196 [string]: `Como você se autodeclara racialmente?`
+- Linha 197 [string]: `Negra (preta ou parda)`
+- Linha 199 [string]: `Indígena`
+- Linha 200 [string]: `Asiática`
+- Linha 201 [string]: `Prefiro não declarar`
+- Linha 207 [string]: `Corpo e rosto`
+- Linha 208 [string]: `Corpo e linhas`
+- Linha 209 [string]: `Estas respostas ajudam a observar proporção, linhas, ossatura, rosto e ancestralidade física.`
+- Linha 211 [string]: `1. Como é a sua linha vertical (a impressão de altura que você passa, não a sua altura real)?`
+- Linha 212 [string]: `A. Longa (as pessoas sempre acham que sou mais alta do que realmente sou).`
+- Linha 213 [string]: `B. Moderadamente longa (as pessoas às vezes acham que sou um pouco mais alta, mas nem sempre).`
+- Linha 214 [string]: `C. Média (as pessoas costumam acertar minha altura ou não se surpreendem).`
+- Linha 215 [string]: `D. Pequena (as pessoas costumam achar que sou um pouco mais baixa do que sou).`
+- Linha 216 [string]: `E. Muito pequena (é óbvio para todos que sou pequena/petite).`
+- Linha 218 [string]: `2. Qual é o formato dos seus ombros?`
+- Linha 219 [string]: `A. Estreitos e pontudos.`
+- Linha 220 [string]: `B. Largos e rombudos (quadrados com pontas suaves).`
+- Linha 221 [string]: `C. Simétricos e equilibrados.`
+- Linha 222 [string]: `D. Inclinados/caídos, porém cônicos, afilados.`
+- Linha 223 [string]: `E. Inclinados/caídos e arredondados.`
+- Linha 225 [string]: `3. Como são seus braços e pernas em relação ao tronco?`
+- Linha 226 [string]: `A. Longos e estreitos.`
+- Linha 227 [string]: `B. Longos e largos (mais fortes).`
+- Linha 228 [string]: `C. Médios (proporcionais ao tronco).`
+- Linha 229 [string]: `D. Pequenos (curtos em relação ao tronco).`
+- Linha 230 [string]: `E. Muito pequenos e delicados.`
+- Linha 232 [string]: `4. Qual é o formato das suas mãos e pés?`
+- Linha 234 [string]: `B. Grandes e largos.`
+- Linha 235 [string]: `C. Médios (nem longos, nem largos).`
+- Linha 236 [string]: `D. Pequenos, estreitos e delicados.`
+- Linha 237 [string]: `E. Pequenos e levemente largos/arredondados.`
+- Linha 239 [string]: `5. Qual a forma geral do seu corpo?`
+- Linha 240 [string]: `A. Longo, magro e reto (colunar).`
+- Linha 241 [string]: `B. Largo e musculoso (tendência a ser atlético).`
+- Linha 242 [string]: `C. Simétrico e equilibrado (proporção ampulheta moderada).`
+- Linha 243 [string]: `D. Curvilíneo e delicado (ampulheta suave).`
+- Linha 244 [string]: `E. Muito arredondado e muito curvilíneo (ampulheta exuberante).`
+- Linha 246 [string]: `6. Como é o seu busto e tronco?`
+- Linha 247 [string]: `A. Reto e plano (mesmo com peso, não acumula muito aqui).`
+- Linha 248 [string]: `B. Largo e reto (tendência a tronco largo).`
+- Linha 249 [string]: `C. Moderado e simétrico.`
+- Linha 250 [string]: `D. Suave e levemente curvilíneo.`
+- Linha 251 [string]: `E. Muito proeminente e arredondado.`
+- Linha 253 [string]: `7. Como é a sua linha de cintura?`
+- Linha 254 [string]: `A. Reta e longa (mesmo magra, a cintura é pouco definida), mas estreita.`
+- Linha 255 [string]: `B. Reta e larga, mas curta.`
+- Linha 256 [string]: `C. Moderada e levemente definida.`
+- Linha 257 [string]: `D. Muito marcada e fina.`
+- Linha 258 [string]: `E. Suavemente definida, mas com tendência a ser larga.`
+- Linha 260 [string]: `8. Como são seus quadris?`
+- Linha 261 [string]: `A. Retos, estreitos e cônicos.`
+- Linha 262 [string]: `B. Retos e levemente largos.`
+- Linha 263 [string]: `C. Médios e simétricos.`
+- Linha 264 [string]: `D. Arredondados e proeminentes.`
+- Linha 265 [string]: `E. Muito arredondados e muito largos.`
+- Linha 267 [string]: `9. Se você ganha peso, onde ele se acumula primeiro?`
+- Linha 268 [string]: `A. Quase não mudo; o peso se espalha uniformemente.`
+- Linha 269 [string]: `B. Na cintura e abdômen (corpo fica mais "quadrado").`
+- Linha 270 [string]: `C. Uniformemente, mantendo a simetria.`
+- Linha 271 [string]: `D. Nos quadris e coxas.`
+- Linha 272 [string]: `E. No rosto, braços e coxas (fica muito arredondado).`
+- Linha 274 [string]: `10. Qual o formato da sua mandíbula?`
+- Linha 275 [string]: `A. Afiada, pontuda ou muito quadrada.`
+- Linha 276 [string]: `B. Larga ou rombuda (quadrada suave).`
+- Linha 277 [string]: `C. Moderada e simétrica.`
+- Linha 278 [string]: `D. Delicada, estreita ou levemente pontuda.`
+- Linha 279 [string]: `E. Arredondada e levemente larga.`
+- Linha 281 [string]: `11. Qual o formato do seu nariz?`
+- Linha 282 [string]: `A. Afiado ou proeminente.`
+- Linha 283 [string]: `B. Largo ou rombudo.`
+- Linha 284 [string]: `C. Médio e simétrico.`
+- Linha 285 [string]: `D. Pequeno e estreito.`
+- Linha 286 [string]: `E. Pequeno e arredondado.`
+- Linha 288 [string]: `12. Como são as suas maçãs do rosto?`
+- Linha 289 [string]: `A. Altas e afiadas.`
+- Linha 290 [string]: `B. Largas.`
+- Linha 291 [string]: `C. Simétricas e moderadas.`
+- Linha 292 [string]: `D. Delicadas e estreitas.`
+- Linha 293 [string]: `E. Arredondadas e cheias ("maçãs do rosto de bebê").`
+- Linha 295 [string]: `13. Qual o formato dos seus olhos?`
+- Linha 296 [string]: `A. Pequenos e amendoados.`
+- Linha 297 [string]: `B. Estreitos e largos.`
+- Linha 299 [string]: `D. Arredondados e levemente grandes.`
+- Linha 300 [string]: `E. Muito grandes e muito redondos.`
+- Linha 302 [string]: `14. Qual o formato dos seus lábios?`
+- Linha 303 [string]: `A. Finos e retos.`
+- Linha 304 [string]: `B. Retos, mas levemente largos (não carnudos).`
+- Linha 306 [string]: `D. Levemente cheios e arredondados.`
+- Linha 307 [string]: `E. Muito cheios e muito redondos.`
+- Linha 309 [string]: `15. Como você percebe sua ancestralidade física no corpo? (Esta pergunta ajuda a refinar sua análise estrutural, considerando como características herdadas influenciam sua silhueta real além dos padrões tradicionais.)`
+- Linha 310 [string]: `Predominantemente africana (ossos fortes, volume natural, curvas evidentes, densidade corporal)`
+- Linha 311 [string]: `Predominantemente indígena (estrutura mais compacta, ossatura firme, corpo mais contido)`
+- Linha 312 [string]: `Predominantemente europeia (estrutura mais fina, proporções alongadas ou delicadas)`
+- Linha 313 [string]: `Mista (percebo características combinadas no meu corpo)`
+- Linha 314 [string]: `Não sei identificar`
+- Linha 320 [string]: `Coloração`
+- Linha 321 [string]: `Cores e contraste`
+- Linha 322 [string]: `Estas respostas ajudam a entender temperatura, profundidade, contraste, intensidade e fundo de pele.`
+- Linha 324 [string]: `16. Temperatura: Como sua pele reage ao sol?`
+- Linha 325 [string]: `A. Queimo com facilidade e raramente fico bronzeada. (Frio).`
+- Linha 326 [string]: `B. Fico vermelha no início, mas depois o bronzeado fixa (Neutro).`
+- Linha 327 [string]: `C. Bronzeio com muita facilidade e fico com um tom dourado (Quente).`
+- Linha 329 [string]: `17. Teste dos Metais/Cores: O que faz sua pele parecer mais "viva" e uniforme?`
+- Linha 330 [string]: `A. Acessórios prateados e tons de azul/rosa frio`
+- Linha 331 [string]: `B. Fico bem tanto com ouro quanto com prata`
+- Linha 332 [string]: `C. Acessórios dourados e tons de laranja/terrosos`
+- Linha 334 [string]: `18. Qual o nível de escuridão (profundidade) do conjunto (pele + olhos + cabelo natural)?`
+- Linha 335 [string]: `A. Claro: Tenho pouco contraste, tudo em mim é clarinho (ex: pele clara, olhos claros, cabelo loiro/castanho claro).`
+- Linha 336 [string]: `B. Média: Não sou nem muito clara, nem muito escura.`
+- Linha 337 [string]: `C. Escuro/Profundo: Meus olhos e cabelos são muito escuros e a pele tem presença (ex: pele retinta ou pele clara com cabelos/olhos pretos).`
+- Linha 339 [string]: `19. Como você definiria a "intensidade" da sua beleza?`
+- Linha 340 [string]: `A. Opaca/Suave: Minha beleza é mais "contida" ou suave. Cores muito vibrantes parecem "chegar antes" de mim.`
+- Linha 341 [string]: `B. Moderada / Neutra`
+- Linha 342 [string]: `C. Brilhante/Intensa: Meus olhos têm cor/brilho vivo e minha pele tem viço. Fico ótima com cores puras e fortes (ex: batom vermelho vivo, cores neon).`
+- Linha 344 [string]: `20. Olhando para uma foto sua em preto e branco, qual a diferença entre a cor da sua pele e a cor do seu cabelo/olhos?`
+- Linha 345 [string]: `A. Baixo Contraste: Minha pele, olhos e cabelos têm tons muito parecidos (ex: tudo muito claro ou tudo muito escuro/retinto).`
+- Linha 346 [string]: `B. Médio Contraste: Existe uma diferença clara, mas não é chocante.`
+- Linha 347 [string]: `C. Alto Contraste: A diferença é muito grande (ex: pele muito clara e cabelo muito preto, ou dentes e olhos que "saltam" muito no rosto).`
+- Linha 349 [string]: `21. Teste das Cores (Azul vs. Laranja): Qual dessas cores te faz parecer mais descansada e disfarça olheiras?`
+- Linha 350 [string]: `A. Azul Royal / Azul Marinho: Sinto que tons frios me deixam mais elegante e com a pele uniforme. (Indica Subtom Frio)`
+- Linha 351 [string]: `B. Não sei dizer / Não vejo diferença`
+- Linha 352 [string]: `C. Laranja / Terracota / Amarelo Mostarda: Sinto que tons quentes me dão um "ar de saúde" e viço. (Indica Subtom Quente)`
+- Linha 354 [string]: `22. Veias e Subtom`
+- Linha 355 [string]: `A. Azuis ou Roxas`
+- Linha 356 [string]: `B. Mistura de ambas / Difícil identificar:`
+- Linha 357 [string]: `C. Esverdeadas ou Olivas`
+- Linha 359 [string]: `23. Reação a Batons: Qual tom de batom costuma receber mais elogios em você?`
+- Linha 360 [string]: `A. Rosa choque, Vinho ou Vermelho "cereja" (rosado): Tons frios e intensos.`
+- Linha 361 [string]: `B. Tons suaves, "cor de boca" e sem muito brilho: Tons opacos/suaves.`
+- Linha 362 [string]: `C. Nude amarronzado, Coral ou Vermelho "tomate" (alaranjado): Tons quentes.`
+- Linha 364 [string]: `24. Ao usar batons em tons de "Nude", qual o resultado que você prefere ou que fica mais harmônico?`
+- Linha 365 [string]: `A. Nudes rosados ou "cor de malva" (Frio).`
+- Linha 366 [string]: `B. Fico bem com vários tons, desde que não sejam extremos. (Neutro).`
+- Linha 367 [string]: `C. Nudes amarronzados, pêssego ou "cor de terra" (Quente).`
+- Linha 369 [string]: `25. Como você sente que as cores vibrantes (como um Amarelo Canário ou um Pink) reagem no seu rosto?`
+- Linha 370 [string]: `A. Elas me deixam pálida ou parecem "separadas" do meu rosto (Indica pele de Intensidade Suave/Opaca).`
+- Linha 371 [string]: `B. Depende muito da cor, algumas funcionam e outras não. (Moderado).`
+- Linha 372 [string]: `C. Eu sustento bem cores fortes; elas parecem acender meu viço natural (Indica pele de Intensidade Brilhante).`
+- Linha 374 [string]: `26. Sobre a gengiva e a parte interna dos lábios`
+- Linha 375 [string]: `A. Um rosa mais azulado ou arroxeado (Frio).`
+- Linha 376 [string]: `B. Um rosa equilibrado. (Neutro).`
+- Linha 377 [string]: `C. Um rosa mais alaranjado ou pêssego (Quente).`
+- Linha 379 [string]: `27. Se você usar uma roupa totalmente Laranja vibrante`
+- Linha 380 [string]: `A. Sinto que fico "amarelada" ou com aspecto cansado`
+- Linha 381 [string]: `B. Não é minha melhor cor, mas também não é a pior.`
+- Linha 382 [string]: `C. Me sinto iluminada, combina com a energia da minha pele`
+- Linha 384 [string]: `28. Como sua pele se comporta em relação ao brilho natural e texturas?`
+- Linha 385 [string]: `A. Minha pele tem um aspecto mais mate/aveludado; o excesso de brilho em acessórios ou maquiagem parece "brigar" com a minha pele.`
+- Linha 386 [string]: `B. Tenho um equilíbrio; consigo transitar entre o brilho e o opaco sem grandes perdas. (Neutro)`
+- Linha 387 [string]: `C. Minha pele tem um viço natural "aceso"; fico muito melhor com brilhos, acessórios polidos, pedras brilhantes e maquiagem iluminada.`
+- Linha 389 [string]: `29: Tom de Fundo. --> Instrução: Observe a nuance que mais se destaca na sua pele sob a luz do dia.`
+- Linha 390 [string]: `A. Azulada/Arroxeada: Sinto que minha pele tem uma sombra profunda, quase azul em certos ângulos. (Blues/Jazz)`
+- Linha 391 [string]: `B. Acinzentada/Rosada: Minha pele é mais clara ou média, com um fundo que puxa para o cinza ou rosa frio. (Nilo)`
+- Linha 392 [string]: `C. Dourada/Amarelada: Minha pele brilha como ouro no sol. (Calypso/Saara)`
+- Linha 393 [string]: `D. Avermelhada/Jambo: Minha pele tem um calor avermelhado intenso, cor de terra quente. (Spice)`
+- Linha 395 [string]: `30. Validação de Fundo: Ao observar sua pele no sol, qual "reflexo" é mais nítido?`
+- Linha 396 [string]: `A. Fundo escuro azulado: Minha pele é retinta e profunda, com uma sombra fria que puxa para o azul. (Blues)`
+- Linha 397 [string]: `B. Fundo escuro chocolate/arroxeado: Minha pele é escura e intensa, com um fundo marrom profundo e frio. (Jazz)`
+- Linha 398 [string]: `C. Fundo claro acinzentado ou rosado: Minha pele é clara ou média, com uma nuance fria, oliva e suave. (Nilo)`
+- Linha 399 [string]: `D. Fundo claro amarelado ou bege quente: Minha pele é clara a média, com um tom de "areia", bege ou dourado suave. (Saara)`
+- Linha 400 [string]: `E. Fundo médio dourado: Minha pele é visivelmente intensa, quente, solar e bronzeia com facilidade. (Calypso)`
+- Linha 401 [string]: `F. Fundo médio avermelhado (cor de jambo): Minha pele é quente e tem um brilho terroso ou "quente" intenso e avermelhado. (Spice)`
+- Linha 408 [string]: `Cabelo e rotina`
+- Linha 409 [string]: `Estas respostas ajudam a entender curvatura, fio, volume, cuidado possível e a moldura do seu rosto.`
+- Linha 411 [string]: `31. Curvatura:`
+- Linha 412 [string]: `A. Liso (1 A/B/C)`
+- Linha 413 [string]: `B. Ondulado (2 A/B/C)`
+- Linha 414 [string]: `C. Cacheado (3 A/B/C)`
+- Linha 415 [string]: `D. Crespo (4 A/B/C)`
+- Linha 416 [string]: `E. Não sei / Estou em transição`
+- Linha 418 [string]: `32. Espessura do Fio: Ao pegar um único fio de cabelo, como você o sente entre os dedos?`
+- Linha 419 [string]: `A. Fino (quase não sinto, quebra com facilidade).`
+- Linha 420 [string]: `B. Médio.`
+- Linha 421 [string]: `C. Grosso (sinto o fio bem presente, é resistente).`
+- Linha 423 [string]: `33. Porosidade e Absorção: Como seu cabelo reage à água e aos produtos?`
+- Linha 424 [string]: `A. Demora muito para secar (Baixa porosidade - as cutículas são muito fechadas).`
+- Linha 425 [string]: `B. Absorve bem a água e seca em tempo normal (Porosidade média).`
+- Linha 426 [string]: `C. Demora para molhar, mas "bebe" o produto e seca muito rápido (Alta porosidade - o fio está com as cutículas abertas/danificadas).`
+- Linha 428 [string]: `34. Densidade: Se você fizer um rabo de cavalo, qual a sensação de volume na base?`
+- Linha 429 [string]: `A. Pouco cabelo (consigo dar muitas voltas com o elástico).`
+- Linha 430 [string]: `B. Quantidade média.`
+- Linha 431 [string]: `C. Muito cabelo (o elástico mal consegue dar duas voltas, sinto "muito peso").`
+- Linha 433 [string]: `35. Relação com o Volume`
+- Linha 434 [string]: `A. Prefiro ele controlado, com menos volume e mais definição/alinhamento.`
+- Linha 435 [string]: `B. Gosto de um volume equilibrado.`
+- Linha 436 [string]: `C. Amo o volume máximo! Sinto que o volume faz parte da minha presença e poder.`
+- Linha 438 [string]: `36. Saúde e Química`
+- Linha 439 [string]: `A. Natural (sem químicas de transformação).`
+- Linha 440 [string]: `B. Colorido ou com Mechas (uso química de cor, mas mantenho a curvatura).`
+- Linha 441 [string]: `C. Alisado / Relaxado / Transição (uso química para mudar a estrutura ou estou parando de usar agora).`
+- Linha 443 [string]: `37. Comportamento no Day After`
+- Linha 444 [string]: `A. Mantém a forma e o brilho com pouco esforço.`
+- Linha 445 [string]: `B. Perde a definição, mas ganha um volume que eu gosto.`
+- Linha 446 [string]: `C. Amassa, embaraça muito ou perde totalmente a forma (exige revitalização completa).`
+- Linha 448 [string]: `38. Quanto tempo você dedica ao seu cabelo na semana?`
+- Linha 449 [string]: `A. Praticidade total: lavo e deixo secar naturalmente, não gasto mais de 15 min.`
+- Linha 450 [string]: `B. Dedicação moderada: gosto de finalizar com produtos específicos e uso difusor às vezes.`
+- Linha 451 [string]: `C. Ritual completo: invisto tempo em finalizações detalhadas (dedoliss, fitagem) e tratamentos profundos.`
+- Linha 453 [string]: `39. O "Cabelo dos Sonhos"`
+- Linha 454 [string]: `A. Gostaria de ter mais brilho e saúde, mantendo o que já tenho.`
+- Linha 455 [string]: `B. Gostaria de aprender a lidar com o volume/frizz sem "brigar" com ele.`
+- Linha 456 [string]: `C. Gostaria de mudar radicalmente (cor, corte ou textura) para me sentir mais eu mesma.`
+- Linha 458 [string]: `40. Percepção de Moldura: Você sente que seu cabelo hoje "conversa" com quem você é internamente?`
+- Linha 459 [string]: `A. Sim, sinto que ele é minha marca registrada e me representa 100%.`
+- Linha 460 [string]: `B. Às vezes sim, às vezes não. Ainda estou em busca da minha melhor versão.`
+- Linha 461 [string]: `C. Não, sinto que ele esconde quem eu sou ou que ainda não encontrei o corte/estilo certo.`
+- Linha 467 [string]: `Síntese pessoal`
+- Linha 468 [string]: `Como você se percebe agora`
+- Linha 469 [string]: `Sua primeira leitura já trouxe uma direção. Aqui você conta o que faz sentido e qual desafio de imagem ainda precisa ser cuidado.`
+- Linha 471 [string]: `43. Identificação com o Arquétipo Mesclado: No seu "Mapa dos Arquétipos", você se identificou com o nome da combinação sugerida? (Ex: Selvagem Magnética, Musa Enigmática, Soberana Estratégica...)`
+- Linha 472 [string]: `Sim, descreve exatamente como me sinto.`
+- Linha 473 [string]: `Em partes, sinto que uma deusa domina muito mais que a outra.`
+- Linha 474 [string]: `Não, ainda me sinto confusa sobre essa combinação.`
+- Linha 476 [string]: `44. Desafio de Estilo: Qual a sua maior dificuldade ao se vestir hoje ou o que mais te incomoda na sua imagem atual?`
+- Linha 477 [string]: `45. Espaço Telúrica: Há algo mais sobre sua história, seu corpo ou sua ancestralidade que você gostaria de compartilhar para que seu dossiê seja ainda mais especial?`
+- Linha 490 [string]: `Autoidentificação racial`
+- Linha 491 [string]: `Resultado da primeira leitura`
+- Linha 492 [string]: `Deusa principal`
+- Linha 493 [string]: `Deusa auxiliar`
+- Linha 494 [string]: `Arquétipo composto`
+- Linha 495 [string]: `Momento atual`
+- Linha 496 [string]: `Dor atual`
+- Linha 497 [string]: `Objetivo principal`
+
+## /produto-3
+
+### `metodo-ori/src/pages/Produto3.jsx`
+
+- Linha 7 [string]: `Olhar para o armário real, entender o que funciona, o que pesa e o que já não acompanha sua imagem.`
+- Linha 11 [string]: `Organizar peças-base, combinações possíveis, fórmulas de look e usos para a rotina.`
+- Linha 14 [string]: `Comprar com critério`
+- Linha 15 [string]: `Definir o que falta, o que vale comprar primeiro e o que evita novas escolhas por impulso.`
+- Linha 115 [JSX]: `Aplicação`
+- Linha 128 [JSX]: `Código Final`
+- Linha 138 [JSX]: `A etapa final leva sua leitura para o guarda-roupa real:`
+- Linha 140 [JSX]: `cápsula, fórmulas de look, lacunas`
+- Linha 142 [JSX]: `e estratégia de compra.`
+- Linha 148 [JSX]: `Depois de entender sua força e ver como ela aparece na imagem, o Código Final ajuda você a decidir o que fica, o que sai, o que falta e como usar melhor o que já tem.`
+- Linha 203 [JSX]: `Código Final ainda não liberado`
+- Linha 211 [JSX]: `O Código Final abre quando sua leitura visual já estiver pronta.`
+- Linha 214 [JSX]: `Esta etapa abre depois que sua força já foi entendida e sua imagem já ganhou direção. O Código Final leva essa direção para o armário real.`
+- Linha 225 [string]: `Inventário do armário`
+- Linha 226 [string]: `Cápsula funcional`
+- Linha 227 [string]: `Fórmulas de look`
+- Linha 228 [string]: `Estratégia de compra`
+- Linha 255 [JSX]: `Ver minha primeira leitura`
+- Linha 277 [JSX]: `O que vem no Código Final`
+- Linha 294 [JSX]: `Na prática`
+- Linha 331 [JSX]: `Próxima parte`
+
+## /redefinir-senha
+
+### `metodo-ori/src/pages/RedefinirSenha.jsx`
+
+- Linha 38 [string]: `Crie uma senha com pelo menos 6 caracteres.`
+- Linha 43 [string]: `As senhas precisam ser iguais.`
+- Linha 56 [string]: `Não foi possível salvar a nova senha. Abra novamente o link do e-mail ou solicite outro link.`
+- Linha 61 [string]: `Senha redefinida. Você já pode acessar o Átrio ORI.`
+- Linha 105 [string]: `Método ORI`
+- Linha 113 [JSX]: `Redefinição de senha`
+- Linha 124 [JSX]: `Crie sua nova senha`
+- Linha 131 [JSX]: `Escolha uma senha com pelo menos 6 caracteres para voltar ao Átrio ORI.`
+- Linha 141 [JSX]: `Nova senha`
+- Linha 163 [JSX]: `Confirmar senha`
+- Linha 236 [string]: `Salvar nova senha`
+- Linha 248 [JSX]: `Voltar para o login`
+
+## API Mapa Vivo
+
+### `backend/app/services/mapa_vivo_service.py`
+
+- Linha 27 [string]: `Sua Presença`
+- Linha 28 [string]: `Seu Estilo`
+- Linha 29 [string]: `Seu Corpo`
+- Linha 30 [string]: `Seus Relacionamentos`
+- Linha 31 [string]: `Seu Mundo Interno`
+- Linha 32 [string]: `Seus Padrões`
+- Linha 37 [string]: `Presença`
+- Linha 38 [string]: `Sua presença já chega antes da explicação. A imagem precisa sustentar esse campo sem pedir licença para aparecer.`
+- Linha 39 [string]: `O cuidado é não transformar força em defesa, nem suavizar demais aquilo que naturalmente já comunica.`
+- Linha 43 [string]: `Seu vestir está tentando encontrar uma forma mais fiel: menos adaptação automática, mais escolhas que pareçam suas no corpo.`
+- Linha 44 [string]: `O cuidado é não usar roupa como tentativa de se organizar por fora enquanto sua presença pede mais verdade.`
+- Linha 48 [string]: `Seu corpo pede participação na imagem. Forma, caimento e movimento precisam conversar com presença real, não só com ideia estética.`
+- Linha 49 [string]: `O cuidado é não tratar o corpo como detalhe técnico. Ele é uma parte viva da sua leitura.`
+- Linha 52 [string]: `Vínculos`
+- Linha 53 [string]: `A forma como você troca com o outro também aparece na imagem: aproximação, espaço, limite e desejo de ser vista.`
+- Linha 54 [string]: `O cuidado é não vestir expectativas externas antes de escutar o que sua presença sustenta.`
+- Linha 57 [string]: `Mundo interno`
+- Linha 58 [string]: `Seu mundo interno pede imagem com linguagem própria. O que você sente por dentro precisa encontrar uma forma possível por fora.`
+- Linha 59 [string]: `O cuidado é ficar tempo demais no imaginário e adiar a tradução concreta da imagem.`
+- Linha 62 [string]: `Padrões`
+- Linha 63 [string]: `Seus padrões mostram onde a imagem pode se repetir por proteção. A próxima etapa ajuda a separar identidade de defesa.`
+- Linha 64 [string]: `O cuidado é confundir proteção com estilo. Nem tudo que parece seguro revela você.`
+- Linha 96 [string]: `Esse sinal apareceu especialmente quando você marcou: “`
+- Linha 102 [string]: `Como seu objetivo agora é “`
+- Linha 102 [string]: `”, a leitura precisa virar direção prática, não só identificação.`
+- Linha 108 [string]: `Como o ponto sensível agora é “`
+- Linha 108 [string]: `”, a imagem precisa trazer mais coerência e menos ruído.`
+- Linha 114 [string]: `No seu momento atual, “`
+- Linha 114 [string]: `”, a leitura pede escolhas que você consiga sustentar na vida real.`
+- Linha 140 [string]: `Aguardando respostas`
+- Linha 153 [string]: `Alta nitidez`
+- Linha 156 [string]: `Boa nitidez`
+- Linha 158 [string]: `Leitura em contraste`
+- Linha 203 [string]: `sinal simbólico em formação`
+- Linha 220 [string]: `como este campo aparece na leitura`
+- Linha 242 [string]: `apareceu como um dos pontos mais presentes.`
+- Linha 253 [string]: `Composição simbólica`
+- Linha 254 [string]: `organiza a leitura atual da sua presença.`
+- Linha 269 [string]: `pede atenção para não virar defesa, excesso ou ruído na imagem.`
+- Linha 299 [string]: `Completar a base do mapa`
+- Linha 300 [string]: `Finalize o quiz e o perfil de entrada para que o ORI leia a jornada com mais precisão.`
+- Linha 310 [string]: `Adicionar contexto de vida`
+- Linha 311 [string]: `Momento atual, dor principal e objetivo ajudam a transformar arquétipo em direção prática.`
+- Linha 325 [string]: `Use este ponto como entrada principal:`
+- Linha 336 [string]: `Esse campo mostra contraste. Antes de avançar, vale traduzir o sinal em escolhas visuais simples.`
+- Linha 346 [string]: `Traduzir em imagem concreta`
+- Linha 347 [string]: `Leve a composição simbólica para cor, modelagem, beleza, presença e rotina real.`
+- Linha 356 [string]: `Revisitar o mapa vivo`
+- Linha 357 [string]: `Volte a este mapa quando uma nova etapa da jornada abrir ou quando seu momento interno mudar.`
+- Linha 375 [string]: `Seu Mapa Vivo ainda está começando. Quanto mais você responde, mais clara fica a leitura da sua jornada.`
+- Linha 379 [string]: `seus sinais principais`
+- Linha 382 [string]: `O Mapa Vivo reconhece`
+- Linha 382 [string]: `como composição atual, com`
+- Linha 383 [string]: `. A prontidão da base está em`
+- Linha 383 [string]: `e maior força em`
+- Linha 413 [string]: `Primeira leitura em formação`
+- Linha 419 [string]: `Sua imagem começa a pedir escolhas mais fiéis ao que sua presença sustenta.`
+- Linha 424 [string]: `Cuidado para não diminuir sua força tentando explicar demais. Antes da fala, sua imagem já começa a comunicar.`
+- Linha 429 [string]: `. Agora essa força já pode ganhar corpo, cor, cabelo, beleza e presença visual.`
+- Linha 429 [string]: `Sua primeira leitura mostrou`
+- Linha 433 [string]: `. Agora essa força precisa aparecer com mais verdade no jeito como você se veste, se move e ocupa presença.`
+- Linha 443 [string]: `Na próxima escolha de imagem, observe se ela sustenta sua força ou se apenas tenta caber no olhar de fora.`
+- Linha 449 [string]: `Primeira leitura`
+- Linha 451 [string]: `O Espelho está reunindo seus sinais para mostrar a força simbólica que abre sua jornada de imagem.`
+- Linha 454 [string]: `Código das Deusas`
+- Linha 456 [string]: `A primeira leitura identifica a base da sua imagem antes de qualquer direção visual.`
+- Linha 462 [string]: `Força ativa`
+- Linha 464 [string]: `Sua primeira força ainda está sendo formada a partir dos sinais da jornada.`
+- Linha 469 [string]: `O que pede forma`
+- Linha 470 [string]: `Essência`
+- Linha 471 [string]: `Antes da imagem ganhar forma, o ORI precisa reconhecer qual energia sustenta sua presença.`
+- Linha 476 [string]: `Ponto de atenção`
+- Linha 480 [string]: `Responda a primeira leitura sem tentar parecer pronta. A leitura começa onde você é mais verdadeira.`
+- Linha 486 [string]: `Na prática`
+- Linha 487 [string]: `Comece pela leitura`
+- Linha 488 [string]: `O próximo passo é abrir o Código das Deusas e descobrir a força que sustenta sua imagem.`
+- Linha 497 [string]: `Imagem tomando forma`
+- Linha 499 [string]: `Dossiê ORI`
+- Linha 501 [string]: `Esta etapa transforma força simbólica em escolhas visuais mais concretas.`
+- Linha 509 [string]: `O que apareceu aqui não é um rótulo. É a energia que começa a organizar sua imagem.`
+- Linha 526 [string]: `Consulte o Dossiê`
+- Linha 535 [string]: `Imagem em aplicação`
+- Linha 537 [string]: `já passou da leitura para a aplicação. Agora a força precisa aparecer nas escolhas reais: armário, combinações, compras e rotina.`
+- Linha 540 [string]: `Código Final`
+- Linha 542 [string]: `A próxima etapa organiza a identidade no cotidiano, para que a imagem não dependa só de inspiração.`
+- Linha 550 [string]: `Sua base simbólica continua guiando a imagem, mas agora precisa sustentar decisões práticas.`
+- Linha 554 [string]: `O que pede aplicação`
+- Linha 556 [string]: `A pergunta deixa de ser só o que combina com você e passa a ser o que você consegue sustentar na vida real.`
+- Linha 561 [string]: `Coerência`
+- Linha 562 [string]: `Evite acumular referências que não entram no corpo, no armário ou no gesto. A imagem precisa virar prática.`
+- Linha 567 [string]: `Escolha com direção`
+- Linha 568 [string]: `Ao montar um look ou pensar em compra, pergunte se aquilo fortalece sua presença ou só preenche ruído.`
+- Linha 575 [string]: `Base identificada`
+- Linha 579 [string]: `A próxima etapa mostra como essa força aparece no corpo, na cor, no cabelo, na beleza e na presença.`
+- Linha 587 [string]: `O que apareceu aqui não é um rótulo. É a força que começa a organizar sua presença, sua imagem e o modo como você se mostra.`
+- Linha 604 [string]: `Uma escolha por vez`
+
+## API Oráculo
+
+### `backend/app/services/oraculo_service.py`
+
+- Linha 52 [string]: `Não foi possível consultar a carta diária.`
+- Linha 84 [string]: `user_id,date_key`
+- Linha 92 [string]: `Não foi possível salvar a carta diária.`
+
+## API Produto 1 / quiz
+
+### `backend/app/data/quiz.py`
+
+- Linha 3 [string]: `Perséfone`
+- Linha 5 [string]: `Deméter`
+- Linha 11 [string]: `Musa Enigmática`
+- Linha 13 [string]: `Rainha Magnética`
+- Linha 15 [string]: `Amante Nutridora`
+- Linha 17 [string]: `Sedutora Estratégica`
+- Linha 19 [string]: `Selvagem Magnética`
+- Linha 21 [string]: `Rainha Oculta`
+- Linha 23 [string]: `Guardiã Sensível`
+- Linha 25 [string]: `Visionária Sutil`
+- Linha 27 [string]: `Selvagem Intuitiva`
+- Linha 29 [string]: `Matriarca Soberana`
+- Linha 31 [string]: `Soberana Estratégica`
+- Linha 33 [string]: `Soberana Indomável`
+- Linha 35 [string]: `Cuidadora Estratégica`
+- Linha 37 [string]: `Protetora Selvagem`
+- Linha 39 [string]: `Autônoma Absoluta`
+- Linha 46 [string]: `Sua Presença`
+- Linha 47 [string]: `Minha presença costuma chamar atenção sem esforço`
+- Linha 53 [string]: `Prefiro não chamar muita atenção para mim`
+- Linha 59 [string]: `Transmito uma imagem de controle e elegância`
+- Linha 65 [string]: `Minha presença tem algo de delicado ou misterioso`
+- Linha 71 [string]: `As pessoas me veem como alguém acolhedora`
+- Linha 77 [string]: `Minha presença é mais forte e direta do que suave`
+- Linha 82 [string]: `Seu Estilo`
+- Linha 83 [string]: `Gosto de roupas que valorizam o corpo`
+- Linha 89 [string]: `Meu estilo muda bastante conforme meu momento interno`
+- Linha 95 [string]: `Prefiro roupas clássicas e estruturadas`
+- Linha 101 [string]: `Busco conforto acima de tudo ao me vestir`
+- Linha 107 [string]: `Prefiro roupas práticas e funcionais`
+- Linha 113 [string]: `Gosto de roupas que permitem liberdade de movimento`
+- Linha 118 [string]: `Seu Corpo`
+- Linha 119 [string]: `Me sinto confortável com o toque e com meu corpo`
+- Linha 125 [string]: `Às vezes me sinto desconectada do meu corpo`
+- Linha 131 [string]: `Tenho consciência constante da minha postura`
+- Linha 137 [string]: `Meu corpo se conecta com o cuidado ao outro`
+- Linha 143 [string]: `Vejo meu corpo como ferramenta prática`
+- Linha 149 [string]: `Preciso me movimentar para me sentir bem`
+- Linha 154 [string]: `Seus Relacionamentos`
+- Linha 155 [string]: `Gosto de relações intensas e envolventes`
+- Linha 161 [string]: `Tenho tendência a me adaptar ao outro`
+- Linha 167 [string]: `Valorizo muito o compromisso e reconhecimento nas relações`
+- Linha 173 [string]: `Cuido muito das pessoas ao meu redor`
+- Linha 179 [string]: `Evito depender emocionalmente de alguém`
+- Linha 185 [string]: `Preciso de espaço e autonomia nas relações`
+- Linha 190 [string]: `Seu Mundo Interno`
+- Linha 191 [string]: `Busco prazer, beleza e experiências sensoriais`
+- Linha 197 [string]: `Tenho um mundo interno profundo e imaginativo`
+- Linha 203 [string]: `Gosto de controle e previsibilidade`
+- Linha 209 [string]: `Sinto que preciso ser necessária para os outros`
+- Linha 215 [string]: `Tomo decisões com base na lógica`
+- Linha 221 [string]: `Sigo meu próprio caminho, mesmo sem aprovação`
+- Linha 226 [string]: `Seus Padrões`
+- Linha 227 [string]: `Posso usar meu charme para influenciar situações`
+- Linha 233 [string]: `Às vezes me sinto perdida ou sem direção`
+- Linha 239 [string]: `Posso querer controlar relações ou situações`
+- Linha 245 [string]: `Me sobrecarrego cuidando dos outros`
+- Linha 251 [string]: `Posso parecer fria ou distante emocionalmente`
+- Linha 257 [string]: `Tenho dificuldade em me prender ou me comprometer`
+
+## API Produto 1 / relatório base
+
+### `backend/app/data/reports.json`
+
+- Linha 1 [json Amante Nutridora.reconhecimento]: `A Amante Nutridora mostra uma combinação em que amor não aparece apenas como atração, nem apenas como cuidado. Ele aparece no jeito como você aquece, envolve e sustenta. Afrodite traz magnetismo, prazer, beleza, sensualidade e capacidade de criar conexão. Deméter traz acolhimento, nutrição, vínculo, constância afetiva e impulso de sustentar o outro. Juntas, elas formam uma mulher que não apenas encanta. Acalma. Não apenas atrai. Faz permanecer.`
+- Linha 1 [json Amante Nutridora.essencia]: `A Amante Nutridora nasce do encontro entre duas forças profundamente relacionais: Afrodite abre conexão; Deméter transforma essa conexão em vínculo. Existe em você uma necessidade profunda de gerar calor, proximidade e troca viva. Sua força não está em dominar a cena. Está em criar um campo onde o outro baixa a guarda. Sua força pede uma imagem viva, feminina, sensorial e acolhedora.`
+- Linha 1 [json Autônoma Absoluta.reconhecimento]: `A Autônoma Absoluta carrega uma força de independência clara. Existe em você uma mulher que aprendeu a confiar na própria leitura, a decidir com lucidez e a seguir mesmo quando ninguém confirma o caminho. Você não precisa de excesso emocional, validação constante ou aprovação externa para saber quem é. Mas, muitas vezes, também pode ter aprendido a não esperar muito do outro para não depender de ninguém. Athena traz estratégia, inteligência, clareza e visão do todo. Artemis traz autonomia, instinto, território e independência. Juntas, elas formam uma mulher que precisa entender, escolher e se mover a partir de um eixo próprio.`
+- Linha 1 [json Autônoma Absoluta.essencia]: `A Autônoma Absoluta nasce do encontro entre duas forças muito independentes: Athena organiza a mente; Artemis preserva o território. Essa combinação cria uma mulher que precisa de liberdade com direção. Você não quer apenas ser livre. Quer saber para onde está indo, por que está indo e se aquele caminho respeita sua inteligência. Sua força aparece quando existe espaço para pensar, decidir e se mover sem precisar se explicar o tempo inteiro. Sua imagem precisa mostrar essa força: limpa, objetiva, precisa, livre e bem estruturada.`
+- Linha 1 [json Cuidadora Estratégica.reconhecimento]: `A Cuidadora Estratégica nasce do encontro entre acolhimento e lucidez. Existe em você uma capacidade de perceber necessidades antes que elas sejam ditas, organizar soluções e oferecer suporte de forma prática. Você costuma notar o que falta, o que está fora do lugar, o que precisa ser ajustado e o que pode aliviar a vida de alguém. Deméter traz cuidado, nutrição, cuidado afetivo, vínculo e sustentação. Athena traz estratégia, clareza, inteligência, organização e visão de sistema. Juntas, elas formam uma mulher que não apenas sente a necessidade do outro. Ela entende o que precisa ser feito.`
+- Linha 1 [json Cuidadora Estratégica.essencia]: `A Cuidadora Estratégica une o cuidado nutritivo de Deméter com a inteligência organizadora de Athena. Você não cuida apenas com emoção. Cuida com método, atenção, solução, rotina e estrutura. Muitas vezes, seu afeto aparece menos em grandes declarações e mais em gestos concretos: resolver, lembrar, organizar, prevenir, orientar e tornar o caminho mais simples. Sua força pede uma imagem acolhedora, mas não frouxa; prática, mas não fria.`
+- Linha 1 [json Guardiã Sensível.reconhecimento]: `A Guardiã Sensível nasce do encontro entre duas forças femininas profundamente receptivas: a que sente e a que cuida. Perséfone mostra seu mundo interno, sua sensibilidade psíquica, sua capacidade de perceber atmosferas, nuances emocionais e tudo aquilo que não é dito de forma explícita. Deméter transforma essa percepção em cuidado, suporte, proteção e presença afetiva. Essa combinação cria uma mulher que não apenas observa o emocional do outro. Ela entra em contato com ele, acolhe e, muitas vezes, tenta sustentá-lo. Sua força não está no impacto. Está na profundidade com que você percebe, na delicadeza com que acolhe e na constância silenciosa com que oferece cuidado. Você cria segurança emocional no ambiente. Sua energia convida o outro a baixar a guarda, respirar e existir com mais verdade.`
+- Linha 1 [json Matriarca Soberana.reconhecimento]: `A Matriarca Soberana nasce do encontro entre cuidado e posição. Existe em você uma força que acolhe, sustenta e protege, mas também deseja reconhecimento, respeito e lugar. Você tende a perceber onde falta base, onde falta compromisso e onde alguém precisa de sustentação para continuar. Muitas vezes, sem perceber, vira o ponto de equilíbrio do ambiente. Deméter traz nutrição, vínculo, suporte e cuidado afetivo. Hera traz dignidade, estrutura, compromisso, reconhecimento e legitimidade. Juntas, elas formam uma mulher que não apenas cuida. Ela estrutura pertencimento.`
+- Linha 1 [json Matriarca Soberana.essencia]: `A Matriarca Soberana une o cuidado nutritivo de Deméter com a dignidade de Hera. Deméter pergunta: quem precisa de cuidado? Hera pergunta: qual é o lugar desse vínculo? Essa combinação cria uma mulher que tende a levar relações, família, compromisso e pertencimento com seriedade. Para você, vínculo não é algo leve ou descartável. Quando algo importa, você quer que tenha forma, cuidado, presença e respeito. Sua imagem pede cuidado com autoridade: acolhimento, estrutura e respeito.`
+- Linha 1 [json Musa Enigmática.reconhecimento]: `A Musa Enigmática carrega uma presença que não se entrega inteira de imediato. Existe em você uma combinação rara entre magnetismo e profundidade: algo atrai, mas algo também preserva mistério. Você não precisa falar alto para ser percebida. Muitas vezes, sua presença altera o clima antes mesmo que você tente explicar quem é. As pessoas podem sentir curiosidade, fascínio ou vontade de se aproximar, mas nem sempre conseguem decifrar exatamente o que existe em você. Afrodite traz desejo, beleza, sensorialidade e magnetismo. Perséfone traz silêncio, mundo interno, percepção emocional e relação com o invisível. Juntas, elas criam uma mulher cuja força não está em se mostrar inteira, mas em criar uma atmosfera que permanece.`
+- Linha 1 [json Musa Enigmática.essencia]: `A Musa Enigmática nasce do encontro entre Afrodite e Perséfone: desejo com mistério, beleza com mundo interno, magnetismo com profundidade emocional. Afrodite desperta sua capacidade de atrair, criar beleza, sentir prazer e tocar o outro pelo modo como você chega. Perséfone aprofunda essa energia e leva sua percepção para sinais mais sutis: intuição, silêncio, recolhimento e sensibilidade aos ambientes. Essa combinação cria uma mulher que não apenas aparece. Ela evoca. Sua imagem costuma deixar uma sensação, uma memória emocional, uma pergunta no ar.`
+- Linha 1 [json Protetora Selvagem.reconhecimento]: `A Protetora Selvagem nasce do encontro entre cuidado e instinto. Existe em você uma força profundamente protetora, mas também livre, territorial e independente. Você tende a perceber rápido quando algo ameaça quem você ama, o espaço que construiu ou a verdade que sustenta. Seu cuidado não é frágil: ele tem corpo, limite e prontidão. Deméter traz nutrição, acolhimento, vínculo e cuidado afetivo. Artemis traz autonomia, território, movimento, instinto e recusa a ser controlada. Juntas, elas formam uma mulher que cuida, mas não se deixa domesticar.`
+- Linha 1 [json Protetora Selvagem.essencia]: `A Protetora Selvagem une o cuidado de Deméter com o instinto territorial de Artemis. Deméter pergunta: quem precisa ser cuidado? Artemis pergunta: onde estão meus limites? Essa combinação cria uma mulher que ama com entrega, mas também com senso claro de limite. Você pode ser profundamente leal, mas dificilmente se mantém onde sente invasão, controle ou falta de respeito pelo seu espaço. Sua imagem pede acolhimento com força natural: conforto, movimento e limite.`
+- Linha 1 [json Rainha Magnética.reconhecimento]: `A Rainha Magnética carrega uma força que não se contenta em apenas aparecer. Existe em você uma necessidade profunda de ser percebida com valor, escolhida com intenção e reconhecida em um lugar que faça sentido para a sua força. Afrodite traz magnetismo, prazer, beleza, poder de atração e presença sensorial. Hera traz posição, dignidade, vínculo, legitimidade e necessidade de ocupar um lugar claro. Juntas, elas formam uma mulher que não quer apenas encantar. Quer ser reconhecida. Não apenas atrai, mas também cria a sensação de importância.`
+- Linha 1 [json Rainha Magnética.essencia]: `A Rainha Magnética nasce do encontro entre Afrodite e Hera: desejo com estrutura, beleza com posição, magnetismo com dignidade. Afrodite desperta desejo. Hera pergunta se esse desejo tem lugar, valor e escolha. Afrodite desperta o olhar. Hera pergunta: qual é o valor desse olhar? Por isso, sua imagem não funciona quando é apenas bonita. Ela precisa parecer significativa. Sua força pede uma imagem que una atração e respeito. Sensualidade sem vulgaridade. Estrutura sem frieza. Beleza sem submissão.`
+- Linha 1 [json Rainha Oculta.essencia]: `A Rainha Oculta nasce do encontro entre Hera e Perséfone: posição com introspecção, autoridade com mistério, legitimidade com profundidade emocional. Hera pergunta: qual é o meu lugar? Perséfone pergunta: é seguro mostrar o que sinto? Essa combinação cria uma mulher que carrega autoridade por fora e intensidade por dentro. Existe em você uma necessidade de ser respeitada sem precisar se explicar demais, e de ser sentida sem ter que se abrir inteira antes de confiar. Sua força pede uma imagem sofisticada, profunda, reservada e emocionalmente densa.`
+- Linha 1 [json Rainha Oculta.reconhecimento]: `A Rainha Oculta não precisa ocupar o espaço pelo excesso para ser percebida. Sua força aparece na contenção, no mistério e na sensação de profundidade emocional. Hera traz dignidade, posição, vínculo, reconhecimento e necessidade de ocupar um lugar de valor. Perséfone traz mundo interno, silêncio, sensibilidade, percepção emocional e relação com aquilo que não é imediatamente visível. Juntas, elas formam uma mulher que sente mais do que mostra. Você pode carregar muita coisa por dentro sem entregar tudo de imediato. Nem sempre sua força aparece em fala, gesto ou exposição; às vezes, ela aparece no que você escolhe preservar.`
+- Linha 1 [json Sedutora Estratégica.reconhecimento]: `A Sedutora Estratégica carrega uma mistura de charme e consciência. Você não seduz apenas por impulso, nem depende somente de beleza, espontaneidade ou magnetismo natural. Existe em você uma capacidade de ler o ambiente, perceber jogos sutis e escolher como se posicionar. Afrodite traz corpo, beleza, desejo e poder de atração. Athena traz lucidez, estratégia, leitura de contexto, inteligência e precisão. Juntas, elas formam uma mulher que entende que sua imagem comunica antes mesmo de você explicar.`
+- Linha 1 [json Sedutora Estratégica.essencia]: `A Sedutora Estratégica nasce do encontro entre Afrodite e Athena: magnetismo com clareza, desejo com inteligência, charme com direção. Afrodite desperta atração, prazer, estética, corpo vivo e desejo. Athena organiza essa energia com lucidez, discernimento e leitura estratégica. Por isso, sua beleza não funciona bem quando parece vazia. Ela precisa ter intenção. Sua força pede uma imagem inteligente: bonita, sim, mas nunca sem mente.`
+- Linha 1 [json Selvagem Intuitiva.reconhecimento]: `A Selvagem Intuitiva nasce do encontro entre profundidade e liberdade. Existe em você uma força que não se adapta bem a ambientes rígidos, invasivos ou previsíveis demais. Você percebe mais do que costuma dizer. Sente mudanças sutis no clima, no olhar das pessoas, no tom das conversas e na energia dos espaços. Mas, ao mesmo tempo, precisa preservar movimento, autonomia e território. Quando algo tenta te prender, definir ou invadir antes da hora, alguma parte sua recua. Perséfone traz mundo interno, silêncio, intuição e percepção dos sinais invisíveis. Artemis traz instinto, independência, direção própria e necessidade de espaço. Juntas, elas formam uma mulher que não quer ser capturada pelo olhar do outro. Você precisa se sentir livre para permanecer.`
+- Linha 1 [json Selvagem Magnética.reconhecimento]: `A Selvagem Magnética carrega uma energia intensa, independente e profundamente viva. Você não se encaixa facilmente em expectativas externas porque sua força nasce do instinto, do corpo e da autonomia. Existe em você uma energia que precisa sentir verdade para se aproximar. Quando algo parece controle, performance ou tentativa de domesticação, seu corpo percebe antes da mente explicar. Afrodite traz magnetismo, prazer, beleza, sensualidade e poder de atração. Artemis traz liberdade, território, movimento, independência e recusa a ser domesticada. Juntas, elas formam uma mulher que seduz sendo livre.`
+- Linha 1 [json Selvagem Magnética.essencia]: `A Selvagem Magnética nasce do encontro entre Afrodite e Artemis: desejo com liberdade, sensualidade com independência, magnetismo com movimento. Afrodite desperta o corpo, o prazer, a beleza e a conexão. Artemis preserva autonomia, território, instinto e direção própria. Sua força pede uma imagem viva, com corpo, textura e liberdade. Algo que comunique sensualidade sem submissão. Você não precisa parecer disponível para ser magnética. Seu magnetismo cresce quando sua imagem mostra desejo com autonomia.`
+- Linha 1 [json Soberana Estratégica.reconhecimento]: `A Soberana Estratégica nasce do encontro entre dignidade e inteligência. Existe em você uma força que busca lugar, estrutura, reconhecimento e direção. Você tende a perceber rapidamente onde há desorganização, incoerência ou falta de posicionamento. E, muitas vezes, sente que precisa se manter firme porque se deixar o eixo cair, tudo ao redor perde forma. Hera traz posição, compromisso, legitimidade, vínculo e desejo de ocupar um lugar de valor. Athena traz estratégia, razão, discernimento e capacidade de organizar sistemas. Juntas, elas formam uma mulher que não apenas quer ser respeitada. Ela sabe construir respeito.`
+- Linha 1 [json Soberana Estratégica.essencia]: `A Soberana Estratégica une o senso de lugar de Hera com a lucidez de Athena. Hera pergunta: qual é o meu lugar? Athena pergunta: qual é a estratégia mais inteligente para ocupá-lo? Essa combinação cria uma mulher que pensa em estrutura, legitimidade, coerência e resultado. Você não ocupa lugar apenas para aparecer. Ocupa para dar forma, sustentar direção e fazer com que o ambiente entenda que existe uma ordem possível. Sua imagem pede autoridade refinada: estrutura, precisão e presença humana.`
+- Linha 1 [json Soberana Indomável.reconhecimento]: `A Soberana Indomável nasce do encontro entre dignidade e liberdade. Existe em você uma força que deseja ocupar um lugar de valor, mas sem abrir mão da própria autonomia. Você tende a perceber rápido quando um vínculo, ambiente ou expectativa tenta te diminuir. Algo em você reage quando sente que sua liberdade, sua dignidade ou sua voz estão sendo negociadas. Hera traz dignidade, reconhecimento, vínculo, legitimidade e consciência de lugar. Artemis traz independência, espaço, instinto, movimento e recusa a ser domesticada. Juntas, elas formam uma mulher que não aceita ser diminuída, controlada ou colocada em um lugar que não respeita sua força.`
+- Linha 1 [json Soberana Indomável.essencia]: `A Soberana Indomável une a dignidade de Hera com a liberdade de Artemis. Hera pergunta: qual é o meu lugar? Artemis pergunta: esse lugar respeita minha liberdade? Essa combinação cria uma mulher que deseja reconhecimento, mas também precisa de espaço. Você quer ser vista com valor, mas não aceita que esse valor venha ao custo da sua liberdade. Não quer pertencer a qualquer lugar; quer pertencer sem se domesticar. Sua imagem pede autoridade livre: força, elegância, espaço e vida.`
+- Linha 1 [json Visionária Sutil.reconhecimento]: `A Visionária Sutil nasce do encontro entre percepção profunda e inteligência estratégica. Existe em você uma capacidade rara de captar o que está por trás das palavras, dos gestos e das aparências. Você percebe mudanças pequenas no tom, no silêncio, na intenção e na energia de um ambiente antes que muita gente consiga nomear o que aconteceu. Perséfone traz sensibilidade, mundo interno, intuição e leitura do invisível. Athena traz clareza, análise, estratégia e capacidade de organizar o que foi percebido. Juntas, elas formam uma mulher que não apenas sente. Ela compreende.`
+- Linha 1 [json Visionária Sutil.essencia]: `A Visionária Sutil une o mundo subterrâneo de Perséfone com a lucidez de Athena. Perséfone percebe atmosferas, emoções ocultas, silêncios e sinais sutis. Athena organiza essas percepções em pensamento, direção, linguagem e estratégia. Sua força pede uma imagem que mostre profundidade com clareza. Mistério, sim, mas não confusão. Inteligência, sim, mas não frieza. Você precisa parecer alguém que sente o invisível, mas sabe dar forma ao que percebe.`
+- Linha 1 [json Guardiã Sensível.essencia]: `A força da Guardiã Sensível está na união entre profundidade emocional e cuidado encarnado. Perséfone sente o invisível. Deméter responde ao que sente com acolhimento. Essa combinação cria uma mulher que percebe rapidamente quando algo muda no ambiente, quando alguém não está bem ou quando uma emoção foi escondida. Você não é indiferente ao que sente. E quase nunca é indiferente ao que o outro sente. Sua energia comunica: eu sinto o que está acontecendo em você, e meu impulso natural é cuidar disso. Sua força pede uma imagem que não invade. Ela contém. Não domina. Sustenta. Mas também precisa aprender que acolher não é carregar tudo.`
+- Linha 1 [json Autônoma Absoluta.sombra]: `A sombra da Autônoma Absoluta aparece quando lucidez e liberdade viram armadura. Quando isso acontece, você pode parecer forte por fora, mas estar apenas tentando não precisar de nada. Athena pode racionalizar tudo e desvalorizar emoção. Artemis pode rejeitar dependência e transformar liberdade em isolamento. A autossuficiência pode virar uma forma elegante de não pedir, não receber, não se apoiar e não mostrar onde algo toca. O ajuste começa quando você entende que receber não diminui sua força.`
+- Linha 1 [json Cuidadora Estratégica.sombra]: `A sombra da Cuidadora Estratégica aparece quando cuidado e inteligência viram obrigação de resolver tudo. Você pode acabar sendo chamada de forte, prática ou indispensável, quando por dentro está apenas cansada de sustentar o que ninguém mais percebe. Deméter pode cuidar excessivamente. Athena pode racionalizar emoções, corrigir o outro e tentar organizar a vida de todos. O ajuste começa quando você lembra que apoiar não significa assumir. Orientar não significa controlar.`
+- Linha 1 [json Matriarca Soberana.sombra]: `A sombra da Matriarca Soberana aparece quando cuidado e reconhecimento se misturam de forma inconsciente. Deméter pode cuidar excessivamente e se tornar indispensável. Hera pode esperar reconhecimento, lealdade e posição como confirmação de valor. O ajuste começa quando você lembra que cuidado não precisa virar moeda de reconhecimento. Você não precisa provar valor sendo indispensável, nem transformar lealdade em obrigação de carregar tudo.`
+- Linha 1 [json Musa Enigmática.sombra]: `A sombra da Musa Enigmática aparece quando o desejo de conexão se mistura à tendência de se adaptar demais. Afrodite, em desequilíbrio, pode buscar confirmação pelo olhar: ser desejada, admirada, escolhida ou sentida. Perséfone, em desequilíbrio, pode se dissolver no ambiente, no vínculo ou na emoção que atravessa. O risco é perder contorno para manter encanto. Você pode sentir o que o outro sente, ajustar sua imagem para preservar uma leitura favorável e, aos poucos, se afastar da própria vontade.`
+- Linha 1 [json Protetora Selvagem.sombra]: `A sombra da Protetora Selvagem aparece quando cuidado e instinto viram defesa. Deméter pode cuidar excessivamente. Artemis pode reagir a qualquer sensação de invasão. A sombra central é proteger para não se vulnerabilizar. Você pode cuidar de todos, defender todos, prever riscos e se manter em prontidão, mas ter dificuldade de deixar alguém perceber quando você também precisa de colo, descanso ou proteção. O ajuste começa quando você lembra que proteção não precisa virar armadura.`
+- Linha 1 [json Rainha Magnética.sombra]: `A sombra da Rainha Magnética aparece quando desejo e reconhecimento deixam de ser expressão natural da identidade e passam a virar prova de valor. Afrodite, em desequilíbrio, pode buscar confirmação através do olhar e do desejo. Hera, em desequilíbrio, pode buscar segurança através da posição, da definição do vínculo e da necessidade de ser escolhida. O ajuste começa quando você lembra que sua presença não precisa convencer ninguém do seu valor.`
+- Linha 1 [json Rainha Oculta.sombra]: `A sombra da Rainha Oculta aparece quando o desejo de reconhecimento se mistura ao medo de exposição. Hera pode buscar validação por posição. Perséfone pode se recolher demais, esconder necessidades ou esperar que o outro decifre o que você sente. O ajuste começa quando você permite que sua profundidade tenha linguagem. Ser reservada não precisa significar ser inacessível. Você não precisa desaparecer para se proteger, nem transformar silêncio em teste para saber quem fica.`
+- Linha 1 [json Sedutora Estratégica.sombra]: `A sombra da Sedutora Estratégica aparece quando a mente tenta controlar o desejo. Athena pode transformar tudo em análise, cálculo e controle. Afrodite pode usar charme como forma de conduzir a situação sem se expor de verdade. Você pode pensar demais antes de sentir, seduzir mantendo distância ou analisar emoções em vez de vivê-las.`
+- Linha 1 [json Selvagem Intuitiva.sombra]: `A sombra da Selvagem Intuitiva aparece quando sensibilidade e autonomia viram defesa. Perséfone pode se recolher demais, desaparecer emocionalmente, esperar que o outro perceba sozinho ou guardar tudo em silêncio. Artemis pode fugir antes de se vulnerabilizar, rejeitar demandas legítimas ou transformar qualquer aproximação em ameaça. A sombra central é desaparecer antes de ser tocada. Você pode sair de situações sem explicar completamente, cortar vínculos antes de admitir que se importava ou convencer a si mesma de que não precisa de nada quando, na verdade, só não quer se sentir capturada. O ajuste começa quando você percebe que nem toda aproximação é invasão. Nem todo vínculo é prisão. Nem toda permanência exige perda de liberdade.`
+- Linha 1 [json Selvagem Magnética.sombra]: `A sombra da Selvagem Magnética aparece quando independência vira defesa emocional. Afrodite deseja conexão. Artemis teme captura. Você pode evitar vulnerabilidade, fugir de vínculos profundos ou transformar liberdade em isolamento. A fuga pode parecer força, mas às vezes é apenas uma forma de sair antes que algo toque de verdade. O ajuste começa quando você entende que vínculo não precisa ser prisão.`
+- Linha 1 [json Soberana Estratégica.sombra]: `A sombra da Soberana Estratégica aparece quando autoridade e inteligência viram rigidez. Hera pode buscar posição como prova de valor. Athena pode racionalizar tudo e controlar variáveis. A sombra aparece quando você sente que precisa estar sempre certa, sempre preparada, sempre acima da desordem, como se qualquer falha pudesse diminuir sua autoridade. O ajuste começa quando você lembra que autoridade real não exige controle permanente.`
+- Linha 1 [json Soberana Indomável.sombra]: `A sombra da Soberana Indomável aparece quando dignidade e autonomia viram defesa permanente. Você pode se manter tão pronta para não ser diminuída que acaba impedindo também o que poderia te encontrar com respeito. Hera pode buscar reconhecimento como prova de valor. Artemis pode rejeitar qualquer vínculo que pareça limitar sua liberdade. O ajuste começa quando você percebe que flexibilidade não é submissão, e que vínculo respeitoso não diminui sua força.`
+- Linha 1 [json Visionária Sutil.sombra]: `A sombra da Visionária Sutil aparece quando percepção e inteligência se fecham em um circuito interno. Perséfone pode se recolher demais e interpretar sinais em excesso. Athena pode racionalizar emoções e se proteger pela análise. O ajuste começa quando você lembra que nem toda percepção precisa virar explicação. Nem todo silêncio precisa ser decifrado. Nem toda sensação precisa virar hipótese. Nem tudo que você capta precisa ser carregado sozinha.`
+- Linha 1 [json Amante Nutridora.sombra]: `A sombra dessa combinação aparece quando amor e cuidado deixam de ser expressão verdadeira e passam a se tornar forma de garantir vínculo, valor ou pertencimento. Afrodite pode buscar validação pela conexão. Deméter pode transformar amor em função e cuidado em obrigação. A sombra central é cuidar para não perder lugar. Na prática, ela aparece quando o cuidado substitui a identidade.`
+- Linha 1 [json Guardiã Sensível.sombra]: `A sombra dessa combinação aparece quando sensibilidade e cuidado deixam de ser expressão verdadeira e passam a se tornar mecanismo de sobrevivência emocional. Perséfone, em desequilíbrio, pode se adaptar demais, absorver o ambiente e perder contorno emocional. Deméter, em desequilíbrio, pode cuidar excessivamente, se responsabilizar pelo outro e sustentar vínculos além do saudável. Quando essas duas forças se somam sem consciência, a sombra surge como autoabandono emocional. Você pode colocar o outro antes de si, perceber a necessidade alheia com tanta rapidez que ignora a própria, absorver emoções que não são suas e construir valor a partir do cuidado. Pode existir, de forma sutil, a sensação de que ser necessária é uma forma de garantir amor, vínculo ou pertencimento. Na prática, a sombra aparece quando o cuidado substitui o próprio eu. Ou seja: quando você passa a existir mais na função de sustentar o outro do que na verdade de sustentar a si mesma.`
+- Linha 1 [json Selvagem Intuitiva.essencia]: `A sua força não funciona pela lógica da exposição direta. Você não precisa mostrar tudo para ser percebida. Muitas vezes, sua força está justamente no que não se entrega de imediato. Você carrega uma força que mistura mistério e instinto. Existe algo reservado, sensível e profundo em você, mas também existe uma parte que sabe se mover sozinha, escolher sozinha e se proteger quando sente que algo ameaça sua liberdade emocional. A Selvagem Intuitiva não nasceu para se encaixar em fórmulas prontas de feminilidade. Sua feminilidade tem silêncio, natureza, distância, profundidade, movimento e escolha. Ela não é disponível o tempo inteiro. Ela aparece quando sente verdade.`
+- Linha 1 [json Selvagem Magnética.combinacao]: `Afrodite + Artemis`
+- Linha 1 [json Sedutora Estratégica.combinacao]: `Afrodite + Athena`
+- Linha 1 [json Amante Nutridora.combinacao]: `Afrodite + Deméter`
+- Linha 1 [json Rainha Magnética.combinacao]: `Afrodite + Hera`
+- Linha 1 [json Musa Enigmática.combinacao]: `Afrodite + Perséfone`
+- Linha 1 [json key]: `Amante Nutridora`
+- Linha 1 [json Amante Nutridora.evitar[4]]: `Aparência descuidada.`
+- Linha 1 [json Visionária Sutil.evitar[5]]: `Aparência excessivamente fria.`
+- Linha 1 [json Rainha Oculta.evitar[5]]: `Aparência inacessível demais.`
+- Linha 1 [json Matriarca Soberana.evitar[2]]: `Aparência maternal demais.`
+- Linha 1 [json Cuidadora Estratégica.evitar[4]]: `Aparência maternal sem refinamento.`
+- Linha 1 [json Autônoma Absoluta.combinacao]: `Athena + Artemis`
+- Linha 1 [json Soberana Estratégica.formula]: `Autoridade + Clareza + Estratégia`
+- Linha 1 [json key]: `Autônoma Absoluta`
+- Linha 1 [json Musa Enigmática.evitar[5]]: `Brilho exagerado ou artificial.`
+- Linha 1 [json Amante Nutridora.formula]: `Calor + Sensualidade + Acolhimento`
+- Linha 1 [json Autônoma Absoluta.formula]: `Clareza + Autonomia + Movimento`
+- Linha 1 [json Sedutora Estratégica.formula]: `Clareza + Magnetismo + Intenção`
+- Linha 1 [json Cuidadora Estratégica.formula]: `Cuidado + Clareza + Estrutura`
+- Linha 1 [json Matriarca Soberana.formula]: `Cuidado + Dignidade + Sustentação`
+- Linha 1 [json key]: `Cuidadora Estratégica`
+- Linha 1 [json Soberana Indomável.evitar[1]]: `Delicadeza excessiva.`
+- Linha 1 [json Protetora Selvagem.combinacao]: `Deméter + Artemis`
+- Linha 1 [json Cuidadora Estratégica.combinacao]: `Deméter + Athena`
+- Linha 1 [json Matriarca Soberana.combinacao]: `Deméter + Hera`
+- Linha 1 [json Protetora Selvagem.evitar[5]]: `Descuidado como defesa.`
+- Linha 1 [json Visionária Sutil.evitar[1]]: `Estampas barulhentas.`
+- Linha 1 [json Rainha Oculta.evitar[3]]: `Estampas infantis ou alegres demais.`
+- Linha 1 [json Rainha Magnética.evitar[2]]: `Estilo excessivamente infantil.`
+- Linha 1 [json Rainha Magnética.formula]: `Estrutura + Magnetismo + Valor`
+- Linha 1 [json Sedutora Estratégica.evitar[3]]: `Estética desleixada ou improvisada.`
+- Linha 1 [json Cuidadora Estratégica.evitar[1]]: `Estética excessivamente utilitária.`
+- Linha 1 [json Guardiã Sensível.evitar[2]]: `Estética fria ou distante demais.`
+- Linha 1 [json Protetora Selvagem.evitar[2]]: `Estética muito delicada.`
+- Linha 1 [json Selvagem Intuitiva.evitar[1]]: `Estética muito romântica ou doce.`
+- Linha 1 [json Matriarca Soberana.evitar[5]]: `Estética que comunica sobrecarga.`
+- Linha 1 [json Selvagem Magnética.evitar[2]]: `Estética rígida ou corporativa.`
+- Linha 1 [json Soberana Indomável.evitar[3]]: `Estética submissa.`
+- Linha 1 [json Soberana Indomável.evitar[4]]: `Excesso de agressividade visual.`
+- Linha 1 [json Selvagem Intuitiva.evitar[3]]: `Excesso de brilho artificial.`
+- Linha 1 [json Soberana Estratégica.evitar[2]]: `Excesso de casualidade.`
+- Linha 1 [json Autônoma Absoluta.evitar[3]]: `Excesso de delicadeza.`
+- Linha 1 [json Sedutora Estratégica.evitar[0]]: `Excesso de emoção visual.`
+- Linha 1 [json Musa Enigmática.evitar[3]]: `Excesso de exposição direta.`
+- Linha 1 [json Matriarca Soberana.evitar[1]]: `Excesso de funcionalidade sem beleza.`
+- Linha 1 [json Visionária Sutil.evitar[0]]: `Excesso de informação visual.`
+- Linha 1 [json Amante Nutridora.evitar[1]]: `Excesso de minimalismo frio.`
+- Linha 1 [json Cuidadora Estratégica.evitar[5]]: `Excesso de neutralidade apagada.`
+- Linha 1 [json Protetora Selvagem.evitar[1]]: `Excesso de romantismo.`
+- Linha 1 [json Guardiã Sensível.evitar[1]]: `Excesso de sensualidade explícita.`
+- Linha 1 [json Rainha Oculta.fraseHero]: `Existe em você uma força reservada, profunda e silenciosamente firme.`
+- Linha 1 [json Rainha Oculta.evitar[1]]: `Exposição direta demais.`
+- Linha 1 [json Musa Enigmática.formula]: `Fluidez + Mistério + Sensualidade velada`
+- Linha 1 [json Autônoma Absoluta.evitar[5]]: `Frieza sem presença humana.`
+- Linha 1 [json Amante Nutridora.evitar[5]]: `Funcionalidade sem beleza.`
+- Linha 1 [json key]: `Guardiã Sensível`
+- Linha 1 [json Soberana Indomável.combinacao]: `Hera + Artemis`
+- Linha 1 [json Soberana Estratégica.combinacao]: `Hera + Athena`
+- Linha 1 [json Rainha Oculta.combinacao]: `Hera + Perséfone`
+- Linha 1 [json Soberana Estratégica.evitar[3]]: `Infantilidade estética.`
+- Linha 1 [json Selvagem Magnética.formula]: `Instinto + Liberdade + Magnetismo`
+- Linha 1 [json Selvagem Intuitiva.formula]: `Intuição + Liberdade + Mistério`
+- Linha 1 [json key]: `Matriarca Soberana`
+- Linha 1 [json key]: `Musa Enigmática`
+- Linha 1 [json Soberana Estratégica.beleza]: `Na beleza, sua força aparece em acabamento, definição e controle elegante. Pele polida, olhos definidos, boca em nude sofisticado, vinho ou vermelho profundo e cabelo bem cortado e alinhado sustentam sua imagem.`
+- Linha 1 [json Matriarca Soberana.beleza]: `Na beleza, sua força aparece em cuidado visível, acabamento e maturidade feminina. Pele bem cuidada, olhos suaves mas definidos, boca em nude quente, terracota, vinho suave ou rosado queimado e cabelo bem tratado sustentam sua imagem.`
+- Linha 1 [json Cuidadora Estratégica.beleza]: `Na beleza, sua força aparece em cuidado visível, naturalidade e organização. Pele bem cuidada, olhos suaves, boca em nude natural ou terracota leve e cabelo prático, limpo e saudável sustentam sua imagem.`
+- Linha 1 [json Visionária Sutil.beleza]: `Na beleza, sua força aparece em definição sutil e acabamento limpo. Pele natural refinada, olhos profundos em tons frios ou neutros, boca discreta em malva, nude frio ou vinho suave e cabelo com forma clara sustentam sua imagem.`
+- Linha 1 [json Soberana Indomável.beleza]: `Na beleza, sua força aparece em intensidade bem posicionada. Pele natural refinada, olhos marcados, boca em nude forte, vinho, vermelho fechado ou terracota profundo e cabelo com força sustentam sua imagem.`
+- Linha 1 [json Autônoma Absoluta.beleza]: `Na beleza, sua força aparece em limpeza, definição e praticidade elegante. Pele natural refinada, olhos definidos, boca em nude limpo ou vinho discreto e cabelo com corte funcional e forma clara sustentam sua imagem.`
+- Linha 1 [json Protetora Selvagem.beleza]: `Na beleza, sua força aparece em naturalidade, saúde e instinto. Pele viva, olhos em tons terrosos, boca nude quente, terracota ou vinho queimado e cabelo com textura visível traduzem sua energia.`
+- Linha 1 [json Musa Enigmática.beleza]: `Na beleza, sua força aparece quando existe iluminação, suavidade e profundidade controlada. Pele viva e luminosa sem excesso, olhos levemente esfumados, boca hidratada em tons rosados queimados ou nude profundo e cabelo com movimento natural expressam melhor sua atmosfera. Sua beleza funciona quando deixa sensação de presença, não de esforço.`
+- Linha 1 [json Selvagem Intuitiva.beleza]: `Na beleza, sua força aparece quando existe naturalidade, textura e profundidade. Pele viva, olhos em tons de ameixa, marrom, grafite ou oliva, boca terrosa ou vinho suave e cabelo com textura visível sustentam sua imagem.`
+- Linha 1 [json Rainha Oculta.beleza]: `Na beleza, sua força aparece quando existe profundidade, acabamento e mistério. Pele acetinada, olhos profundos, boca em nude fechado, vinho, malva ou ameixa suave, e cabelo polido ou com ondas controladas sustentam essa reserva sofisticada.`
+- Linha 1 [json Selvagem Magnética.beleza]: `Na beleza, sua força aparece quando existe textura natural, pele viva e presença menos domesticada. Pele natural, olhos marcados em tons terrosos, boca em tons queimados ou vinho e cabelo com textura visível expressam melhor sua energia.`
+- Linha 1 [json Amante Nutridora.beleza]: `Na beleza, sua força aparece quando existe vida, maciez e cuidado sem rigidez. Pele viçosa e nutrida, olhos suaves, boca em tons quentes e hidratados e cabelo solto ou com movimento sustentam essa sensação de vida. Sua beleza funciona quando parece viva, próxima e sensorial.`
+- Linha 1 [json Sedutora Estratégica.beleza]: `Na beleza, você ganha força com acabamento refinado, definição sutil e intenção. Pele natural refinada, olhos definidos com delicadeza, boca nude elegante ou vinho leve e cabelo polido ou intencional. Sua beleza funciona quando parece decisão.`
+- Linha 1 [json Sedutora Estratégica.padraoRelacional]: `Nos vínculos, você observa, cria conexão com inteligência e charme, mas pode manter certo controle emocional. A abertura costuma ser gradual, porque confiança para você nasce de coerência. Você se interessa por pessoas que estimulam sua mente e respeitam sua autonomia. O risco é transformar lucidez em distância.`
+- Linha 1 [json Selvagem Intuitiva.padraoRelacional]: `Nos vínculos, você precisa de profundidade e espaço ao mesmo tempo. Relações muito superficiais podem te entediar. Relações muito controladoras podem te sufocar. Você tende a confiar aos poucos. Observa antes de se abrir. Sente antes de nomear. Quando percebe respeito pelo seu ritmo, pode mostrar uma força rara: intensa, leal, intuitiva e muito verdadeira. Mas quando sente cobrança, invasão ou expectativa excessiva, pode se afastar. Às vezes, o afastamento vem antes da conversa. A pessoa do outro lado pode achar que você não se importa, quando na verdade você está tentando se proteger de perder o próprio centro.`
+- Linha 1 [json Autônoma Absoluta.padraoRelacional]: `Nos vínculos, você precisa de respeito, espaço, inteligência e coerência. Relações dependentes, dramáticas, invasivas ou desorganizadas tendem a te afastar. O risco é manter distância demais e chamar isso de paz, quando às vezes é apenas proteção. Seu amadurecimento relacional está em permitir troca sem sentir perda de autonomia. Receber presença, cuidado ou apoio não precisa significar invasão, dívida ou dependência.`
+- Linha 1 [json Soberana Indomável.padraoRelacional]: `Nos vínculos, você precisa de respeito, espaço, lealdade e admiração real. Relações controladoras, invasivas, ambíguas ou que tentam diminuir sua autonomia não sustentam sua energia. Seu amadurecimento relacional está em permitir vínculo sem sentir que perdeu liberdade. Um vínculo maduro não pede que você se dobre. Ele cria espaço para que sua força continue inteira, mas menos sozinha.`
+- Linha 1 [json Protetora Selvagem.padraoRelacional]: `Nos vínculos, você tende a amar com lealdade, cuidado e proteção. Relações frágeis, instáveis, invasivas ou controladoras não sustentam sua energia. O risco é ocupar o lugar de protetora permanente, cuidando de todos sem permitir que alguém veja suas próprias necessidades. Você pode se tornar escudo antes de se permitir ser pessoa.`
+- Linha 1 [json Cuidadora Estratégica.padraoRelacional]: `Nos vínculos, você tende a amar por cuidado prático. Demonstra afeto por organização, conselho, cuidado cotidiano, antecipação de necessidades e suporte concreto. O risco é atrair pessoas que se apoiam na sua competência sem oferecer reciprocidade emocional. Aos poucos, o vínculo pode se organizar em torno do que você faz, e não de quem você é.`
+- Linha 1 [json Rainha Oculta.padraoRelacional]: `Nos vínculos, você tende a buscar profundidade, estabilidade e significado. Relações superficiais raramente sustentam seu interesse. O risco é esperar que o outro decifre tudo sem você precisar mostrar nada. Às vezes, o desejo de ser compreendida sem se explicar pode fazer com que suas necessidades fiquem escondidas até de quem realmente quer se aproximar. Seu amadurecimento relacional está em comunicar o que sente sem transformar abertura em perda de poder.`
+- Linha 1 [json Amante Nutridora.padraoRelacional]: `Nos vínculos, você tende a criar conexão emocional e sensorial com facilidade, se envolver de forma genuína, oferecer acolhimento, presença e cuidado, e começar a sustentar o vínculo com mais energia do que deveria. O risco é atrair pessoas que precisam ser cuidadas, salvas, organizadas, tranquilizadas ou emocionalmente alimentadas. Seu amadurecimento relacional está em permitir que o outro também cuide, ofereça e sustente.`
+- Linha 1 [json Rainha Magnética.padraoRelacional]: `Nos vínculos, você tende a encantar, criar impacto e depois buscar definição. Desejo sem lugar pode se tornar instável para você. Intensidade sem escolha pode parecer insuficiente. Você se envolve melhor quando sente admiração, reciprocidade e importância. O risco é confundir intensidade com compromisso, ser escolhida com ser amada e reconhecimento externo com segurança emocional.`
+- Linha 1 [json Visionária Sutil.padraoRelacional]: `Nos vínculos, você tende a observar antes de confiar. Seu afeto se abre quando percebe coerência, inteligência emocional, segurança e respeito ao seu tempo interno. O risco é interpretar mais do que comunicar. Você pode perceber algo real, mas ainda assim precisar perguntar, ouvir e deixar o outro se revelar no próprio tempo. Seu amadurecimento relacional está em transformar percepção em diálogo.`
+- Linha 1 [json Selvagem Magnética.padraoRelacional]: `Nos vínculos, você tende a se aproximar quando existe admiração, desejo e espaço. Relações sufocantes, controladoras ou previsíveis demais drenam sua energia rapidamente. O risco é confundir qualquer demanda afetiva com controle. Nem toda aproximação quer te prender. Nem todo pedido quer te diminuir. Nem todo vínculo precisa roubar seu movimento. Seu amadurecimento relacional está em diferenciar invasão de cuidado, prisão de compromisso e autonomia de fuga.`
+- Linha 1 [json Guardiã Sensível.padraoRelacional]: `Nos vínculos, você tende a seguir um fluxo muito claro: percebe profundamente o outro, cria conexão emocional com rapidez, se envolve pelo cuidado e sustenta o vínculo com cuidado afetivo. Você ama por acolhimento. Cria vínculo por empatia. Oferece amor por cuidado real. Isso torna suas relações muito intensas em profundidade, mesmo quando não parecem intensas por fora. O principal risco é atrair relações em que você ocupa o lugar de porto seguro, base emocional ou sustentação afetiva, mas sem necessariamente ser reconhecida, escolhida ou nutrida na mesma medida. Você pode acabar sendo essencial para o equilíbrio do outro, mas não para a reciprocidade da relação. A pergunta que amadurece essa combinação é: eu estou cuidando porque escolhi, ou porque sinto que preciso ser necessária para continuar pertencendo?`
+- Linha 1 [json Soberana Estratégica.padraoRelacional]: `Nos vínculos, você tende a valorizar clareza, compromisso, lealdade e coerência. Relações ambíguas, desorganizadas ou emocionalmente instáveis podem te cansar rapidamente. O risco é tentar organizar o vínculo como um sistema. Você pode querer clareza antes da hora, resposta antes do processo e coerência antes que o outro consiga elaborar o que sente.`
+- Linha 1 [json Matriarca Soberana.padraoRelacional]: `Nos vínculos, você tende a valorizar compromisso, lealdade, estabilidade e reciprocidade real. Você ama sustentando. Demonstra afeto por cuidado, constância, proteção, organização e permanência. O risco é ocupar o lugar de base sem permitir que o outro também sustente. Aos poucos, você pode virar casa para todo mundo e ficar sem lugar para descansar dentro da própria relação.`
+- Linha 1 [json Musa Enigmática.padraoRelacional]: `Nos vínculos, você tende a viver conexão como experiência transformadora. Relações raramente são apenas convivência para você. Elas tocam pontos internos importantes e podem despertar percepção, desejo, fantasia, medo, cuidado ou recolhimento. O desafio é diferenciar conexão real de absorção emocional. Nem toda intensidade é intimidade. Nem todo fascínio é destino. Nem toda percepção profunda precisa virar entrega. Sua maturidade relacional nasce quando você consegue permanecer sensível sem se tornar permeável demais.`
+- Linha 1 [json Guardiã Sensível.tecidos]: `Os melhores tecidos para sua composição são aqueles que carregam toque afetivo. Algodão, viscose, linho suavizado, malhas confortáveis, tricôs leves, tecidos macios ao toque, materiais com aparência natural, crepe fluido e texturas orgânicas tendem a conversar melhor com sua energia. Sua roupa deve parecer acolhedora, tátil, confortável, suave e emocionalmente segura.`
+- Linha 1 [json Musa Enigmática.tecidos]: `Os tecidos que melhor expressam essa composição são aqueles que criam movimento silencioso e sensação tátil: seda, cetim fosco, chiffon, crepe leve, tule sutil, malhas fluidas, viscose leve e texturas translúcidas ou enevoadas. Tecidos muito duros podem endurecer sua delicadeza. Tecidos excessivamente brilhantes podem tornar sua sensualidade óbvia demais.`
+- Linha 1 [json Selvagem Magnética.evitar[3]]: `Perfeccionismo visual excessivo.`
+- Linha 1 [json Selvagem Intuitiva.combinacao]: `Perséfone + Artemis`
+- Linha 1 [json Visionária Sutil.combinacao]: `Perséfone + Athena`
+- Linha 1 [json Guardiã Sensível.combinacao]: `Perséfone + Deméter`
+- Linha 1 [json Musa Enigmática.evitar[4]]: `Peças infantis ou doces demais.`
+- Linha 1 [json Autônoma Absoluta.evitar[2]]: `Peças muito ornamentais.`
+- Linha 1 [json Guardiã Sensível.evitar[5]]: `Peças que comunicam fragilidade sem centro.`
+- Linha 1 [json Selvagem Intuitiva.evitar[5]]: `Peças que prendem o movimento.`
+- Linha 1 [json Rainha Magnética.evitar[5]]: `Peças sem intenção visual.`
+- Linha 1 [json Selvagem Magnética.dinamica]: `Por dentro, você alterna entre conexão e afastamento. Afrodite cria desejo e atração. Artemis preserva autonomia, território e espaço interno. Você pode se aproximar com intensidade e depois precisar de espaço. Pode desejar vínculo, mas rejeitar qualquer sensação de sufocamento. Às vezes, o desejo vem junto com uma pergunta silenciosa: posso permanecer sem ser capturada? O desafio é não transformar liberdade em desaparecimento.`
+- Linha 1 [json Rainha Oculta.dinamica]: `Por dentro, você alterna entre presença e recolhimento. Hera deseja lugar, escolha, reconhecimento e pertencimento legítimo. Perséfone observa, sente, preserva e só se mostra quando percebe segurança. Você pode querer ser vista, mas se fechar quando sente que o olhar é superficial. O olhar certo aproxima. O olhar invasivo faz você recolher. Por isso, sua abertura costuma depender menos de intensidade e mais de segurança. O desafio é não transformar proteção em desaparecimento.`
+- Linha 1 [json Selvagem Intuitiva.dinamica]: `Por dentro, você alterna entre recolhimento e movimento. Perséfone observa, sente, mergulha e processa. Artemis se desloca, preserva espaço e busca liberdade. Por isso, você pode parecer contraditória para quem tenta te entender de fora. Há momentos em que você quer conexão profunda, mas não suporta invasão. Quer ser vista, mas não exposta. Quer intimidade, mas não dependência. Quer estar presente, mas não controlada. Sua energia funciona melhor quando existe espaço para sentir antes de responder. Quando você é pressionada, explicada, cobrada ou puxada para uma definição rápida, sua tendência pode ser se fechar, fugir ou endurecer. Não porque você não sente, mas porque sente demais e precisa continuar dona do próprio território.`
+- Linha 1 [json Sedutora Estratégica.dinamica]: `Por dentro, você observa antes de agir. Athena lê o cenário; Afrodite cria atração. Primeiro você entende o campo, depois decide como entrar nele. Isso gera uma sedução sutil, inteligente e pouco óbvia. Você pode atrair mais pela forma como sustenta o olhar, escolhe palavras, organiza a estética e controla a dose de aproximação do que por exposição direta. O risco é que a mente assuma comando total.`
+- Linha 1 [json Autônoma Absoluta.dinamica]: `Por dentro, você segue uma lógica de leitura, decisão e movimento. Primeiro entende o cenário. Depois escolhe a rota. Só então se entrega à ação. Athena observa, analisa e organiza. Artemis age, preserva espaço e segue direção própria. Você tende a confiar mais em consistência do que em promessa, mais em gesto concreto do que em discurso, mais em liberdade real do que em pertencimento que cobra adaptação. O risco é transformar independência em blindagem. Sua maturidade está em entender que autonomia não precisa significar isolamento.`
+- Linha 1 [json Guardiã Sensível.dinamica]: `Por dentro, você segue uma lógica muito específica: Perséfone percebe profundamente; Deméter responde cuidando. Primeiro você sente. Depois acolhe. Primeiro capta. Depois tenta reparar, proteger, suavizar ou sustentar. Essa é uma estrutura interna muito bonita, porque une empatia e presença. Mas também é uma configuração que pede maturidade emocional, justamente porque você tende a se envolver com facilidade na dor, na necessidade e na vulnerabilidade do outro. Quando essa dinâmica está consciente, você oferece cuidado sem se abandonar. Quando está automática, pode confundir amor com função, cuidado com obrigação e vínculo com responsabilidade emocional.`
+- Linha 1 [json Protetora Selvagem.dinamica]: `Por dentro, você tende a alternar entre acolher e preservar seu espaço. Deméter aproxima, cuida e sustenta. Artemis observa limites, protege seu espaço e recusa invasão. O risco é transformar proteção em controle ou liberdade em afastamento. Quando algo toca sua vulnerabilidade, você pode reagir primeiro com força, antes de admitir que aquilo te afetou. Por trás da defesa, muitas vezes existe cuidado. Por trás do limite, existe algo que você não quer ver sendo machucado. Sua maturidade está em cuidar sem controlar e preservar seu espaço sem se isolar.`
+- Linha 1 [json Soberana Indomável.dinamica]: `Por dentro, você tende a alternar entre ocupar seu lugar e preservar sua liberdade. Hera quer lugar, compromisso e reconhecimento. Artemis quer autonomia, movimento e liberdade. O desafio é não transformar toda demanda em ameaça à sua liberdade. Quando você já precisou lutar muito para preservar seu espaço, qualquer tentativa de aproximação pode parecer controle antes mesmo de ser cuidado. Às vezes, a defesa chega antes da escuta. Sua maturidade está em diferenciar compromisso de prisão, reconhecimento de controle e vínculo de perda de liberdade.`
+- Linha 1 [json Soberana Estratégica.dinamica]: `Por dentro, você tende a avaliar seu lugar, ler o contexto, organizar estratégia e sustentar autoridade. Hera busca reconhecimento e lugar. Athena analisa como esse lugar pode ser ocupado com precisão. O risco é transformar tudo em controle. Quando isso acontece, você pode começar a confiar mais na estratégia do que na relação, mais na postura do que na vulnerabilidade, mais na precisão do que no afeto. Sua maturidade está em sustentar autoridade sem perder humanidade.`
+- Linha 1 [json Matriarca Soberana.dinamica]: `Por dentro, você tende a cuidar, sustentar, organizar vínculos e desejar reconhecimento. Deméter oferece cuidado. Hera busca legitimidade. Você pode segurar o entorno, organizar demandas e se tornar referência de estabilidade. O risco é transformar cuidado em cobrança silenciosa. Quando você sustenta demais sem ser vista, o afeto pode virar expectativa, e a expectativa pode virar ressentimento. Você pode esperar que o outro reconheça espontaneamente tudo o que você carregou em silêncio.`
+- Linha 1 [json Amante Nutridora.dinamica]: `Por dentro, você tende a seguir este movimento: primeiro se conecta, depois acolhe, depois nutre e, muitas vezes, passa a sustentar emocionalmente aquilo que começou como troca. Afrodite abre. Deméter aprofunda. Afrodite cria ponte. Deméter constrói permanência. O desafio é perceber quando sua disponibilidade deixa de ser troca e vira função.`
+- Linha 1 [json Cuidadora Estratégica.dinamica]: `Por dentro, você tende a seguir o fluxo: perceber necessidade, analisar cenário, organizar resposta. Deméter percebe a demanda afetiva. Athena estrutura a ação. O risco é transformar cuidado em gestão permanente. Quando isso acontece, você pode começar a se sentir responsável por tudo o que poderia funcionar melhor. A mente tenta organizar o que o afeto não quer ver desmoronar. Sua maturidade está em diferenciar suporte de controle, cuidado de responsabilidade total e cuidado de sobrecarga.`
+- Linha 1 [json Guardiã Sensível.formula]: `Profundidade + Acolhimento + Limite`
+- Linha 1 [json Visionária Sutil.formula]: `Profundidade + Clareza + Sutileza`
+- Linha 1 [json Rainha Oculta.formula]: `Profundidade + Dignidade + Mistério`
+- Linha 1 [json key]: `Protetora Selvagem`
+- Linha 1 [json Protetora Selvagem.formula]: `Proteção + Instinto + Acolhimento`
+- Linha 1 [json key]: `Rainha Magnética`
+- Linha 1 [json key]: `Rainha Oculta`
+- Linha 1 [json Rainha Oculta.evitar[4]]: `Rigidez emocional traduzida em roupa dura demais.`
+- Linha 1 [json Soberana Estratégica.evitar[5]]: `Rigidez extrema.`
+- Linha 1 [json Sedutora Estratégica.evitar[5]]: `Rigidez fria demais.`
+- Linha 1 [json Soberana Indomável.evitar[5]]: `Rigidez sem movimento.`
+- Linha 1 [json Matriarca Soberana.evitar[3]]: `Rigidez severa.`
+- Linha 1 [json Cuidadora Estratégica.evitar[3]]: `Rigidez visual demais.`
+- Linha 1 [json Visionária Sutil.evitar[2]]: `Romantismo exagerado.`
+- Linha 1 [json Sedutora Estratégica.evitar[4]]: `Romantismo excessivo.`
+- Linha 1 [json Rainha Magnética.evitar[1]]: `Roupa com aparência desleixada.`
+- Linha 1 [json Selvagem Intuitiva.evitar[2]]: `Roupa rígida demais.`
+- Linha 1 [json Amante Nutridora.evitar[2]]: `Roupa seca, dura ou sem calor.`
+- Linha 1 [json Selvagem Magnética.evitar[1]]: `Roupas delicadas demais.`
+- Linha 1 [json Autônoma Absoluta.evitar[4]]: `Roupas desconfortáveis.`
+- Linha 1 [json Guardiã Sensível.evitar[3]]: `Roupas duras sem movimento.`
+- Linha 1 [json Soberana Indomável.evitar[2]]: `Roupas frágeis.`
+- Linha 1 [json Musa Enigmática.evitar[0]]: `Roupas muito estruturadas, que endurecem sua fluidez.`
+- Linha 1 [json Selvagem Magnética.evitar[5]]: `Roupas que impedem movimento.`
+- Linha 1 [json Cuidadora Estratégica.evitar[2]]: `Roupas sem beleza.`
+- Linha 1 [json Sedutora Estratégica.evitar[2]]: `Roupas sem estrutura ou intenção.`
+- Linha 1 [json Matriarca Soberana.evitar[4]]: `Roupas sem estrutura.`
+- Linha 1 [json key]: `Sedutora Estratégica`
+- Linha 1 [json key]: `Selvagem Intuitiva`
+- Linha 1 [json key]: `Selvagem Magnética`
+- Linha 1 [json Soberana Estratégica.evitar[4]]: `Sensualidade exagerada.`
+- Linha 1 [json Musa Enigmática.evitar[2]]: `Sensualidade explícita demais.`
+- Linha 1 [json Rainha Oculta.evitar[2]]: `Sensualidade vulgar.`
+- Linha 1 [json Musa Enigmática.proximoPasso]: `Seu Código das Deusas revelou a força que organiza sua imagem por dentro. Para preparar o Dossiê ORI, envie fotos com boa luz, rosto limpo, sem maquiagem, e uma roupa neutra mais ajustada ao corpo. Essas imagens ajudam a próxima leitura a observar sua presença real sem interferências: corpo, coloração, cabelo, textura, proporção, contraste e direção estética aplicada. O Dossiê ORI mostra como essa força aparece na prática: corpo, rosto, cores, cabelo, beleza e presença. É a próxima etapa para transformar leitura em imagem real.`
+- Linha 1 [json Selvagem Magnética.caminho]: `Seu caminho está em descobrir que liberdade e vínculo não precisam ser opostos. Você não precisa desaparecer para continuar sendo você. Afrodite consciente permite desejo e conexão sem transformar atração em dependência. Artemis consciente sustenta autonomia sem transformar independência em isolamento. Sua síntese é pertencer a si mesma sem precisar negar toda aproximação.`
+- Linha 1 [json Rainha Magnética.caminho]: `Seu caminho está em desejar sem depender e se comprometer sem controlar. Afrodite consciente permite prazer, beleza e magnetismo como expressão. Hera consciente sustenta dignidade, vínculo e posição sem transformar amor em disputa por legitimidade. Sua síntese é ser desejada sem se medir por isso, ser escolhida sem precisar se provar e ocupar lugar sem guerrear por legitimidade.`
+- Linha 1 [json Protetora Selvagem.caminho]: `Seu caminho está em integrar cuidado e liberdade sem transformar um no oposto do outro. Deméter consciente cuida sem carregar. Artemis consciente preserva território sem fugir. Sua síntese é cuidar com limite, proteger sem controlar e amar sem perder território. Seu caminho é descobrir que baixar a guarda com quem respeita sua força não te torna menos segura. Torna sua proteção menos solitária.`
+- Linha 1 [json Soberana Indomável.caminho]: `Seu caminho está em integrar dignidade e liberdade sem transformar uma em defesa da outra. Hera consciente ocupa lugar com dignidade. Artemis consciente preserva autonomia sem fugir. Sua síntese é ocupar lugar sem se aprisionar, amar sem se submeter e ser livre sem se fechar. Seu caminho é perceber que flexibilidade também pode ser poder quando nasce da escolha, não da submissão.`
+- Linha 1 [json Autônoma Absoluta.caminho]: `Seu caminho está em integrar força e capacidade de receber. Não para diminuir sua autonomia, mas para deixar sua força menos solitária. Athena consciente oferece lucidez, estratégia e visão. Artemis consciente oferece liberdade, território e movimento. A Autônoma Absoluta amadurece quando entende que independência não precisa excluir apoio, vínculo ou ternura.`
+- Linha 1 [json Visionária Sutil.caminho]: `Seu caminho está em integrar intuição e razão sem se esconder atrás de nenhuma das duas. Perséfone consciente permite sentir profundamente sem se dissolver. Athena consciente permite compreender sem controlar tudo. Sua síntese é perceber sem se perder, analisar sem se desconectar e compreender sem abandonar a experiência viva.`
+- Linha 1 [json Sedutora Estratégica.caminho]: `Seu caminho está em permitir sentir sem analisar tudo e usar sua inteligência sem bloquear a emoção. Athena consciente oferece discernimento, clareza, estratégia e escolha. Afrodite consciente oferece prazer, magnetismo e corpo vivo. A Sedutora Estratégica amadurece quando entende que vulnerabilidade não é falta de inteligência.`
+- Linha 1 [json Soberana Estratégica.caminho]: `Seu caminho está em sustentar autoridade sem virar rigidez. Hera consciente ocupa lugar com dignidade. Athena consciente cria clareza, estratégia e escolha sem precisar controlar cada movimento. Sua síntese é ocupar lugar sem endurecer, liderar sem controlar e manter lucidez sem se afastar do afeto. Sua força não diminui quando você escuta, quando revê uma rota ou quando permite que alguém se aproxime sem precisar ser conduzido.`
+- Linha 1 [json Matriarca Soberana.caminho]: `Seu caminho está em transformar cuidado em escolha e autoridade em segurança, não em peso. Deméter consciente nutre sem carregar. Hera consciente ocupa lugar sem depender de validação externa. Sua síntese é cuidar sem se sacrificar, ocupar lugar sem controlar e sustentar vínculos sem se tornar invisível dentro deles. Seu caminho é permitir que sua força seja reconhecida sem que você precise carregar mais do que deveria para merecer esse reconhecimento.`
+- Linha 1 [json Cuidadora Estratégica.caminho]: `Seu caminho está em transformar cuidado em escolha, não em função automática. Deméter consciente cuida sem carregar. Athena consciente organiza sem controlar. A Cuidadora Estratégica amadurece quando entende que sua utilidade não é a medida do seu valor. Você pode ser amada mesmo quando não resolve, não orienta, não antecipa e não sustenta tudo.`
+- Linha 1 [json Selvagem Intuitiva.caminho]: `Seu caminho está em transformar fuga em escolha consciente. A Artemis madura sabe preservar liberdade sem precisar cortar tudo. A Perséfone madura sabe mergulhar sem desaparecer dentro do próprio mundo interno. Quando essas duas forças se integram, você deixa de viver entre se esconder e fugir. Sua evolução começa quando você entende que pode permanecer sem se entregar inteira. Pode criar vínculo sem se abandonar. Pode ser profunda sem ficar inacessível. Pode ser livre sem viver em estado de defesa.`
+- Linha 1 [json Musa Enigmática.caminho]: `Seu caminho está em transformar magnetismo em escolha, não em necessidade. E transformar sensibilidade em consciência, não em dissolução. Afrodite consciente permite prazer, beleza e desejo sem depender de validação. Perséfone consciente permite profundidade, recolhimento e intuição sem desaparecer no mundo interno. Sua síntese é: mostrar partes de si sem se entregar inteira. Atrair sem se moldar. Sentir profundamente sem se perder no que sente.`
+- Linha 1 [json Rainha Oculta.caminho]: `Seu caminho está em transformar reserva em presença escolhida, não em defesa. Hera consciente sustenta dignidade sem depender de reconhecimento externo. Perséfone consciente preserva profundidade sem desaparecer dentro dela. Sua síntese é mostrar com critério, não se esconder por medo.`
+- Linha 1 [json Guardiã Sensível.caminho]: `Seu crescimento não está em deixar de sentir nem em deixar de cuidar. Está em transformar essas qualidades em escolha consciente, e não em automatismo emocional. Perséfone consciente sente sem se dissolver, percebe sem absorver tudo e acolhe a profundidade sem desaparecer nela. Deméter consciente cuida sem carregar, ama sem assumir tudo e oferece cuidado sem se abandonar. A síntese do seu caminho é estar presente sem se perder. Cuidar sem se abandonar. Esse é o ponto de maturidade da Guardiã Sensível: continuar sendo acolhedora, mas com centro. Continuar sendo profunda, mas com limite. Continuar amando, mas sem transformar amor em sobrecarga.`
+- Linha 1 [json Amante Nutridora.caminho]: `Seu crescimento não está em endurecer, deixar de amar ou abandonar sua natureza acolhedora. Seu caminho está em refinar a consciência dessas duas forças. Afrodite consciente recebe prazer sem culpa e sustenta o próprio desejo. Deméter consciente cuida sem carregar e ama sem se responsabilizar por tudo. Sua síntese é amar sem se sacrificar, nutrir sem se apagar e acolher sem transformar o outro em centro.`
+- Linha 1 [json Musa Enigmática.dinamica]: `Seu funcionamento interno segue uma lógica sensível: primeiro você sente, depois entende. Primeiro capta o clima, o olhar, a intenção, o silêncio. Depois tenta organizar internamente o que aquilo provocou em você. Afrodite quer contato, beleza, desejo e troca. Perséfone quer profundidade, segurança emocional e leitura do invisível. Por isso, você pode se envolver com atmosferas, pessoas e situações antes mesmo de conseguir nomear o que está acontecendo. Sua maturidade começa quando você aprende a diferenciar sensibilidade de dissolução.`
+- Linha 1 [json Rainha Magnética.dinamica]: `Seu funcionamento interno tende a seguir um fluxo: primeiro você atrai, depois observa se existe lugar. Primeiro Afrodite cria campo, encanto e resposta. Depois Hera avalia se existe escolha, prioridade, reconhecimento e consistência. O desafio aparece quando o olhar externo começa a definir sua medida de valor. Você pode medir sinais, comparar, buscar confirmação ou sentir que perde força quando não é reconhecida como gostaria.`
+- Linha 1 [json Sedutora Estratégica.tecidos]: `Seus tecidos precisam sustentar clareza, caimento e sofisticação: alfaiataria premium, seda, crepe, cetim fosco, viscose encorpada, lã fria, couro liso ou detalhes pontuais e tecidos com superfície limpa.`
+- Linha 1 [json key]: `Soberana Estratégica`
+- Linha 1 [json key]: `Soberana Indomável`
+- Linha 1 [json Soberana Indomável.formula]: `Soberania + Liberdade + Força`
+- Linha 1 [json Guardiã Sensível.beleza]: `Sua beleza funciona melhor quando preserva naturalidade e humanidade. Pele leve, viçosa, natural e fresca sustenta sua imagem sem criar máscara. Nos olhos, funciona melhor uma definição suave, pouco marcada, que preserve delicadeza. Na boca, tons hidratados, leves e com aspecto natural conversam melhor com sua energia. O cabelo tende a favorecer movimento, naturalidade, textura orgânica e ausência de rigidez excessiva. A sensação final deve ser real, acessível, segura e gentil.`
+- Linha 1 [json Musa Enigmática.paleta]: `Sua direção cromática pede tons emocionais, profundos e levemente enevoados. Base Perséfone: lavanda, cinza suave, azul acinzentado, lilás profundo, off-white frio, tons de névoa e ameixa suave. Toque Afrodite: vinho, rosa queimado, rosé profundo, dourado suave, nude frio, malva e brilho perolado discreto. Sua cor não deve gritar. Ela deve criar atmosfera.`
+- Linha 1 [json Sedutora Estratégica.presenca]: `Sua forma de chegar se fortalece com movimento contido, eficiente, postura segura e olhar observador. Você transmite consciência antes mesmo de falar. O cuidado é não deixar sua linguagem corporal excessivamente controlada. Sua imagem precisa preservar magnetismo, não virar apenas estratégia.`
+- Linha 1 [json Selvagem Magnética.presenca]: `Sua forma de chegar se fortalece com movimento firme, olhar direto e energia de quem ocupa o próprio espaço sem pedir validação. Você não precisa parecer dócil para ser feminina. Sua feminilidade tem força, instinto e liberdade.`
+- Linha 1 [json Protetora Selvagem.presenca]: `Sua forma de chegar se fortalece com movimento firme, postura natural e energia de proteção tranquila. Sua linguagem corporal ideal transmite: eu acolho, mas tenho limite. O cuidado é não deixar a defesa dominar sua expressão.`
+- Linha 1 [json Cuidadora Estratégica.presenca]: `Sua forma de chegar se fortalece com postura calma, gestos organizados e ritmo estável. O cuidado é não deixar seu cuidado virar função. Você não precisa parecer sempre pronta para ajudar. Também pode apenas existir, receber e ser cuidada.`
+- Linha 1 [json Visionária Sutil.presenca]: `Sua forma de chegar se fortalece com postura calma, olhar atento e ritmo contido. Seu silêncio pode ter força, desde que não vire retraimento. Você ganha força quando mostra que percebe, mas também participa.`
+- Linha 1 [json Soberana Estratégica.presenca]: `Sua forma de chegar se fortalece com postura ereta, ritmo calmo, olhar direto e fala precisa. Sua linguagem corporal ideal transmite: eu sei onde estou, mas não preciso endurecer para ocupar esse lugar.`
+- Linha 1 [json Soberana Indomável.presenca]: `Sua forma de chegar se fortalece com postura firme, movimento decidido e olhar direto. Sua linguagem corporal ideal comunica: eu sei meu lugar, mas continuo livre. O cuidado é não usar força como barreira permanente.`
+- Linha 1 [json Autônoma Absoluta.presenca]: `Sua forma de chegar se fortalece com postura firme, movimento objetivo e energia de quem sabe onde está indo. Sua linguagem corporal ideal comunica: eu tenho eixo, mas não preciso viver fechada.`
+- Linha 1 [json Rainha Oculta.presenca]: `Sua forma de chegar se fortalece com ritmo mais lento, postura digna e olhar que observa sem pressa. Você comunica muito pela pausa, pela contenção e pela forma como escolhe se mostrar. O cuidado é não usar a reserva para desaparecer.`
+- Linha 1 [json Selvagem Intuitiva.presenca]: `Sua forma de chegar se fortalece com ritmo próprio, olhar atento e corpo que preserva território. Sua linguagem corporal ideal comunica: eu estou aqui, mas continuo pertencendo a mim. O cuidado é não usar o distanciamento como única forma de proteção.`
+- Linha 1 [json Matriarca Soberana.leituraFinal]: `Sua força está em criar base, sustentar vínculos e oferecer cuidado real. Mas sua evolução começa quando você entende que sustentar não pode significar se apagar. Sua beleza se aprofunda quando a mulher que cuida também ocupa lugar, recebe cuidado e deixa de ser apenas a estrutura que mantém tudo de pé. A Matriarca Soberana amadurece quando cuidado deixa de ser sobrecarga e dignidade deixa de depender do reconhecimento externo. Sua beleza ganha força quando Deméter e Hera se integram: acolher sem se diminuir, sustentar sem carregar tudo, ocupar lugar sem endurecer. Seu Código das Deusas revelou a força que organiza sua imagem por dentro. Para preparar o Dossiê ORI, envie fotos com boa luz, rosto limpo, sem maquiagem, e uma roupa neutra mais ajustada ao corpo. Essas imagens ajudam a próxima leitura a observar sua presença real sem interferências: corpo, coloração, cabelo, textura, proporção, contraste e direção estética aplicada. O Dossiê ORI mostra como essa força aparece na prática: corpo, rosto, cores, cabelo, beleza e presença. É a próxima etapa para transformar leitura em imagem real.`
+- Linha 1 [json Protetora Selvagem.leituraFinal]: `Sua força está em cuidar com verdade e proteger com instinto. Você não ama de forma frágil. Ama com corpo, limite e lealdade. Mas sua beleza se aprofunda quando essa força deixa de ser apenas defesa e passa a ser presença inteira: firme, viva, afetiva e disponível para também receber cuidado. A Protetora Selvagem amadurece quando entende que proteção não precisa virar controle, e liberdade não precisa virar isolamento. Sua beleza ganha força quando Deméter e Artemis se integram: acolhimento com limite, cuidado com autonomia, força com calor. Seu Código das Deusas revelou a força que organiza sua imagem por dentro. Para preparar o Dossiê ORI, envie fotos com boa luz, rosto limpo, sem maquiagem, e uma roupa neutra mais ajustada ao corpo. Essas imagens ajudam a próxima leitura a observar sua presença real sem interferências: corpo, coloração, cabelo, textura, proporção, contraste e direção estética aplicada. O Dossiê ORI mostra como essa força aparece na prática: corpo, rosto, cores, cabelo, beleza e presença. É a próxima etapa para transformar leitura em imagem real.`
+- Linha 1 [json Visionária Sutil.leituraFinal]: `Sua força está em enxergar o que muitos não percebem e organizar essa percepção com lucidez. Mas sua beleza se aprofunda quando essa lucidez não te afasta da experiência viva: sentir, perguntar, confiar e deixar que a vida também responda. A Visionária Sutil amadurece quando entende que não precisa escolher entre sentir e pensar. Sua beleza ganha força quando Perséfone e Athena se integram: profundidade sem confusão, inteligência sem frieza, silêncio sem apagamento. Seu Código das Deusas revelou a força que organiza sua imagem por dentro. Para preparar o Dossiê ORI, envie fotos com boa luz, rosto limpo, sem maquiagem, e uma roupa neutra mais ajustada ao corpo. Essas imagens ajudam a próxima leitura a observar sua presença real sem interferências: corpo, coloração, cabelo, textura, proporção, contraste e direção estética aplicada. O Dossiê ORI mostra como essa força aparece na prática: corpo, rosto, cores, cabelo, beleza e presença. É a próxima etapa para transformar leitura em imagem real.`
+- Linha 1 [json Soberana Indomável.leituraFinal]: `Sua força está em ocupar lugar sem pedir permissão e preservar sua liberdade sem negociar sua dignidade. Mas sua beleza se aprofunda quando essa liberdade deixa de ser apenas defesa e passa a ser presença viva: firme, aberta, inteira e impossível de diminuir. A Soberana Indomável amadurece quando entende que não precisa viver em defesa para continuar forte. Sua beleza ganha força quando Hera e Artemis se integram: posição com autonomia, vínculo com território, autoridade com movimento. Seu Código das Deusas revelou a força que organiza sua imagem por dentro. Para preparar o Dossiê ORI, envie fotos com boa luz, rosto limpo, sem maquiagem, e uma roupa neutra mais ajustada ao corpo. Essas imagens ajudam a próxima leitura a observar sua presença real sem interferências: corpo, coloração, cabelo, textura, proporção, contraste e direção estética aplicada. O Dossiê ORI mostra como essa força aparece na prática: corpo, rosto, cores, cabelo, beleza e presença. É a próxima etapa para transformar leitura em imagem real.`
+- Linha 1 [json Cuidadora Estratégica.leituraFinal]: `Sua força está em transformar cuidado em estrutura e suporte real. Mas sua beleza se aprofunda quando esse cuidado deixa de ser função e volta a ser escolha. A Cuidadora Estratégica amadurece quando entende que não precisa ser indispensável para ter valor. Sua beleza ganha força quando Deméter e Athena se integram: acolhimento com clareza, suporte com limite, inteligência com humanidade. Seu Código das Deusas revelou a força que organiza sua imagem por dentro. Para preparar o Dossiê ORI, envie fotos com boa luz, rosto limpo, sem maquiagem, e uma roupa neutra mais ajustada ao corpo. Essas imagens ajudam a próxima leitura a observar sua presença real sem interferências: corpo, coloração, cabelo, textura, proporção, contraste e direção estética aplicada. O Dossiê ORI mostra como essa força aparece na prática: corpo, rosto, cores, cabelo, beleza e presença. É a próxima etapa para transformar leitura em imagem real.`
+- Linha 1 [json Soberana Estratégica.leituraFinal]: `Sua força está em unir posição e lucidez. Você sabe perceber contexto, construir respeito e sustentar autoridade com inteligência. Mas sua beleza se aprofunda quando essa autoridade deixa espaço para calor, escuta e presença real. A Soberana Estratégica amadurece quando entende que não precisa controlar tudo para ter valor. Sua beleza ganha força quando Hera e Athena se integram: dignidade com clareza, liderança com humanidade, estrutura com presença viva. Seu Código das Deusas revelou a força que organiza sua imagem por dentro. Para preparar o Dossiê ORI, envie fotos com boa luz, rosto limpo, sem maquiagem, e uma roupa neutra mais ajustada ao corpo. Essas imagens ajudam a próxima leitura a observar sua presença real sem interferências: corpo, coloração, cabelo, textura, proporção, contraste e direção estética aplicada. O Dossiê ORI mostra como essa força aparece na prática: corpo, rosto, cores, cabelo, beleza e presença. É a próxima etapa para transformar leitura em imagem real.`
+- Linha 1 [json Autônoma Absoluta.leituraFinal]: `Sua força está na lucidez com que escolhe, na autonomia com que se move e na capacidade de preservar seu eixo mesmo diante de pressões externas. Mas sua beleza se aprofunda quando essa força não precisa mais provar que aguenta tudo sozinha. A Autônoma Absoluta amadurece quando entende que não precisa provar força negando cuidado, vínculo ou apoio. Sua beleza ganha força quando Athena e Artemis se integram: inteligência com liberdade, direção com instinto, independência com vida. Seu Código das Deusas revelou a força que organiza sua imagem por dentro. Para preparar o Dossiê ORI, envie fotos com boa luz, rosto limpo, sem maquiagem, e uma roupa neutra mais ajustada ao corpo. Essas imagens ajudam a próxima leitura a observar sua presença real sem interferências: corpo, coloração, cabelo, textura, proporção, contraste e direção estética aplicada. O Dossiê ORI mostra como essa força aparece na prática: corpo, rosto, cores, cabelo, beleza e presença. É a próxima etapa para transformar leitura em imagem real.`
+- Linha 1 [json Guardiã Sensível.fraseHero]: `Sua força está na profundidade com que sente e na delicadeza com que acolhe.`
+- Linha 1 [json Autônoma Absoluta.fraseHero]: `Sua força nasce da lucidez, da autonomia e da recusa em viver sem direção própria.`
+- Linha 1 [json Selvagem Intuitiva.leituraFinal]: `Sua força nasce da união entre mundo interno e instinto. Você sente profundamente, mas precisa continuar livre. A Selvagem Intuitiva amadurece quando entende que liberdade não precisa ser fuga e profundidade não precisa ser isolamento. Sua beleza ganha força na integração entre silêncio e movimento: misteriosa sem desaparecer, livre sem se desconectar, sensível sem se deixar capturar. A sua imagem começa a funcionar quando ela deixa de tentar explicar você e passa a proteger o seu ritmo. Quando roupa, cor, textura e beleza respeitam sua necessidade de espaço, sua força aparece sem esforço. Você não precisa parecer mais acessível para ser bonita. Precisa parecer mais fiel ao seu próprio território. Seu Código das Deusas revelou a força que organiza sua imagem por dentro. Para preparar o Dossiê ORI, envie fotos com boa luz, rosto limpo, sem maquiagem, e uma roupa neutra mais ajustada ao corpo. Essas imagens ajudam a próxima leitura a observar sua presença real sem interferências: corpo, coloração, cabelo, textura, proporção, contraste e direção estética aplicada. O Dossiê ORI mostra como essa força aparece na prática: corpo, rosto, cores, cabelo, beleza e presença. É a próxima etapa para transformar leitura em imagem real.`
+- Linha 1 [json Rainha Magnética.leituraFinal]: `Sua força não está apenas em ser admirada. Está em sustentar uma presença que une desejo e dignidade. A Rainha Magnética amadurece quando para de buscar a coroa no olhar externo e começa a sustentá-la por dentro. Sua beleza ganha força quando Afrodite e Hera deixam de disputar espaço: quando prazer não compromete dignidade, e dignidade não sufoca prazer. Você não precisa provar valor para ser tratada com valor. Seu Código das Deusas revelou a força que organiza sua imagem por dentro. Para preparar o Dossiê ORI, envie fotos com boa luz, rosto limpo, sem maquiagem, e uma roupa neutra mais ajustada ao corpo. Essas imagens ajudam a próxima leitura a observar sua presença real sem interferências: corpo, coloração, cabelo, textura, proporção, contraste e direção estética aplicada. O Dossiê ORI mostra como essa força aparece na prática: corpo, rosto, cores, cabelo, beleza e presença. É a próxima etapa para transformar leitura em imagem real.`
+- Linha 1 [json Guardiã Sensível.leituraFinal]: `Sua força não está em dominar o ambiente. Não está em impressionar. Não está em ocupar tudo. Sua força está em algo mais raro: perceber, acolher e sustentar. Mas o verdadeiro equilíbrio da sua força só acontece quando esse cuidado deixa de ser um lugar de autoabandono e passa a ser uma expressão consciente da mulher que você é. A Guardiã Sensível floresce quando entende que você não precisa cuidar para ser amada e não precisa sentir tudo para se conectar. Sua imagem, daqui para frente, não precisa ser uma armadura. Ela precisa ser uma extensão fiel da sua natureza: suave, profunda, acolhedora e inteira. Seu Código das Deusas revelou a força que organiza sua imagem por dentro. Para preparar o Dossiê ORI, envie fotos com boa luz, rosto limpo, sem maquiagem, e uma roupa neutra mais ajustada ao corpo. Essas imagens ajudam a próxima leitura a observar sua presença real sem interferências: corpo, coloração, cabelo, textura, proporção, contraste e direção estética aplicada. O Dossiê ORI mostra como essa força aparece na prática: corpo, rosto, cores, cabelo, beleza e presença. É a próxima etapa para transformar leitura em imagem real.`
+- Linha 1 [json Amante Nutridora.leituraFinal]: `Sua força não está em ocupar o ambiente pela dureza, pelo ruído ou pela imposição. Sua força está em fazer as pessoas se sentirem vistas, criar conexão real, produzir segurança emocional e unir beleza e humanidade no mesmo campo. O verdadeiro equilíbrio da Amante Nutridora acontece quando o amor deixa de ser serviço e volta a ser troca. Quando isso se integra, sua imagem floresce como extensão fiel da mulher que você já é. Seu Código das Deusas revelou a força que organiza sua imagem por dentro. Para preparar o Dossiê ORI, envie fotos com boa luz, rosto limpo, sem maquiagem, e uma roupa neutra mais ajustada ao corpo. Essas imagens ajudam a próxima leitura a observar sua presença real sem interferências: corpo, coloração, cabelo, textura, proporção, contraste e direção estética aplicada. O Dossiê ORI mostra como essa força aparece na prática: corpo, rosto, cores, cabelo, beleza e presença. É a próxima etapa para transformar leitura em imagem real.`
+- Linha 1 [json Rainha Oculta.leituraFinal]: `Sua força não está em se mostrar inteira. Está em sustentar uma imagem que faz o outro perceber que existe profundidade, valor e mundo interno. A Rainha Oculta amadurece quando entende que intimidade não diminui autoridade e que ser vista não significa ser invadida. Sua beleza se aprofunda quando sua reserva deixa de ser esconderijo e passa a ser escolha: você mostra o que quer, quando quer, para quem sabe olhar com respeito. Sua beleza ganha força nessa síntese: reservada sem desaparecer, elegante sem endurecer, profunda sem se esconder. Seu Código das Deusas revelou a força que organiza sua imagem por dentro. Para preparar o Dossiê ORI, envie fotos com boa luz, rosto limpo, sem maquiagem, e uma roupa neutra mais ajustada ao corpo. Essas imagens ajudam a próxima leitura a observar sua presença real sem interferências: corpo, coloração, cabelo, textura, proporção, contraste e direção estética aplicada. O Dossiê ORI mostra como essa força aparece na prática: corpo, rosto, cores, cabelo, beleza e presença. É a próxima etapa para transformar leitura em imagem real.`
+- Linha 1 [json Sedutora Estratégica.leituraFinal]: `Sua força não está em ser a mais intensa, nem a mais emocional, nem a mais óbvia. Está em perceber, escolher e agir com precisão. A Sedutora Estratégica amadurece quando permite que o desejo exista sem precisar ser totalmente calculado. Sua beleza ganha força na união entre lucidez e magnetismo: elegante sem ser fria, sensual sem ser óbvia, estratégica sem perder corpo. Seu Código das Deusas revelou a força que organiza sua imagem por dentro. Para preparar o Dossiê ORI, envie fotos com boa luz, rosto limpo, sem maquiagem, e uma roupa neutra mais ajustada ao corpo. Essas imagens ajudam a próxima leitura a observar sua presença real sem interferências: corpo, coloração, cabelo, textura, proporção, contraste e direção estética aplicada. O Dossiê ORI mostra como essa força aparece na prática: corpo, rosto, cores, cabelo, beleza e presença. É a próxima etapa para transformar leitura em imagem real.`
+- Linha 1 [json Selvagem Magnética.leituraFinal]: `Sua força não nasce da adaptação. Nasce da autenticidade. A Selvagem Magnética amadurece quando liberdade deixa de ser fuga e passa a ser presença escolhida. Sua beleza se aprofunda quando você percebe que pode desejar, ficar e continuar livre. Sua beleza ganha força na união entre desejo e território: sensual sem ser disponível, livre sem ser dispersa, intensa sem precisar provar força. Você pode desejar sem se perder, se aproximar sem ser capturada e ser vista sem ser domesticada. Seu Código das Deusas revelou a força que organiza sua imagem por dentro. Para preparar o Dossiê ORI, envie fotos com boa luz, rosto limpo, sem maquiagem, e uma roupa neutra mais ajustada ao corpo. Essas imagens ajudam a próxima leitura a observar sua presença real sem interferências: corpo, coloração, cabelo, textura, proporção, contraste e direção estética aplicada. O Dossiê ORI mostra como essa força aparece na prática: corpo, rosto, cores, cabelo, beleza e presença. É a próxima etapa para transformar leitura em imagem real.`
+- Linha 1 [json Matriarca Soberana.essenciaImagem]: `Sua imagem ideal comunica acolhimento com autoridade. Ela precisa parecer confiável, madura, feminina e estruturada. Nesta leitura arquetípica, seus primeiros códigos visuais são estabilidade, linhas estruturadas, tons quentes e nobres, tecidos com peso, feminilidade madura e acabamento que comunica cuidado consigo.`
+- Linha 1 [json Autônoma Absoluta.essenciaImagem]: `Sua imagem ideal comunica autonomia, precisão e movimento. Ela não precisa ser excessivamente ornamental ou emocional. Ela precisa parecer funcional, forte e consciente. Nesta leitura arquetípica, seus primeiros códigos visuais são linhas limpas, estrutura, praticidade refinada, elementos utilitários, contraste, peças bem cortadas e estética sem excesso.`
+- Linha 1 [json Soberana Indomável.essenciaImagem]: `Sua imagem ideal comunica autoridade, força e liberdade. Ela não deve parecer dócil, frágil ou excessivamente domesticada. Nesta leitura arquetípica, seus primeiros códigos visuais são estrutura, presença firme, textura forte, contraste, peças com força, silhuetas firmes, elementos utilitários refinados e elegância com força.`
+- Linha 1 [json Cuidadora Estratégica.essenciaImagem]: `Sua imagem ideal comunica cuidado, organização e confiança. Ela precisa parecer acolhedora, mas também competente. Nesta leitura arquetípica, seus primeiros códigos visuais são linhas limpas, conforto estruturado, tecidos agradáveis, praticidade refinada, tons naturais organizados e uma estética confiável.`
+- Linha 1 [json Soberana Estratégica.essenciaImagem]: `Sua imagem ideal comunica poder refinado, clareza e elegância estratégica. Nesta leitura arquetípica, seus primeiros códigos visuais são alfaiataria, linhas limpas, estrutura, acabamento impecável, cores sóbrias, acessórios marcantes e estética de autoridade.`
+- Linha 1 [json Visionária Sutil.essenciaImagem]: `Sua imagem ideal comunica profundidade limpa: uma estética silenciosa, inteligente e levemente enigmática. Nesta leitura arquetípica, seus primeiros códigos visuais são linhas limpas, tons profundos ou enevoados, texturas sutis, contraste controlado, pouca informação visual e detalhes que mostram intenção.`
+- Linha 1 [json Protetora Selvagem.essenciaImagem]: `Sua imagem ideal mistura força natural, acolhimento e movimento. Ela precisa parecer viva, resistente, feminina e instintiva. Nesta leitura arquetípica, seus primeiros códigos visuais são materiais naturais, textura, conforto com força, peças funcionais refinadas, tons terrosos, movimento e feminilidade não frágil.`
+- Linha 1 [json Selvagem Magnética.essenciaImagem]: `Sua imagem ideal mistura sensualidade natural, força e movimento. Ela funciona melhor quando transmite autenticidade e instinto, não perfeição excessiva. Nesta leitura arquetípica, seus primeiros códigos visuais são textura, liberdade, assimetria, corpo em movimento, materiais naturais, contraste terroso e sensualidade não polida demais. Sua imagem precisa parecer viva, não domada.`
+- Linha 1 [json Rainha Oculta.essenciaImagem]: `Sua imagem ideal não precisa competir para ser percebida. Ela existe no campo da profundidade, da dignidade e da imagem que se mostra aos poucos. Nesta leitura arquetípica, seus primeiros códigos visuais são sofisticação silenciosa, mistério, contraste profundo, elegância reservada, tecidos densos, linhas limpas e emoção contida.`
+- Linha 1 [json Musa Enigmática.essenciaImagem]: `Sua imagem ideal não precisa ser óbvia, literal ou excessivamente exposta. Ela funciona melhor quando sugere, cria curiosidade e mistura suavidade, profundidade e sensualidade velada. Nesta leitura arquetípica, os primeiros códigos visuais são fluidez, névoa, textura, movimento, luminosidade baixa, contraste sutil, transparências controladas e elementos que deixam algo por descobrir. O que favorece você é uma estética com profundidade: algo que acompanha o corpo, mas não entrega tudo; algo que toca o olhar, mas não implora por ele.`
+- Linha 1 [json Guardiã Sensível.essenciaImagem]: `Sua imagem ideal não é construída para impactar. Ela é construída para acalmar, envolver e transmitir segurança emocional. Sua imagem funciona melhor quando comunica suavidade, acolhimento, delicadeza, conforto visual, verdade emocional e feminilidade serena. Você não precisa de dureza para parecer forte. Sua força aparece quando sua imagem mostra consistência afetiva, sensibilidade e presença. Sua estética ideal toca antes de impressionar. Aproxima antes de impor. Acolhe antes de performar.`
+- Linha 1 [json Musa Enigmática.leituraFinal]: `Sua imagem ideal não é sobre chamar atenção de forma óbvia. É sobre criar presença emocional. As pessoas talvez não saibam exatamente o que existe em você, mas sentem que há algo. A Musa Enigmática amadurece quando deixa de usar mistério como proteção inconsciente e passa a usar sua imagem como linguagem. Quando sua estética respeita sua profundidade, você não precisa provar encanto, forçar sensualidade ou se adaptar para permanecer desejável. Sua beleza ganha força nessa síntese entre magnetismo e mundo interno: envolvente sem ser disponível demais, delicada sem ser frágil, profunda sem se perder no invisível. Seu Código das Deusas revelou a força que organiza sua imagem por dentro. Para preparar o Dossiê ORI, envie fotos com boa luz, rosto limpo, sem maquiagem, e uma roupa neutra mais ajustada ao corpo. Essas imagens ajudam a próxima leitura a observar sua presença real sem interferências: corpo, coloração, cabelo, textura, proporção, contraste e direção estética aplicada. O Dossiê ORI mostra como essa força aparece na prática: corpo, rosto, cores, cabelo, beleza e presença. É a próxima etapa para transformar leitura em imagem real.`
+- Linha 1 [json Selvagem Intuitiva.essenciaImagem]: `Sua imagem ideal precisa mostrar mistério livre. Nada muito domesticado, rígido, previsível ou excessivamente polido sustenta sua verdade por muito tempo. Você funciona melhor com uma estética que tenha profundidade, textura, movimento e atmosfera. Algo que sugere mais do que explica. Algo que acompanha o corpo, mas não entrega tudo. Algo que pareça natural, intuitivo, levemente selvagem e emocionalmente profundo. Sua imagem não deve parecer montada para agradar. Ela deve parecer descoberta, escolhida, sentida.`
+- Linha 1 [json Amante Nutridora.essenciaImagem]: `Sua imagem ideal transmite calor, suavidade e magnetismo emocional. Ela não precisa dominar o ambiente. Ela envolve. Nesta leitura arquetípica, seus primeiros códigos visuais são textura, maciez, tons quentes, linhas acolhedoras, feminilidade natural e sensualidade habitável. Sua estética precisa tocar antes de impressionar.`
+- Linha 1 [json Sedutora Estratégica.essenciaImagem]: `Sua imagem ideal é minimalista com magnetismo. Menos excesso, mais intenção. O impacto vem da precisão. Nesta leitura arquetípica, seus primeiros códigos visuais são linhas limpas, recortes estratégicos, contraste controlado, sensualidade sutil, acabamento inteligente e estética que mostra intenção. Sua imagem precisa ser pensada, mas não sem vida. Estratégica, mas não fria.`
+- Linha 1 [json Rainha Magnética.essenciaImagem]: `Sua imagem pede elegância que atrai e sustenta posição. Você não precisa exagerar para ser percebida: sua estética funciona melhor quando une poder, intenção e sensualidade controlada. Nesta leitura arquetípica, seus primeiros códigos visuais são estrutura, brilho estratégico, feminilidade adulta, recortes conscientes, acabamento refinado e aura de valor. O ponto ideal está na tensão entre atração e respeito. Sua imagem precisa parecer escolhida, não improvisada.`
+- Linha 1 [json Amante Nutridora.tecidos]: `Sua imagem pede matéria tátil: algodão macio, viscose, linho suavizado, malhas leves, tricô fino, seda natural, crepes fluidos e texturas orgânicas agradáveis. Você funciona melhor com superfícies que sugerem contato, não distância.`
+- Linha 1 [json Amante Nutridora.modelagem]: `Sua imagem pede roupas que envolvam, não que confrontem: silhuetas suaves, linhas femininas sem rigidez, peças com movimento, cintura sugerida, caimento macio, vestidos fluidos, saias amplas, tricôs delicados e camisas de tecidos suaves. A regra central é conforto, feminilidade e acolhimento.`
+- Linha 1 [json Amante Nutridora.presenca]: `Sua linguagem corporal ideal não é excessivamente controlada nem teatral. Movimento suave, contínuo, sem dureza e com cadência natural favorece sua energia. O ponto ideal é calor com centro: acolhimento sem se oferecer inteira a qualquer demanda.`
+- Linha 1 [json Guardiã Sensível.presenca]: `Sua linguagem corporal é parte fundamental da sua assinatura visual. Movimentos suaves, contínuos e sem brusquidão favorecem sua presença. Uma postura aberta, receptiva e presente sem tensão comunica segurança emocional. Acessórios delicados, afetivos, naturais, simbólicos ou com aparência orgânica tendem a funcionar melhor do que peças muito pesadas, frias ou excessivamente duras. O cuidado está em não parecer disponível para absorver tudo. Sua forma de chegar deve acolher sem se oferecer como solução para todos.`
+- Linha 1 [json Rainha Magnética.paleta]: `Sua lógica cromática nasce do encontro entre base soberana e magnetismo sensual. Base Hera: preto, off-white, marfim, bege sofisticado, azul profundo, marinho, taupe elegante e cinza quente refinado. Toque Afrodite: vermelho fechado, vinho, bordô, ameixa quente, rosé profundo, dourado e cobre sofisticado. Sua cor deve parecer intencional, madura e simbolicamente forte.`
+- Linha 1 [json Cuidadora Estratégica.tecidos]: `Sua matéria ideal precisa comunicar conforto, durabilidade e cuidado: algodão macio, linho estruturado, viscose encorpada, malhas de qualidade, tricô fino, crepe leve, sarja e tecidos naturais com bom acabamento.`
+- Linha 1 [json Matriarca Soberana.tecidos]: `Sua matéria ideal precisa comunicar cuidado, qualidade e estabilidade: linho encorpado, algodão premium, crepe estruturado, seda fosca, alfaiataria confortável, malhas nobres, tricôs refinados e viscose encorpada.`
+- Linha 1 [json Rainha Oculta.tecidos]: `Sua matéria ideal precisa comunicar densidade, sofisticação e mundo interno: veludo, seda fosca, crepe encorpado, lã fria, cetim pesado, alfaiataria fluida, tule escuro sutil e tecidos com textura profunda.`
+- Linha 1 [json Soberana Indomável.tecidos]: `Sua matéria ideal precisa comunicar força, qualidade e resistência: couro macio, alfaiataria encorpada, sarja premium, linho estruturado, lã fria, suede, crepe pesado, algodão encorpado e tecidos com textura firme.`
+- Linha 1 [json Selvagem Intuitiva.tecidos]: `Sua matéria ideal precisa comunicar natureza, textura e profundidade: linho, algodão encorpado, viscose, suede, couro macio, malhas naturais, tricôs orgânicos, tecidos com textura irregular e crepes fluidos.`
+- Linha 1 [json Soberana Estratégica.tecidos]: `Sua matéria ideal precisa comunicar qualidade, estrutura e sobriedade: alfaiataria premium, lã fria, crepe encorpado, seda fosca, algodão estruturado, couro liso pontual, viscose encorpada e tecidos com peso.`
+- Linha 1 [json Protetora Selvagem.tecidos]: `Sua matéria ideal precisa comunicar resistência, toque e natureza: algodão encorpado, linho, sarja, couro macio, suede, tricôs naturais, malhas densas, viscose com textura e tecidos orgânicos.`
+- Linha 1 [json Visionária Sutil.tecidos]: `Sua matéria ideal precisa comunicar sofisticação silenciosa: crepe, seda fosca, algodão estruturado, viscose encorpada, lã fria, malhas finas, tecidos opacos com bom caimento e texturas discretas.`
+- Linha 1 [json Selvagem Magnética.tecidos]: `Sua matéria ideal precisa comunicar textura, natureza e força: couro macio, algodão encorpado, linho rústico, suede, malhas naturais, sarja, tricôs orgânicos e viscose com movimento. Sua imagem funciona melhor com superfícies que parecem ter vida.`
+- Linha 1 [json Rainha Magnética.tecidos]: `Sua matéria ideal precisa expressar valor, acabamento e presença tátil: seda, cetim sofisticado, crepe estruturado, alfaiataria premium, viscose encorpada, malhas de boa densidade e tecidos com caimento nobre. Sua imagem pede matéria com peso visual.`
+- Linha 1 [json Autônoma Absoluta.tecidos]: `Sua matéria ideal precisa sustentar forma, movimento e resistência: algodão encorpado, sarja, linho estruturado, lã fria, couro liso, crepe encorpado, nylon premium, alfaiataria e malhas densas.`
+- Linha 1 [json Cuidadora Estratégica.modelagem]: `Sua modelagem pede conforto com estrutura: camisas bem cortadas, calças retas, vestidos práticos com caimento, saias midi, blazers leves, tricôs estruturados, conjuntos coordenados e peças funcionais com acabamento bonito.`
+- Linha 1 [json Protetora Selvagem.modelagem]: `Sua modelagem pede conforto, mobilidade e força: jaquetas utilitárias refinadas, vestidos com movimento, saias confortáveis, calças retas ou cargo sofisticadas, camisas de tecidos naturais, botas, tricôs encorpados e sobreposições funcionais.`
+- Linha 1 [json Rainha Oculta.modelagem]: `Sua modelagem pede elegância, contenção e presença: vestidos de linhas limpas, saias midi, blazers sofisticados, peças com gola alta ou decote controlado, sobreposições elegantes, alfaiataria suave e silhuetas longas. A regra central é mostrar aos poucos.`
+- Linha 1 [json Matriarca Soberana.modelagem]: `Sua modelagem pede estrutura com conforto: vestidos midi, saias estruturadas, blazers leves, calças de bom corte, camisas em tecidos nobres, peças com cintura marcada de forma confortável, conjuntos coordenados e tricôs elegantes.`
+- Linha 1 [json Sedutora Estratégica.modelagem]: `Sua modelagem pede estrutura com detalhe estratégico: blazers ajustados, calças de alfaiataria, vestidos minimalistas com recortes, saias de corte limpo, peças estruturadas, decotes calculados, fendas discretas e camisas com acabamento inteligente. A regra central é mostrar intenção sem mostrar demais.`
+- Linha 1 [json Soberana Estratégica.modelagem]: `Sua modelagem pede estrutura, corte e intenção: blazers bem cortados, calças de alfaiataria, vestidos estruturados, saias midi retas, camisas sofisticadas, conjuntos coordenados, ombro definido e silhuetas limpas.`
+- Linha 1 [json Soberana Indomável.modelagem]: `Sua modelagem pede estrutura, mobilidade e firmeza: blazers marcantes, jaquetas estruturadas, calças de bom corte, botas, vestidos firmes com movimento, cintos, ombros definidos, peças utilitárias refinadas e sobreposições fortes.`
+- Linha 1 [json Autônoma Absoluta.modelagem]: `Sua modelagem pede estrutura, mobilidade e praticidade refinada: alfaiataria limpa, calças retas, blazers sem excesso, camisas bem cortadas, jaquetas utilitárias, peças funcionais, vestidos retos e botas.`
+- Linha 1 [json Selvagem Intuitiva.modelagem]: `Sua modelagem pede liberdade de movimento e sobreposições: vestidos fluidos, peças assimétricas, sobreposições, saias com movimento, botas, jaquetas leves ou estruturadas, peças utilitárias refinadas e silhuetas que não prendam demais o corpo.`
+- Linha 1 [json Visionária Sutil.modelagem]: `Sua modelagem pede limpeza, precisão e sutileza: alfaiataria leve, vestidos de linhas simples, camisas bem cortadas, calças retas, saias midi, sobreposições discretas, assimetrias sutis e peças minimalistas com detalhe inteligente.`
+- Linha 1 [json Selvagem Magnética.modelagem]: `Sua modelagem pede mobilidade, força e território: jaquetas estruturadas, vestidos com movimento, botas, recortes assimétricos, peças utilitárias refinadas, saias com fendas, sobreposições e roupas que permitam ação. A regra central é o corpo poder se mover.`
+- Linha 1 [json Musa Enigmática.modelagem]: `Sua modelagem pede movimento, envolvimento e revelação parcial. Funcionam bem vestidos fluidos, saias com queda, blusas levemente translúcidas, sobreposições leves, decotes sutis, assimetrias suaves e caimentos que criam movimento. A regra central é sugerir, não escancarar. Sua imagem cresce quando existe profundidade visual.`
+- Linha 1 [json Rainha Magnética.modelagem]: `Sua modelagem pede peças que unam desenho, intenção e feminilidade controlada: blazers acinturados, vestidos com marcação de cintura, saias midi estruturadas, calças de corte limpo, decotes controlados e silhuetas femininas com acabamento adulto. A regra central é mostrar com intenção, nunca por descuido.`
+- Linha 1 [json Guardiã Sensível.modelagem]: `Sua modelagem precisa criar sensação de amparo. O que funciona melhor para você são formas fluidas, confortáveis, envolventes, suaves ao olhar e delicadas no caimento. Vestidos leves, malhas macias, saias com movimento, blusas de caimento suave, tricôs delicados e peças que acompanham o corpo sem endurecê-lo tendem a sustentar melhor sua imagem. A regra central é conforto emocional em forma de roupa. Sua imagem precisa parecer habitável, sensível e coerente com sua força: nem excessivamente rígida, nem desestruturada. O ideal é um equilíbrio entre presença e suavidade.`
+- Linha 1 [json Amante Nutridora.paleta]: `Sua paleta funciona melhor quando aquece, aproxima e humaniza. Base Deméter: terracota, bege quente, caramelo, areia dourada, oliva suave, marrom mel, creme amanteigado e argila. Toque Afrodite: rosa queimado, coral suave, pêssego aquecido, vinho macio, canela rosada, cobre, dourado quente e vermelho queimado. Sua cor ideal não grita. Ela convida.`
+- Linha 1 [json Matriarca Soberana.paleta]: `Sua paleta pede calor, estrutura e dignidade. Base Deméter: terracota, caramelo, creme, bege quente, marrom mel, oliva, areia dourada e argila. Toque Hera: vinho, azul profundo, marinho, preto pontual, dourado, off-white sofisticado, taupe e verde escuro.`
+- Linha 1 [json Sedutora Estratégica.paleta]: `Sua paleta pede clareza, contraste e magnetismo controlado. Base Athena: preto, branco, cinza, grafite, azul profundo, marinho, prata fria e tons neutros limpos. Toque Afrodite: vinho, vermelho fechado, rosé sofisticado, nude elegante, ameixa discreto, brilho pontual e metalizados sutis. Sua paleta precisa comunicar inteligência com magnetismo.`
+- Linha 1 [json Autônoma Absoluta.paleta]: `Sua paleta pede clareza, contraste e território. Base Athena: preto, branco, grafite, cinza, azul marinho, prata, off-white limpo e tons frios estruturados. Toque Artemis: verde oliva, verde musgo, areia, marrom profundo, caqui, tons de pedra, ferrugem e couro.`
+- Linha 1 [json Guardiã Sensível.paleta]: `Sua paleta pede cores que acalmem, suavizem e criem sensação de proximidade emocional. Base Perséfone: lavanda, cinza claro, azul suave, rosado frio, tons enevoados, nuances etéreas e lilás apagado. Acolhimento Deméter: bege, creme, areia, terracota suave, verde claro, marrom claro, oliva suave e tons orgânicos naturais. A sua paleta ideal não precisa gritar. Ela constrói atmosfera. São cores que transmitem serenidade, disponibilidade emocional, gentileza, aconchego e profundidade suave.`
+- Linha 1 [json Soberana Indomável.paleta]: `Sua paleta pede força, espaço e dignidade. Base Hera: preto, vinho profundo, marinho, azul petróleo, off-white sofisticado, dourado envelhecido, grafite e verde escuro. Toque Artemis: oliva, verde musgo, marrom profundo, ferrugem, caqui, couro, areia escura e tons de pedra.`
+- Linha 1 [json Cuidadora Estratégica.paleta]: `Sua paleta pede naturalidade, clareza e estabilidade. Base Deméter: creme, bege, areia, terracota suave, oliva, marrom claro, caramelo e verde seco. Toque Athena: branco limpo, cinza claro, azul marinho, grafite suave, off-white, preto pontual e tons neutros organizados.`
+- Linha 1 [json Rainha Oculta.paleta]: `Sua paleta pede profundidade, sofisticação e mistério emocional. Base Hera: preto, marinho, vinho profundo, grafite, cinza escuro, off-white sofisticado, azul petróleo e ameixa. Toque Perséfone: lilás profundo, lavanda acinzentado, roxo fechado, prata envelhecida, rosa antigo, tons de névoa e azul noturno.`
+- Linha 1 [json Visionária Sutil.paleta]: `Sua paleta pede silêncio, profundidade e lucidez. Base Perséfone: lavanda acinzentado, azul noite, lilás profundo, ameixa suave, cinza névoa, malva e tons frios velados. Toque Athena: branco frio, preto, grafite, azul marinho, prata, cinza claro e off-white limpo.`
+- Linha 1 [json Soberana Estratégica.paleta]: `Sua paleta pede sobriedade, contraste e valor. Base Hera: preto, marinho, vinho fechado, off-white sofisticado, taupe, azul profundo, grafite e dourado discreto. Toque Athena: branco limpo, cinza, prata, azul aço, carvão, tons frios estruturados e neutros precisos.`
+- Linha 1 [json Protetora Selvagem.paleta]: `Sua paleta pede terra, calor e força natural. Base Deméter: terracota, caramelo, bege quente, creme, marrom mel, areia, argila e oliva suave. Toque Artemis: verde musgo, verde oliva, caqui, ferrugem, marrom profundo, preto pontual, couro e tons de pedra.`
+- Linha 1 [json Selvagem Magnética.paleta]: `Sua paleta pede terra, intensidade e magnetismo natural. Base Artemis: oliva, verde musgo, areia, marrom profundo, ferrugem, grafite, tons de pedra e couro envelhecido. Toque Afrodite: vinho, vermelho queimado, cobre, dourado envelhecido, bronze, ameixa escuro e preto. Sua cor ideal comunica instinto com magnetismo.`
+- Linha 1 [json Selvagem Intuitiva.paleta]: `Sua paleta pede tons de natureza, sombra e mundo interno. Base Perséfone: azul noite, ameixa, lilás acinzentado, cinza névoa, roxo profundo, malva escuro e tons lunares. Toque Artemis: verde musgo, oliva, areia, marrom profundo, ferrugem, argila, preto e tons de pedra.`
+- Linha 1 [json Amante Nutridora.fraseHero]: `Sua presença não impõe. Ela aquece, aproxima e faz permanecer.`
+- Linha 1 [json Musa Enigmática.presenca]: `Sua presença se fortalece com movimento fluido, contínuo e sem pressa. Você comunica muito quando não tenta acelerar sua expressão. O olhar pode sustentar, mas não precisa invadir. O corpo pode se aproximar, mas também preservar espaço. Sua assinatura está nessa alternância entre abertura e recolhimento: você mostra, mas não se entrega por inteiro antes de escolher.`
+- Linha 1 [json Matriarca Soberana.presenca]: `Sua presença se fortalece com postura assentada, ritmo estável e gestos que comunicam segurança. A linguagem corporal ideal transmite base, mas não peso. Disponibilidade, mas não submissão. Cuidado, mas não sobrecarga.`
+- Linha 1 [json Rainha Magnética.presenca]: `Sua presença se fortalece com postura estável, movimento controlado e ritmo sem pressa. Você não precisa pedir atenção. Você a sustenta. Sua assinatura está em parecer desejável sem parecer disponível demais. Elegante sem parecer fria. Forte sem parecer inacessível.`
+- Linha 1 [json key]: `Visionária Sutil`
+- Linha 1 [json Rainha Magnética.evitar[0]]: `Visual casual demais.`
+- Linha 1 [json Visionária Sutil.evitar[4]]: `Visual caótico.`
+- Linha 1 [json Selvagem Intuitiva.evitar[4]]: `Visual corporativo severo.`
+- Linha 1 [json Matriarca Soberana.evitar[0]]: `Visual descuidado.`
+- Linha 1 [json Cuidadora Estratégica.evitar[0]]: `Visual desleixado.`
+- Linha 1 [json Sedutora Estratégica.evitar[1]]: `Visual exageradamente sensual.`
+- Linha 1 [json Rainha Oculta.evitar[0]]: `Visual excessivamente casual.`
+- Linha 1 [json Selvagem Intuitiva.evitar[0]]: `Visual excessivamente polido.`
+- Linha 1 [json Selvagem Magnética.evitar[0]]: `Visual excessivamente romântico.`
+- Linha 1 [json Protetora Selvagem.evitar[4]]: `Visual excessivamente rígido.`
+- Linha 1 [json Musa Enigmática.evitar[1]]: `Visual extremamente básico ou funcional.`
+- Linha 1 [json Autônoma Absoluta.evitar[0]]: `Visual frágil demais.`
+- Linha 1 [json Selvagem Magnética.evitar[4]]: `Visual frágil ou doce demais.`
+- Linha 1 [json Soberana Estratégica.evitar[0]]: `Visual improvisado.`
+- Linha 1 [json Guardiã Sensível.evitar[4]]: `Visual infantilizado.`
+- Linha 1 [json Guardiã Sensível.evitar[0]]: `Visual muito rígido ou agressivo.`
+- Linha 1 [json Soberana Indomável.evitar[0]]: `Visual romântico demais.`
+- Linha 1 [json Amante Nutridora.evitar[0]]: `Visual rígido ou severamente estruturado.`
+- Linha 1 [json Rainha Magnética.evitar[4]]: `Visual rígido ou severo demais.`
+- Linha 1 [json Cuidadora Estratégica.fraseHero]: `Você cuida com afeto, estrutura, clareza e inteligência.`
+- Linha 1 [json Protetora Selvagem.fraseHero]: `Você cuida com instinto, protege com força e ama sem aceitar ser aprisionada.`
+- Linha 1 [json Musa Enigmática.fraseHero]: `Você não ocupa o espaço pelo excesso. Ocupa pela atmosfera.`
+- Linha 1 [json Selvagem Magnética.fraseHero]: `Você não pede permissão para existir. Sua imagem atravessa o ambiente com instinto e liberdade.`
+- Linha 1 [json Rainha Magnética.fraseHero]: `Você não quer apenas ser vista. Quer ser escolhida, reconhecida e elevada.`
+- Linha 1 [json Soberana Indomável.fraseHero]: `Você ocupa lugar sem pedir permissão e preserva sua liberdade sem negociar sua dignidade.`
+- Linha 1 [json Soberana Estratégica.fraseHero]: `Você organiza o ambiente com autoridade, lucidez e clareza de lugar.`
+- Linha 1 [json Visionária Sutil.fraseHero]: `Você percebe o que muitos não veem — e transforma silêncio em lucidez.`
+- Linha 1 [json Selvagem Intuitiva.fraseHero]: `Você pertence ao invisível, ao instinto e aos caminhos que não aceitam domesticação.`
+- Linha 1 [json Sedutora Estratégica.fraseHero]: `Você sabe o que está acontecendo — e escolhe como se posicionar.`
+- Linha 1 [json Matriarca Soberana.fraseHero]: `Você sustenta, organiza e cria base, mas também precisa ser reconhecida.`
+- Linha 1 [json Amante Nutridora.percebida]: `Você tende a ser percebida como acolhedora, feminina, calorosa, sensível, acessível, afetiva e naturalmente agradável de estar por perto. Existe em você uma sensualidade, mas ela não costuma aparecer como provocação explícita. Ela aparece como maciez, temperatura, doçura encarnada e beleza viva. Você não parece apenas bonita. Você parece habitável.`
+- Linha 1 [json Matriarca Soberana.percebida]: `Você tende a ser percebida como confiável, forte, acolhedora, madura, protetora e naturalmente respeitável. Sua forma de estar pode criar sensação de base. Ao mesmo tempo, algumas pessoas podem projetar em você a expectativa de que sempre aguente, sempre cuide e sempre resolva.`
+- Linha 1 [json Cuidadora Estratégica.percebida]: `Você tende a ser percebida como confiável, inteligente, prestativa, prática e emocionalmente estável. As pessoas podem sentir que perto de você existe clareza. Você acolhe, mas também orienta. Escuta, mas também aponta caminhos.`
+- Linha 1 [json Visionária Sutil.percebida]: `Você tende a ser percebida como discreta, inteligente, profunda, observadora e difícil de acessar completamente. Existe em você uma força silenciosa que parece captar mais do que fala. Isso pode gerar admiração, respeito e curiosidade, mas também distância.`
+- Linha 1 [json Guardiã Sensível.percebida]: `Você tende a ser percebida como doce, empática, acessível, confiável, acolhedora e emocionalmente segura. Existe em você uma qualidade rara: as pessoas sentem que podem relaxar perto da sua energia. Você transmite algo como: comigo, você pode baixar a guarda. Essa percepção não nasce de esforço. Ela nasce da sua natureza receptiva, do seu olhar emocional e da forma como sua presença parece conter, e não invadir. Ao mesmo tempo, Perséfone adiciona uma parte mais silenciosa e interna à sua imagem. Então, embora você pareça disponível, existe também profundidade, recolhimento e uma delicadeza que não se entrega inteira de imediato.`
+- Linha 1 [json Rainha Magnética.percebida]: `Você tende a ser percebida como forte, feminina, marcante, elegante e naturalmente magnética. Sua imagem pode transmitir uma aura de mulher de valor: alguém que não apenas chama atenção, mas parece importante. As pessoas podem sentir que você mistura desejo e respeito. Ao mesmo tempo, algumas podem projetar exigência, vaidade ou controle antes mesmo de te conhecerem profundamente.`
+- Linha 1 [json Soberana Indomável.percebida]: `Você tende a ser percebida como forte, imponente, independente, intensa e difícil de dominar. Sua forma de estar comunica autoridade e espaço. Isso gera respeito, mas também pode intimidar. Sua imagem ganha força quando essa liberdade é refinada.`
+- Linha 1 [json Soberana Estratégica.percebida]: `Você tende a ser percebida como forte, inteligente, elegante, séria, confiável e difícil de desestabilizar. Sua forma de estar comunica competência e lugar. Isso pode gerar respeito, admiração e confiança, mas também distância se parecer dura ou inacessível.`
+- Linha 1 [json Autônoma Absoluta.percebida]: `Você tende a ser percebida como forte, inteligente, independente, objetiva e difícil de manipular. Sua imagem comunica competência. Isso gera respeito, mas também pode gerar distância se sua autossuficiência parecer frieza ou indisponibilidade.`
+- Linha 1 [json Protetora Selvagem.percebida]: `Você tende a ser percebida como forte, protetora, leal, independente e intuitiva. Existe em você uma força de quem cuida dos seus. Isso pode gerar segurança e admiração, mas também pode intimidar pessoas que esperam uma feminilidade mais dócil.`
+- Linha 1 [json Sedutora Estratégica.percebida]: `Você tende a ser percebida como inteligente, interessante, elegante e magnética de forma discreta. Existe uma sensação de que você sabe mais do que mostra. Essa percepção pode gerar admiração, curiosidade e respeito. Mas também pode gerar distância se sua imagem ficar excessivamente controlada, cerebral ou inacessível. Sua força aparece quando inteligência e eros permanecem juntos.`
+- Linha 1 [json Musa Enigmática.percebida]: `Você tende a ser percebida como intensa, feminina, delicada, magnética e difícil de decifrar completamente. Existe na sua imagem uma tensão interessante: algo convida, mas algo também permanece velado. As pessoas podem sentir que há mais em você do que aquilo que aparece à primeira vista. Sua imagem ganha força quando você assume esse mistério com consciência. Ela perde força quando tenta se tornar excessivamente disponível, explicada ou moldada para ser aceita.`
+- Linha 1 [json Selvagem Magnética.percebida]: `Você tende a ser percebida como intensa, livre, magnética e impossível de prender completamente. Sua imagem transmite autenticidade e força instintiva. As pessoas podem sentir que você tem uma energia própria. Isso cria fascínio, mas também pode intimidar quem espera previsibilidade, docilidade ou controle.`
+- Linha 1 [json Selvagem Intuitiva.percebida]: `Você tende a ser percebida como misteriosa, independente, intuitiva, reservada e difícil de controlar. Existe em você uma força que parece pertencer a um campo próprio. Isso cria fascínio, mas também pode gerar incompreensão em quem espera previsibilidade.`
+- Linha 1 [json Rainha Oculta.percebida]: `Você tende a ser percebida como reservada, elegante, intensa, profunda e difícil de acessar completamente. Sua imagem pode transmitir dignidade silenciosa. Para alguns olhares, isso cria fascínio e respeito. Para outros, pode parecer distância, frieza ou inacessibilidade.`
+
+## API Produto 2
+
+### `backend/app/services/produto2_service.py`
+
+- Linha 33 [string]: `Token de autenticação ausente.`
+- Linha 82 [string]: `Negra (preta ou parda)`
+- Linha 85 [string]: `indígena`
+- Linha 86 [string]: `Indígena`
+- Linha 88 [string]: `Asiática`
+- Linha 89 [string]: `prefiro não responder`
+- Linha 90 [string]: `Prefiro não declarar`
+- Linha 124 [string]: `Quero escrever com minhas palavras`
+- Linha 281 [string]: `Não foi possível consultar o Dossiê ORI.`
+- Linha 305 [string]: `Não foi possível carregar a cliente.`
+- Linha 312 [string]: `Cliente não encontrada.`
+- Linha 322 [string]: `Perfil da cliente não encontrado.`
+- Linha 328 [string]: `Dossiê ORI ainda não liberado para esta cliente.`
+- Linha 355 [string]: `Não foi possível salvar o Dossiê ORI.`
+- Linha 362 [string]: `Não foi possível confirmar o Dossiê ORI salvo.`
+- Linha 391 [string]: `Não foi possível atualizar o Dossiê ORI.`
+- Linha 424 [string]: `Não foi possível atualizar o status da jornada.`
+- Linha 472 [string]: `Dossiê ORI publicado não pode receber novos insumos.`
+- Linha 516 [string]: `Dossiê ORI publicado não pode receber novo envio.`
+
+## API Produto 2 / diagnósticos
+
+### `backend/app/services/produto2_calculo_service.py`
+
+- Linha 31 [string]: `Rainha Magnética`
+- Linha 32 [string]: `Amante Nutridora`
+- Linha 33 [string]: `Sedutora Estratégica`
+- Linha 34 [string]: `Selvagem Magnética`
+- Linha 35 [string]: `Musa Enigmática`
+- Linha 36 [string]: `Rainha Oculta`
+- Linha 37 [string]: `Guardiã Sensível`
+- Linha 38 [string]: `Visionária Sutil`
+- Linha 39 [string]: `Selvagem Intuitiva`
+- Linha 40 [string]: `Matriarca Soberana`
+- Linha 41 [string]: `Soberana Estratégica`
+- Linha 42 [string]: `Soberana Indomável`
+- Linha 43 [string]: `Cuidadora Estratégica`
+- Linha 44 [string]: `Protetora Selvagem`
+- Linha 45 [string]: `Autônoma Absoluta`
+- Linha 112 [string]: `Soft Dramatic`
+- Linha 115 [string]: `Flamboyant Natural`
+- Linha 117 [string]: `Soft Natural`
+- Linha 122 [string]: `Dramatic Classic`
+- Linha 124 [string]: `Soft Classic`
+- Linha 129 [string]: `Flamboyant Gamine`
+- Linha 131 [string]: `Soft Gamine`
+- Linha 135 [string]: `Theatrical Romantic`
+- Linha 163 [string]: `Sugestao preliminar baseada nos sinais corporais informados, seguindo a pontuacao estrutural da planilha original. A validacao final depende da leitura visual do admin.`
+- Linha 197 [string]: `Outono Profundo`
+- Linha 198 [string]: `Inverno Profundo`
+- Linha 199 [string]: `Primavera Clara`
+- Linha 200 [string]: `Verão Claro`
+- Linha 204 [string]: `Primavera Quente`
+- Linha 205 [string]: `Outono Quente`
+- Linha 206 [string]: `Inverno Frio`
+- Linha 207 [string]: `Verão Frio`
+- Linha 211 [string]: `Primavera Brilhante`
+- Linha 212 [string]: `Inverno Brilhante`
+- Linha 213 [string]: `Outono Suave`
+- Linha 214 [string]: `Verão Suave`
+- Linha 222 [string]: `Leitura cromatica preliminar. Fotos e avaliacao humana seguem necessarias.`
+- Linha 251 [string]: `Patton deve ser usado como refinamento respeitoso para peles negras ou miscigenadas, nunca como classificacao automatica definitiva.`
+- Linha 270 [string]: `Transição/Outro`
+- Linha 273 [string]: `Pouco Cabelo`
+- Linha 274 [string]: `médio`
+- Linha 275 [string]: `Densidade Média`
+- Linha 277 [string]: `Muito Cabelo`
+- Linha 288 [string]: `Foco: Reconstrução (Danos/Porosidade)`
+- Linha 290 [string]: `Foco: Hidratação Profunda (Dificuldade de absorção)`
+- Linha 292 [string]: `Foco: Nutrição e Manutenção`
+- Linha 295 [string]: `Alta Conexão: Reforçar a marca registrada`
+- Linha 297 [string]: `Em Busca: Sugerir ajustes sutis de finalização`
+- Linha 299 [string]: `Desconexão: Foco em Transformação e Aceitação`
+- Linha 301 [string]: `Verificar conexão com a assinatura visual`
+- Linha 303 [string]: `pouco tempo`
+- Linha 304 [string]: `Perfil Prático: Sugerir produtos multifuncionais`
+- Linha 305 [string]: `algum tempo`
+- Linha 306 [string]: `Perfil Equilibrado: Rotina padrão`
+- Linha 308 [string]: `Perfil Ritualístico: Detalhar fitagem e cronograma`
+- Linha 310 [string]: `Não informado`
+- Linha 323 [string]: `deméter`
+- Linha 329 [string]: `perséfone`
+
+## Componente/serviço compartilhado
+
+### `backend/app/routes/produto1.py`
+
+- Linha 55 [string]: `Não foi possível salvar suas respostas agora.`
+- Linha 72 [string]: `Não foi possível concluir sua leitura agora.`
+- Linha 109 [string]: `attachment; filename="`
+
+### `backend/app/routes/quiz.py`
+
+- Linha 42 [string]: `Não foi possível preparar sua leitura agora.`
+
+### `backend/app/services/admin_service.py`
+
+- Linha 24 [string]: `Token de autenticação ausente.`
+- Linha 51 [string]: `Não foi possível validar o acesso administrativo.`
+- Linha 58 [string]: `Acesso administrativo necessário.`
+- Linha 117 [string]: `Não foi possível carregar os dados administrativos.`
+- Linha 143 [string]: `Não foi possível carregar a cliente.`
+- Linha 150 [string]: `Cliente não encontrada.`
+- Linha 195 [string]: `Não foi possível carregar os detalhes da cliente.`
+- Linha 273 [string]: `Não foi possível atualizar a cliente.`
+- Linha 314 [string]: `Não foi possível registrar o histórico administrativo.`
+- Linha 321 [string]: `O histórico administrativo não confirmou o registro.`
+
+### `backend/app/services/auth_service.py`
+
+- Linha 19 [string]: `Não foi possível preparar o acesso agora.`
+- Linha 31 [string]: `Token de autenticação ausente.`
+- Linha 48 [string]: `Sessão inválida ou expirada.`
+
+### `backend/app/services/feedback_service.py`
+
+- Linha 57 [string]: `Não foi possível consultar o feedback da leitura.`
+- Linha 87 [string]: `user_id,context`
+- Linha 95 [string]: `Não foi possível salvar o feedback da leitura.`
+
+### `backend/app/services/jornada_service.py`
+
+- Linha 36 [string]: `Token de autenticação ausente.`
+- Linha 67 [string]: `Não foi possível consultar a jornada agora.`
+
+### `backend/app/services/leitura_service.py`
+
+- Linha 33 [string]: `Sua Presença`
+- Linha 33 [string]: `como sua presença chega antes da explicação`
+- Linha 34 [string]: `Seu Estilo`
+- Linha 34 [string]: `como sua imagem tenta se organizar no vestir`
+- Linha 35 [string]: `Seu Corpo`
+- Linha 35 [string]: `como corpo, postura e movimento entram na leitura`
+- Linha 36 [string]: `Seus Relacionamentos`
+- Linha 36 [string]: `como vínculo, espaço e troca aparecem no seu campo`
+- Linha 37 [string]: `Seu Mundo Interno`
+- Linha 37 [string]: `como desejo, controle, imaginação e direção operam por dentro`
+- Linha 38 [string]: `Seus Padrões`
+- Linha 38 [string]: `onde a força pode virar defesa, excesso ou ruído`
+- Linha 43 [string]: `quando você chega em um lugar, muda o clima da conversa ou sente que precisa modular sua intensidade para ser recebida`
+- Linha 47 [string]: `quando uma roupa bonita ainda parece errada porque não sustenta o jeito como você quer se mover, ser vista ou se proteger`
+- Linha 51 [string]: `quando postura, conforto, movimento e sensação física dizem antes da cabeça se algo combina com você`
+- Linha 55 [string]: `quando vínculo, troca, distância, escolha ou disponibilidade mexem diretamente com a sua segurança`
+- Linha 59 [string]: `quando desejo, intuição, análise, imaginação ou controle definem o ritmo das suas escolhas`
+- Linha 62 [string]: `quando você repete uma defesa conhecida: agradar, endurecer, sumir, controlar, cuidar demais ou romper antes de nomear o incômodo`
+- Linha 68 [string]: `escolha uma peça, gesto ou beleza que aumente prazer sem depender de aprovação externa`
+- Linha 69 [string]: `observe uma sensação antes de explicá-la e anote o que seu corpo percebeu primeiro`
+- Linha 70 [string]: `defina onde você precisa de respeito real, não apenas de reconhecimento aparente`
+- Linha 71 [string]: `ofereça cuidado sem assumir uma responsabilidade que não precisa ser sua`
+- Linha 72 [string]: `transforme uma percepção solta em uma decisão simples, com critério e limite`
+- Linha 73 [string]: `preserve espaço de movimento antes de aceitar uma demanda que aperta seu território`
+- Linha 77 [string]: `isso me dá prazer real ou só tenta produzir desejo no olhar de fora?`
+- Linha 78 [string]: `meu corpo já percebeu algo que minha cabeça ainda está tentando explicar?`
+- Linha 79 [string]: `esse lugar me reconhece de verdade ou só exige que eu sustente uma posição?`
+- Linha 80 [string]: `esse cuidado nasce de presença ou de uma tentativa de ser necessária?`
+- Linha 81 [string]: `essa escolha tem critério claro ou virou controle para evitar vulnerabilidade?`
+- Linha 82 [string]: `esse caminho respeita meu espaço ou começa a me prender por dentro?`
+- Linha 86 [string]: `prazer, presença sensorial e beleza que não precise implorar por validação`
+- Linha 87 [string]: `profundidade, pausa e uma imagem que revele por camadas, sem se explicar demais`
+- Linha 88 [string]: `dignidade, estrutura e uma presença que comunique valor sem endurecer`
+- Linha 89 [string]: `acolhimento, conforto e sustentação sem apagar contorno pessoal`
+- Linha 90 [string]: `clareza, intenção e escolhas visuais com critério, sem rigidez excessiva`
+- Linha 91 [string]: `movimento, território e liberdade suficiente para o corpo respirar`
+- Linha 95 [string]: `magnetismo, prazer, beleza e desejo de conexão`
+- Linha 96 [string]: `profundidade, intuição, recolhimento e mundo interno`
+- Linha 97 [string]: `dignidade, reconhecimento, posição e compromisso`
+- Linha 98 [string]: `cuidado, vínculo, acolhimento e sustentação`
+- Linha 99 [string]: `clareza, estratégia, leitura de contexto e controle`
+- Linha 100 [string]: `liberdade, território, movimento e autonomia`
+- Linha 150 [string]: `abrir a leitura com uma cena interna reconhecível e pessoal`
+- Linha 152 [string]: `mostre a tensão central entre as duas forças e conecte-a aos sinais mais fortes do teste e ao momento informado pela cliente`
+- Linha 158 [string]: `Essência`
+- Linha 159 [string]: `nomear o núcleo vivo da combinação arquetípica`
+- Linha 161 [string]: `explique o que cada força busca, o que nasce do encontro entre elas e qual qualidade singular organiza a presença`
+- Linha 164 [string]: `não tratar os arquétipos como duas listas separadas de características`
+- Linha 167 [string]: `Dinâmica psíquica`
+- Linha 169 [string]: `traduzir o funcionamento interno em decisões, reações, sinais corporais e formas de proteção`
+- Linha 173 [string]: `explique como as duas forças operam por dentro, o que a pessoa tende a tentar controlar ou preservar, e como isso aparece em escolhas reais`
+- Linha 176 [string]: `não repita a camada Vida real; não transforme em diagnóstico psicológico`
+- Linha 179 [string]: `Como isso aparece na vida real`
+- Linha 181 [string]: `mostrar a primeira aplicação concreta da leitura fora da tela, sem sugerir atualização semanal`
+- Linha 185 [string]: `traga cenas de decisão, vínculo e imagem como exercício inicial de reconhecimento; use linguagem atemporal, como 'para começar' ou 'quando isso aparecer de novo'`
+- Linha 188 [string]: `não fale em semana atual, previsão, rotina recorrente do produto ou acompanhamento contínuo`
+- Linha 191 [string]: `Como você é percebida`
+- Linha 192 [string]: `traduzir o impacto inicial e a leitura que outras pessoas podem fazer`
+- Linha 194 [string]: `diferencie intenção interna de efeito externo e mostre como presença, silêncio, ritmo, proximidade e postura podem ser interpretados`
+- Linha 197 [string]: `não afirmar o que todas as pessoas pensam nem reduzir percepção a elogios`
+- Linha 201 [string]: `mostrar quando a força vira defesa, excesso ou padrão repetido`
+- Linha 203 [string]: `nomeie a defesa de forma concreta, mostre o custo no corpo, nos vínculos ou na imagem, e indique um ajuste observável`
+- Linha 206 [string]: `não patologize, não use linguagem clínica e não trate sombra como erro moral`
+- Linha 209 [string]: `Padrão relacional`
+- Linha 211 [string]: `mostrar como a força aparece em vínculo, aproximação, distância, expectativa e necessidade de segurança`
+- Linha 215 [string]: `traga situações de conversa, espera, cobrança, silêncio, escolha, desejo, cuidado, controle ou liberdade`
+- Linha 218 [string]: `não dê conselho afetivo prescritivo e não diga como a pessoa deve se relacionar`
+- Linha 221 [string]: `Caminho de individuação`
+- Linha 222 [string]: `mostrar como integrar conscientemente as duas forças`
+- Linha 224 [string]: `nomeie a passagem entre automatismo e escolha, com perguntas e movimentos internos que preservem ambas as forças`
+- Linha 227 [string]: `não prometer cura, não prescrever terapia e não usar linguagem de autoajuda`
+- Linha 230 [string]: `Essência de imagem`
+- Linha 231 [string]: `traduzir símbolo em roupa, gesto, beleza e presença visual`
+- Linha 233 [string]: `explique o que uma escolha visual precisa sustentar, o que pode estar bonito mas desalinhado, e que pergunta fazer antes de escolher roupa, beleza ou postura; abra com delicadeza a curiosidade sobre como essa essência será lida tecnicamente no Dossiê ORI`
+- Linha 238 [string]: `não invente análise de coloração pessoal, biotipo, proporção corporal, cabelo ou diagnóstico visual que ainda pertence ao Dossiê ORI`
+- Linha 243 [string]: `Paleta simbólica`
+- Linha 244 [string]: `traduzir a combinação em atmosferas cromáticas arquetípicas`
+- Linha 246 [string]: `preserve as cores do texto-base e explique intenção, contraste, profundidade e ocasião de uso como linguagem simbólica`
+- Linha 249 [string]: `não apresentar cartela de coloração pessoal nem afirmar subtom de pele`
+- Linha 253 [string]: `traduzir a combinação em linha, estrutura, movimento e proporção visual`
+- Linha 255 [string]: `preserve as direções do texto-base e explique o que cada construção comunica e como equilibrar as duas forças`
+- Linha 258 [string]: `não diagnosticar Kibbe, formato corporal, peso ou correção de corpo`
+- Linha 262 [string]: `explicar como textura, peso, brilho e movimento sustentam a presença`
+- Linha 264 [string]: `preserve os materiais do texto-base e conecte sensação tátil, queda e acabamento ao equilíbrio arquetípico`
+- Linha 267 [string]: `não criar regras universais nem transformar a seção em lista de compras`
+- Linha 271 [string]: `traduzir a essência em intenção de beleza sem fechar diagnóstico técnico`
+- Linha 273 [string]: `trabalhe acabamento, intensidade, contraste simbólico, gesto e coerência entre rosto, cabelo e presença a partir do texto-base`
+- Linha 277 [string]: `não diagnosticar coloração, formato de rosto, textura capilar nem prescrever mudança permanente`
+- Linha 282 [string]: `Presença`
+- Linha 283 [string]: `mostrar como sustentar o arquétipo no corpo e na comunicação não verbal`
+- Linha 285 [string]: `desenvolva postura, ritmo, ocupação do espaço, olhar, voz e gesto em situações reais, sem criar uma personagem`
+- Linha 288 [string]: `não ensinar performance artificial nem impor feminilidade padronizada`
+- Linha 291 [string]: `O que quebra seu arquétipo`
+- Linha 292 [string]: `nomear escolhas que criam ruído entre identidade e imagem`
+- Linha 294 [string]: `explique por que os excessos ou apagamentos do texto-base enfraquecem a presença e ofereça critérios de revisão, sem proibições rígidas`
+- Linha 297 [string]: `não humilhar escolhas anteriores, ditar tendências ou criar regras de certo e errado`
+- Linha 300 [string]: `Leitura final`
+- Linha 301 [string]: `integrar a leitura em uma síntese emocional, estratégica e memorável`
+- Linha 303 [string]: `retome a tensão central, reconheça o momento da cliente e indique a passagem da consciência para uma imagem mais coerente; conclua com um convite afetuoso e claro para o Dossiê ORI como próxima etapa de corpo, cores, cabelo e presença real`
+- Linha 307 [string]: `não repetir literalmente as seções anteriores nem antecipar a entrega do Dossiê ORI`
+- Linha 423 [string]: `Quero escrever com minhas palavras`
+- Linha 511 [string]: `seu momento atual é “`
+- Linha 514 [string]: `o que mais pesa hoje é “`
+- Linha 517 [string]: `seu objetivo principal é “`
+- Linha 521 [string]: `Seu perfil de entrada ainda não trouxe todos os pontos de partida, então esta camada se apoia principalmente no mapa do quiz.`
+- Linha 525 [string]: `No seu perfil de entrada, você indicou que`
+- Linha 542 [string]: `essa escolha sustenta minha presença ou me coloca em uma versão menor de mim?`
+- Linha 546 [string]: `essa nuance precisa aparecer com mais verdade ou está ficando escondida?`
+- Linha 558 [string]: `Na vida real,`
+- Linha 558 [string]: `aparece menos como uma ideia e mais como um modo de reagir. Ela pode surgir`
+- Linha 559 [string]: `. Quando essa força está viva, você tende a perceber rapidamente se uma situação expande sua presença ou se começa a apertar seu corpo por dentro. Nas decisões, a pergunta silenciosa costuma ser: “`
+- Linha 561 [string]: `”. A resposta nem sempre vem como pensamento organizado. Às vezes aparece como impaciência, distância, vontade de recuar, necessidade de controlar ou dificuldade de permanecer em algo que parece bonito por fora, mas estreito por dentro. Nas relações, o ponto de atenção em`
+- Linha 565 [string]: `mostra onde você pode se adaptar, se defender ou esperar que o outro adivinhe o que está acontecendo. Esse é um ponto importante da leitura: não para se cobrar, mas para perceber onde a sua força vira proteção automática. Na imagem, uma escolha pode estar bonita e ainda assim não funcionar. O que sustenta você precisa dar espaço para`
+- Linha 569 [string]: `, sem apagar`
+- Linha 569 [string]: `. Antes de escolher roupa, beleza ou postura, pergunte se aquilo deixa você mais presente no corpo ou se apenas encaixa você em um papel aceitável. Para começar a aplicar esta leitura, observe uma situação em que você quase disse sim no automático. Antes de responder,`
+- Linha 573 [string]: `. Depois,`
+- Linha 573 [string]: `. Se precisar de uma frase simples para reconhecer esse movimento fora da tela, use esta: “`
+- Linha 616 [string]: `seu resultado`
+- Linha 617 [string]: `força principal`
+- Linha 618 [string]: `força secundária`
+- Linha 621 [string]: `escolha uma ação pequena que sustente sua força principal sem performar para o olhar externo`
+- Linha 625 [string]: `observe qual nuance da sua força secundária precisa aparecer com mais clareza`
+- Linha 641 [string]: `O que suas respostas mostraram`
+- Linha 643 [string]: `. Isso mostra que`
+- Linha 643 [string]: `O mapa marcou com mais força`
+- Linha 644 [string]: `apareceu pela repetição dos seus sinais, não por uma leitura genérica.`
+- Linha 649 [string]: `O que seu perfil trouxe`
+- Linha 651 [string]: `Esses dados ajudam o ORI a entender onde essa força precisa virar imagem real, e não apenas nome simbólico.`
+- Linha 659 [string]: `, o ORI cruzou suas respostas com o seu ponto de partida. O que ganhou mais força foi`
+- Linha 659 [string]: `Antes de nomear sua composição como`
+- Linha 661 [string]: `Por isso, esta leitura olha para você a partir do que foi marcado, do que se repetiu e do que sua imagem parece pedir agora. A força principal,`
+- Linha 663 [string]: `, apareceu ligada a`
+- Linha 664 [string]: `Ela se confirmou especialmente quando você marcou com intensidade sinais como`
+- Linha 664 [string]: `Ela se confirmou pela recorrência dos sinais associados a essa energia.`
+- Linha 667 [string]: `. A força principal aponta o eixo que mais organiza sua imagem; a força secundária mostra nuance, tensão e profundidade.`
+- Linha 667 [string]: `A dinâmica interna desta leitura mostra um encontro entre`
+- Linha 669 [string]: `A presença de`
+- Linha 669 [string]: `aparece como uma segunda corrente atravessando sua leitura.`
+- Linha 669 [string]: `apareceu em respostas como`
+- Linha 669 [string]: `É por isso que essa leitura não deve ser entendida como rótulo fixo, mas como movimento entre duas forças que precisam aprender a trabalhar juntas.`
+- Linha 673 [string]: `. Esse bloco fala de`
+- Linha 673 [string]: `O ponto de maior atenção apareceu em`
+- Linha 674 [string]: `, e mostra onde sua imagem pode perder clareza quando tenta compensar, se proteger ou responder demais ao ambiente. A sombra aqui não significa erro. Ela mostra onde a força nomeada precisa de consciência para não virar defesa, excesso ou fragmentação visual.`
+- Linha 680 [string]: `A roupa, a beleza, a cor e o gesto precisam sustentar`
+- Linha 680 [string]: `Quando cruzamos o resultado com o seu perfil, a direção de imagem precisa responder a algo concreto:`
+- Linha 681 [string]: `. É aqui que começa a ponte para o Dossiê ORI: a primeira leitura nomeia a força, mas ainda não resolve sozinha como ela deve aparecer no corpo, no rosto, no cabelo, na coloração e na rotina real.`
+- Linha 685 [string]: `Esta leitura foi construída a partir das suas respostas e do seu perfil de entrada. O ORI observou onde você marcou intensidade, onde apareceu contraste e onde sua imagem parece pedir mais tradução. Por isso,`
+- Linha 687 [string]: `é menos uma etiqueta e mais uma chave de leitura. Ela mostra a força que organiza sua presença agora e aponta o próximo passo: traduzir essa base em imagem concreta, coerente e possível de sustentar.`
+- Linha 706 [string]: `Nesta leitura arquetípica,`
+- Linha 706 [string]: `No Produto 1,`
+- Linha 707 [string]: `nesta leitura arquetípica,`
+- Linha 707 [string]: `no Produto 1,`
+- Linha 708 [string]: `Produto 1`
+- Linha 708 [string]: `leitura arquetípica`
+- Linha 709 [string]: `Dossiê ORI`
+- Linha 709 [string]: `Produto 2`
+- Linha 936 [string]: `Reescreva a camada`
+- Linha 936 [string]: `com base no contexto abaixo. Use o texto base como chão autoral, mas deixe a leitura mais aterrada. Não repita a função das outras camadas. Cumpra a missão desta camada.`
+- Linha 1045 [string]: `Reescreva todas as camadas como partes de uma mesma leitura. Use o contexto compartilhado para personalizar e o texto-base de cada camada somente como referência autoral. Não devolva o texto-base ampliado: entregue uma interpretação nova, mais íntima, explicada e reveladora. A cliente deve sentir continuidade, profundidade e especificidade do início ao fim. CONTEXTO COMPARTILHADO`
+- Linha 1121 [string]: `AI reading layer retry: layer=`
+- Linha 1130 [string]: `AI reading layer fallback: layer=`
+- Linha 1131 [string]: `reason=HTTPStatusError status=`
+- Linha 1153 [string]: `AI reading layer generated: layer=`
+- Linha 1241 [string]: `AI reading batch retry: batch=`
+- Linha 1252 [string]: `AI reading batch fallback: batch=`
+- Linha 1291 [string]: `AI reading batch rejected: layer=`
+- Linha 1299 [string]: `source=batch batch=`
+- Linha 1354 [string]: `AI reading loaded from persistence`
+- Linha 1426 [string]: `A leitura do Código das Deusas ainda não está pronta para relatório.`
+- Linha 1437 [string]: `Relatório ORI ·`
+
+### `backend/app/services/produto1_catalogo_service.py`
+
+- Linha 10 [string]: `A Magnética`
+- Linha 11 [string]: `A Sensível`
+- Linha 12 [string]: `A Soberana`
+- Linha 13 [string]: `A Nutridora`
+- Linha 14 [string]: `A Estrategista`
+- Linha 15 [string]: `A Livre`
+
+### `backend/app/services/produto1_service.py`
+
+- Linha 30 [string]: `Token de autenticação ausente.`
+- Linha 47 [string]: `Existem respostas que não pertencem ao Código das Deusas:`
+- Linha 122 [string]: `AI reading persistence skipped: status=`
+- Linha 127 [string]: `AI reading persisted`
+- Linha 165 [string]: `Não foi possível consultar as respostas do Código das Deusas.`
+- Linha 217 [string]: `Não foi possível salvar as respostas do Código das Deusas.`
+- Linha 266 [string]: `Não foi possível atualizar o resultado da cliente.`
+- Linha 332 [string]: `Não foi possível reiniciar o resultado da cliente.`
+- Linha 338 [string]: `Não foi possível limpar o feedback anterior da leitura.`
+
+### `backend/app/services/produto3_service.py`
+
+- Linha 191 [string]: `Sem categoria`
+- Linha 311 [string]: `Não foi possível consultar o Código Final.`
+- Linha 322 [string]: `Perfil da cliente não encontrado.`
+- Linha 328 [string]: `Código Final ainda não liberado para esta cliente.`
+- Linha 355 [string]: `Não foi possível salvar o Código Final.`
+- Linha 362 [string]: `Não foi possível confirmar o Código Final salvo.`
+- Linha 391 [string]: `Não foi possível atualizar o Código Final.`
+- Linha 467 [string]: `Código Final publicado não pode receber novos insumos.`
+- Linha 521 [string]: `Código Final publicado não pode receber novo envio.`
+
+### `backend/app/services/quiz_service.py`
+
+- Linha 40 [string]: `Pergunta inválida:`
+- Linha 46 [string]: `. Use valores de 1 a 5.`
+- Linha 46 [string]: `Resposta inválida na pergunta`
+- Linha 61 [string]: `Responda todos os sinais antes de revelar o Código ORI. Faltam:`
+
+### `metodo-ori/src/components/LockedProductCard.jsx`
+
+- Linha 24 [JSX]: `Acesso ainda não liberado`
+- Linha 63 [JSX]: `Voltar para a primeira leitura`
+
+### `metodo-ori/src/components/NextStepCard.jsx`
+
+- Linha 140 [JSX]: `Dossiê ORI`
+- Linha 152 [JSX]: `Sua leitura ganhando forma visual`
+- Linha 167 [string]: `Cabelo e beleza`
+- Linha 167 [string]: `Coloração`
+- Linha 167 [string]: `Corpo e rosto`
+- Linha 167 [string]: `Presença`
+- Linha 212 [JSX]: `Continuar para o Dossiê ORI`
+- Linha 237 [JSX]: `Dossiê em preparação`
+- Linha 245 [JSX]: `Quando essa etapa estiver liberada, você poderá continuar por aqui.`
+
+### `metodo-ori/src/components/QuizHero.jsx`
+
+- Linha 3 [string]: `Começar minha leitura`
+- Linha 20 [string]: `Leitura Arquetípica de Imagem`
+- Linha 106 [JSX]: `Nomeação`
+- Linha 121 [JSX]: `Arquetípica`
+- Linha 130 [JSX]: `de Imagem`
+- Linha 140 [JSX]: `Sua imagem não começa na aparência.`
+- Linha 142 [JSX]: `Ela começa no que você deseja, protege, repete e mostra sem perceber.`
+- Linha 176 [JSX]: `O ORI começa identificando a força principal e a força de apoio que aparecem nas suas escolhas, nos seus desejos e nos seus modos de proteção.`
+- Linha 187 [JSX]: `Não é uma dica de estilo pronta. Essa primeira leitura cria a base para os próximos passos: entender seu corpo, suas cores, seu cabelo, sua beleza e sua imagem na vida real.`
+- Linha 206 [string]: `Forças principais`
+- Linha 208 [string]: `Primeiros códigos`
+
+### `metodo-ori/src/components/ReportAccordion.jsx`
+
+- Linha 295 [string]: `Camada ativa`
+- Linha 295 [string]: `Camada disponível`
+- Linha 352 [string]: `Abrir seção`
+- Linha 352 [string]: `Fechar seção`
+- Linha 395 [JSX]: `Leitura ativada`
+- Linha 470 [string]: `Referência visual`
+
+### `metodo-ori/src/components/ReportDivider.jsx`
+
+- Linha 1 [string]: `Matriz ORI`
+
+### `metodo-ori/src/components/ResultHero.jsx`
+
+- Linha 5 [string]: `Sua imagem começa a mostrar o que já existe em você.`
+- Linha 9 [string]: `Você segue aquilo que sente antes mesmo de conseguir explicar.`
+- Linha 10 [string]: `Você segue aquilo que sentenantes mesmo de conseguir explicar.`
+- Linha 147 [JSX]: `Primeira leitura ORI`
+- Linha 212 [JSX]: `Arquétipo principal`
+- Linha 234 [JSX]: `Arquétipo secundário`
+- Linha 279 [JSX]: `Esta é sua base arquetípica inicial: a força que organiza sua imagem antes de virar roupa, cor, beleza e assinatura visual.`
+
+### `metodo-ori/src/components/StatusCard.jsx`
+
+- Linha 27 [JSX]: `Leitura em andamento`
+- Linha 41 [JSX]: `Suas respostas estão organizando uma primeira leitura sobre imagem, desejos, padrões emocionais e formas de se proteger.`
+- Linha 96 [JSX]: `Iniciar Diagnóstico`
+
+### `metodo-ori/src/components/SyncNotice.jsx`
+
+- Linha 1 [string]: `Atualizando sua jornada`
+
+### `metodo-ori/src/components/espelho/EspelhoInteractions.jsx`
+
+- Linha 64 [string]: `Navegação do Espelho ORI`
+- Linha 132 [JSX]: `Foco da matriz`
+
+### `metodo-ori/src/components/onboarding/OnboardingLeftPanel.jsx`
+
+- Linha 10 [string]: `Seu nome aparecerá aqui`
+- Linha 15 [string]: `Seu momento aparecerá aqui`
+- Linha 20 [string]: `Seu objetivo aparecerá aqui`
+- Linha 67 [string]: `Método ORI`
+- Linha 84 [JSX]: `Entrada rápida`
+- Linha 98 [JSX]: `Crie seu perfil e comece sua jornada no ORI.`
+- Linha 105 [JSX]: `Essas informações ajudam o ORI a começar sua leitura com mais precisão.`
+
+### `metodo-ori/src/components/onboarding/OnboardingProgress.jsx`
+
+- Linha 17 [string]: `Entrada ORI concluída`
+- Linha 17 [string]: `Perfil de Entrada ORI`
+- Linha 25 [string]: `Registro completo`
+
+### `metodo-ori/src/components/onboarding/OnboardingShell.jsx`
+
+- Linha 72 [string]: `oriOnboardingOrbit 42s linear infinite`
+- Linha 84 [string]: `oriParticleRise 5.2s ease-in-out infinite`
+- Linha 92 [string]: `oriParticleRise 6.6s ease-in-out infinite 1.4s`
+- Linha 100 [string]: `oriParticleRise 7.4s ease-in-out infinite 0.8s`
+
+### `metodo-ori/src/components/report/ImageManual.jsx`
+
+- Linha 24 [JSX]: `Manual de Imagem`
+- Linha 31 [JSX]: `Sua estética traduz sua essência.`
+- Linha 108 [JSX]: `Presença`
+- Linha 127 [JSX]: `O que quebra sua essência`
+
+### `metodo-ori/src/constants/journeyStatus.js`
+
+- Linha 2 [string]: `Cadastro recebido`
+- Linha 3 [string]: `Entrada ORI em andamento`
+- Linha 4 [string]: `Entrada ORI concluída`
+- Linha 5 [string]: `Código das Deusas liberado`
+- Linha 6 [string]: `Código das Deusas em andamento`
+- Linha 7 [string]: `Código das Deusas concluído`
+- Linha 8 [string]: `Dossiê ORI liberado`
+- Linha 9 [string]: `Dossiê ORI em preenchimento`
+- Linha 10 [string]: `Dossiê ORI em análise`
+- Linha 11 [string]: `Dossiê ORI publicado`
+- Linha 12 [string]: `Código Final liberado`
+- Linha 13 [string]: `Código Final em preenchimento`
+- Linha 14 [string]: `Código Final em análise`
+- Linha 15 [string]: `Código Final publicado`
+- Linha 16 [string]: `Jornada finalizada`
+
+### `metodo-ori/src/content/journeyCopy.js`
+
+- Linha 2 [string]: `Átrio ORI`
+- Linha 3 [string]: `Código das Deusas`
+- Linha 4 [string]: `Dossiê ORI`
+- Linha 5 [string]: `Código Final`
+- Linha 6 [string]: `Próximo passo`
+- Linha 12 [string]: `A primeira leitura nomeia a força que organiza sua imagem por dentro.`
+- Linha 14 [string]: `Seu Código das Deusas revelou a força que organiza sua imagem por dentro. Essa é a base para a próxima tradução da sua imagem.`
+- Linha 18 [string]: `Mostra como sua leitura aparece no corpo, no rosto, nas cores, no cabelo, na beleza e na presença.`
+- Linha 19 [string]: `Seu próximo passo é o Dossiê ORI.`
+- Linha 21 [string]: `Seu Código das Deusas revelou a força que organiza sua imagem por dentro. O Dossiê ORI mostra como essa força aparece na prática: no corpo, no rosto, nas cores, no cabelo, na beleza e na presença. É a próxima etapa para transformar leitura em imagem real.`
+- Linha 23 [string]: `O Dossiê ORI mostra como a força revelada no Código das Deusas aparece na prática: corpo, rosto, cores, cabelo, beleza e presença.`
+- Linha 27 [string]: `O Código Final aplica sua identidade ao armário real: cápsula, fórmulas de look, prioridades de compra e escolhas com critério.`
+- Linha 31 [string]: `Ele funciona como a porta de entrada da jornada: primeiro nomeia sua força, depois prepara o Dossiê, o Espelho e a aplicação no guarda-roupa.`
+- Linha 33 [string]: `Estamos buscando sua leitura e os próximos passos da sua jornada.`
+
+### `metodo-ori/src/data/archetypeImages.js`
+
+- Linha 2 [string]: `Amante Nutridora`
+- Linha 6 [string]: `Autônoma Absoluta`
+- Linha 10 [string]: `Cuidadora Estratégica`
+- Linha 14 [string]: `Guardiã Sensível`
+- Linha 18 [string]: `Matriarca Soberana`
+- Linha 22 [string]: `Musa Enigmática`
+- Linha 26 [string]: `Protetora Selvagem`
+- Linha 30 [string]: `Rainha Magnética`
+- Linha 34 [string]: `Rainha Oculta`
+- Linha 38 [string]: `Sedutora Estratégica`
+- Linha 42 [string]: `Selvagem Magnética`
+- Linha 46 [string]: `Selvagem Intuitiva`
+- Linha 50 [string]: `Soberana Estratégica`
+- Linha 54 [string]: `Soberana Indomável`
+- Linha 58 [string]: `Visionária Sutil`
+
+### `metodo-ori/src/data/archetypeThemes.js`
+
+- Linha 2 [string]: `Musa Enigmática`
+- Linha 10 [string]: `Rainha Magnética`
+- Linha 18 [string]: `Amante Nutridora`
+- Linha 26 [string]: `Sedutora Estratégica`
+- Linha 34 [string]: `Selvagem Magnética`
+- Linha 42 [string]: `Rainha Oculta`
+- Linha 50 [string]: `Guardiã Sensível`
+- Linha 58 [string]: `Visionária Sutil`
+- Linha 66 [string]: `Selvagem Intuitiva`
+- Linha 74 [string]: `Autônoma Absoluta`
+- Linha 82 [string]: `Cuidadora Estratégica`
+- Linha 90 [string]: `Matriarca Soberana`
+- Linha 98 [string]: `Protetora Selvagem`
+- Linha 106 [string]: `Soberana Estratégica`
+- Linha 114 [string]: `Soberana Indomável`
+
+### `metodo-ori/src/pages/Produto2EmPreparacao.jsx`
+
+- Linha 41 [JSX]: `Próxima camada`
+- Linha 53 [JSX]: `Dossiê ORI`
+- Linha 60 [JSX]: `Depois da primeira leitura, o ORI observa como sua essência aparece na imagem real: corpo, rosto, cor, cabelo, beleza, presença e rotina.`
+- Linha 78 [JSX]: `Em preparação`
+- Linha 88 [JSX]: `Sua próxima etapa está sendo preparada.`
+- Linha 94 [JSX]: `Esta camada será liberada quando estiver pronta para a sua jornada. Enquanto isso, sua primeira leitura segue como base viva do caminho.`
+- Linha 108 [JSX]: `Voltar ao portal`
+- Linha 120 [JSX]: `Rever primeira leitura`
+- Linha 137 [string]: `A forma como sua presença ocupa espaço.`
+- Linha 137 [string]: `Corpo e linhas`
+- Linha 138 [string]: `A temperatura, o contraste e a força visual.`
+- Linha 138 [string]: `Cor e beleza`
+- Linha 139 [string]: `A moldura real da sua expressão diária.`
+- Linha 139 [string]: `Cabelo e rotina`
+
+### `metodo-ori/src/services/analyzeReadingSignals.js`
+
+- Linha 2 [string]: `Sua Presença`
+- Linha 2 [string]: `como sua presença chega antes da explicação`
+- Linha 3 [string]: `Seu Estilo`
+- Linha 3 [string]: `como sua imagem tenta se organizar no vestir`
+- Linha 4 [string]: `Seu Corpo`
+- Linha 4 [string]: `como corpo, postura e movimento entram na leitura`
+- Linha 5 [string]: `Seus Relacionamentos`
+- Linha 5 [string]: `como vínculo, espaço e troca aparecem no seu campo`
+- Linha 6 [string]: `Seu Mundo Interno`
+- Linha 6 [string]: `como desejo, controle, imaginação e direção operam por dentro`
+- Linha 7 [string]: `Seus Padrões`
+- Linha 7 [string]: `onde a força pode virar defesa, excesso ou ruído`
+- Linha 12 [string]: `quando você chega em um lugar, muda o clima da conversa ou sente que precisa modular sua intensidade para ser recebida`
+- Linha 14 [string]: `quando uma roupa bonita ainda parece errada porque não sustenta o jeito como você quer se mover, ser vista ou se proteger`
+- Linha 16 [string]: `quando postura, conforto, movimento e sensação física dizem antes da cabeça se algo combina com você`
+- Linha 18 [string]: `quando vínculo, troca, distância, escolha ou disponibilidade mexem diretamente com a sua segurança`
+- Linha 20 [string]: `quando desejo, intuição, análise, imaginação ou controle definem o ritmo das suas escolhas`
+- Linha 22 [string]: `quando você repete uma defesa conhecida: agradar, endurecer, sumir, controlar, cuidar demais ou romper antes de nomear o incômodo`
+- Linha 27 [string]: `escolha uma peça, gesto ou beleza que aumente prazer sem depender de aprovação externa`
+- Linha 29 [string]: `observe uma sensação antes de explicá-la e anote o que seu corpo percebeu primeiro`
+- Linha 31 [string]: `defina onde você precisa de respeito real, não apenas de reconhecimento aparente`
+- Linha 33 [string]: `ofereça cuidado sem assumir uma responsabilidade que não precisa ser sua`
+- Linha 35 [string]: `transforme uma percepção solta em uma decisão simples, com critério e limite`
+- Linha 37 [string]: `preserve espaço de movimento antes de aceitar uma demanda que aperta seu território`
+- Linha 42 [string]: `isso me dá prazer real ou só tenta produzir desejo no olhar de fora?`
+- Linha 44 [string]: `meu corpo já percebeu algo que minha cabeça ainda está tentando explicar?`
+- Linha 46 [string]: `esse lugar me reconhece de verdade ou só exige que eu sustente uma posição?`
+- Linha 48 [string]: `esse cuidado nasce de presença ou de uma tentativa de ser necessária?`
+- Linha 50 [string]: `essa escolha tem critério claro ou virou controle para evitar vulnerabilidade?`
+- Linha 52 [string]: `esse caminho respeita meu espaço ou começa a me prender por dentro?`
+- Linha 57 [string]: `prazer, presença sensorial e beleza que não precise implorar por validação`
+- Linha 59 [string]: `profundidade, pausa e uma imagem que revele por camadas, sem se explicar demais`
+- Linha 60 [string]: `dignidade, estrutura e uma presença que comunique valor sem endurecer`
+- Linha 61 [string]: `acolhimento, conforto e sustentação sem apagar contorno pessoal`
+- Linha 63 [string]: `clareza, intenção e escolhas visuais com critério, sem rigidez excessiva`
+- Linha 64 [string]: `movimento, território e liberdade suficiente para o corpo respirar`
+- Linha 68 [string]: `magnetismo, prazer, beleza e desejo de conexão`
+- Linha 69 [string]: `profundidade, intuição, recolhimento e mundo interno`
+- Linha 70 [string]: `dignidade, reconhecimento, posição e compromisso`
+- Linha 71 [string]: `cuidado, vínculo, acolhimento e sustentação`
+- Linha 72 [string]: `clareza, estratégia, leitura de contexto e controle`
+- Linha 73 [string]: `liberdade, território, movimento e autonomia`
+- Linha 146 [string]: `essa escolha sustenta minha presença ou me coloca em uma versão menor de mim?`
+- Linha 149 [string]: `essa nuance precisa aparecer com mais verdade ou está ficando escondida?`
+- Linha 154 [string]: `seus padrões`
+- Linha 157 [template]: `Na vida real,`
+- Linha 157 [template]: `aparece menos como uma ideia e mais como um modo de reagir.`
+- Linha 158 [template]: `. Quando essa força está viva, você tende a perceber rapidamente se uma situação expande sua presença ou se começa a apertar seu corpo por dentro.nn`
+- Linha 158 [template]: `Ela pode surgir`
+- Linha 159 [template]: `Nas decisões, a pergunta silenciosa costuma ser: “`
+- Linha 159 [template]: `”. A resposta nem sempre vem como pensamento organizado. Às vezes aparece como impaciência, distância, vontade de recuar, necessidade de controlar ou dificuldade de permanecer em algo que parece bonito por fora, mas estreito por dentro.nn`
+- Linha 160 [template]: `Nas relações, o ponto de atenção em`
+- Linha 160 [template]: `mostra onde você pode se adaptar, se defender ou esperar que o outro adivinhe o que está acontecendo. Esse é um ponto importante da leitura: não para se cobrar, mas para perceber onde a sua força vira proteção automática.nn`
+- Linha 161 [template]: `, sem apagar`
+- Linha 161 [template]: `. Antes de escolher roupa, beleza ou postura, pergunte se aquilo deixa você mais presente no corpo ou se apenas encaixa você em um papel aceitável.nn`
+- Linha 161 [template]: `Na imagem, uma escolha pode estar bonita e ainda assim não funcionar. O que sustenta você precisa dar espaço para`
+- Linha 162 [template]: `. Depois,`
+- Linha 162 [template]: `. Se precisar de uma frase simples para reconhecer esse movimento fora da tela, use esta: “`
+- Linha 162 [template]: `Para começar a aplicar esta leitura, observe uma situação em que você quase disse sim no automático. Antes de responder,`
+- Linha 208 [string]: `escolha uma ação pequena que sustente sua força principal sem performar para o olhar externo`
+- Linha 211 [string]: `observe qual nuance da sua força secundária precisa aparecer com mais clareza`
+- Linha 224 [template]: `, o ORI leu o padrão das suas respostas. O que ganhou mais força foi`
+- Linha 224 [template]: `. Isso indica que o resultado não nasceu apenas de uma soma de arquétipos: ele apareceu pela forma como sua presença, suas escolhas e seus padrões se repetiram no mapa.nn`
+- Linha 224 [template]: `Antes de nomear sua composição como`
+- Linha 225 [template]: `, apareceu ligada a`
+- Linha 225 [string]: `: "Ela se confirmou pela recorrência dos sinais associados a essa energia."}`
+- Linha 225 [template]: `A força principal,`
+- Linha 228 [template]: `. A força principal aponta o eixo que mais organiza sua imagem; a força secundária mostra a camada que dá nuance, tensão e profundidade ao resultado.nn`
+- Linha 228 [template]: `A dinâmica interna desta leitura mostra um encontro entre`
+- Linha 229 [string]: `} Por isso, a leitura não deve ser entendida como um rótulo fixo, mas como um movimento entre duas forças que precisam aprender a trabalhar juntas.`
+- Linha 233 [template]: `, e mostra onde sua imagem pode perder clareza quando tenta compensar, se proteger ou responder demais ao ambiente.nnA sombra aqui não significa erro. Ela mostra o lugar onde a força nomeada precisa de mais consciência para não virar defesa, excesso ou fragmentação visual.`
+- Linha 233 [template]: `. Esse bloco fala de`
+- Linha 233 [template]: `O ponto de maior atenção aparece em`
+- Linha 234 [string]: `O ponto de atenção desta leitura está menos em uma falha específica e mais na necessidade de sustentar coerência entre essência, presença e imagem. Quando essas camadas se separam, a força nomeada pode parecer menor do que realmente é.`
+- Linha 239 [template]: `.nnÉ aqui que começa a ponte para o Dossiê ORI: a primeira leitura nomeia a força, mas ainda não resolve sozinha como essa força deve aparecer no corpo, no rosto, no cabelo, na coloração e na rotina real.`
+- Linha 239 [template]: `Quando cruzamos o resultado com suas respostas, a direção de imagem pede mais do que estética bonita: ela precisa traduzir o modo como você funciona. A roupa, a beleza, a cor e o gesto precisam sustentar`
+- Linha 242 [template]: `Esta leitura foi construída a partir das suas respostas, não apenas da combinação arquetípica final. O ORI observou onde você marcou intensidade, onde apareceu contraste e onde sua imagem parece pedir mais tradução.nnPor isso,`
+- Linha 242 [template]: `é menos uma etiqueta e mais uma chave de leitura: ela mostra a força que organiza sua presença agora e aponta o próximo passo. Depois de nomear essa base, o Dossiê ORI aprofunda a tradução para a sua imagem concreta: corpo, cor, beleza, cabelo, proporção, textura e presença visual aplicada.`
+
+### `metodo-ori/src/services/api.js`
+
+- Linha 19 [string]: `O ORI está demorando um pouco para atualizar sua jornada. Você pode continuar; seus dados serão preservados.`
+- Linha 45 [string]: `O ORI demorou mais que o esperado para responder.`
+- Linha 46 [string]: `Não foi possível atualizar a jornada ORI agora.`
+- Linha 51 [string]: `O ORI está acordando a leitura. Aguarde alguns segundos e tente novamente.`
+- Linha 52 [string]: `O ORI está demorando um pouco para atualizar sua jornada. Você pode continuar; vamos manter o que já foi salvo.`
+- Linha 62 [template]: `Não foi possível concluir a atualização ORI:`
+- Linha 68 [string]: `Sua sessão precisa ser atualizada. Entre novamente para continuar com segurança.`
+- Linha 69 [string]: `Não conseguimos concluir a atualização agora. Tente novamente em alguns instantes.`
+- Linha 81 [string]: `Não foi possível ler a sessão atual.`
+- Linha 83 [string]: `Não conseguimos confirmar sua sessão agora. Atualize a página ou entre novamente.`
+- Linha 94 [string]: `Sessão não encontrada.`
+- Linha 97 [string]: `Sua sessão expirou. Entre novamente para continuar sua jornada ORI.`
+- Linha 139 [string]: `O ORI demorou mais que o esperado para preparar o arquivo.`
+- Linha 140 [string]: `Não foi possível preparar o arquivo agora.`
+- Linha 145 [string]: `O ORI ainda está preparando o arquivo. Aguarde mais alguns instantes e tente baixar novamente.`
+- Linha 146 [string]: `Não conseguimos baixar o arquivo agora. Tente novamente em alguns instantes.`
+- Linha 156 [template]: `Não foi possível preparar o arquivo ORI:`
+- Linha 162 [string]: `Sua sessão precisa ser atualizada. Entre novamente para baixar o PDF.`
+- Linha 163 [string]: `Não conseguimos gerar o PDF agora. Tente novamente em alguns instantes.`
+
+### `metodo-ori/src/utils/adminClientPriority.js`
+
+- Linha 46 [string]: `Perfil inicial pendente`
+- Linha 47 [string]: `Entrada ORI não concluída.`
+- Linha 48 [string]: `Solicitar conclusão do perfil inicial antes da leitura.`
+- Linha 49 [string]: `Enviar lembrete curto, sem explicar todo o processo.`
+- Linha 57 [string]: `Leitura em andamento`
+- Linha 58 [template]: `% do quiz.`
+- Linha 58 [template]: `iniciou o Código das Deusas e respondeu`
+- Linha 59 [string]: `Solicitar conclusão das respostas do Produto 1.`
+- Linha 60 [string]: `Enviar lembrete objetivo para concluir a etapa iniciada.`
+- Linha 68 [string]: `Iniciar Código das Deusas`
+- Linha 69 [string]: `Cliente ainda não tem leitura do Produto 1 registrada.`
+- Linha 70 [string]: `Direcionar para iniciar o Código das Deusas.`
+- Linha 71 [string]: `Indicar o primeiro passo com clareza.`
+- Linha 79 [string]: `Resposta pós-leitura pendente`
+- Linha 80 [string]: `Leitura concluída. Resposta pós-leitura ainda não registrada.`
+- Linha 81 [string]: `Solicitar resposta pós-leitura antes de convidar para a próxima etapa.`
+- Linha 82 [string]: `Entender se a leitura foi clara, abstrata ou desalinhada.`
+- Linha 90 [string]: `Revisar leitura`
+- Linha 91 [string]: `Cliente informou que não se reconheceu na leitura.`
+- Linha 92 [string]: `Revisar sinais antes de qualquer convite para o Dossiê.`
+- Linha 93 [string]: `Pedir contexto, reduzir desalinhamento e evitar avanço prematuro.`
+- Linha 101 [string]: `Enviar exemplos práticos`
+- Linha 102 [string]: `Leitura compreendida, mas ainda abstrata.`
+- Linha 103 [string]: `Enviar exemplos práticos antes do convite.`
+- Linha 104 [string]: `Conectar a leitura a corpo, imagem e rotina.`
+- Linha 116 [string]: `Convidar para Dossiê`
+- Linha 117 [string]: `Resposta positiva registrada. Cliente apta para convite ao Dossiê.`
+- Linha 118 [string]: `Enviar convite para o Dossiê ORI.`
+- Linha 119 [string]: `Explicar o Dossiê como o próximo passo prático, sem pressão.`
+- Linha 127 [string]: `Avaliar convite`
+- Linha 128 [string]: `Código das Deusas concluído e Dossiê ainda fechado.`
+- Linha 129 [string]: `Avaliar convite para o Dossiê com base no contexto da cliente.`
+- Linha 130 [string]: `Conectar o convite ao resultado do Produto 1.`
+- Linha 138 [string]: `Acompanhar Dossiê`
+- Linha 139 [string]: `Dossiê ORI liberado e Código Final ainda fechado.`
+- Linha 140 [string]: `Acompanhar avanço no Dossiê antes de liberar o Código Final.`
+- Linha 141 [string]: `Acompanhar execução sem antecipar a próxima etapa.`
+- Linha 149 [string]: `Ativar Oráculo`
+- Linha 150 [string]: `Carta diária de hoje ainda não registrada.`
+- Linha 151 [string]: `Sugerir uso do Oráculo como acompanhamento leve.`
+- Linha 152 [string]: `Manter engajamento sem criar pressão comercial.`
+- Linha 163 [string]: `Fechar jornada`
+- Linha 164 [string]: `Código Final liberado e fechamento administrativo ainda pendente.`
+- Linha 165 [string]: `Marcar o encerramento quando a entrega estiver concluída.`
+- Linha 166 [string]: `Registrar fechamento com cuidado.`
+- Linha 173 [string]: `Sem urgência`
+- Linha 174 [string]: `Nenhuma pendência relevante identificada.`
+- Linha 175 [string]: `Manter acompanhamento normal.`
+- Linha 176 [string]: `Sem necessidade de contato ativo agora.`
+- Linha 209 [string]: `sem resultado definido`
+- Linha 213 [string]: `Quero escrever com minhas palavras`
+- Linha 218 [template]: `ainda está na etapa de entrada.`
+- Linha 222 [template]: `ainda não concluiu o perfil inicial.`
+- Linha 228 [template]: `concluiu o Código das Deusas com leitura`
+- Linha 231 [string]: `Resposta pós-leitura ainda pendente.`
+- Linha 235 [string]: `Na resposta pós-leitura, ela sinalizou que se sentiu vista.`
+- Linha 238 [string]: `Na resposta pós-leitura, informou que a leitura fez sentido, mas permaneceu abstrata.`
+- Linha 241 [string]: `Na resposta pós-leitura, informou que não se reconheceu em alguns pontos.`
+- Linha 251 [string]: `Resumo da cliente`
+- Linha 270 [string]: `Mensagem sugerida`
+- Linha 277 [string]: `Solicitar resposta pós-leitura`
+- Linha 279 [template]: `. Vi que sua primeira leitura do Código das Deusas já ficou pronta.`
+- Linha 280 [string]: `Antes de seguir para a próxima etapa, queria saber como ela chegou para você: fez sentido, ficou abstrata ou não te encontrou?`
+- Linha 281 [string]: `Seu retorno me ajuda a conduzir o próximo passo com mais precisão.`
+- Linha 287 [string]: `Solicitar conclusão da leitura`
+- Linha 289 [template]: `. Vi que você já começou sua leitura no ORI.`
+- Linha 290 [string]: `Quando puder, finalize as respostas para o ORI organizar sua primeira leitura com mais precisão.`
+- Linha 296 [string]: `Convite para o Dossiê`
+- Linha 298 [template]: `. Seu Código das Deusas já mostrou uma direção importante: a força que organiza sua imagem por dentro.`
+- Linha 299 [string]: `O Dossiê ORI é a próxima etapa para ver como isso aparece no corpo, nas cores, no cabelo, na beleza e na rotina real.`
+- Linha 300 [string]: `Se fizer sentido para você, posso te explicar com calma como funciona.`
+- Linha 306 [string]: `Solicitar conclusão da Entrada ORI`
+- Linha 308 [template]: `. Vi que sua Entrada ORI ainda não foi finalizada.`
+- Linha 309 [string]: `Quando você completar essa parte, consigo ler sua jornada com mais precisão e liberar a próxima etapa.`
+- Linha 314 [string]: `Acompanhamento leve`
+- Linha 316 [template]: `. Passei para acompanhar sua jornada no ORI.`
+- Linha 317 [string]: `Quando você quiser, posso te orientar no próximo passo com calma.`
+
+### `metodo-ori/src/utils/feedbackInsights.js`
+
+- Linha 2 [string]: `Me senti vista`
+- Linha 3 [string]: `Fez sentido, mas ficou abstrato`
+- Linha 4 [string]: `Não me reconheci`
+- Linha 9 [string]: `Alta aderência`
+- Linha 10 [string]: `Boa candidata para convite ao Dossiê.`
+- Linha 12 [string]: `Convite direto com aprofundamento`
+- Linha 17 [string]: `Precisa clareza prática`
+- Linha 18 [string]: `Enviar ponte mais concreta antes do convite.`
+- Linha 20 [string]: `Ponte prática antes do convite`
+- Linha 25 [string]: `Risco de desalinhamento`
+- Linha 26 [string]: `Revisar leitura antes de convidar.`
+- Linha 28 [string]: `Revisão cuidadosa da leitura`
+- Linha 37 [string]: `Sem feedback`
+- Linha 38 [string]: `Pedir retorno da leitura.`
+- Linha 46 [string]: `Ler comentário aberto e definir próximo contato.`
+- Linha 57 [string]: `Abordagem manual`
+
+## Menu lateral / navegação
+
+### `metodo-ori/src/components/Sidebar.jsx`
+
+- Linha 7 [string]: `Portal Cliente`
+- Linha 8 [string]: `Conheça o Método`
+- Linha 9 [string]: `Código das Deusas`
+- Linha 10 [string]: `Dossiê ORI`
+- Linha 11 [string]: `Código Final`
+- Linha 12 [string]: `Espelho ORI`
+- Linha 13 [string]: `Oráculo`
+- Linha 17 [string]: `Estúdio ORI`
+- Linha 138 [template]: `, transparent)`
+- Linha 194 [JSX]: `Menu ORI`
+- Linha 223 [string]: `Fechar menu`
+- Linha 243 [string]: `Método ORI`
+- Linha 250 [JSX]: `Jornada ORI`
+- Linha 256 [JSX]: `Escolha seu próximo passo.`
+- Linha 294 [JSX]: `Painel Administrativo`
+- Linha 314 [JSX]: `Sair do portal`
+- Linha 495 [JSX]: `Sessão ORI`
+- Linha 530 [JSX]: `Portal conectado`
+- Linha 571 [JSX]: `Sair do Portal`
+
+## PDF Produto 1
+
+### `backend/app/services/pdf_service.py`
+
+- Linha 39 [string]: `Amante Nutridora`
+- Linha 40 [string]: `Autônoma Absoluta`
+- Linha 41 [string]: `Cuidadora Estratégica`
+- Linha 42 [string]: `Guardiã Sensível`
+- Linha 43 [string]: `Matriarca Soberana`
+- Linha 44 [string]: `Musa Enigmática`
+- Linha 45 [string]: `Protetora Selvagem`
+- Linha 46 [string]: `Rainha Magnética`
+- Linha 47 [string]: `Rainha Oculta`
+- Linha 48 [string]: `Sedutora Estratégica`
+- Linha 49 [string]: `Selvagem Intuitiva`
+- Linha 50 [string]: `Selvagem Magnética`
+- Linha 51 [string]: `Soberana Estratégica`
+- Linha 52 [string]: `Soberana Indomável`
+- Linha 53 [string]: `Visionária Sutil`
+- Linha 128 [string]: `re B`
+- Linha 131 [string]: `re f`
+- Linha 133 [string]: `re S`
+- Linha 148 [string]: `) Tj ET`
+- Linha 148 [string]: `Td (`
+- Linha 160 [string]: `l S`
+- Linha 278 [string]: `Método ORI by Telúrica`
+- Linha 283 [string]: `Método ORI by Telúrica · Código das Deusas`
+- Linha 321 [string]: `0 obj`
+- Linha 326 [string]: `xref 0`
+- Linha 342 [string]: `Relatório digital · Código das Deusas`
+- Linha 350 [string]: `Pontos considerados na sua leitura`
+- Linha 354 [string]: `Momento atual`
+- Linha 355 [string]: `O que mais pesa hoje`
+- Linha 356 [string]: `Objetivo principal`
+- Linha 363 [string]: `O que o ORI leu no seu mapa`
+- Linha 375 [string]: `Próximo passo`
+- Linha 376 [string]: `Continuidade da jornada`
+- Linha 380 [string]: `Gerado pelo Método ORI em`
+- Linha 469 [string]: `Relatório ORI ·`
+- Linha 471 [string]: `Código das Deusas`
+- Linha 546 [string]: `MÉTODO ORI BY TELÚRICA · CÓDIGO DAS DEUSAS`
+- Linha 645 [string]: `· continuação`
+- Linha 651 [string]: `Leitura arquetípica`
+- Linha 703 [string]: `Mapa da leitura`
+- Linha 706 [string]: `O que foi considerado`
+- Linha 707 [string]: `antes da revelação`
+- Linha 711 [string]: `O que suas respostas mostraram`
+- Linha 712 [string]: `O que seu perfil trouxe`
+- Linha 742 [string]: `O movimento depois da leitura`
+- Linha 762 [string]: `;base64,`
+- Linha 767 [string]: `" alt="Método ORI" />`
+- Linha 888 [string]: `<!doctype html> <html lang="pt-BR"> <head> <meta charset="utf-8" /> <title>`
+- Linha 1252 [string]: `Sua primeira cartografia simbólica de imagem.`
+- Linha 1287 [string]: `Playwright indisponivel para gerar PDF premium: %s`
+- Linha 1291 [string]: `Falha ao gerar PDF premium com ReportLab: %s`
+- Linha 1320 [string]: `Falha ao gerar PDF premium com Playwright. Usando fallback simples: %s`
+
+## Produto 1
+
+### `metodo-ori/src/pages/Produto1.jsx`
+
+- Linha 65 [JSX]: `Abrindo sua leitura...`
+- Linha 108 [JSX]: `Código das Deusas`
+- Linha 119 [JSX]: `Leitura Arquetípica de Imagem`
+- Linha 126 [JSX]: `Sua imagem não começa na aparência. Ela começa nos padrões que moldam sua presença.`
+- Linha 141 [JSX]: `Nesta primeira etapa, o ORI identifica sua composição arquetípica inicial: a força principal, a força secundária e o arquétipo composto que organiza sua forma de desejar, se proteger, se posicionar e ser percebida.`
+- Linha 151 [string]: `Leitura inicial`
+- Linha 152 [string]: `Composição arquetípica`
+- Linha 153 [string]: `Imagem simbólica`
+- Linha 154 [string]: `Presença`
+- Linha 180 [JSX]: `Começar minha leitura`
+- Linha 196 [JSX]: `O que será revelado`
+- Linha 201 [string]: `Direção`
+- Linha 201 [string]: `Essência`
+- Linha 231 [JSX]: `Escala de leitura`
+- Linha 237 [JSX]: `1 = nada a ver comigo · 5 = totalmente eu`
+- Linha 252 [JSX]: `Bloco de leitura`
+- Linha 340 [JSX]: `Revelar Resultado`
+- Linha 356 [string]: `O que existe por trás da sua presença`
+- Linha 362 [string]: `O centro da sua presença`
+- Linha 367 [string]: `Dinâmica Psíquica`
+- Linha 368 [string]: `Como sua energia funciona`
+- Linha 374 [string]: `Vida Real`
+- Linha 375 [string]: `Como isso aparece no dia a dia`
+- Linha 381 [string]: `Como você é percebida`
+- Linha 382 [string]: `O efeito da sua imagem no outro`
+- Linha 388 [string]: `O que tende a desequilibrar sua essência`
+- Linha 393 [string]: `Padrão Relacional`
+- Linha 394 [string]: `Como você se vincula`
+- Linha 399 [string]: `Caminho de Individuação`
+- Linha 400 [string]: `A maturação da sua imagem interna`
+- Linha 405 [string]: `Essência de Imagem`
+- Linha 406 [string]: `Como sua psique se traduz visualmente`
+- Linha 411 [string]: `Leitura Final`
+- Linha 412 [string]: `Quando sua imagem começa a revelar sua essência`
+- Linha 427 [JSX]: `Relatório completo ainda não cadastrado para este resultado.`
+
+## Proteção administrativa
+
+### `metodo-ori/src/components/AdminRoute.jsx`
+
+- Linha 57 [JSX]: `Painel ORI`
+- Linha 63 [JSX]: `Verificando seu acesso administrativo...`
+
+## Proteção de acesso
+
+### `metodo-ori/src/components/ProtectedRoute.jsx`
+
+- Linha 41 [JSX]: `Validando acesso`
+- Linha 51 [JSX]: `Preparando seu portal ORI...`
+- Linha 58 [JSX]: `Estamos confirmando sua sessão e carregando suas camadas.`
+- Linha 109 [string]: `Erro inesperado ao validar sessão:`
+
+## Sistema geral / rotas
+
+### `metodo-ori/src/App.jsx`
+
+- Linha 42 [JSX]: `Abrindo sua jornada...`
+
+## Topo / navegação
+
+### `metodo-ori/src/components/Topbar.jsx`
+
+- Linha 8 [JSX]: `Área da Cliente`
+- Linha 15 [JSX]: `Bem-vinda, Helena.`
+- Linha 28 [JSX]: `Plano Premium`
+- Linha 39 [JSX]: `Novo Diagnóstico`

@@ -1,0 +1,871 @@
+[
+  {
+    "nome": "Pâmela Gadelha",
+    "insumos": {
+      "dados_base": {
+        "autoidentificacao_racial": "Negra (preta ou parda)"
+      },
+      "estrutura_corporal": {
+        "linha_vertical": "B. Moderadamente longa (as pessoas às vezes acham que sou um pouco mais alta, mas nem sempre).",
+        "ombros": "B. Largos e rombudos (quadrados com pontas suaves).",
+        "bracos_pernas": "B. Longos e largos (mais fortes).",
+        "maos_pes": "B. Grandes e largos.",
+        "forma_geral": "B. Largo e musculoso (tendência a ser atlético).",
+        "busto_tronco": "B. Largo e reto (tendência a tronco largo).",
+        "cintura": "E. Suavemente definida, mas com tendência a ser larga.",
+        "quadris": "D. Arredondados e proeminentes.",
+        "ganho_peso": "B. Na cintura e abdômen (corpo fica mais \"quadrado\").",
+        "mandibula": "B. Larga ou rombuda (quadrada suave).",
+        "nariz": "E. Pequeno e arredondado.",
+        "macas_rosto": "B. Largas.",
+        "olhos": "D. Arredondados e levemente grandes.",
+        "labios": "D. Levemente cheios e arredondados.",
+        "ancestralidade_fisica": "Predominantemente africana (ossos fortes, volume natural, curvas evidentes, densidade corporal)"
+      },
+      "coloracao": {
+        "reacao_sol": "B. Fico vermelha no início, mas depois o bronzeado fixa (Neutro).",
+        "metais": "B. Fico bem tanto com ouro quanto com prata",
+        "profundidade": "C. Escuro/Profundo: Meus olhos e cabelos são muito escuros e a pele tem presença (ex: pele retinta ou pele clara com cabelos/olhos pretos).",
+        "intensidade": "C. Brilhante/Intensa: Meus olhos têm cor/brilho vivo e minha pele tem viço. Fico ótima com cores puras e fortes (ex: batom vermelho vivo, cores neon).",
+        "contraste_preto_branco": "C. Alto Contraste: A diferença é muito grande (ex: pele muito clara e cabelo muito preto, ou dentes e olhos que \"saltam\" muito no rosto).",
+        "azul_laranja": "A. Azul Royal / Azul Marinho: Sinto que tons frios me deixam mais elegante e com a pele uniforme. (Indica Subtom Frio)",
+        "veias_subtom": "B. Mistura de ambas / Difícil identificar:",
+        "batons": "A. Rosa choque, Vinho ou Vermelho \"cereja\" (rosado): Tons frios e intensos.",
+        "nude": "A. Nudes rosados ou \"cor de malva\" (Frio).",
+        "cores_vibrantes": "B. Depende muito da cor, algumas funcionam e outras não. (Moderado).",
+        "gengiva_labios": "A. Um rosa mais azulado ou arroxeado (Frio).",
+        "laranja_vibrante": "A. Sinto que fico \"amarelada\" ou com aspecto cansado",
+        "brilho_texturas": "B. Tenho um equilíbrio; consigo transitar entre o brilho e o opaco sem grandes perdas. (Neutro)"
+      },
+      "patton": {
+        "tom_fundo": "B. Acinzentada/Rosada: Minha pele é mais clara ou média, com um fundo que puxa para o cinza ou rosa frio.(Nilo)",
+        "reflexo_sol": "C. Fundo claro acinzentado ou rosado: Minha pele é clara ou média, com uma nuance fria, oliva e suave. (Nilo)"
+      },
+      "cabelo": {
+        "curvatura": "C. Cacheado (3 A/B/C)",
+        "espessura_fio": "A. Fino (quase não sinto, quebra com facilidade).",
+        "porosidade_absorcao": "B. Absorve bem a água e seca em tempo normal (Porosidade média).",
+        "densidade": "C. Muito cabelo (o elástico mal consegue dar duas voltas, sinto \"muito peso\").",
+        "relacao_volume": "B. Gosto de um volume equilibrado.",
+        "saude_quimica": "B. Colorido ou com Mechas (uso química de cor, mas mantenho a curvatura).",
+        "day_after": "C. Amassa, embaraça muito ou perde totalmente a forma (exige revitalização completa).",
+        "tempo_rotina": "B. Dedicação moderada: gosto de finalizar com produtos específicos e uso difusor às vezes.",
+        "cabelo_dos_sonhos": "B. Gostaria de aprender a lidar com o volume/frizz sem \"brigar\" com ele.",
+        "percepcao_moldura": "A. Sim, sinto que ele é minha marca registrada e me representa 100%."
+      },
+      "essencia": {
+        "deusa_principal": "Afrodite",
+        "deusa_auxiliar": "Perséfone"
+      }
+    },
+    "expected": {
+      "kibbe_scores": {
+        "dramatic": 0,
+        "natural": 9,
+        "classic": 0,
+        "gamine": 3,
+        "romantic": 2
+      },
+      "kibbe": "Soft Natural",
+      "cartela_sazonal": "Inverno Frio",
+      "cartela_patton": "NILO",
+      "saldo_profundidade_contraste": 2,
+      "saldo_temperatura": -5,
+      "saldo_intensidade": 1,
+      "perfil_curvatura_densidade": "Cacheado / Muito Cabelo",
+      "necessidade_tratamento": "Foco: Nutrição e Manutenção",
+      "indice_conexao_moldura": "Alta Conexão: Reforçar a marca registrada",
+      "perfil_rotina": "Perfil Equilibrado: Rotina padrão"
+    }
+  },
+  {
+    "nome": "Luana de Araújo Moraes",
+    "insumos": {
+      "dados_base": {
+        "autoidentificacao_racial": "Negra (preta ou parda)"
+      },
+      "estrutura_corporal": {
+        "linha_vertical": "B. Moderadamente longa (as pessoas às vezes acham que sou um pouco mais alta, mas nem sempre).",
+        "ombros": "E. Inclinados/caídos e arredondados.",
+        "bracos_pernas": "B. Longos e largos (mais fortes).",
+        "maos_pes": "D. Pequenos, estreitos e delicados.",
+        "forma_geral": "E. Muito arredondado e muito curvilíneo (ampulheta exuberante).",
+        "busto_tronco": "E. Muito proeminente e arredondado",
+        "cintura": "E. Suavemente definida, mas com tendência a ser larga.",
+        "quadris": "D. Arredondados e proeminentes.",
+        "ganho_peso": "B. Na cintura e abdômen (corpo fica mais \"quadrado\").",
+        "mandibula": "E. Arredondada ou levemente larga.",
+        "nariz": "D. Pequeno e estreito.",
+        "macas_rosto": "E. Arredondadas e cheias (\"maçãs do rosto de bebê\").",
+        "olhos": "D. Arredondados e levemente grandes.",
+        "labios": "C. Médios e simétricos.",
+        "ancestralidade_fisica": "Mista (percebo características combinadas no meu corpo)"
+      },
+      "coloracao": {
+        "reacao_sol": "B. Fico vermelha no início, mas depois o bronzeado fixa (Neutro).",
+        "metais": "B. Fico bem tanto com ouro quanto com prata",
+        "profundidade": "C. Escuro/Profundo: Meus olhos e cabelos são muito escuros e a pele tem presença (ex: pele retinta ou pele clara com cabelos/olhos pretos).",
+        "intensidade": "C. Brilhante/Intensa: Meus olhos têm cor/brilho vivo e minha pele tem viço. Fico ótima com cores puras e fortes (ex: batom vermelho vivo, cores neon).",
+        "contraste_preto_branco": "C. Alto Contraste: A diferença é muito grande (ex: pele muito clara e cabelo muito preto, ou dentes e olhos que \"saltam\" muito no rosto).",
+        "azul_laranja": "B: Não sei dizer / Não vejo diferença",
+        "veias_subtom": "B. Mistura de ambas / Difícil identificar:",
+        "batons": "C. Nude amarronzado, Coral ou Vermelho \"tomate\" (alaranjado): Tons quentes.",
+        "nude": "C. Nudes amarronzados, pêssego ou \"cor de terra\" (Quente).",
+        "cores_vibrantes": "B. Depende muito da cor, algumas funcionam e outras não. (Moderado).",
+        "gengiva_labios": "B. Um rosa equilibrado. (Neutro).",
+        "laranja_vibrante": "B. Não é minha melhor cor, mas também não é a pior.",
+        "brilho_texturas": "A. Minha pele tem um aspecto mais mate/aveludado; o excesso de brilho em acessórios ou maquiagem parece \"brigar\" com a minha pele."
+      },
+      "patton": {
+        "tom_fundo": "C. Dourada/Amarelada: Minha pele brilha como ouro no sol. (Calypso/Saara)",
+        "reflexo_sol": "E. Fundo médio dourado: Minha pele é visivelmente intensa, quente, solar e bronzeia com facilidade. (Calypso)"
+      },
+      "cabelo": {
+        "curvatura": "B. Ondulado (2 A/B/C)",
+        "espessura_fio": "B. Médio.",
+        "porosidade_absorcao": "B. Absorve bem a água e seca em tempo normal (Porosidade média).",
+        "densidade": "A. Pouco cabelo (consigo dar muitas voltas com o elástico).",
+        "relacao_volume": "A. Prefiro ele controlado, com menos volume e mais definição/alinhamento.",
+        "saude_quimica": "B. Colorido ou com Mechas (uso química de cor, mas mantenho a curvatura).",
+        "day_after": "C. Amassa, embaraça muito ou perde totalmente a forma (exige revitalização completa).",
+        "tempo_rotina": "B. Dedicação moderada: gosto de finalizar com produtos específicos e uso difusor às vezes.",
+        "cabelo_dos_sonhos": "B. Gostaria de aprender a lidar com o volume/frizz sem \"brigar\" com ele.",
+        "percepcao_moldura": "B. Às vezes sim, às vezes não. Ainda estou em busca da minha melhor versão."
+      },
+      "essencia": {
+        "deusa_principal": "Afrodite",
+        "deusa_auxiliar": "Perséfone"
+      }
+    },
+    "expected": {
+      "kibbe_scores": {
+        "dramatic": 0,
+        "natural": 3,
+        "classic": 1,
+        "gamine": 4,
+        "romantic": 6
+      },
+      "kibbe": "Romantic",
+      "cartela_sazonal": "Outono Profundo",
+      "cartela_patton": "CALYPSO",
+      "saldo_profundidade_contraste": 2,
+      "saldo_temperatura": 2,
+      "saldo_intensidade": 0,
+      "perfil_curvatura_densidade": "Ondulado / Pouco Cabelo",
+      "necessidade_tratamento": "Foco: Nutrição e Manutenção",
+      "indice_conexao_moldura": "Em Busca: Sugerir ajustes sutis de finalização",
+      "perfil_rotina": "Perfil Equilibrado: Rotina padrão"
+    }
+  },
+  {
+    "nome": "Raquel Koehler Magalhães",
+    "insumos": {
+      "dados_base": {
+        "autoidentificacao_racial": "Negra (preta ou parda)"
+      },
+      "estrutura_corporal": {
+        "linha_vertical": "A. Longa (as pessoas sempre acham que sou mais alta do que realmente sou).",
+        "ombros": "D. Inclinados/caídos, porém cônicos, afilados.",
+        "bracos_pernas": "B. Longos e largos (mais fortes).",
+        "maos_pes": "A. Longos e estreitos.",
+        "forma_geral": "E. Muito arredondado e muito curvilíneo (ampulheta exuberante).",
+        "busto_tronco": "A. Reto e plano (mesmo com peso, não acumula muito aqui).",
+        "cintura": "E. Suavemente definida, mas com tendência a ser larga.",
+        "quadris": "E. Muito arredondados e muito largos.",
+        "ganho_peso": "D. Nos quadris e coxas.",
+        "mandibula": "D. Delicada, estreita ou levemente pontuda.",
+        "nariz": "C. Médio e simétrico.",
+        "macas_rosto": "A. Altas e afiadas.",
+        "olhos": "A. Pequenos e amendoados.",
+        "labios": "C. Médios e simétricos.",
+        "ancestralidade_fisica": "Mista (percebo características combinadas no meu corpo)"
+      },
+      "coloracao": {
+        "reacao_sol": "C. Bronzeio com muita facilidade e fico com um tom dourado (Quente).",
+        "metais": "B. Fico bem tanto com ouro quanto com prata",
+        "profundidade": "B. Média: Não sou nem muito clara, nem muito escura.",
+        "intensidade": "B. Moderada / Neutra",
+        "contraste_preto_branco": "B. Médio Contraste: Existe uma diferença clara, mas não é chocante.",
+        "azul_laranja": "C. Laranja / Terracota / Amarelo Mostarda: Sinto que tons quentes me dão um \"ar de saúde\" e viço. (Indica Subtom Quente)",
+        "veias_subtom": "C. Esverdeadas ou Olivas",
+        "batons": "B. Tons suaves, \"cor de boca\" e sem muito brilho: Tons opacos/suaves.",
+        "nude": "B. Fico bem com vários tons, desde que não sejam extremos. (Neutro).",
+        "cores_vibrantes": "B. Depende muito da cor, algumas funcionam e outras não. (Moderado).",
+        "gengiva_labios": "B. Um rosa equilibrado. (Neutro).",
+        "laranja_vibrante": "B. Não é minha melhor cor, mas também não é a pior.",
+        "brilho_texturas": "B. Tenho um equilíbrio; consigo transitar entre o brilho e o opaco sem grandes perdas. (Neutro)"
+      },
+      "patton": {
+        "tom_fundo": "C. Dourada/Amarelada: Minha pele brilha como ouro no sol. (Calypso/Saara)",
+        "reflexo_sol": "D. Fundo claro amarelado ou bege quente: Minha pele é clara a média, com um tom de \"areia\", bege ou dourado suave. (Saara)"
+      },
+      "cabelo": {
+        "curvatura": "C. Cacheado (3 A/B/C)",
+        "espessura_fio": "B. Médio.",
+        "porosidade_absorcao": "B. Absorve bem a água e seca em tempo normal (Porosidade média).",
+        "densidade": "B. Quantidade média.",
+        "relacao_volume": "C. Amo o volume máximo! Sinto que o volume faz parte da minha presença e poder.",
+        "saude_quimica": "A. Natural (sem químicas de transformação).",
+        "day_after": "B. Perde a definição, mas ganha um volume que eu gosto.",
+        "tempo_rotina": "A. Praticidade total: lavo e deixo secar naturalmente, não gasto mais de 15 min.",
+        "cabelo_dos_sonhos": "A. Gostaria de ter mais brilho e saúde, mantendo o que já tenho.",
+        "percepcao_moldura": "A. Sim, sinto que ele é minha marca registrada e me representa 100%."
+      },
+      "essencia": {
+        "deusa_principal": "Artemis",
+        "deusa_auxiliar": "Perséfone"
+      }
+    },
+    "expected": {
+      "kibbe_scores": {
+        "dramatic": 5,
+        "natural": 1,
+        "classic": 2,
+        "gamine": 3,
+        "romantic": 3
+      },
+      "kibbe": "Soft Dramatic",
+      "cartela_sazonal": "Outono Quente",
+      "cartela_patton": "SAARA",
+      "saldo_profundidade_contraste": -1,
+      "saldo_temperatura": 3,
+      "saldo_intensidade": -1,
+      "perfil_curvatura_densidade": "Cacheado / Analisar",
+      "necessidade_tratamento": "Foco: Nutrição e Manutenção",
+      "indice_conexao_moldura": "Alta Conexão: Reforçar a marca registrada",
+      "perfil_rotina": "Perfil Prático: Sugerir produtos multifuncionais"
+    }
+  },
+  {
+    "nome": "Camila",
+    "insumos": {
+      "dados_base": {
+        "autoidentificacao_racial": "Branca"
+      },
+      "estrutura_corporal": {
+        "linha_vertical": "C. Média (as pessoas costumam acertar minha altura ou não se surpreendem).",
+        "ombros": "D. Inclinados/caídos, porém cônicos, afilados.",
+        "bracos_pernas": "C. Médios (proporcionais ao tronco).",
+        "maos_pes": "A. Longos e estreitos.",
+        "forma_geral": "D. Curvilíneo e delicado (ampulheta suave).",
+        "busto_tronco": "C. Moderado e simétrico.",
+        "cintura": "C. Moderada e levemente definida.",
+        "quadris": "C. Médios e simétricos.",
+        "ganho_peso": "B. Na cintura e abdômen (corpo fica mais \"quadrado\").",
+        "mandibula": "C. Moderada e simétrica.",
+        "nariz": "D. Pequeno e estreito.",
+        "macas_rosto": "D. Delicadas e estreitas.",
+        "olhos": "D. Arredondados e levemente grandes.",
+        "labios": "C. Médios e simétricos.",
+        "ancestralidade_fisica": "Mista (percebo características combinadas no meu corpo)"
+      },
+      "coloracao": {
+        "reacao_sol": "B. Fico vermelha no início, mas depois o bronzeado fixa (Neutro).",
+        "metais": "A. Acessórios prateados e tons de azul/rosa frio",
+        "profundidade": "Claro: Tenho pouco contraste, tudo em mim é clarinho (ex: pele clara, olhos claros, cabelo loiro/castanho claro).",
+        "intensidade": "A. Opaca/Suave: Minha beleza é mais \"contida\" ou suave. Cores muito vibrantes parecem \"chegar antes\" de mim.",
+        "contraste_preto_branco": "B. Médio Contraste: Existe uma diferença clara, mas não é chocante.",
+        "azul_laranja": "B: Não sei dizer / Não vejo diferença",
+        "veias_subtom": "C. Esverdeadas ou Olivas",
+        "batons": "B. Tons suaves, \"cor de boca\" e sem muito brilho: Tons opacos/suaves.",
+        "nude": "A. Nudes rosados ou \"cor de malva\" (Frio).",
+        "cores_vibrantes": "A. Elas me deixam pálida ou parecem \"separadas\" do meu rosto (Indica pele de Intensidade Suave/Opaca).",
+        "gengiva_labios": "B. Um rosa equilibrado. (Neutro).",
+        "laranja_vibrante": "A. Sinto que fico \"amarelada\" ou com aspecto cansado",
+        "brilho_texturas": "B. Tenho um equilíbrio; consigo transitar entre o brilho e o opaco sem grandes perdas. (Neutro)"
+      },
+      "patton": {
+        "tom_fundo": "",
+        "reflexo_sol": ""
+      },
+      "cabelo": {
+        "curvatura": "B. Ondulado (2 A/B/C)",
+        "espessura_fio": "C. Grosso (sinto o fio bem presente, é resistente).",
+        "porosidade_absorcao": "A. Demora muito para secar (Baixa porosidade - as cutículas são muito fechadas).",
+        "densidade": "C. Muito cabelo (o elástico mal consegue dar duas voltas, sinto \"muito peso\").",
+        "relacao_volume": "B. Gosto de um volume equilibrado.",
+        "saude_quimica": "B. Colorido ou com Mechas (uso química de cor, mas mantenho a curvatura).",
+        "day_after": "A. Mantém a forma e o brilho com pouco esforço.",
+        "tempo_rotina": "A. Praticidade total: lavo e deixo secar naturalmente, não gasto mais de 15 min.",
+        "cabelo_dos_sonhos": "A. Gostaria de ter mais brilho e saúde, mantendo o que já tenho.",
+        "percepcao_moldura": "B. Às vezes sim, às vezes não. Ainda estou em busca da minha melhor versão."
+      },
+      "essencia": {
+        "deusa_principal": "Deméter",
+        "deusa_auxiliar": "Perséfone"
+      }
+    },
+    "expected": {
+      "kibbe_scores": {
+        "dramatic": 1,
+        "natural": 1,
+        "classic": 7,
+        "gamine": 5,
+        "romantic": 0
+      },
+      "kibbe": "Dramatic Classic",
+      "cartela_sazonal": "Verão Suave",
+      "cartela_patton": "Verificar",
+      "saldo_profundidade_contraste": 0,
+      "saldo_temperatura": -2,
+      "saldo_intensidade": -3,
+      "perfil_curvatura_densidade": "Ondulado / Muito Cabelo",
+      "necessidade_tratamento": "Foco: Hidratação Profunda (Dificuldade de absorção)",
+      "indice_conexao_moldura": "Em Busca: Sugerir ajustes sutis de finalização",
+      "perfil_rotina": "Perfil Prático: Sugerir produtos multifuncionais"
+    }
+  },
+  {
+    "nome": "Rafaela Salgueiro",
+    "insumos": {
+      "dados_base": {
+        "autoidentificacao_racial": "Branca"
+      },
+      "estrutura_corporal": {
+        "linha_vertical": "C. Média (as pessoas costumam acertar minha altura ou não se surpreendem).",
+        "ombros": "B. Largos e rombudos (quadrados com pontas suaves).",
+        "bracos_pernas": "C. Médios (proporcionais ao tronco).",
+        "maos_pes": "B. Grandes e largos.",
+        "forma_geral": "C. Simétrico e equilibrado (proporção ampulheta moderada).",
+        "busto_tronco": "C. Moderado e simétrico.",
+        "cintura": "C. Moderada e levemente definida.",
+        "quadris": "C. Médios e simétricos.",
+        "ganho_peso": "C. Uniformemente, mantendo a simetria.",
+        "mandibula": "B. Larga ou rombuda (quadrada suave).",
+        "nariz": "C. Médio e simétrico.",
+        "macas_rosto": "D. Delicadas e estreitas.",
+        "olhos": "C. Médios e simétricos.",
+        "labios": "B. Retos, mas levemente largos (não carnudos).",
+        "ancestralidade_fisica": "Predominantemente europeia (estrutura mais fina, proporções alongadas ou delicadas)"
+      },
+      "coloracao": {
+        "reacao_sol": "C. Bronzeio com muita facilidade e fico com um tom dourado (Quente).",
+        "metais": "C. Acessórios dourados e tons de laranja/terrosos",
+        "profundidade": "Claro: Tenho pouco contraste, tudo em mim é clarinho (ex: pele clara, olhos claros, cabelo loiro/castanho claro).",
+        "intensidade": "A. Opaca/Suave: Minha beleza é mais \"contida\" ou suave. Cores muito vibrantes parecem \"chegar antes\" de mim.",
+        "contraste_preto_branco": "B. Médio Contraste: Existe uma diferença clara, mas não é chocante.",
+        "azul_laranja": "C. Laranja / Terracota / Amarelo Mostarda: Sinto que tons quentes me dão um \"ar de saúde\" e viço. (Indica Subtom Quente)",
+        "veias_subtom": "A. Azuis ou Roxas",
+        "batons": "B. Tons suaves, \"cor de boca\" e sem muito brilho: Tons opacos/suaves.",
+        "nude": "B. Fico bem com vários tons, desde que não sejam extremos. (Neutro).",
+        "cores_vibrantes": "A. Elas me deixam pálida ou parecem \"separadas\" do meu rosto (Indica pele de Intensidade Suave/Opaca).",
+        "gengiva_labios": "B. Um rosa equilibrado. (Neutro).",
+        "laranja_vibrante": "B. Não é minha melhor cor, mas também não é a pior.",
+        "brilho_texturas": "B. Tenho um equilíbrio; consigo transitar entre o brilho e o opaco sem grandes perdas. (Neutro)"
+      },
+      "patton": {
+        "tom_fundo": "",
+        "reflexo_sol": ""
+      },
+      "cabelo": {
+        "curvatura": "B. Ondulado (2 A/B/C)",
+        "espessura_fio": "B. Médio.",
+        "porosidade_absorcao": "B. Absorve bem a água e seca em tempo normal (Porosidade média).",
+        "densidade": "B. Quantidade média.",
+        "relacao_volume": "B. Gosto de um volume equilibrado.",
+        "saude_quimica": "B. Colorido ou com Mechas (uso química de cor, mas mantenho a curvatura).",
+        "day_after": "A. Mantém a forma e o brilho com pouco esforço.",
+        "tempo_rotina": "A. Praticidade total: lavo e deixo secar naturalmente, não gasto mais de 15 min.",
+        "cabelo_dos_sonhos": "A. Gostaria de ter mais brilho e saúde, mantendo o que já tenho.",
+        "percepcao_moldura": "B. Às vezes sim, às vezes não. Ainda estou em busca da minha melhor versão."
+      },
+      "essencia": {
+        "deusa_principal": "Afrodite",
+        "deusa_auxiliar": "Athena"
+      }
+    },
+    "expected": {
+      "kibbe_scores": {
+        "dramatic": 0,
+        "natural": 4,
+        "classic": 9,
+        "gamine": 1,
+        "romantic": 0
+      },
+      "kibbe": "Classic",
+      "cartela_sazonal": "Outono Suave",
+      "cartela_patton": "Verificar",
+      "saldo_profundidade_contraste": 0,
+      "saldo_temperatura": 2,
+      "saldo_intensidade": -3,
+      "perfil_curvatura_densidade": "Ondulado / Analisar",
+      "necessidade_tratamento": "Foco: Nutrição e Manutenção",
+      "indice_conexao_moldura": "Em Busca: Sugerir ajustes sutis de finalização",
+      "perfil_rotina": "Perfil Prático: Sugerir produtos multifuncionais"
+    }
+  },
+  {
+    "nome": "Maria do Perpétuo Socorro Gadelha",
+    "insumos": {
+      "dados_base": {
+        "autoidentificacao_racial": "Negra (preta ou parda)"
+      },
+      "estrutura_corporal": {
+        "linha_vertical": "D. Pequena (as pessoas costumam achar que sou um pouco mais baixa do que sou).",
+        "ombros": "E. Inclinados/caídos e arredondados.",
+        "bracos_pernas": "C. Médios (proporcionais ao tronco).",
+        "maos_pes": "E. Pequenos e levemente largos/arredondados",
+        "forma_geral": "C. Simétrico e equilibrado (proporção ampulheta moderada).",
+        "busto_tronco": "C. Moderado e simétrico.",
+        "cintura": "C. Moderada e levemente definida.",
+        "quadris": "C. Médios e simétricos.",
+        "ganho_peso": "A. Quase não mudo; o peso se espalha uniformemente.",
+        "mandibula": "E. Arredondada e levemente larga.",
+        "nariz": "B. Largo ou rombudo.",
+        "macas_rosto": "C. Simétricas e moderadas.",
+        "olhos": "B. Estreitos e largos.",
+        "labios": "D. Levemente cheios e arredondados.",
+        "ancestralidade_fisica": "Predominantemente indígena (estrutura mais compacta, ossatura firme, corpo mais contido)"
+      },
+      "coloracao": {
+        "reacao_sol": "B. Fico vermelha no início, mas depois o bronzeado fixa (Neutro).",
+        "metais": "C. Acessórios dourados e tons de laranja/terrosos",
+        "profundidade": "C. Escuro/Profundo: Meus olhos e cabelos são muito escuros e a pele tem presença (ex: pele retinta ou pele clara com cabelos/olhos pretos).",
+        "intensidade": "B. Moderada / Neutra",
+        "contraste_preto_branco": "B. Médio Contraste: Existe uma diferença clara, mas não é chocante.",
+        "azul_laranja": "C. Laranja / Terracota / Amarelo Mostarda: Sinto que tons quentes me dão um \"ar de saúde\" e viço. (Indica Subtom Quente)",
+        "veias_subtom": "A. Azuis ou Roxas",
+        "batons": "B. Tons suaves, \"cor de boca\" e sem muito brilho: Tons opacos/suaves.",
+        "nude": "B. Fico bem com vários tons, desde que não sejam extremos. (Neutro).",
+        "cores_vibrantes": "A. Elas me deixam pálida ou parecem \"separadas\" do meu rosto (Indica pele de Intensidade Suave/Opaca).",
+        "gengiva_labios": "A. Um rosa mais azulado ou arroxeado (Frio).",
+        "laranja_vibrante": "B. Não é minha melhor cor, mas também não é a pior.",
+        "brilho_texturas": "B. Tenho um equilíbrio; consigo transitar entre o brilho e o opaco sem grandes perdas. (Neutro)"
+      },
+      "patton": {
+        "tom_fundo": "D. Avermelhada/Jambo: Minha pele tem um calor avermelhado intenso, cor de terra quente.(Spice)",
+        "reflexo_sol": "F. Fundo médio avermelhado (cor de jambo): Minha pele é quente e tem um brilho terroso ou \"quente\" intenso e avermelhado. (Spice)"
+      },
+      "cabelo": {
+        "curvatura": "C. Cacheado (3 A/B/C)",
+        "espessura_fio": "A. Fino (quase não sinto, quebra com facilidade).",
+        "porosidade_absorcao": "C. Demora para molhar, mas \"bebe\" o produto e seca muito rápido (Alta porosidade - o fio está com as cutículas abertas/danificadas).",
+        "densidade": "B. Quantidade média.",
+        "relacao_volume": "B. Gosto de um volume equilibrado.",
+        "saude_quimica": "A. Natural (sem químicas de transformação).",
+        "day_after": "B. Perde a definição, mas ganha um volume que eu gosto.",
+        "tempo_rotina": "A. Praticidade total: lavo e deixo secar naturalmente, não gasto mais de 15 min.",
+        "cabelo_dos_sonhos": "A. Gostaria de ter mais brilho e saúde, mantendo o que já tenho.",
+        "percepcao_moldura": "B. Às vezes sim, às vezes não. Ainda estou em busca da minha melhor versão."
+      },
+      "essencia": {
+        "deusa_principal": "Hera",
+        "deusa_auxiliar": "Deméter"
+      }
+    },
+    "expected": {
+      "kibbe_scores": {
+        "dramatic": 1,
+        "natural": 2,
+        "classic": 6,
+        "gamine": 2,
+        "romantic": 3
+      },
+      "kibbe": "Soft Classic",
+      "cartela_sazonal": "Verão Suave",
+      "cartela_patton": "SPICE",
+      "saldo_profundidade_contraste": 1,
+      "saldo_temperatura": 0,
+      "saldo_intensidade": -2,
+      "perfil_curvatura_densidade": "Cacheado / Analisar",
+      "necessidade_tratamento": "Foco: Reconstrução (Danos/Porosidade)",
+      "indice_conexao_moldura": "Em Busca: Sugerir ajustes sutis de finalização",
+      "perfil_rotina": "Perfil Prático: Sugerir produtos multifuncionais"
+    }
+  },
+  {
+    "nome": "Nandah",
+    "insumos": {
+      "dados_base": {
+        "autoidentificacao_racial": "Branca"
+      },
+      "estrutura_corporal": {
+        "linha_vertical": "D. Pequena (as pessoas costumam achar que sou um pouco mais baixa do que sou).",
+        "ombros": "A. Estreitos e pontudos.",
+        "bracos_pernas": "D. Pequenos (curtos em relação ao tronco)",
+        "maos_pes": "E. Pequenos e levemente largos/arredondados",
+        "forma_geral": "D. Curvilíneo e delicado (ampulheta suave).",
+        "busto_tronco": "D. Suave e levemente curvilíneo.",
+        "cintura": "D. Muito marcada e fina.",
+        "quadris": "E. Muito arredondados e muito largos.",
+        "ganho_peso": "D. Nos quadris e coxas.",
+        "mandibula": "C. Moderada e simétrica.",
+        "nariz": "B. Largo ou rombudo.",
+        "macas_rosto": "A. Altas e afiadas.",
+        "olhos": "A. Pequenos e amendoados.",
+        "labios": "D. Levemente cheios e arredondados.",
+        "ancestralidade_fisica": "Mista (percebo características combinadas no meu corpo)"
+      },
+      "coloracao": {
+        "reacao_sol": "B. Fico vermelha no início, mas depois o bronzeado fixa (Neutro).",
+        "metais": "B. Fico bem tanto com ouro quanto com prata",
+        "profundidade": "B. Média: Não sou nem muito clara, nem muito escura.",
+        "intensidade": "C. Brilhante/Intensa: Meus olhos têm cor/brilho vivo e minha pele tem viço. Fico ótima com cores puras e fortes (ex: batom vermelho vivo, cores neon).",
+        "contraste_preto_branco": "C. Alto Contraste: A diferença é muito grande (ex: pele muito clara e cabelo muito preto, ou dentes e olhos que \"saltam\" muito no rosto).",
+        "azul_laranja": "A. Azul Royal / Azul Marinho: Sinto que tons frios me deixam mais elegante e com a pele uniforme. (Indica Subtom Frio)",
+        "veias_subtom": "A. Azuis ou Roxas",
+        "batons": "A. Rosa choque, Vinho ou Vermelho \"cereja\" (rosado): Tons frios e intensos.",
+        "nude": "A. Nudes rosados ou \"cor de malva\" (Frio).",
+        "cores_vibrantes": "C. Eu sustento bem cores fortes; elas parecem acender meu viço natural (Indica pele de Intensidade Brilhante).",
+        "gengiva_labios": "B. Um rosa equilibrado. (Neutro).",
+        "laranja_vibrante": "B. Não é minha melhor cor, mas também não é a pior.",
+        "brilho_texturas": "C. Minha pele tem um viço natural \"aceso\"; fico muito melhor com brilhos, acessórios polidos, pedras brilhantes e maquiagem iluminada."
+      },
+      "patton": {
+        "tom_fundo": "",
+        "reflexo_sol": ""
+      },
+      "cabelo": {
+        "curvatura": "B. Ondulado (2 A/B/C)",
+        "espessura_fio": "C. Grosso (sinto o fio bem presente, é resistente).",
+        "porosidade_absorcao": "B. Absorve bem a água e seca em tempo normal (Porosidade média).",
+        "densidade": "B. Quantidade média.",
+        "relacao_volume": "B. Gosto de um volume equilibrado.",
+        "saude_quimica": "A. Natural (sem químicas de transformação).",
+        "day_after": "B. Perde a definição, mas ganha um volume que eu gosto.",
+        "tempo_rotina": "A. Praticidade total: lavo e deixo secar naturalmente, não gasto mais de 15 min.",
+        "cabelo_dos_sonhos": "A. Gostaria de ter mais brilho e saúde, mantendo o que já tenho.",
+        "percepcao_moldura": "B. Às vezes sim, às vezes não. Ainda estou em busca da minha melhor versão."
+      },
+      "essencia": {
+        "deusa_principal": "Deméter",
+        "deusa_auxiliar": "Afrodite"
+      }
+    },
+    "expected": {
+      "kibbe_scores": {
+        "dramatic": 3,
+        "natural": 1,
+        "classic": 1,
+        "gamine": 7,
+        "romantic": 2
+      },
+      "kibbe": "Flamboyant Gamine",
+      "cartela_sazonal": "Inverno Frio",
+      "cartela_patton": "Verificar",
+      "saldo_profundidade_contraste": 0,
+      "saldo_temperatura": -4,
+      "saldo_intensidade": 2,
+      "perfil_curvatura_densidade": "Ondulado / Analisar",
+      "necessidade_tratamento": "Foco: Hidratação Profunda (Dificuldade de absorção)",
+      "indice_conexao_moldura": "Em Busca: Sugerir ajustes sutis de finalização",
+      "perfil_rotina": "Perfil Prático: Sugerir produtos multifuncionais"
+    }
+  },
+  {
+    "nome": "Iasmim Oliveira Passos",
+    "insumos": {
+      "dados_base": {
+        "autoidentificacao_racial": "Branca"
+      },
+      "estrutura_corporal": {
+        "linha_vertical": "C. Média (as pessoas costumam acertar minha altura ou não se surpreendem).",
+        "ombros": "D. Inclinados/caídos, porém cônicos, afilados.",
+        "bracos_pernas": "C. Médios (proporcionais ao tronco).",
+        "maos_pes": "E. Pequenos e levemente largos/arredondados",
+        "forma_geral": "E. Muito arredondado e muito curvilíneo (ampulheta exuberante).",
+        "busto_tronco": "C. Moderado e simétrico.",
+        "cintura": "E. Suavemente definida, mas com tendência a ser larga.",
+        "quadris": "D. Arredondados e proeminentes.",
+        "ganho_peso": "B. Na cintura e abdômen (corpo fica mais \"quadrado\").",
+        "mandibula": "C. Moderada e simétrica.",
+        "nariz": "B. Largo ou rombudo.",
+        "macas_rosto": "D. Delicadas e estreitas.",
+        "olhos": "C. Médios e simétricos.",
+        "labios": "C. Médios e simétricos.",
+        "ancestralidade_fisica": "Mista (percebo características combinadas no meu corpo)"
+      },
+      "coloracao": {
+        "reacao_sol": "B. Fico vermelha no início, mas depois o bronzeado fixa (Neutro).",
+        "metais": "B. Fico bem tanto com ouro quanto com prata",
+        "profundidade": "Claro: Tenho pouco contraste, tudo em mim é clarinho (ex: pele clara, olhos claros, cabelo loiro/castanho claro).",
+        "intensidade": "C. Brilhante/Intensa: Meus olhos têm cor/brilho vivo e minha pele tem viço. Fico ótima com cores puras e fortes (ex: batom vermelho vivo, cores neon).",
+        "contraste_preto_branco": "A. Baixo Contraste: Minha pele, olhos e cabelos têm tons muito parecidos (ex: tudo muito claro ou tudo muito escuro/retinto).",
+        "azul_laranja": "A. Azul Royal / Azul Marinho: Sinto que tons frios me deixam mais elegante e com a pele uniforme. (Indica Subtom Frio)",
+        "veias_subtom": "B. Mistura de ambas / Difícil identificar:",
+        "batons": "C. Nude amarronzado, Coral ou Vermelho \"tomate\" (alaranjado): Tons quentes.",
+        "nude": "C. Nudes amarronzados, pêssego ou \"cor de terra\" (Quente).",
+        "cores_vibrantes": "B. Depende muito da cor, algumas funcionam e outras não. (Moderado).",
+        "gengiva_labios": "B. Um rosa equilibrado. (Neutro).",
+        "laranja_vibrante": "C. Me sinto iluminada, combina com a energia da minha pele",
+        "brilho_texturas": "B. Tenho um equilíbrio; consigo transitar entre o brilho e o opaco sem grandes perdas. (Neutro)"
+      },
+      "patton": {
+        "tom_fundo": "",
+        "reflexo_sol": ""
+      },
+      "cabelo": {
+        "curvatura": "B. Ondulado (2 A/B/C)",
+        "espessura_fio": "A. Fino (quase não sinto, quebra com facilidade).",
+        "porosidade_absorcao": "B. Absorve bem a água e seca em tempo normal (Porosidade média).",
+        "densidade": "B. Quantidade média.",
+        "relacao_volume": "C. Amo o volume máximo! Sinto que o volume faz parte da minha presença e poder.",
+        "saude_quimica": "A. Natural (sem químicas de transformação).",
+        "day_after": "C. Amassa, embaraça muito ou perde totalmente a forma (exige revitalização completa).",
+        "tempo_rotina": "A. Praticidade total: lavo e deixo secar naturalmente, não gasto mais de 15 min.",
+        "cabelo_dos_sonhos": "A. Gostaria de ter mais brilho e saúde, mantendo o que já tenho.",
+        "percepcao_moldura": "B. Às vezes sim, às vezes não. Ainda estou em busca da minha melhor versão."
+      },
+      "essencia": {
+        "deusa_principal": "Afrodite",
+        "deusa_auxiliar": "Artemis"
+      }
+    },
+    "expected": {
+      "kibbe_scores": {
+        "dramatic": 0,
+        "natural": 2,
+        "classic": 6,
+        "gamine": 3,
+        "romantic": 3
+      },
+      "kibbe": "Soft Classic",
+      "cartela_sazonal": "Primavera Quente",
+      "cartela_patton": "Verificar",
+      "saldo_profundidade_contraste": -1,
+      "saldo_temperatura": 2,
+      "saldo_intensidade": 1,
+      "perfil_curvatura_densidade": "Ondulado / Analisar",
+      "necessidade_tratamento": "Foco: Nutrição e Manutenção",
+      "indice_conexao_moldura": "Em Busca: Sugerir ajustes sutis de finalização",
+      "perfil_rotina": "Perfil Prático: Sugerir produtos multifuncionais"
+    }
+  },
+  {
+    "nome": "Yasmin Marins",
+    "insumos": {
+      "dados_base": {
+        "autoidentificacao_racial": "Branca"
+      },
+      "estrutura_corporal": {
+        "linha_vertical": "D. Pequena (as pessoas costumam achar que sou um pouco mais baixa do que sou).",
+        "ombros": "E. Inclinados/caídos e arredondados.",
+        "bracos_pernas": "C. Médios (proporcionais ao tronco).",
+        "maos_pes": "D. Pequenos, estreitos e delicados.",
+        "forma_geral": "E. Muito arredondado e muito curvilíneo (ampulheta exuberante).",
+        "busto_tronco": "E. Muito proeminente e arredondado",
+        "cintura": "E. Suavemente definida, mas com tendência a ser larga.",
+        "quadris": "E. Muito arredondados e muito largos.",
+        "ganho_peso": "D. Nos quadris e coxas.",
+        "mandibula": "E. Arredondada e levemente larga.",
+        "nariz": "E. Pequeno e arredondado.",
+        "macas_rosto": "E. Arredondadas e cheias (\"maçãs do rosto de bebê\").",
+        "olhos": "E. Muito grandes e muito redondos.",
+        "labios": "E. Muito cheios e muito redondos.",
+        "ancestralidade_fisica": "Não sei identificar"
+      },
+      "coloracao": {
+        "reacao_sol": "B. Fico vermelha no início, mas depois o bronzeado fixa (Neutro).",
+        "metais": "B. Fico bem tanto com ouro quanto com prata",
+        "profundidade": "B. Média: Não sou nem muito clara, nem muito escura.",
+        "intensidade": "B. Moderada / Neutra",
+        "contraste_preto_branco": "B. Médio Contraste: Existe uma diferença clara, mas não é chocante.",
+        "azul_laranja": "C. Laranja / Terracota / Amarelo Mostarda: Sinto que tons quentes me dão um \"ar de saúde\" e viço. (Indica Subtom Quente)",
+        "veias_subtom": "C. Esverdeadas ou Olivas",
+        "batons": "B. Tons suaves, \"cor de boca\" e sem muito brilho: Tons opacos/suaves.",
+        "nude": "C. Nudes amarronzados, pêssego ou \"cor de terra\" (Quente).",
+        "cores_vibrantes": "B. Depende muito da cor, algumas funcionam e outras não. (Moderado).",
+        "gengiva_labios": "A. Um rosa mais azulado ou arroxeado (Frio).",
+        "laranja_vibrante": "C. Me sinto iluminada, combina com a energia da minha pele",
+        "brilho_texturas": "B. Tenho um equilíbrio; consigo transitar entre o brilho e o opaco sem grandes perdas. (Neutro)"
+      },
+      "patton": {
+        "tom_fundo": "",
+        "reflexo_sol": ""
+      },
+      "cabelo": {
+        "curvatura": "C. Cacheado (3 A/B/C)",
+        "espessura_fio": "B. Médio.",
+        "porosidade_absorcao": "B. Absorve bem a água e seca em tempo normal (Porosidade média).",
+        "densidade": "B. Quantidade média.",
+        "relacao_volume": "B. Gosto de um volume equilibrado.",
+        "saude_quimica": "C. Alisado / Relaxado / Transição (uso química para mudar a estrutura ou estou parando de usar agora).",
+        "day_after": "A. Mantém a forma e o brilho com pouco esforço.",
+        "tempo_rotina": "B. Dedicação moderada: gosto de finalizar com produtos específicos e uso difusor às vezes.",
+        "cabelo_dos_sonhos": "C. Gostaria de mudar radicalmente (cor, corte ou textura) para me sentir mais eu mesma.",
+        "percepcao_moldura": "A. Sim, sinto que ele é minha marca registrada e me representa 100%."
+      },
+      "essencia": {
+        "deusa_principal": "Afrodite",
+        "deusa_auxiliar": "Hera"
+      }
+    },
+    "expected": {
+      "kibbe_scores": {
+        "dramatic": 0,
+        "natural": 0,
+        "classic": 1,
+        "gamine": 3,
+        "romantic": 10
+      },
+      "kibbe": "Romantic",
+      "cartela_sazonal": "Outono Quente",
+      "cartela_patton": "Verificar",
+      "saldo_profundidade_contraste": -1,
+      "saldo_temperatura": 3,
+      "saldo_intensidade": -1,
+      "perfil_curvatura_densidade": "Cacheado / Analisar",
+      "necessidade_tratamento": "Foco: Reconstrução (Danos/Porosidade)",
+      "indice_conexao_moldura": "Alta Conexão: Reforçar a marca registrada",
+      "perfil_rotina": "Perfil Equilibrado: Rotina padrão"
+    }
+  },
+  {
+    "nome": "Karine Rocha Brigido",
+    "insumos": {
+      "dados_base": {
+        "autoidentificacao_racial": "Branca"
+      },
+      "estrutura_corporal": {
+        "linha_vertical": "B. Moderadamente longa (as pessoas às vezes acham que sou um pouco mais alta, mas nem sempre).",
+        "ombros": "C. Simétricos e equilibrados.",
+        "bracos_pernas": "B. Longos e largos (mais fortes).",
+        "maos_pes": "A. Longos e estreitos.",
+        "forma_geral": "D. Curvilíneo e delicado (ampulheta suave).",
+        "busto_tronco": "D. Suave e levemente curvilíneo.",
+        "cintura": "C. Moderada e levemente definida.",
+        "quadris": "D. Arredondados e proeminentes.",
+        "ganho_peso": "B. Na cintura e abdômen (corpo fica mais \"quadrado\").",
+        "mandibula": "D. Delicada, estreita ou levemente pontuda.",
+        "nariz": "B. Largo ou rombudo.",
+        "macas_rosto": "D. Delicadas e estreitas.",
+        "olhos": "B. Estreitos e largos.",
+        "labios": "B. Retos, mas levemente largos (não carnudos).",
+        "ancestralidade_fisica": "Mista (percebo características combinadas no meu corpo)"
+      },
+      "coloracao": {
+        "reacao_sol": "B. Fico vermelha no início, mas depois o bronzeado fixa (Neutro).",
+        "metais": "B. Fico bem tanto com ouro quanto com prata",
+        "profundidade": "Claro: Tenho pouco contraste, tudo em mim é clarinho (ex: pele clara, olhos claros, cabelo loiro/castanho claro).",
+        "intensidade": "B. Moderada / Neutra",
+        "contraste_preto_branco": "B. Médio Contraste: Existe uma diferença clara, mas não é chocante.",
+        "azul_laranja": "B: Não sei dizer / Não vejo diferença",
+        "veias_subtom": "A. Azuis ou Roxas",
+        "batons": "A. Rosa choque, Vinho ou Vermelho \"cereja\" (rosado): Tons frios e intensos.",
+        "nude": "A. Nudes rosados ou \"cor de malva\" (Frio).",
+        "cores_vibrantes": "B. Depende muito da cor, algumas funcionam e outras não. (Moderado).",
+        "gengiva_labios": "B. Um rosa equilibrado. (Neutro).",
+        "laranja_vibrante": "B. Não é minha melhor cor, mas também não é a pior.",
+        "brilho_texturas": "B. Tenho um equilíbrio; consigo transitar entre o brilho e o opaco sem grandes perdas. (Neutro)"
+      },
+      "patton": {
+        "tom_fundo": "",
+        "reflexo_sol": ""
+      },
+      "cabelo": {
+        "curvatura": "B. Ondulado (2 A/B/C)",
+        "espessura_fio": "A. Fino (quase não sinto, quebra com facilidade).",
+        "porosidade_absorcao": "B. Absorve bem a água e seca em tempo normal (Porosidade média).",
+        "densidade": "C. Muito cabelo (o elástico mal consegue dar duas voltas, sinto \"muito peso\").",
+        "relacao_volume": "B. Gosto de um volume equilibrado.",
+        "saude_quimica": "B. Colorido ou com Mechas (uso química de cor, mas mantenho a curvatura).",
+        "day_after": "C. Amassa, embaraça muito ou perde totalmente a forma (exige revitalização completa).",
+        "tempo_rotina": "A. Praticidade total: lavo e deixo secar naturalmente, não gasto mais de 15 min.",
+        "cabelo_dos_sonhos": "B. Gostaria de aprender a lidar com o volume/frizz sem \"brigar\" com ele.",
+        "percepcao_moldura": "A. Sim, sinto que ele é minha marca registrada e me representa 100%."
+      },
+      "essencia": {
+        "deusa_principal": "Afrodite",
+        "deusa_auxiliar": "Deméter"
+      }
+    },
+    "expected": {
+      "kibbe_scores": {
+        "dramatic": 1,
+        "natural": 6,
+        "classic": 2,
+        "gamine": 5,
+        "romantic": 0
+      },
+      "kibbe": "Flamboyant Natural",
+      "cartela_sazonal": "Verão Frio",
+      "cartela_patton": "Verificar",
+      "saldo_profundidade_contraste": 0,
+      "saldo_temperatura": -3,
+      "saldo_intensidade": 0,
+      "perfil_curvatura_densidade": "Ondulado / Muito Cabelo",
+      "necessidade_tratamento": "Foco: Nutrição e Manutenção",
+      "indice_conexao_moldura": "Alta Conexão: Reforçar a marca registrada",
+      "perfil_rotina": "Perfil Prático: Sugerir produtos multifuncionais"
+    }
+  },
+  {
+    "nome": "Juliana Dias",
+    "insumos": {
+      "dados_base": {
+        "autoidentificacao_racial": "Negra (preta ou parda)"
+      },
+      "estrutura_corporal": {
+        "linha_vertical": "C. Média (as pessoas costumam acertar minha altura ou não se surpreendem).",
+        "ombros": "D. Inclinados/caídos, porém cônicos, afilados.",
+        "bracos_pernas": "C. Médios (proporcionais ao tronco).",
+        "maos_pes": "D. Pequenos, estreitos e delicados.",
+        "forma_geral": "E. Muito arredondado e muito curvilíneo (ampulheta exuberante).",
+        "busto_tronco": "E. Muito proeminente e arredondado",
+        "cintura": "E. Suavemente definida, mas com tendência a ser larga.",
+        "quadris": "E. Muito arredondados e muito largos.",
+        "ganho_peso": "E. No rosto, braços e coxas (fica muito arredondado).",
+        "mandibula": "E. Arredondada e levemente larga.",
+        "nariz": "C. Médio e simétrico.",
+        "macas_rosto": "B. Largas.",
+        "olhos": "D. Arredondados e levemente grandes.",
+        "labios": "C. Médios e simétricos.",
+        "ancestralidade_fisica": "Mista (percebo características combinadas no meu corpo)"
+      },
+      "coloracao": {
+        "reacao_sol": "B. Fico vermelha no início, mas depois o bronzeado fixa (Neutro).",
+        "metais": "B. Fico bem tanto com ouro quanto com prata",
+        "profundidade": "B. Média: Não sou nem muito clara, nem muito escura.",
+        "intensidade": "A. Opaca/Suave: Minha beleza é mais \"contida\" ou suave. Cores muito vibrantes parecem \"chegar antes\" de mim.",
+        "contraste_preto_branco": "B. Médio Contraste: Existe uma diferença clara, mas não é chocante.",
+        "azul_laranja": "B: Não sei dizer / Não vejo diferença",
+        "veias_subtom": "C. Esverdeadas ou Olivas",
+        "batons": "C. Nude amarronzado, Coral ou Vermelho \"tomate\" (alaranjado): Tons quentes.",
+        "nude": "B. Fico bem com vários tons, desde que não sejam extremos. (Neutro).",
+        "cores_vibrantes": "A. Elas me deixam pálida ou parecem \"separadas\" do meu rosto (Indica pele de Intensidade Suave/Opaca).",
+        "gengiva_labios": "B. Um rosa equilibrado. (Neutro).",
+        "laranja_vibrante": "B. Não é minha melhor cor, mas também não é a pior.",
+        "brilho_texturas": "B. Tenho um equilíbrio; consigo transitar entre o brilho e o opaco sem grandes perdas. (Neutro)"
+      },
+      "patton": {
+        "tom_fundo": "",
+        "reflexo_sol": "C. Fundo claro acinzentado ou rosado: Minha pele é clara ou média, com uma nuance fria, oliva e suave. (Nilo)"
+      },
+      "cabelo": {
+        "curvatura": "C. Cacheado (3 A/B/C)",
+        "espessura_fio": "B. Médio.",
+        "porosidade_absorcao": "C. Demora para molhar, mas \"bebe\" o produto e seca muito rápido (Alta porosidade - o fio está com as cutículas abertas/danificadas).",
+        "densidade": "A. Pouco cabelo (consigo dar muitas voltas com o elástico).",
+        "relacao_volume": "B. Gosto de um volume equilibrado.",
+        "saude_quimica": "A. Natural (sem químicas de transformação).",
+        "day_after": "C. Amassa, embaraça muito ou perde totalmente a forma (exige revitalização completa).",
+        "tempo_rotina": "A. Praticidade total: lavo e deixo secar naturalmente, não gasto mais de 15 min.",
+        "cabelo_dos_sonhos": "C. Gostaria de mudar radicalmente (cor, corte ou textura) para me sentir mais eu mesma.",
+        "percepcao_moldura": "B. Às vezes sim, às vezes não. Ainda estou em busca da minha melhor versão."
+      },
+      "essencia": {
+        "deusa_principal": "Artemis",
+        "deusa_auxiliar": "Perséfone"
+      }
+    },
+    "expected": {
+      "kibbe_scores": {
+        "dramatic": 0,
+        "natural": 1,
+        "classic": 4,
+        "gamine": 3,
+        "romantic": 6
+      },
+      "kibbe": "Romantic",
+      "cartela_sazonal": "Outono Quente",
+      "cartela_patton": "NILO",
+      "saldo_profundidade_contraste": -1,
+      "saldo_temperatura": 2,
+      "saldo_intensidade": -2,
+      "perfil_curvatura_densidade": "Cacheado / Pouco Cabelo",
+      "necessidade_tratamento": "Foco: Reconstrução (Danos/Porosidade)",
+      "indice_conexao_moldura": "Em Busca: Sugerir ajustes sutis de finalização",
+      "perfil_rotina": "Perfil Prático: Sugerir produtos multifuncionais"
+    }
+  }
+]

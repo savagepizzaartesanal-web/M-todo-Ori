@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { FEATURES } from "../config/features";
+import { JOURNEY_LABELS } from "../content/journeyCopy";
 
 const productPhases = [
   {
@@ -54,7 +55,7 @@ const productPhases = [
       "Leve sua imagem para escolhas reais no dia a dia.",
     pain: "Essa etapa chega quando você já tem clareza, mas o armário real ainda não acompanha. Você compra, improvisa, mistura versões antigas e continua sentindo desgaste para se vestir.",
     whatIs:
-      "Aqui a identidade revelada vira sistema de vida visual: cápsula, compras, repetição estética, combinações, lacunas e assinatura pessoal.",
+      "Aqui a identidade revelada vira direção de vida visual: cápsula, compras, repetição estética, combinações, lacunas e assinatura pessoal.",
     value:
       "Você para de improvisar imagem e começa a sustentar presença com escolhas reais.",
     cta: "Ver aplicação final",
@@ -81,7 +82,7 @@ const layers = [
     id: "metodo",
     number: "02",
     title: "O Método",
-    eyebrow: "Sistema ORI",
+    eyebrow: "Jornada ORI",
     summary: "Imagem como expressão da essência, não superfície isolada.",
   },
   {
@@ -882,7 +883,7 @@ function MetodoOriLayer({ activeLayer, activeProduct, setActiveProduct }) {
         <div className="grid gap-2 md:grid-cols-3">
           {[
             ["Código das Deusas", "Concluído", "Primeira leitura"],
-            ["Dossiê ORI", "Próxima etapa", "Imagem e essência"],
+            ["Dossiê ORI", JOURNEY_LABELS.proximoPasso, "Imagem e essência"],
             ["Código Final", "Ainda não iniciado", "Guarda-roupa real"],
           ].map(([product, status, title], index) => {
             const active = index === 0;
@@ -1012,13 +1013,13 @@ function MetodoOri() {
   const hasNextProductStep =
     isProductLayer && activeProduct < productPhases.length - 1;
   const footerText = hasNextProductStep
-    ? "Continue pelas etapas antes de avançar para a próxima etapa da página."
+    ? "Continue pelos passos antes de avançar na página."
     : activeLayer < layers.length - 1
       ? "Avance quando esta etapa fizer sentido."
       : "A travessia conceitual está completa.";
   const nextButtonLabel = hasNextProductStep
-    ? "Próxima etapa"
-    : "Próxima etapa";
+    ? JOURNEY_LABELS.proximoPasso
+    : JOURNEY_LABELS.proximoPasso;
   const scrollToReading = () => {
     window.setTimeout(() => {
       readingRef.current?.scrollIntoView({

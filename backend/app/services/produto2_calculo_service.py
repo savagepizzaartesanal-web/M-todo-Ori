@@ -25,6 +25,8 @@ KIBBE_KEYS = {
     "E": "romantic",
 }
 
+PATTON_RACIAL_MARKERS = ("negra", "preta", "parda", "miscigenada")
+
 ARCHETYPE_COMBINATIONS = {
     ("afrodite", "hera"): "Rainha Magnética",
     ("afrodite", "demeter"): "Amante Nutridora",
@@ -87,53 +89,79 @@ def _score_choice(value: Any, negative: str = "A", positive: str = "C") -> int:
     return 0
 
 
+def _score_letter(value: Any, scores: dict[str, int]) -> int:
+    letter = _choice_letter(value)
+    return scores.get(letter or "", 0)
+
+
+def is_patton_applicable(insumos: dict[str, Any]) -> bool:
+    dados_base = insumos.get("dados_base") or {}
+    autoidentificacao = _lower(dados_base.get("autoidentificacao_racial"))
+    return any(marker in autoidentificacao for marker in PATTON_RACIAL_MARKERS)
+
+
+def _resolve_kibbe_suggestion(scores: dict[str, int]) -> tuple[str, list[str]]:
+    max_score = max(scores.values()) if scores else 0
+    leaders = [key for key, value in scores.items() if value == max_score and value > 0]
+
+    suggestion = "Inconclusivo"
+    if max_score <= 0:
+        return suggestion, leaders
+
+    if scores["dramatic"] == max_score:
+        suggestion = "Soft Dramatic" if scores["romantic"] >= 3 else "Dramatic"
+    elif scores["natural"] == max_score:
+        if scores["dramatic"] > scores["romantic"]:
+            suggestion = "Flamboyant Natural"
+        elif scores["romantic"] > scores["dramatic"]:
+            suggestion = "Soft Natural"
+        else:
+            suggestion = "Natural"
+    elif scores["classic"] == max_score:
+        if scores["dramatic"] > scores["romantic"]:
+            suggestion = "Dramatic Classic"
+        elif scores["romantic"] > scores["dramatic"]:
+            suggestion = "Soft Classic"
+        else:
+            suggestion = "Classic"
+    elif scores["gamine"] == max_score:
+        if scores["dramatic"] > scores["romantic"]:
+            suggestion = "Flamboyant Gamine"
+        elif scores["romantic"] > scores["dramatic"]:
+            suggestion = "Soft Gamine"
+        else:
+            suggestion = "Gamine"
+    elif scores["romantic"] == max_score:
+        suggestion = "Theatrical Romantic" if scores["dramatic"] >= 3 else "Romantic"
+
+    return suggestion, leaders
+
+
 def calculate_kibbe(insumos: dict[str, Any]) -> dict[str, Any]:
     estrutura = insumos.get("estrutura_corporal") or {}
-    scores = {key: 0 for key in KIBBE_KEYS.values()}
+    structural_scores = {key: 0 for key in KIBBE_KEYS.values()}
     answered_count = 0
 
     for field in KIBBE_FIELDS:
         letter = _choice_letter(estrutura.get(field))
         if letter:
-            scores[KIBBE_KEYS[letter]] += 1
+            structural_scores[KIBBE_KEYS[letter]] += 1
             answered_count += 1
 
-    max_score = max(scores.values()) if scores else 0
-    leaders = [key for key, value in scores.items() if value == max_score and value > 0]
-
-    suggestion = "Inconclusivo"
-    if len(leaders) == 1:
-        leader = leaders[0]
-        if leader == "dramatic":
-            suggestion = "Soft Dramatic" if scores["romantic"] >= 3 else "Dramatic"
-        elif leader == "natural":
-            if scores["dramatic"] > scores["romantic"]:
-                suggestion = "Flamboyant Natural"
-            elif scores["romantic"] > scores["dramatic"]:
-                suggestion = "Soft Natural"
-            else:
-                suggestion = "Natural"
-        elif leader == "classic":
-            if scores["dramatic"] > scores["romantic"]:
-                suggestion = "Dramatic Classic"
-            elif scores["romantic"] > scores["dramatic"]:
-                suggestion = "Soft Classic"
-            else:
-                suggestion = "Classic"
-        elif leader == "gamine":
-            suggestion = "Soft Gamine" if scores["romantic"] >= scores["dramatic"] else "Flamboyant Gamine"
-        elif leader == "romantic":
-            suggestion = "Theatrical Romantic" if scores["dramatic"] >= 3 else "Romantic"
+    scores = dict(structural_scores)
+    suggestion, leaders = _resolve_kibbe_suggestion(scores)
 
     return {
         "pontuacoes": scores,
+        "pontuacoes_estruturais": structural_scores,
+        "pontuacoes_moduladas": scores,
         "respostas_validas": answered_count,
         "total_campos": len(KIBBE_FIELDS),
         "empate": leaders if len(leaders) > 1 else [],
         "sugestao": suggestion,
         "observacao": (
-            "Sugestao preliminar baseada apenas nos sinais corporais informados. "
-            "Autodeclaracao racial e ancestralidade nao alteram a pontuacao Kibbe. "
+            "Sugestao preliminar baseada nos sinais corporais informados, seguindo "
+            "a pontuacao estrutural da planilha original. "
             "A validacao final depende da leitura visual do admin."
         ),
     }
@@ -150,28 +178,40 @@ def calculate_coloracao(insumos: dict[str, Any]) -> dict[str, Any]:
         + _score_choice(coloracao.get("metais"))
         + _score_choice(coloracao.get("azul_laranja"))
         + _score_choice(coloracao.get("veias_subtom"))
+        + _score_choice(coloracao.get("batons"))
+        + _score_choice(coloracao.get("nude"))
+        + _score_choice(coloracao.get("gengiva_labios"))
+        + _score_choice(coloracao.get("laranja_vibrante"))
     )
     intensidade = (
         _score_choice(coloracao.get("intensidade"))
+        + _score_letter(coloracao.get("batons"), {"B": -1})
         + _score_choice(coloracao.get("cores_vibrantes"))
-        + _score_choice(coloracao.get("laranja_vibrante"))
+        + _score_choice(coloracao.get("brilho_texturas"))
     )
 
     if profundidade == 0 and temperatura == 0 and intensidade == 0:
         suggestion = "Inconclusivo"
     elif abs(profundidade) >= abs(temperatura) and abs(profundidade) >= abs(intensidade):
-        suggestion = "Outono Profundo" if profundidade > 0 and temperatura > 0 else (
-            "Inverno Profundo" if profundidade > 0 else (
-                "Primavera Clara" if temperatura > 0 else "Verão Claro"
-            )
+        suggestion = (
+            "Outono Profundo" if profundidade > 0 and temperatura > 0
+            else "Inverno Profundo" if profundidade > 0
+            else "Primavera Clara" if temperatura > 0
+            else "Verão Claro"
         )
     elif abs(temperatura) >= abs(intensidade):
-        suggestion = "Outono Quente" if temperatura > 0 and profundidade >= 0 else (
-            "Primavera Quente" if temperatura > 0 else "Verão Frio"
+        suggestion = (
+            "Primavera Quente" if temperatura > 0 and intensidade > 0
+            else "Outono Quente" if temperatura > 0
+            else "Inverno Frio" if intensidade > 0
+            else "Verão Frio"
         )
     else:
-        suggestion = "Primavera Brilhante" if intensidade > 0 and temperatura > 0 else (
-            "Inverno Brilhante" if intensidade > 0 else "Suave / verificar presencialmente"
+        suggestion = (
+            "Primavera Brilhante" if intensidade > 0 and temperatura > 0
+            else "Inverno Brilhante" if intensidade > 0
+            else "Outono Suave" if temperatura > 0
+            else "Verão Suave"
         )
 
     return {
@@ -184,14 +224,9 @@ def calculate_coloracao(insumos: dict[str, Any]) -> dict[str, Any]:
 
 
 def calculate_patton(insumos: dict[str, Any]) -> dict[str, Any]:
-    dados_base = insumos.get("dados_base") or {}
     patton = insumos.get("patton") or {}
-    autoidentificacao = _lower(dados_base.get("autoidentificacao_racial"))
-    aplicavel = any(
-        marker in autoidentificacao
-        for marker in ("negra", "preta", "parda", "miscigenada")
-    ) or bool(patton)
-    source = " ".join(_clean(value) for value in patton.values())
+    aplicavel = is_patton_applicable(insumos)
+    source = _clean(patton.get("reflexo_sol"))
 
     suggestion = ""
     if _contains(source, "blues"):
@@ -206,8 +241,8 @@ def calculate_patton(insumos: dict[str, Any]) -> dict[str, Any]:
         suggestion = "CALYPSO"
     elif _contains(source, "spice"):
         suggestion = "SPICE"
-    elif aplicavel:
-        suggestion = "Verificar pela leitura visual"
+    else:
+        suggestion = "Verificar"
 
     return {
         "aplicavel": aplicavel,
@@ -221,35 +256,58 @@ def calculate_patton(insumos: dict[str, Any]) -> dict[str, Any]:
 
 def calculate_cabelo(insumos: dict[str, Any]) -> dict[str, Any]:
     cabelo = insumos.get("cabelo") or {}
-    curvatura = _clean(cabelo.get("curvatura")) or "Nao informado"
-    densidade = _clean(cabelo.get("densidade")) or "Analisar"
+    curvatura_source = cabelo.get("curvatura")
+    densidade_source = cabelo.get("densidade")
+    if _contains(curvatura_source, "liso"):
+        curvatura = "Liso"
+    elif _contains(curvatura_source, "ondulado"):
+        curvatura = "Ondulado"
+    elif _contains(curvatura_source, "cacheado"):
+        curvatura = "Cacheado"
+    elif _contains(curvatura_source, "crespo"):
+        curvatura = "Crespo"
+    else:
+        curvatura = "Transição/Outro"
+
+    if _contains(densidade_source, "pouco"):
+        densidade = "Pouco Cabelo"
+    elif _contains(densidade_source, "médio", "medio"):
+        densidade = "Densidade Média"
+    elif _contains(densidade_source, "muito"):
+        densidade = "Muito Cabelo"
+    else:
+        densidade = "Analisar"
+
     porosidade = cabelo.get("porosidade_absorcao")
+    espessura = cabelo.get("espessura_fio")
     quimica = cabelo.get("saude_quimica")
     moldura = cabelo.get("percepcao_moldura")
     rotina = cabelo.get("tempo_rotina")
 
     if _contains(porosidade, "alta") or _contains(quimica, "alisado", "descolor", "quim"):
-        tratamento = "Foco: Reconstrucao (danos/porosidade)"
-    elif _contains(porosidade, "baixa") or _contains(cabelo.get("day_after"), "pesado"):
-        tratamento = "Foco: Hidratacao e leveza"
+        tratamento = "Foco: Reconstrução (Danos/Porosidade)"
+    elif _contains(porosidade, "baixa") or _contains(espessura, "grosso"):
+        tratamento = "Foco: Hidratação Profunda (Dificuldade de absorção)"
     else:
-        tratamento = "Foco: Nutricao e manutencao"
+        tratamento = "Foco: Nutrição e Manutenção"
 
     if _choice_letter(moldura) == "A":
-        conexao = "Alta conexao: reforcar a marca registrada"
+        conexao = "Alta Conexão: Reforçar a marca registrada"
     elif _choice_letter(moldura) == "B":
-        conexao = "Em busca: sugerir ajustes sutis de finalizacao"
+        conexao = "Em Busca: Sugerir ajustes sutis de finalização"
+    elif _choice_letter(moldura) == "C":
+        conexao = "Desconexão: Foco em Transformação e Aceitação"
     else:
-        conexao = "Verificar conexao com a assinatura visual"
+        conexao = "Verificar conexão com a assinatura visual"
 
     if _contains(rotina, "praticidade", "pouco tempo"):
-        perfil_rotina = "Perfil pratico: sugerir produtos multifuncionais"
+        perfil_rotina = "Perfil Prático: Sugerir produtos multifuncionais"
     elif _contains(rotina, "moderada", "algum tempo"):
-        perfil_rotina = "Perfil equilibrado: rotina padrao"
-    elif _clean(rotina):
-        perfil_rotina = "Perfil elaborado: pode sustentar ritual capilar"
+        perfil_rotina = "Perfil Equilibrado: Rotina padrão"
+    elif _contains(rotina, "ritual"):
+        perfil_rotina = "Perfil Ritualístico: Detalhar fitagem e cronograma"
     else:
-        perfil_rotina = "Nao informado"
+        perfil_rotina = "Não informado"
 
     return {
         "perfil_curvatura_densidade": f"{curvatura} / {densidade}",
