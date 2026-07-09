@@ -12,6 +12,11 @@ from app.schemas.produto2 import (
     Produto2AdminUpdateRequest,
     Produto2PublishRequest,
 )
+from app.schemas.produto3 import (
+    Produto3AdminResponse,
+    Produto3AdminUpdateRequest,
+    Produto3PublishRequest,
+)
 from app.services.admin_ai_service import generate_admin_ai_message
 from app.services.admin_service import (
     create_admin_cliente_evento,
@@ -25,6 +30,12 @@ from app.services.produto2_service import (
     publish_admin_produto2,
     unpublish_admin_produto2,
     update_admin_produto2,
+)
+from app.services.produto3_service import (
+    get_admin_produto3,
+    publish_admin_produto3,
+    unpublish_admin_produto3,
+    update_admin_produto3,
 )
 from app.services.produto2_ai_service import generate_admin_produto2_ai_draft
 
@@ -158,6 +169,66 @@ async def unpublish_produto2(
     current_user: CurrentUser = Depends(get_current_user),
 ):
     return await unpublish_admin_produto2(
+        cliente_id=cliente_id,
+        current_user=current_user,
+    )
+
+
+@router.get(
+    "/produto-3/{cliente_id}",
+    response_model=Produto3AdminResponse,
+)
+async def read_admin_produto3(
+    cliente_id: str,
+    current_user: CurrentUser = Depends(get_current_user),
+):
+    return await get_admin_produto3(
+        cliente_id=cliente_id,
+        current_user=current_user,
+    )
+
+
+@router.put(
+    "/produto-3/{cliente_id}",
+    response_model=Produto3AdminResponse,
+)
+async def put_admin_produto3(
+    cliente_id: str,
+    payload: Produto3AdminUpdateRequest,
+    current_user: CurrentUser = Depends(get_current_user),
+):
+    return await update_admin_produto3(
+        cliente_id=cliente_id,
+        payload=payload,
+        current_user=current_user,
+    )
+
+
+@router.post(
+    "/produto-3/{cliente_id}/publicar",
+    response_model=Produto3AdminResponse,
+)
+async def publish_produto3(
+    cliente_id: str,
+    payload: Produto3PublishRequest,
+    current_user: CurrentUser = Depends(get_current_user),
+):
+    return await publish_admin_produto3(
+        cliente_id=cliente_id,
+        payload=payload,
+        current_user=current_user,
+    )
+
+
+@router.post(
+    "/produto-3/{cliente_id}/despublicar",
+    response_model=Produto3AdminResponse,
+)
+async def unpublish_produto3(
+    cliente_id: str,
+    current_user: CurrentUser = Depends(get_current_user),
+):
+    return await unpublish_admin_produto3(
         cliente_id=cliente_id,
         current_user=current_user,
     )

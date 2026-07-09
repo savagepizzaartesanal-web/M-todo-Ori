@@ -255,6 +255,24 @@ export function submitProduto2Insumos(insumos) {
   });
 }
 
+export function getProduto3CodigoFinal() {
+  return requestAuthenticatedApi("/api/produto-3/me");
+}
+
+export function saveProduto3Insumos(insumos) {
+  return requestAuthenticatedApi("/api/produto-3/insumos", {
+    method: "POST",
+    body: JSON.stringify({ insumos }),
+  });
+}
+
+export function submitProduto3Insumos(insumos) {
+  return requestAuthenticatedApi("/api/produto-3/enviar", {
+    method: "POST",
+    body: JSON.stringify({ insumos }),
+  });
+}
+
 export function getCurrentApiUser() {
   return requestAuthenticatedApi("/api/me");
 }
@@ -372,6 +390,41 @@ export function publishAdminProduto2(clienteId, payload) {
 export function unpublishAdminProduto2(clienteId) {
   return requestAuthenticatedApi(
     `/api/admin/produto-2/${encodeURIComponent(clienteId)}/despublicar`,
+    {
+      method: "POST",
+    },
+  );
+}
+
+export function getAdminProduto3(clienteId) {
+  return requestAuthenticatedApi(
+    `/api/admin/produto-3/${encodeURIComponent(clienteId)}`,
+  );
+}
+
+export function updateAdminProduto3(clienteId, updates) {
+  return requestAuthenticatedApi(
+    `/api/admin/produto-3/${encodeURIComponent(clienteId)}`,
+    {
+      method: "PUT",
+      body: JSON.stringify(updates),
+    },
+  );
+}
+
+export function publishAdminProduto3(clienteId, payload) {
+  return requestAuthenticatedApi(
+    `/api/admin/produto-3/${encodeURIComponent(clienteId)}/publicar`,
+    {
+      method: "POST",
+      body: JSON.stringify(payload),
+    },
+  );
+}
+
+export function unpublishAdminProduto3(clienteId) {
+  return requestAuthenticatedApi(
+    `/api/admin/produto-3/${encodeURIComponent(clienteId)}/despublicar`,
     {
       method: "POST",
     },
