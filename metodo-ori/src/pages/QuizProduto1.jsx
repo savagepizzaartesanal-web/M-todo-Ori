@@ -3590,7 +3590,7 @@ function QuizProduto1() {
               className="ori-mobile-preview-3 ori-type-reading-soft text-sm md:text-base max-w-3xl mb-5 md:mb-6"
               style={{ color: colors.soft }}
             >
-              Sua primeira leitura já está salva no Portal ORI. Você pode acessar
+              Sua primeira leitura já está salva no Átrio ORI. Você pode acessar
               o Espelho ORI para ver a jornada aberta ou refazer a leitura se
               quiser reiniciar seus sinais.
             </p>

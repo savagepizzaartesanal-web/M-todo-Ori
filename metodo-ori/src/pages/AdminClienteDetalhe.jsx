@@ -221,7 +221,7 @@ function AdminClienteDetalhe() {
   const timeline = [
     {
       label: "Cadastro recebido",
-      description: "Cliente entrou no Portal ORI.",
+      description: "Cliente entrou no Átrio ORI.",
       done: true,
     },
     {

@@ -518,7 +518,7 @@ function Login() {
                 textShadow: "0 0 36px rgba(242,185,104,0.13)",
               }}
             >
-              Portal ORI
+              Átrio ORI
             </h1>
 
             <p
@@ -649,7 +649,7 @@ function Login() {
                     letterSpacing: "-0.065em",
                   }}
                 >
-                  Portal ORI
+                  Átrio ORI
                 </h1>
 
                 <p
@@ -685,7 +685,7 @@ function Login() {
                   className="ori-type-system text-[10px]"
                   style={{ color: "var(--gold-soft)" }}
                 >
-                  Portal de Acesso
+                  Átrio ORI
                 </p>
               </div>
 
@@ -987,8 +987,8 @@ function Login() {
                           ? "Abrir minha primeira porta"
                           : "Criar meu acesso ORI"
                         : formReady
-                          ? "Abrir meu portal"
-                          : "Acessar Portal ORI"}
+                          ? "Abrir meu Átrio ORI"
+                          : "Acessar o Átrio ORI"}
                   </motion.button>
                 </div>
 

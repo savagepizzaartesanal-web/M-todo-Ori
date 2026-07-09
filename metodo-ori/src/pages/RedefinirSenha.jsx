@@ -58,7 +58,7 @@ function RedefinirSenha() {
       return;
     }
 
-    setMensagem("Senha redefinida. Você já pode acessar o Portal ORI.");
+    setMensagem("Senha redefinida. Você já pode acessar o Átrio ORI.");
 
     window.setTimeout(() => {
       navigate("/portal", { replace: true });
@@ -129,7 +129,7 @@ function RedefinirSenha() {
             className="ori-type-reading-soft text-sm mb-6"
             style={{ color: "var(--text-soft)" }}
           >
-            Escolha uma senha com pelo menos 6 caracteres para voltar ao Portal ORI.
+            Escolha uma senha com pelo menos 6 caracteres para voltar ao Átrio ORI.
           </p>
 
           <div className="flex flex-col gap-3.5">
