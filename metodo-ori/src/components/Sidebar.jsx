@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
+import { OriBadge, OriButton, OriCard, OriSheet } from "./ui";
 import { supabase } from "../lib/supabaseClient";
 
 const mainLinks = [
@@ -148,8 +149,9 @@ function Sidebar() {
             <span className="relative z-10 flex items-center justify-between gap-2 pl-2 tracking-[0.035em] normal-case">
               <span>{label}</span>
               {badge ? (
-                <span
-                  className="rounded-full px-2 py-1 text-[8px]"
+                <OriBadge
+                  size="xs"
+                  className="text-[8px]"
                   style={{
                     background: "rgba(242,185,104,0.075)",
                     border: "1px solid rgba(242,185,104,0.10)",
@@ -158,7 +160,7 @@ function Sidebar() {
                   }}
                 >
                   {badge}
-                </span>
+                </OriBadge>
               ) : null}
             </span>
           </>
@@ -170,8 +172,10 @@ function Sidebar() {
   return (
     <>
       <div className="fixed left-2.5 right-2.5 top-2 z-50 flex items-center justify-between gap-2 lg:hidden">
-        <button
+        <OriButton
           type="button"
+          variant="secondary"
+          size="sm"
           onClick={() => setMobileOpen(true)}
           className="ori-button-secondary inline-flex min-h-9 items-center gap-2 rounded-full px-3 py-1.5 text-[12px]"
           style={{
@@ -193,9 +197,11 @@ function Sidebar() {
             }}
           />
           Menu ORI
-        </button>
+        </OriButton>
 
-        <span
+        <OriBadge
+          tone="gold"
+          size="xs"
           className="ori-type-system rounded-full px-2.5 py-1.5 text-[8px]"
           style={{
             background: "rgba(5,2,2,0.42)",
@@ -206,35 +212,15 @@ function Sidebar() {
           }}
         >
           Portal
-        </span>
+        </OriBadge>
       </div>
 
-      {mobileOpen && (
-        <div
-          className="fixed inset-0 z-[60] lg:hidden"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Menu ORI"
-        >
-          <button
-            type="button"
-            className="absolute inset-0 h-full w-full bg-black/62"
-            onClick={() => setMobileOpen(false)}
-            aria-label="Fechar menu"
-          />
-
-          <div
-            id="ori-mobile-menu"
-            className="absolute bottom-0 left-0 right-0 max-h-[86svh] overflow-hidden rounded-t-[28px] border px-5 pb-5 pt-4"
-            style={{
-              backgroundColor: "rgba(5,2,2,0.94)",
-              borderColor: "rgba(242,185,104,0.14)",
-              boxShadow:
-                "0 -18px 70px rgba(0,0,0,0.54), inset 0 1px 0 rgba(255,255,255,0.04)",
-              backdropFilter: "blur(22px)",
-              WebkitBackdropFilter: "blur(22px)",
-            }}
-          >
+      <OriSheet
+        open={mobileOpen}
+        onClose={() => setMobileOpen(false)}
+        title="Menu ORI"
+        id="ori-mobile-menu"
+      >
             <div className="relative z-10">
               <div className="mb-4 flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
@@ -259,8 +245,10 @@ function Sidebar() {
                   </div>
                 </div>
 
-                <button
+                <OriButton
                   type="button"
+                  variant="secondary"
+                  size="sm"
                   onClick={() => setMobileOpen(false)}
                   className="ori-button-secondary grid h-10 w-10 place-items-center rounded-full text-lg"
                   style={{
@@ -271,7 +259,7 @@ function Sidebar() {
                   aria-label="Fechar menu"
                 >
                   ×
-                </button>
+                </OriButton>
               </div>
 
               <div className="ori-premium-scroll max-h-[calc(86svh-112px)] overflow-y-auto pr-1">
@@ -300,8 +288,10 @@ function Sidebar() {
                   </div>
                 )}
 
-                <button
+                <OriButton
                   type="button"
+                  variant="success"
+                  size="md"
                   onClick={handleLogout}
                   className="ori-button-secondary ori-type-system w-full rounded-[14px] px-3.5 py-3 text-[12px]"
                   style={{
@@ -313,12 +303,10 @@ function Sidebar() {
                   }}
                 >
                   Sair do portal
-                </button>
+                </OriButton>
               </div>
             </div>
-          </div>
-        </div>
-      )}
+      </OriSheet>
 
       <aside
       className="
@@ -494,7 +482,10 @@ function Sidebar() {
 
             <SectionTitle variant="green">Sessão ORI</SectionTitle>
 
-            <div
+            <OriCard
+              variant="secondary"
+              padding="none"
+              radius="lg"
               className="ori-card-secondary relative overflow-hidden rounded-[22px] p-3.5 mb-3"
               style={{
                 background:
@@ -532,18 +523,24 @@ function Sidebar() {
                   </p>
                 </div>
 
-                <span
+                <OriBadge
+                  tone="success"
+                  size="xs"
                   className="w-2.5 h-2.5 rounded-full shrink-0"
                   style={{
                     background: "#9BE7AE",
                     boxShadow: "0 0 18px rgba(120,255,160,0.55)",
+                    padding: 0,
                   }}
+                  aria-label="Portal conectado"
                 />
               </div>
-            </div>
+            </OriCard>
 
-            <button
+            <OriButton
               type="button"
+              variant="secondary"
+              size="sm"
               onClick={handleLogout}
               className="ori-button-secondary ori-type-system group relative overflow-hidden w-full rounded-[14px] px-3.5 py-2.5 text-[12px] transition-all duration-500 hover:translate-x-0.5"
               style={{
@@ -569,7 +566,7 @@ function Sidebar() {
               />
 
               <span className="relative z-10 normal-case">Sair do Portal</span>
-            </button>
+            </OriButton>
           </div>
         </div>
       </div>

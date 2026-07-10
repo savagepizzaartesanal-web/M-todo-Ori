@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  /* Base tokens */
   --bg-primary: #050202;
   --bg-secondary: #0b0506;
   --bg-card: rgba(18, 9, 10, 0.72);
@@ -44,6 +45,74 @@
   --ori-state-translating: #d7c2aa;
   --ori-state-sealed: rgba(247, 234, 216, 0.42);
   --ori-state-soon: rgba(247, 234, 216, 0.34);
+
+  /* Semantic aliases for the ORI UI system. These mirror current values so
+     future migrations can replace inline styles without changing the look. */
+  --ori-surface-page: var(--bg-primary);
+  --ori-surface-page-soft: var(--bg-secondary);
+  --ori-surface-card: var(--bg-card);
+  --ori-surface-card-subtle: rgba(255, 255, 255, 0.026);
+  --ori-surface-card-muted: rgba(255, 255, 255, 0.018);
+  --ori-surface-panel: rgba(18, 9, 10, 0.88);
+  --ori-surface-panel-strong: rgba(5, 2, 2, 0.94);
+
+  --ori-text-primary: var(--text-primary);
+  --ori-text-soft: var(--text-soft);
+  --ori-text-muted: var(--text-muted);
+  --ori-text-reading: var(--ori-reading);
+  --ori-text-reading-soft: var(--ori-reading-soft);
+  --ori-text-inverse: #090506;
+
+  --ori-border-primary: var(--border-primary);
+  --ori-border-soft: var(--border-soft);
+  --ori-border-subtle: rgba(242, 185, 104, 0.10);
+  --ori-border-muted: rgba(255, 255, 255, 0.06);
+
+  --ori-action-primary-bg: var(--gold-primary);
+  --ori-action-primary-bg-gradient: linear-gradient(135deg, rgba(210, 135, 70, 1), rgba(242, 185, 104, 1) 54%, rgba(255, 213, 142, 1));
+  --ori-action-primary-text: var(--ori-text-inverse);
+  --ori-action-secondary-bg: rgba(255, 255, 255, 0.024);
+  --ori-action-secondary-border: rgba(242, 185, 104, 0.12);
+  --ori-action-secondary-text: rgba(247, 234, 216, 0.72);
+  --ori-action-disabled-bg: rgba(255, 255, 255, 0.035);
+  --ori-action-disabled-text: rgba(255, 245, 235, 0.56);
+
+  --ori-success: #9be7ae;
+  --ori-success-bg: rgba(120, 255, 160, 0.08);
+  --ori-success-border: rgba(120, 255, 160, 0.16);
+  --ori-success-text: #9be7ae;
+
+  --ori-danger: #ffb0b0;
+  --ori-danger-bg: rgba(199, 106, 122, 0.08);
+  --ori-danger-border: rgba(199, 106, 122, 0.18);
+  --ori-danger-text: #f1b5bf;
+
+  --ori-lavender: #d9bdff;
+  --ori-lavender-bg: rgba(183, 140, 255, 0.10);
+  --ori-lavender-border: rgba(183, 140, 255, 0.18);
+  --ori-lavender-text: #d9bdff;
+
+  --ori-muted-bg: rgba(255, 255, 255, 0.025);
+  --ori-muted-border: rgba(255, 255, 255, 0.06);
+  --ori-muted-text: rgba(255, 245, 235, 0.55);
+
+  --ori-input-bg: rgba(255, 255, 255, 0.032);
+  --ori-input-bg-solid: #1b1213;
+  --ori-input-border: rgba(242, 185, 104, 0.12);
+  --ori-input-placeholder: rgba(255, 245, 235, 0.34);
+  --ori-input-focus-border: rgba(242, 185, 104, 0.38);
+  --ori-input-focus-bg: rgba(242, 185, 104, 0.060);
+
+  --ori-radius-sm: 14px;
+  --ori-radius-md: 18px;
+  --ori-radius-lg: 24px;
+  --ori-radius-xl: 30px;
+  --ori-radius-hero: 42px;
+  --ori-radius-pill: 999px;
+
+  --ori-shadow-card: 0 0 70px rgba(242, 185, 104, 0.045);
+  --ori-shadow-action: 0 10px 28px rgba(210, 135, 70, 0.16);
+  --ori-shadow-focus: 0 0 24px rgba(242, 185, 104, 0.14);
 }
 
 html,

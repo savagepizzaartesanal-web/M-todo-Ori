@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
+import { OriButton, OriCard, OriField } from "../components/ui";
 import { JOURNEY_STATUS } from "../constants/journeyStatus";
 import { supabase } from "../lib/supabaseClient";
 
@@ -771,72 +772,49 @@ function Login() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <label
-                        htmlFor="ori-login-name"
-                        className="ori-type-system block text-[10px] mb-2"
-                        style={{ color: "var(--gold-soft)" }}
-                      >
-                        Nome
-                      </label>
-
-                      <input
+                      <OriField
                         id="ori-login-name"
+                        label="Nome"
                         type="text"
                         autoComplete="name"
                         value={nome}
                         onChange={(event) => setNome(event.target.value)}
                         placeholder="Seu nome"
                         required={isCadastro}
-                        className="ori-input w-full px-5 py-3.5 rounded-2xl outline-none transition-all duration-500"
+                        className="ori-input px-5 py-3.5 duration-500"
                         style={getInputStyle(nomeReady)}
                       />
                     </motion.div>
                   )}
 
-                  <div>
-                    <label
-                      htmlFor="ori-login-email"
-                      className="ori-type-system block text-[10px] mb-2"
-                      style={{ color: "var(--gold-soft)" }}
-                    >
-                      E-mail
-                    </label>
-
-                    <input
-                      id="ori-login-email"
-                      type="email"
-                      autoComplete="email"
-                      inputMode="email"
-                      value={email}
-                      onChange={(event) => {
-                        setEmail(event.target.value);
-                        resetPasswordRecovery();
-                      }}
-                      placeholder="seunome@email.com"
-                      required
-                      className="ori-input w-full px-5 py-3.5 rounded-2xl outline-none transition-all duration-500"
-                      style={getInputStyle(emailReady)}
-                    />
-                  </div>
+                  <OriField
+                    id="ori-login-email"
+                    label="E-mail"
+                    type="email"
+                    autoComplete="email"
+                    inputMode="email"
+                    value={email}
+                    onChange={(event) => {
+                      setEmail(event.target.value);
+                      resetPasswordRecovery();
+                    }}
+                    placeholder="seunome@email.com"
+                    required
+                    className="ori-input px-5 py-3.5 duration-500"
+                    style={getInputStyle(emailReady)}
+                  />
 
                   <div>
-                    <label
-                      htmlFor="ori-login-password"
-                      className="ori-type-system block text-[10px] mb-2"
-                      style={{ color: "var(--gold-soft)" }}
-                    >
-                      Senha
-                    </label>
-
-                    <input
+                    <OriField
                       id="ori-login-password"
+                      label="Senha"
                       type="password"
                       autoComplete={isCadastro ? "new-password" : "current-password"}
                       value={senha}
                       onChange={(event) => setSenha(event.target.value)}
                       placeholder="••••••••"
                       required
-                      className="ori-input w-full px-5 py-3.5 rounded-2xl outline-none transition-all duration-500"
+                      className="ori-input px-5 py-3.5 duration-500"
                       style={getInputStyle(
                         isCadastro ? senhaReady : senha.length > 0,
                       )}
@@ -863,7 +841,11 @@ function Login() {
                   </div>
 
                   {recoveryEmail && !isCadastro && (
-                    <motion.div
+                    <OriCard
+                      as={motion.div}
+                      variant="plain"
+                      padding="none"
+                      radius="md"
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       className="rounded-2xl p-3.5 text-sm leading-relaxed"
@@ -882,42 +864,49 @@ function Login() {
                       </p>
 
                       <div className="flex flex-wrap gap-2">
-                        <motion.button
+                        <OriButton
+                          as={motion.button}
+                          nativeButton
                           type="button"
+                          variant="gradient"
+                          size="sm"
                           disabled={resetLoading}
                           onClick={sendPasswordRecovery}
                           whileHover={resetLoading ? {} : { y: -1 }}
-                          className="rounded-full px-4 py-2 text-xs transition-all disabled:cursor-not-allowed disabled:opacity-60"
                           style={{
                             background:
                               "linear-gradient(90deg, rgba(210,135,70,0.96), rgba(242,185,104,0.92))",
-                            color: "#090506",
                             fontWeight: 600,
                           }}
                         >
                           {resetLoading
                             ? "Enviando..."
                             : "Confirmar e enviar link"}
-                        </motion.button>
+                        </OriButton>
 
-                        <button
+                        <OriButton
                           type="button"
+                          variant="secondary"
+                          size="sm"
                           disabled={resetLoading}
                           onClick={() => setRecoveryEmail("")}
-                          className="rounded-full px-4 py-2 text-xs transition-all disabled:cursor-not-allowed disabled:opacity-60"
                           style={{
                             border: "1px solid rgba(242,185,104,0.16)",
                             color: "var(--gold-primary)",
                           }}
                         >
                           Corrigir e-mail
-                        </button>
+                        </OriButton>
                       </div>
-                    </motion.div>
+                    </OriCard>
                   )}
 
                   {erro && (
-                    <motion.div
+                    <OriCard
+                      as={motion.div}
+                      variant="plain"
+                      padding="none"
+                      radius="md"
                       id="ori-login-error"
                       role="alert"
                       initial={{ opacity: 0, y: 8 }}
@@ -930,11 +919,15 @@ function Login() {
                       }}
                     >
                       {erro}
-                    </motion.div>
+                    </OriCard>
                   )}
 
                   {mensagem && (
-                    <motion.div
+                    <OriCard
+                      as={motion.div}
+                      variant="plain"
+                      padding="none"
+                      radius="md"
                       id="ori-login-message"
                       role="status"
                       aria-live="polite"
@@ -948,11 +941,15 @@ function Login() {
                       }}
                     >
                       {mensagem}
-                    </motion.div>
+                    </OriCard>
                   )}
 
-                  <motion.button
+                  <OriButton
+                    as={motion.button}
+                    nativeButton
                     type="submit"
+                    variant="gradient"
+                    size="lg"
                     disabled={loading}
                     whileHover={
                       loading
@@ -967,7 +964,7 @@ function Login() {
                     }
                     whileTap={loading ? {} : { scale: 0.994, y: 0 }}
                     transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                    className="relative mt-2 px-8 py-4 rounded-full transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed overflow-hidden"
+                    className="relative mt-2 w-full overflow-hidden"
                     style={{
                       background: formReady
                         ? "linear-gradient(90deg, rgba(210,135,70,0.96), rgba(242,185,104,0.92))"
@@ -990,7 +987,7 @@ function Login() {
                         : formReady
                           ? "Abrir meu Átrio ORI"
                           : "Acessar o Átrio ORI"}
-                  </motion.button>
+                  </OriButton>
                 </div>
 
                 <div

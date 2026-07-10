@@ -20,6 +20,7 @@ import {
   FEEDBACK_LABELS,
   getFeedbackBridge,
 } from "../utils/feedbackInsights";
+import { OriBadge, OriButton, OriCard, OriField } from "../components/ui";
 
 function AdminClienteDetalhe() {
   const { id } = useParams();
@@ -189,13 +190,15 @@ function AdminClienteDetalhe() {
   if (!cliente) {
     return (
       <div className="ori-atmosphere ori-atmosphere-method relative overflow-hidden max-w-7xl">
-        <Link
+        <OriButton
+          as={Link}
           to="/admin/clientes"
-          className="ori-button-secondary inline-block mb-8 rounded-full px-5 py-2.5 text-sm"
+          variant="secondary"
+          className="mb-8 px-5 py-2.5 text-sm"
           style={{ color: "var(--gold-primary)" }}
         >
           ← Voltar para clientes
-        </Link>
+        </OriButton>
 
         <div
           className="ori-card-teaser rounded-[30px] p-8 cinematic-card"
@@ -412,13 +415,15 @@ function AdminClienteDetalhe() {
   };
   return (
     <div className="ori-atmosphere ori-atmosphere-method relative overflow-hidden max-w-7xl">
-      <Link
+      <OriButton
+        as={Link}
         to="/admin/clientes"
-        className="ori-button-secondary inline-block mb-7 rounded-full px-5 py-2.5 text-sm"
+        variant="secondary"
+        className="mb-7 px-5 py-2.5 text-sm"
         style={{ color: "var(--gold-primary)" }}
       >
         ← Voltar para clientes
-      </Link>
+      </OriButton>
 
       <section
         className="ori-main-frame ori-hero-panel relative overflow-hidden rounded-[34px] md:rounded-[42px] p-7 md:p-9 xl:p-10 mb-8 cinematic-card"
@@ -486,8 +491,10 @@ function AdminClienteDetalhe() {
 
           <div className="flex flex-wrap gap-2.5">
             {chips.map((item) => (
-              <span
+              <OriBadge
                 key={item}
+                tone={item === "Admin" ? "lavender" : "muted"}
+                size="md"
                 className="ori-chip px-4 py-2 text-xs"
                 data-state={item === "Admin" ? "revealed" : "active"}
                 style={{
@@ -499,7 +506,7 @@ function AdminClienteDetalhe() {
                 }}
               >
                 {item}
-              </span>
+              </OriBadge>
             ))}
           </div>
         </div>
@@ -512,8 +519,11 @@ function AdminClienteDetalhe() {
           ["WhatsApp", contactWhatsapp || "Não informado"],
           ["Último contato", lastAdminContact],
         ].map(([label, value]) => (
-          <div
+          <OriCard
             key={label}
+            variant="secondary"
+            padding="none"
+            radius="md"
             className="ori-card-secondary relative overflow-hidden rounded-[24px] p-5 cinematic-card"
             style={{
               background:
@@ -539,7 +549,7 @@ function AdminClienteDetalhe() {
             >
               {value}
             </h2>
-          </div>
+          </OriCard>
         ))}
       </div>
 
@@ -579,8 +589,10 @@ function AdminClienteDetalhe() {
             {memory.signals.length > 0 && (
               <div className="mt-4 flex flex-wrap gap-2">
                 {memory.signals.map((signal) => (
-                  <span
+                  <OriBadge
                     key={signal}
+                    tone="muted"
+                    size="sm"
                     className="ori-chip px-3 py-1.5 text-[11px]"
                     style={{
                       background: "rgba(255,255,255,0.026)",
@@ -589,7 +601,7 @@ function AdminClienteDetalhe() {
                     }}
                   >
                     {signal}
-                  </span>
+                  </OriBadge>
                 ))}
               </div>
             )}
@@ -648,11 +660,12 @@ function AdminClienteDetalhe() {
               </div>
 
               <div className="flex flex-wrap gap-2">
-                <button
+                <OriButton
                   type="button"
+                  variant={aiApproach?.generated ? "lavender" : "secondary"}
                   onClick={handleGenerateAiApproach}
                   disabled={generatingAi}
-                  className="ori-button-secondary rounded-full px-4 py-2 text-xs"
+                  className="px-4 py-2 text-xs"
                   style={{
                     background: aiApproach?.generated
                       ? "rgba(183,140,255,0.10)"
@@ -667,11 +680,12 @@ function AdminClienteDetalhe() {
                   }}
                 >
                   {generatingAi ? "Gerando..." : "Gerar com IA"}
-                </button>
-                <button
+                </OriButton>
+                <OriButton
                   type="button"
+                  variant="secondary"
                   onClick={copyApproach}
-                  className="ori-button-secondary rounded-full px-4 py-2 text-xs"
+                  className="px-4 py-2 text-xs"
                   style={{
                     background: "rgba(242,185,104,0.08)",
                     border: "1px solid rgba(242,185,104,0.14)",
@@ -679,14 +693,16 @@ function AdminClienteDetalhe() {
                   }}
                 >
                   {copiedApproach ? "Copiado" : "Copiar mensagem"}
-                </button>
+                </OriButton>
                 {whatsappUrl && (
-                  <a
+                  <OriButton
+                    as="a"
                     href={whatsappUrl}
                     target="_blank"
                     rel="noreferrer"
+                    variant="success"
                     onClick={handleWhatsappOpen}
-                    className="ori-button-secondary rounded-full px-4 py-2 text-xs"
+                    className="px-4 py-2 text-xs"
                     style={{
                       background: "rgba(120,255,160,0.08)",
                       border: "1px solid rgba(120,255,160,0.14)",
@@ -694,7 +710,7 @@ function AdminClienteDetalhe() {
                     }}
                   >
                     Abrir WhatsApp
-                  </a>
+                  </OriButton>
                 )}
               </div>
             </div>
@@ -1405,7 +1421,9 @@ function AdminClienteDetalhe() {
           </div>
 
           <div className="flex flex-col gap-3">
-            <button
+            <OriButton
+              type="button"
+              variant={cliente.produto_2_liberado ? "success" : "secondary"}
               disabled={saving}
               onClick={() =>
                 updateCliente({
@@ -1417,7 +1435,7 @@ function AdminClienteDetalhe() {
                   ? "Acesso ao Dossiê ORI removido"
                   : "Dossiê ORI liberado")
               }
-              className="ori-button-secondary px-6 py-4 rounded-full font-medium disabled:opacity-60"
+              className="w-full px-6 py-4"
               style={{
                 background: cliente.produto_2_liberado
                   ? "rgba(120,255,160,0.10)"
@@ -1433,9 +1451,11 @@ function AdminClienteDetalhe() {
               {cliente.produto_2_liberado
                 ? "Dossiê ORI liberado"
                 : "Liberar Dossiê ORI"}
-            </button>
+            </OriButton>
 
-            <button
+            <OriButton
+              type="button"
+              variant={cliente.produto_3_liberado ? "success" : "secondary"}
               disabled={saving}
               onClick={() =>
                 updateCliente({
@@ -1449,7 +1469,7 @@ function AdminClienteDetalhe() {
                   ? "Acesso ao Código Final removido"
                   : "Código Final liberado")
               }
-              className="ori-button-secondary px-6 py-4 rounded-full font-medium disabled:opacity-60"
+              className="w-full px-6 py-4"
               style={{
                 background: cliente.produto_3_liberado
                   ? "rgba(120,255,160,0.10)"
@@ -1465,16 +1485,18 @@ function AdminClienteDetalhe() {
               {cliente.produto_3_liberado
                 ? "Código Final liberado"
                 : "Liberar Código Final"}
-            </button>
+            </OriButton>
 
-            <button
+            <OriButton
+              type="button"
+              variant="lavender"
               disabled={saving}
               onClick={() =>
                 updateCliente({
                   status_jornada: JOURNEY_STATUS.DOSSIE_ORI_PUBLICADO,
                 }, "Dossiê marcado como publicado")
               }
-              className="ori-button-secondary px-6 py-4 rounded-full font-medium disabled:opacity-60"
+              className="w-full px-6 py-4"
               style={{
                 background: "rgba(183,140,255,0.08)",
                 border: "1px solid rgba(183,140,255,0.16)",
@@ -1482,16 +1504,18 @@ function AdminClienteDetalhe() {
               }}
             >
               Marcar Dossiê publicado
-            </button>
+            </OriButton>
 
-            <button
+            <OriButton
+              type="button"
+              variant="secondary"
               disabled={saving}
               onClick={() =>
                 updateCliente({
                   status_jornada: JOURNEY_STATUS.JORNADA_FINALIZADA,
                 }, "Jornada marcada como finalizada")
               }
-              className="ori-button-secondary px-6 py-4 rounded-full font-medium disabled:opacity-60"
+              className="w-full px-6 py-4"
               style={{
                 background: "rgba(242,185,104,0.08)",
                 border: "1px solid rgba(242,185,104,0.14)",
@@ -1499,7 +1523,7 @@ function AdminClienteDetalhe() {
               }}
             >
               Marcar como finalizado
-            </button>
+            </OriButton>
 
           </div>
         </div>
@@ -1608,11 +1632,12 @@ function AdminClienteDetalhe() {
           </p>
         </div>
 
-        <textarea
+        <OriField
+          as="textarea"
           value={observacoes}
           onChange={(event) => setObservacoes(event.target.value)}
           placeholder="Escreva observações privadas sobre esta cliente, ajustes, próximas entregas, preferências ou pontos de atenção..."
-          className="w-full min-h-[220px] rounded-[26px] p-6 outline-none resize-y"
+          className="min-h-[220px] rounded-[26px] p-6"
           style={{
             background: "rgba(255,255,255,0.03)",
             border: "1px solid rgba(242,185,104,0.12)",
@@ -1621,10 +1646,11 @@ function AdminClienteDetalhe() {
           }}
         />
 
-        <button
+        <OriButton
+          type="button"
           disabled={saving}
           onClick={handleSalvarObservacoes}
-          className="ori-journey-action mt-6 px-8 py-4 rounded-full font-medium disabled:opacity-60"
+          className="mt-6 px-8 py-4"
           style={{
             background: "var(--gold-primary)",
             color: "#090506",
@@ -1632,7 +1658,7 @@ function AdminClienteDetalhe() {
           }}
         >
           {saving ? "Salvando..." : "Salvar observações"}
-        </button>
+        </OriButton>
       </div>
     </div>
   );

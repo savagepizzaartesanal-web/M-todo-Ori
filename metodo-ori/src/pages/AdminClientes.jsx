@@ -9,6 +9,7 @@ import {
   getFeedbackBridge,
   getFeedbackInsight,
 } from "../utils/feedbackInsights";
+import { OriBadge, OriButton, OriCard, OriField } from "../components/ui";
 
 function AdminClientes() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -371,9 +372,11 @@ function AdminClientes() {
                 </p>
               </div>
 
-              <button
+              <OriButton
+                type="button"
+                variant="secondary"
                 onClick={fetchClientes}
-                className="ori-button-secondary w-fit px-5 py-3 rounded-full text-sm font-medium"
+                className="w-fit px-5 py-3 text-sm"
                 style={{
                   background: "rgba(242,185,104,0.08)",
                   border: "1px solid rgba(242,185,104,0.14)",
@@ -381,7 +384,7 @@ function AdminClientes() {
                 }}
               >
                 Atualizar lista
-              </button>
+              </OriButton>
             </div>
           </div>
         </section>
@@ -394,7 +397,10 @@ function AdminClientes() {
             ["Feedbacks", resumo.feedbacks],
             ["Dossiês", resumo.produto2],
           ].map(([label, value]) => (
-            <div
+            <OriCard
+              variant="secondary"
+              padding="none"
+              radius="md"
               key={label}
               className="ori-card-secondary relative overflow-hidden rounded-[18px] md:rounded-[24px] p-3.5 md:p-5 cinematic-card"
               style={{
@@ -421,7 +427,7 @@ function AdminClientes() {
               >
                 {value}
               </h2>
-            </div>
+            </OriCard>
           ))}
         </div>
 
@@ -436,11 +442,11 @@ function AdminClientes() {
           }}
         >
           <div className="flex flex-col xl:flex-row gap-4 xl:items-center xl:justify-between">
-            <input
+            <OriField
               value={busca}
               onChange={(event) => setBusca(event.target.value)}
               placeholder="Buscar por nome, e-mail, leitura ou etapa..."
-              className="w-full xl:max-w-[460px] px-5 py-3.5 rounded-full outline-none text-sm"
+              className="w-full rounded-full px-5 py-3.5 text-sm xl:max-w-[460px]"
               style={{
                 background: "rgba(255,255,255,0.03)",
                 border: "1px solid rgba(242,185,104,0.10)",
@@ -453,10 +459,12 @@ function AdminClientes() {
                 const active = filtro === value;
 
                 return (
-                  <button
+                  <OriButton
                     key={value}
+                    type="button"
+                    variant={active ? "secondary" : "ghost"}
                     onClick={() => handleFiltroChange(value)}
-                    className="ori-tab px-4 py-2 rounded-full text-xs"
+                    className="ori-tab px-4 py-2 text-xs"
                     data-state={active ? "active" : "sealed"}
                     style={{
                       background: active
@@ -471,7 +479,7 @@ function AdminClientes() {
                     }}
                   >
                     {label}
-                  </button>
+                  </OriButton>
                 );
               })}
             </div>
@@ -512,7 +520,11 @@ function AdminClientes() {
                 cliente.email || cliente.nome || "Cliente sem contato";
 
               return (
-                <div
+                <OriCard
+                  as="article"
+                  variant="secondary"
+                  padding="none"
+                  radius="lg"
                   key={cliente.id}
                   className="ori-card-secondary group relative overflow-hidden rounded-[26px] p-5 md:p-6 cinematic-card"
                   style={{
@@ -554,7 +566,9 @@ function AdminClientes() {
                           {priority.label}
                         </p>
 
-                        <span
+                        <OriBadge
+                          tone="muted"
+                          size="sm"
                           className="ori-pill px-3 py-1 text-[11px]"
                           style={{
                             background: "rgba(255,255,255,0.026)",
@@ -563,10 +577,12 @@ function AdminClientes() {
                           }}
                         >
                           {formatDate(cliente.created_at)}
-                        </span>
+                        </OriBadge>
 
                         {cliente.admin && (
-                          <span
+                          <OriBadge
+                            tone="lavender"
+                            size="sm"
                             className="ori-pill px-3 py-1 text-[11px]"
                             data-state="revealed"
                             style={{
@@ -576,7 +592,7 @@ function AdminClientes() {
                             }}
                           >
                             Admin
-                          </span>
+                          </OriBadge>
                         )}
                       </div>
 
@@ -620,7 +636,9 @@ function AdminClientes() {
                       </div>
 
                       <div className="flex flex-wrap gap-2.5">
-                        <div
+                        <OriBadge
+                          tone={cliente.resultado ? "gold" : "muted"}
+                          size="md"
                           className="ori-chip px-4 py-2 text-xs"
                           data-state={cliente.resultado ? "revealed" : "sealed"}
                           style={{
@@ -630,9 +648,11 @@ function AdminClientes() {
                           }}
                         >
                           {cliente.resultado || "Sem resultado"}
-                        </div>
+                        </OriBadge>
 
-                        <div
+                        <OriBadge
+                          tone={cliente.produto_2_liberado ? "success" : "muted"}
+                          size="md"
                           className="ori-chip px-4 py-2 text-xs"
                           data-state={cliente.produto_2_liberado ? "done" : "sealed"}
                           style={{
@@ -648,9 +668,11 @@ function AdminClientes() {
                           }}
                         >
                           {produtoAtual}
-                        </div>
+                        </OriBadge>
 
-                        <div
+                        <OriBadge
+                          tone={progress === 100 ? "success" : "muted"}
+                          size="md"
                           className="ori-chip px-4 py-2 text-xs"
                           data-state={progress === 100 ? "done" : "active"}
                           style={{
@@ -660,9 +682,11 @@ function AdminClientes() {
                           }}
                         >
                           {progress === null ? "Quiz não iniciado" : `Quiz ${progress}%`}
-                        </div>
+                        </OriBadge>
 
-                        <div
+                        <OriBadge
+                          tone={oraculo ? "lavender" : "muted"}
+                          size="md"
                           className="ori-chip px-4 py-2 text-xs"
                           data-state={oraculo ? "revealed" : "sealed"}
                           style={{
@@ -676,9 +700,11 @@ function AdminClientes() {
                           }}
                         >
                           {oraculo ? `Oráculo ${formatDate(oraculo.date_key)}` : "Sem carta"}
-                        </div>
+                        </OriBadge>
 
-                        <div
+                        <OriBadge
+                          tone={feedback ? "gold" : "muted"}
+                          size="md"
                           className="ori-chip px-4 py-2 text-xs"
                           data-state={feedback ? "revealed" : "sealed"}
                           style={{
@@ -696,7 +722,7 @@ function AdminClientes() {
                           {feedback
                             ? FEEDBACK_LABELS[feedback.response] || feedback.response
                             : "Sem retorno"}
-                        </div>
+                        </OriBadge>
                       </div>
 
                       {feedback && (
@@ -710,9 +736,11 @@ function AdminClientes() {
                     </div>
 
                     <div className="flex flex-col md:flex-row xl:flex-col gap-3 xl:min-w-[220px]">
-                      <Link
+                      <OriButton
+                        as={Link}
                         to={`/admin/clientes/${cliente.id}`}
-                        className="ori-button-secondary inline-flex justify-center px-5 py-3 rounded-full text-sm font-medium"
+                        variant="lavender"
+                        className="w-full px-5 py-3 text-sm"
                         style={{
                           background: "rgba(183,140,255,0.08)",
                           border: "1px solid rgba(183,140,255,0.16)",
@@ -720,12 +748,14 @@ function AdminClientes() {
                         }}
                       >
                         Abrir ficha
-                      </Link>
+                      </OriButton>
 
-                      <button
+                      <OriButton
+                        type="button"
+                        variant={cliente.produto_2_liberado ? "success" : "secondary"}
                         disabled={isUpdating}
                         onClick={() => toggleProduto2(cliente)}
-                        className="ori-button-secondary inline-flex justify-center px-5 py-3 rounded-full text-sm font-medium disabled:opacity-60"
+                        className="w-full px-5 py-3 text-sm"
                         style={{
                           background: cliente.produto_2_liberado
                             ? "rgba(120,255,160,0.10)"
@@ -741,12 +771,14 @@ function AdminClientes() {
                         {cliente.produto_2_liberado
                           ? "Dossiê liberado"
                           : "Liberar Dossiê"}
-                      </button>
+                      </OriButton>
 
-                      <button
+                      <OriButton
+                        type="button"
+                        variant={cliente.produto_3_liberado ? "success" : "secondary"}
                         disabled={isUpdating}
                         onClick={() => toggleProduto3(cliente)}
-                        className="ori-button-secondary inline-flex justify-center px-5 py-3 rounded-full text-sm font-medium disabled:opacity-60"
+                        className="w-full px-5 py-3 text-sm"
                         style={{
                           background: cliente.produto_3_liberado
                             ? "rgba(120,255,160,0.10)"
@@ -762,10 +794,10 @@ function AdminClientes() {
                         {cliente.produto_3_liberado
                           ? "Código liberado"
                           : "Liberar Código"}
-                      </button>
+                      </OriButton>
                     </div>
                   </div>
-                </div>
+                </OriCard>
               );
             })}
           </div>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+import { OriBadge, OriButton, OriCard } from "../components/ui";
 import { JOURNEY_STATUS } from "../constants/journeyStatus";
 import { JOURNEY_COPY, JOURNEY_LABELS } from "../content/journeyCopy";
 import { supabase } from "../lib/supabaseClient";
@@ -292,9 +293,12 @@ function PortalCliente() {
       aura:
         "radial-gradient(circle at top right, rgba(210,135,70,0.34), transparent 38%)",
       action: produto1Liberado ? (
-        <Link
+        <OriButton
+          as={Link}
           to="/produto-1"
-          className="inline-flex justify-center px-5 py-3 rounded-full text-sm font-medium w-full md:w-fit"
+          variant={hasResult ? "secondary" : "primary"}
+          size="lg"
+          className="w-full px-5 py-3 text-sm md:w-fit"
           style={{
             background: hasResult
               ? "rgba(242,185,104,0.075)"
@@ -304,13 +308,15 @@ function PortalCliente() {
           }}
         >
           {buttonProduto1}
-        </Link>
+        </OriButton>
       ) : !produto1Liberado ? (
-        <button
+        <OriButton
           type="button"
+          variant="disabled"
+          size="lg"
           disabled
           aria-label="Código das Deusas aguardando liberação"
-          className="inline-flex justify-center px-5 py-3 rounded-full text-sm font-medium w-full md:w-fit opacity-60 cursor-not-allowed"
+          className="w-full px-5 py-3 text-sm md:w-fit"
           style={{
             background: "rgba(255,255,255,0.04)",
             border: "1px solid rgba(255,255,255,0.08)",
@@ -318,7 +324,7 @@ function PortalCliente() {
           }}
         >
           Aguardando liberação
-        </button>
+        </OriButton>
       ) : null,
     },
     {
@@ -333,15 +339,17 @@ function PortalCliente() {
       aura:
         "radial-gradient(circle at top right, rgba(107,90,110,0.36), transparent 38%)",
       action: (
-        <button
+        <OriButton
           type="button"
+          variant={produto2Liberado ? "lavender" : "disabled"}
+          size="lg"
           disabled={!produto2Liberado}
           aria-label={
             produto2Liberado
               ? "Acessar Dossiê ORI"
               : "Dossiê ORI ainda não liberado"
           }
-          className="inline-flex justify-center px-5 py-3 rounded-full text-sm font-medium w-full md:w-fit transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+          className="w-full px-5 py-3 text-sm md:w-fit"
           style={{
             background: produto2Liberado
               ? "rgba(183,140,255,0.10)"
@@ -353,7 +361,7 @@ function PortalCliente() {
           }}
         >
           {produto2Liberado ? "Acessar Dossiê" : "Ainda não liberado"}
-        </button>
+        </OriButton>
       ),
     },
     {
@@ -368,15 +376,17 @@ function PortalCliente() {
       aura:
         "radial-gradient(circle at top right, rgba(74,26,26,0.42), transparent 40%)",
       action: (
-        <button
+        <OriButton
           type="button"
+          variant={produto3Liberado ? "secondary" : "disabled"}
+          size="lg"
           disabled={!produto3Liberado}
           aria-label={
             produto3Liberado
               ? "Acessar Código Final"
               : "Código Final ainda não liberado"
           }
-          className="inline-flex justify-center px-5 py-3 rounded-full text-sm font-medium w-full md:w-fit transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+          className="w-full px-5 py-3 text-sm md:w-fit"
           style={{
             background: produto3Liberado
               ? "rgba(242,185,104,0.075)"
@@ -390,7 +400,7 @@ function PortalCliente() {
           }}
         >
           {produto3Liberado ? "Acessar Código Final" : "Ainda não liberado"}
-        </button>
+        </OriButton>
       ),
     },
   ];
@@ -703,8 +713,10 @@ function PortalCliente() {
 
               <div className="ori-premium-scroll hidden gap-2 overflow-x-auto pb-1 sm:flex md:flex-wrap md:gap-3 md:overflow-visible md:pb-0">
                 {["Nomear", "Integrar", "Aplicar", "Sustentar"].map((item) => (
-                  <div
+                  <OriBadge
                     key={item}
+                    tone="gold"
+                    size="sm"
                     className="ori-chip shrink-0"
                     data-state="revealed"
                     style={{
@@ -725,7 +737,7 @@ function PortalCliente() {
                       }}
                     />
                     {item}
-                  </div>
+                  </OriBadge>
                 ))}
               </div>
             </div>
@@ -783,7 +795,9 @@ function PortalCliente() {
                     </h2>
                   </div>
 
-                  <div
+                  <OriBadge
+                    tone="success"
+                    size="md"
                     className="ori-badge ori-state-done ori-state-surface hidden w-fit gap-2.5 px-3.5 sm:inline-flex"
                     style={{
                       background: "rgba(242,185,104,0.08)",
@@ -800,7 +814,7 @@ function PortalCliente() {
                       }}
                     />
                     Registrado
-                  </div>
+                  </OriBadge>
                 </div>
               </div>
             ) : (
@@ -890,9 +904,12 @@ function PortalCliente() {
               </div>
 
               {nextMovement.to ? (
-                <Link
+                <OriButton
+                  as={Link}
                   to={nextMovement.to}
-                  className="ori-journey-action inline-flex min-h-11 w-full items-center justify-center rounded-full px-5 py-3 text-center text-sm lg:w-fit"
+                  variant="gradient"
+                  size="lg"
+                  className="min-h-11 w-full px-5 py-3 text-center text-sm lg:w-fit"
                   style={{
                     background:
                       "linear-gradient(90deg, var(--copper-primary), var(--gold-primary))",
@@ -903,9 +920,11 @@ function PortalCliente() {
                   }}
                 >
                   {nextMovement.action}
-                </Link>
+                </OriButton>
               ) : (
-                <span
+                <OriBadge
+                  tone="muted"
+                  size="md"
                   className="ori-chip inline-flex w-fit px-4 py-2 text-xs"
                   style={{
                     background: "rgba(255,255,255,0.026)",
@@ -914,7 +933,7 @@ function PortalCliente() {
                   }}
                 >
                   Aguardando liberação
-                </span>
+                </OriBadge>
               )}
             </div>
           </section>
@@ -976,9 +995,12 @@ function PortalCliente() {
             </div>
 
               <div className="flex flex-col gap-2 sm:flex-row xl:justify-end">
-                <Link
+                <OriButton
+                  as={Link}
                   to={quickEntry.primaryTo}
-              className="ori-journey-action inline-flex min-h-10 w-full items-center justify-center rounded-full px-5 py-2.5 text-center text-sm sm:w-auto md:min-h-11"
+                  variant="gradient"
+                  size="md"
+                  className="min-h-10 w-full px-5 py-2.5 text-center text-sm sm:w-auto md:min-h-11"
                   style={{
                     background:
                       "linear-gradient(90deg, var(--copper-primary), var(--gold-primary))",
@@ -989,12 +1011,15 @@ function PortalCliente() {
                   }}
                 >
                   {quickEntry.primaryLabel}
-                </Link>
+                </OriButton>
 
                 {showQuickSecondary && (
-                  <Link
+                  <OriButton
+                    as={Link}
                     to={recommendation.to}
-                    className="ori-button-secondary inline-flex min-h-9 w-full items-center justify-center px-4 py-2 text-center text-xs sm:w-auto md:min-h-11 md:px-5 md:py-2.5 md:text-sm"
+                    variant="secondary"
+                    size="md"
+                    className="ori-button-secondary min-h-9 w-full px-4 py-2 text-center text-xs sm:w-auto md:min-h-11 md:px-5 md:py-2.5 md:text-sm"
                     style={{
                       background: "rgba(255,255,255,0.024)",
                       border: "1px solid rgba(242,185,104,0.12)",
@@ -1003,7 +1028,7 @@ function PortalCliente() {
                     }}
                   >
                     {recommendation.action}
-                  </Link>
+                  </OriButton>
                 )}
               </div>
             </div>
@@ -1015,8 +1040,10 @@ function PortalCliente() {
 
             <div className="ori-premium-scroll mt-3 hidden gap-2 overflow-x-auto pb-1 md:flex">
               {themeNavigation.map((theme) => (
-                <span
+                <OriBadge
                   key={theme.title}
+                  tone={theme.active ? "gold" : "muted"}
+                  size="sm"
                   className={`ori-chip shrink-0 ${theme.active ? "ori-state-active ori-state-surface" : "ori-state-sealed ori-state-surface"}`}
                   data-state={theme.active ? "active" : "sealed"}
                   style={{
@@ -1032,7 +1059,7 @@ function PortalCliente() {
                   }}
                 >
                   {theme.title}
-                </span>
+                </OriBadge>
               ))}
             </div>
           </div>
@@ -1085,7 +1112,11 @@ function PortalCliente() {
                 : "rgba(210,135,70,0.14)";
 
             return (
-              <div
+              <OriCard
+                as="article"
+                variant={card.released ? (card.active ? "hero" : "secondary") : "teaser"}
+                padding="none"
+                radius="lg"
                 key={card.number}
                 className={`group cinematic-card relative overflow-hidden rounded-[18px] md:rounded-[26px] p-3 md:p-5 ${
                   card.released
@@ -1221,7 +1252,7 @@ function PortalCliente() {
                     </div>
                   )}
                 </div>
-              </div>
+              </OriCard>
             );
           })}
         </div>

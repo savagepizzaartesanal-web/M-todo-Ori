@@ -7,6 +7,7 @@ import {
   unpublishAdminProduto2,
   updateAdminProduto2,
 } from "../services/api";
+import { OriBadge, OriButton, OriCard, OriField } from "./ui";
 
 const DIAGNOSTIC_FIELDS = [
   ["kibbe", "Estrutura corporal / Kibbe"],
@@ -214,7 +215,11 @@ function Produto2ReviewPanel({ clienteId }) {
   }
 
   return (
-    <section
+    <OriCard
+      as="section"
+      variant="secondary"
+      padding="none"
+      radius="lg"
       className="ori-card-secondary relative mb-8 overflow-hidden rounded-[30px] p-6 md:p-8 cinematic-card"
       style={{
         background: "linear-gradient(180deg, rgba(18,9,10,0.76), rgba(7,3,4,0.92))",
@@ -234,17 +239,17 @@ function Produto2ReviewPanel({ clienteId }) {
           </p>
         </div>
         <div className="flex flex-wrap gap-2 text-xs">
-          <span className="rounded-full border px-3 py-2" style={{ borderColor: "rgba(242,185,104,0.16)", color: "var(--gold-soft)" }}>
+          <OriBadge tone={record?.status === "publicado" ? "success" : "gold"} size="md" className="px-3 py-2">
             {record?.status === "publicado" ? "Publicado" : "Rascunho privado"}
-          </span>
-          <span className="rounded-full border px-3 py-2" style={{ borderColor: "rgba(255,255,255,0.08)", color: "var(--text-soft)" }}>
+          </OriBadge>
+          <OriBadge tone="muted" size="md" className="px-3 py-2">
             {completedSections}/20 seções
-          </span>
+          </OriBadge>
         </div>
       </div>
 
-      {error ? <p className="mt-5 rounded-lg border px-4 py-3 text-sm" style={{ borderColor: "rgba(255,120,120,0.2)", color: "#ffb0b0" }}>{error}</p> : null}
-      {notice ? <p className="mt-5 rounded-lg border px-4 py-3 text-sm" style={{ borderColor: "rgba(120,255,160,0.18)", color: "#9BE7AE" }}>{notice}</p> : null}
+      {error ? <OriBadge as="p" tone="danger" size="md" className="mt-5 max-w-full rounded-lg px-4 py-3 text-sm">{error}</OriBadge> : null}
+      {notice ? <OriBadge as="p" tone="success" size="md" className="mt-5 max-w-full rounded-lg px-4 py-3 text-sm">{notice}</OriBadge> : null}
 
       <div className="mt-7">
         <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -252,24 +257,24 @@ function Produto2ReviewPanel({ clienteId }) {
             <h3 className="text-lg font-semibold" style={{ color: "rgba(255,245,235,0.9)" }}>1. Diagnósticos confirmados</h3>
             <p className="mt-1 text-sm" style={{ color: "var(--text-soft)" }}>Use apenas diagnósticos confirmados. A IA não deve inventar dados.</p>
           </div>
-          <button type="button" disabled={Boolean(action)} onClick={saveDiagnostics} className="ori-button-secondary rounded-full px-5 py-3 text-sm disabled:opacity-50">
+          <OriButton type="button" variant="secondary" disabled={Boolean(action)} onClick={saveDiagnostics} className="px-5 py-3 text-sm">
             {action === "diagnostics" ? "Salvando..." : "Salvar diagnósticos"}
-          </button>
+          </OriButton>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
           {DIAGNOSTIC_FIELDS.map(([key, label]) => (
-            <label key={key} className="grid gap-2">
-              <span className="ori-type-system text-[9px]" style={{ color: "var(--gold-soft)" }}>{label}</span>
-              <textarea
-                value={diagnostics[key] || ""}
-                onChange={(event) => setDiagnostics((current) => ({ ...current, [key]: event.target.value }))}
-                rows={3}
-                className="w-full resize-y rounded-lg p-4 text-sm outline-none"
-                style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(242,185,104,0.1)", color: "var(--text-primary)" }}
-                placeholder="Registre somente o diagnóstico validado."
-              />
-            </label>
+            <OriField
+              key={key}
+              as="textarea"
+              label={label}
+              value={diagnostics[key] || ""}
+              onChange={(event) => setDiagnostics((current) => ({ ...current, [key]: event.target.value }))}
+              rows={3}
+              className="rounded-lg p-4 text-sm"
+              style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(242,185,104,0.1)", color: "var(--text-primary)" }}
+              placeholder="Registre somente o diagnóstico validado."
+            />
           ))}
         </div>
       </div>
@@ -282,9 +287,9 @@ function Produto2ReviewPanel({ clienteId }) {
               Geração: {formatDateTime(record?.ia_gerado_em)} · Revisão: {formatDateTime(record?.ia_revisado_em)}
             </p>
           </div>
-          <button type="button" disabled={Boolean(action) || !diagnosticsReady || record?.status === "publicado"} onClick={generateDraft} className="ori-journey-action rounded-full px-6 py-3 text-sm font-medium disabled:opacity-50" style={{ background: "var(--gold-primary)", color: "#090506" }}>
+          <OriButton type="button" disabled={Boolean(action) || !diagnosticsReady || record?.status === "publicado"} onClick={generateDraft} className="px-6 py-3 text-sm" style={{ background: "var(--gold-primary)", color: "#090506" }}>
             {action === "generate" || action === "diagnostics" ? "Preparando..." : draftReady ? "Gerar nova versão" : "Gerar com IA"}
-          </button>
+          </OriButton>
         </div>
 
         <div className="mt-6 grid gap-4 lg:grid-cols-[250px_minmax(0,1fr)]">
@@ -296,21 +301,23 @@ function Produto2ReviewPanel({ clienteId }) {
               ))}
             </select>
             <div className="mt-2 grid grid-cols-2 gap-2">
-              <button type="button" aria-label="Seção anterior" disabled={activeIndex === 0} onClick={() => setActiveIndex((current) => current - 1)} className="ori-button-secondary rounded-lg px-3 py-3 disabled:opacity-30">←</button>
-              <button type="button" aria-label="Próxima seção" disabled={activeIndex === DRAFT_SECTIONS.length - 1} onClick={() => setActiveIndex((current) => current + 1)} className="ori-button-secondary rounded-lg px-3 py-3 disabled:opacity-30">→</button>
+              <OriButton type="button" variant="secondary" aria-label="Seção anterior" disabled={activeIndex === 0} onClick={() => setActiveIndex((current) => current - 1)} className="w-full rounded-lg px-3 py-3">←</OriButton>
+              <OriButton type="button" variant="secondary" aria-label="Próxima seção" disabled={activeIndex === DRAFT_SECTIONS.length - 1} onClick={() => setActiveIndex((current) => current + 1)} className="w-full rounded-lg px-3 py-3">→</OriButton>
             </div>
           </div>
 
-          <label className="grid min-w-0 gap-2">
+          <label className="grid min-w-0 gap-2" htmlFor="produto2-active-section">
             <span className="flex items-center justify-between gap-3">
               <span className="text-sm font-semibold" style={{ color: "var(--gold-primary)" }}>{activeLabel}</span>
               <span className="text-xs" style={{ color: "var(--text-muted)" }}>{String(draft[activeKey] || "").length} caracteres</span>
             </span>
-            <textarea
+            <OriField
+              id="produto2-active-section"
+              as="textarea"
               value={draft[activeKey] || ""}
               onChange={(event) => setDraft((current) => ({ ...current, [activeKey]: event.target.value }))}
               rows={16}
-              className="w-full resize-y rounded-lg p-5 text-sm leading-7 outline-none"
+              className="rounded-lg p-5 text-sm leading-7"
               style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(242,185,104,0.1)", color: "var(--text-primary)" }}
               placeholder="Esta seção aparecerá aqui após a geração ou pode ser escrita manualmente."
             />
@@ -323,21 +330,21 @@ function Produto2ReviewPanel({ clienteId }) {
           Publicar não libera o Produto 2. O acesso da cliente permanece no controle “Liberar Dossiê ORI”.
         </p>
         <div className="flex flex-wrap gap-3">
-          <button type="button" disabled={Boolean(action) || !Object.keys(draft).length} onClick={saveDraft} className="ori-button-secondary rounded-full px-5 py-3 text-sm disabled:opacity-50">
+          <OriButton type="button" variant="secondary" disabled={Boolean(action) || !Object.keys(draft).length} onClick={saveDraft} className="px-5 py-3 text-sm">
             {action === "draft" ? "Salvando..." : "Salvar revisão"}
-          </button>
+          </OriButton>
           {record?.status === "publicado" ? (
-            <button type="button" disabled={Boolean(action)} onClick={unpublish} className="rounded-full border px-5 py-3 text-sm disabled:opacity-50" style={{ borderColor: "rgba(255,140,140,0.2)", color: "#ffb0b0" }}>
+            <OriButton type="button" variant="danger" disabled={Boolean(action)} onClick={unpublish} className="px-5 py-3 text-sm">
               {action === "unpublish" ? "Retirando..." : "Despublicar"}
-            </button>
+            </OriButton>
           ) : (
-            <button type="button" disabled={Boolean(action) || !draftReady} onClick={publish} className="ori-journey-action rounded-full px-6 py-3 text-sm font-medium disabled:opacity-40" style={{ background: "var(--gold-primary)", color: "#090506" }}>
+            <OriButton type="button" disabled={Boolean(action) || !draftReady} onClick={publish} className="px-6 py-3 text-sm" style={{ background: "var(--gold-primary)", color: "#090506" }}>
               {action === "publish" ? "Publicando..." : "Publicar versão revisada"}
-            </button>
+            </OriButton>
           )}
         </div>
       </div>
-    </section>
+    </OriCard>
   );
 }
 

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
+import { OriButton, OriCard, OriField } from "../components/ui";
 import { supabase } from "../lib/supabaseClient";
 
 function RedefinirSenha() {
@@ -133,52 +134,38 @@ function RedefinirSenha() {
           </p>
 
           <div className="flex flex-col gap-3.5">
-            <div>
-              <label
-                htmlFor="ori-new-password"
-                className="ori-type-system block text-[10px] mb-2"
-                style={{ color: "var(--gold-soft)" }}
-              >
-                Nova senha
-              </label>
-
-              <input
+            <OriField
                 id="ori-new-password"
+                label="Nova senha"
                 type="password"
                 autoComplete="new-password"
                 value={senha}
                 onChange={(event) => setSenha(event.target.value)}
                 placeholder="••••••••"
                 required
-                className="ori-input w-full px-5 py-3.5 rounded-2xl outline-none transition-all duration-500"
+                className="ori-input px-5 py-3.5 duration-500"
                 style={getInputStyle(senhaReady)}
               />
-            </div>
 
-            <div>
-              <label
-                htmlFor="ori-confirm-password"
-                className="ori-type-system block text-[10px] mb-2"
-                style={{ color: "var(--gold-soft)" }}
-              >
-                Confirmar senha
-              </label>
-
-              <input
+            <OriField
                 id="ori-confirm-password"
+                label="Confirmar senha"
                 type="password"
                 autoComplete="new-password"
                 value={confirmacao}
                 onChange={(event) => setConfirmacao(event.target.value)}
                 placeholder="••••••••"
                 required
-                className="ori-input w-full px-5 py-3.5 rounded-2xl outline-none transition-all duration-500"
+                className="ori-input px-5 py-3.5 duration-500"
                 style={getInputStyle(confirmacaoReady)}
               />
-            </div>
 
             {erro && (
-              <motion.div
+              <OriCard
+                as={motion.div}
+                variant="plain"
+                padding="none"
+                radius="md"
                 role="alert"
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -190,11 +177,15 @@ function RedefinirSenha() {
                 }}
               >
                 {erro}
-              </motion.div>
+              </OriCard>
             )}
 
             {mensagem && (
-              <motion.div
+              <OriCard
+                as={motion.div}
+                variant="plain"
+                padding="none"
+                radius="md"
                 role="status"
                 aria-live="polite"
                 initial={{ opacity: 0, y: 8 }}
@@ -207,11 +198,15 @@ function RedefinirSenha() {
                 }}
               >
                 {mensagem}
-              </motion.div>
+              </OriCard>
             )}
 
-            <motion.button
+            <OriButton
+              as={motion.button}
+              nativeButton
               type="submit"
+              variant="gradient"
+              size="lg"
               disabled={loading}
               whileHover={
                 loading
@@ -224,7 +219,7 @@ function RedefinirSenha() {
                     }
               }
               whileTap={loading ? {} : { scale: 0.994, y: 0 }}
-              className="relative mt-2 px-8 py-4 rounded-full transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="relative mt-2 w-full"
               style={{
                 background: formReady
                   ? "linear-gradient(90deg, rgba(210,135,70,0.96), rgba(242,185,104,0.92))"
@@ -234,7 +229,7 @@ function RedefinirSenha() {
               }}
             >
               {loading ? "Salvando..." : "Salvar nova senha"}
-            </motion.button>
+            </OriButton>
           </div>
 
           <div

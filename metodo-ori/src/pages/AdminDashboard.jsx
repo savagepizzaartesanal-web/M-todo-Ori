@@ -8,6 +8,7 @@ import {
   getFeedbackBridge,
   getFeedbackInsight,
 } from "../utils/feedbackInsights";
+import { OriBadge, OriButton, OriCard } from "../components/ui";
 
 const formatPercent = (value) => `${Math.round(value || 0)}%`;
 
@@ -249,20 +250,24 @@ function AdminDashboard() {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            <Link
+            <OriButton
+              as={Link}
               to="/admin/clientes?filtro=atencao"
-              className="ori-button-secondary inline-flex justify-center rounded-full px-5 py-2.5 text-sm"
+              variant="secondary"
+              className="px-5 py-2.5 text-sm"
               style={{ color: "var(--gold-primary)" }}
             >
               Atenção agora
-            </Link>
-            <Link
+            </OriButton>
+            <OriButton
+              as={Link}
               to="/admin/clientes"
-              className="ori-button-secondary inline-flex justify-center rounded-full px-5 py-2.5 text-sm"
+              variant="secondary"
+              className="px-5 py-2.5 text-sm"
               style={{ color: "rgba(255,245,235,0.70)" }}
             >
               Lista completa
-            </Link>
+            </OriButton>
           </div>
         </div>
       </section>
@@ -274,8 +279,11 @@ function AdminDashboard() {
           ["Feedbacks recebidos", loading ? "..." : pilotoProduto1.feedbacks],
           ["Dossiês a convidar", loading ? "..." : resumo.dossiesPendentes],
         ].map(([label, value]) => (
-          <div
+          <OriCard
             key={label}
+            variant="secondary"
+            padding="none"
+            radius="md"
             className="ori-card-secondary rounded-[18px] p-4 md:rounded-[22px] md:p-5"
             style={{
               background: "linear-gradient(180deg, rgba(18,9,10,0.82), rgba(7,3,4,0.92))",
@@ -291,7 +299,7 @@ function AdminDashboard() {
             >
               {value}
             </h2>
-          </div>
+          </OriCard>
         ))}
       </div>
 
@@ -387,13 +395,15 @@ function AdminDashboard() {
                 Atenção agora
               </h2>
             </div>
-            <Link
+            <OriButton
+              as={Link}
               to="/admin/clientes?filtro=atencao"
-              className="ori-button-secondary inline-flex w-fit justify-center rounded-full px-5 py-2.5 text-sm"
+              variant="secondary"
+              className="w-fit px-5 py-2.5 text-sm"
               style={{ color: "var(--gold-primary)" }}
             >
               Ver todas
-            </Link>
+            </OriButton>
           </div>
 
           <div className="grid gap-3">
@@ -423,9 +433,9 @@ function AdminDashboard() {
                         {cliente.email}
                       </p>
                     </div>
-                    <span className="ori-chip w-fit px-3 py-1 text-xs">
+                    <OriBadge tone="gold" size="sm" className="ori-chip w-fit px-3 py-1 text-xs">
                       {cliente.priority.label}
-                    </span>
+                    </OriBadge>
                   </div>
                   <p
                     className="ori-type-reading-soft text-sm leading-relaxed"
@@ -474,9 +484,9 @@ function AdminDashboard() {
               ["Abstrato", feedbackResumo.abstrato],
               ["Risco", feedbackResumo.naoReconheci],
             ].map(([label, value]) => (
-              <span key={label} className="ori-chip px-3 py-1.5 text-xs">
+              <OriBadge key={label} tone={label === "Risco" ? "danger" : "gold"} size="sm" className="ori-chip px-3 py-1.5 text-xs">
                 {label}: {loading ? "..." : value}
-              </span>
+              </OriBadge>
             ))}
           </div>
         </div>
@@ -505,9 +515,9 @@ function AdminDashboard() {
                     >
                       {cliente?.nome || feedback.email || "Cliente"}
                     </p>
-                    <span className="ori-chip w-fit px-3 py-1 text-xs">
+                    <OriBadge tone={feedback.response === "nao_me_reconheci" ? "danger" : "gold"} size="sm" className="ori-chip w-fit px-3 py-1 text-xs">
                       {FEEDBACK_LABELS[feedback.response] || feedback.response}
-                    </span>
+                    </OriBadge>
                   </div>
                   <p className="ori-type-system mb-2 text-[8px]" style={{ color: "var(--gold-soft)" }}>
                     {insight.label} · {insight.action}
