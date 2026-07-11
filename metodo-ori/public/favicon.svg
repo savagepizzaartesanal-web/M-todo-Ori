@@ -1,8 +1,32 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Metodo ORI">
-  <rect width="64" height="64" rx="18" fill="#070304"/>
-  <circle cx="32" cy="32" r="23" fill="none" stroke="#f2b968" stroke-width="2.5"/>
-  <circle cx="32" cy="32" r="13" fill="none" stroke="#d28746" stroke-width="1.5" opacity=".72"/>
-  <path d="M32 13c5.8 7.6 8.7 14 8.7 19.1S37.8 43.8 32 51c-5.8-7.2-8.7-13.5-8.7-18.9S26.2 20.6 32 13Z" fill="#f2b968" opacity=".16"/>
-  <path d="M32 19c3.7 4.8 5.6 9.2 5.6 13S35.7 41.3 32 46c-3.7-4.7-5.6-9-5.6-14S28.3 23.8 32 19Z" fill="#f2b968"/>
-  <circle cx="32" cy="32" r="3.8" fill="#070304"/>
+  <defs>
+    <linearGradient id="ori-gold" x1="13" y1="7" x2="51" y2="57" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff4bf"/>
+      <stop offset=".36" stop-color="#f2b968"/>
+      <stop offset=".68" stop-color="#c9782d"/>
+      <stop offset="1" stop-color="#ffe28c"/>
+    </linearGradient>
+    <filter id="ori-glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="1.2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="#050202"/>
+  <circle cx="32" cy="32" r="24" fill="none" stroke="url(#ori-gold)" stroke-width="1.4" opacity=".58"/>
+  <text
+    x="32"
+    y="40"
+    fill="url(#ori-gold)"
+    filter="url(#ori-glow)"
+    font-family="Georgia, Times New Roman, serif"
+    font-size="24"
+    font-weight="700"
+    letter-spacing="0"
+    text-anchor="middle"
+  >ORI</text>
+  <path d="M32 7l2.2 7.1L41 16l-6.8 1.9L32 25l-2.2-7.1L23 16l6.8-1.9L32 7Z" fill="url(#ori-gold)"/>
+  <path d="M18 29l1.4 4.4L24 35l-4.6 1.4L18 41l-1.4-4.6L12 35l4.6-1.6L18 29Z" fill="url(#ori-gold)"/>
 </svg>
