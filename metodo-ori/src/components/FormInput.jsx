@@ -1,14 +1,12 @@
 import OriField from "./ui/OriField";
 
-function FormInput({ type = "text", placeholder, value, onChange }) {
+function FormInput({ type = "text", className = "", variant = "solid", ...props }) {
   return (
     <OriField
       type={type}
-      placeholder={placeholder}
-      value={value}
-      onChange={onChange}
-      className="w-auto"
-      variant="solid"
+      className={`w-auto ${className}`}
+      variant={variant}
+      {...props}
     />
   );
 }

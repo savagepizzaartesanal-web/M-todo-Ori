@@ -1,3 +1,5 @@
+import OriField from "../ui/OriField";
+
 export default function OnboardingQuestionStep({
   step,
   formData,
@@ -88,42 +90,27 @@ function FieldRenderer({ field, value, onFieldChange, onCheckboxChange }) {
       </label>
 
       {field.type === "text" || field.type === "date" || field.type === "tel" ? (
-        <input
+        <OriField
           id={fieldId}
           type={field.type}
           value={value || ""}
           onChange={(e) => onFieldChange(field.name, e.target.value)}
           placeholder={field.placeholder}
+          variant="onboarding"
           className="w-full rounded-[15px] border px-3.5 py-2.5 text-[13px] outline-none transition duration-300 placeholder:text-[rgba(255,245,235,0.30)] focus:border-[rgba(242,185,104,0.38)] focus:bg-[rgba(242,185,104,0.060)]"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(255,255,255,0.035), rgba(255,255,255,0.010))",
-            borderColor: "rgba(242,185,104,0.13)",
-            color: "rgba(247,234,216,0.92)",
-            boxShadow:
-              "0 0 18px rgba(242,185,104,0.020), inset 0 0 18px rgba(255,255,255,0.012)",
-            caretColor: "rgba(242,185,104,0.96)",
-          }}
         />
       ) : null}
 
       {field.type === "textarea" ? (
-        <textarea
+        <OriField
+          as="textarea"
           id={fieldId}
           value={value || ""}
           onChange={(e) => onFieldChange(field.name, e.target.value)}
           placeholder={field.placeholder}
           rows={3}
+          variant="onboarding"
           className="w-full resize-none rounded-[15px] border px-3.5 py-2.5 text-[13px] leading-relaxed outline-none transition duration-300 placeholder:text-[rgba(255,245,235,0.30)] focus:border-[rgba(242,185,104,0.38)] focus:bg-[rgba(242,185,104,0.060)]"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(255,255,255,0.035), rgba(255,255,255,0.010))",
-            borderColor: "rgba(242,185,104,0.13)",
-            color: "rgba(247,234,216,0.92)",
-            boxShadow:
-              "0 0 18px rgba(242,185,104,0.020), inset 0 0 18px rgba(255,255,255,0.012)",
-            caretColor: "rgba(242,185,104,0.96)",
-          }}
         />
       ) : null}
 

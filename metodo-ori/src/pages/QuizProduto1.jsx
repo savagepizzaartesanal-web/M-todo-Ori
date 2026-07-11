@@ -24,7 +24,7 @@ import QuizHero from "../components/QuizHero";
 import ResultHero from "../components/ResultHero";
 import NextStepCard from "../components/NextStepCard";
 import SyncNotice from "../components/SyncNotice";
-import { OriBadge, OriButton } from "../components/ui";
+import { OriBadge, OriButton, OriField } from "../components/ui";
 
 const LEGACY_STORAGE_KEY = "ori_produto_1_quiz";
 const ORACLE_PANEL_BACKGROUND =
@@ -4097,10 +4097,11 @@ function QuizProduto1() {
 
                     <div className="flex flex-col gap-2.5 sm:flex-row md:gap-3">
                       {previousFlowLabel && (
-                        <button
+                        <OriButton
                           type="button"
+                          variant="secondary"
                           onClick={handleResultFlowPrevious}
-                          className="rounded-full px-5 py-2.5 text-sm md:py-3"
+                          className="px-5 py-2.5 text-sm md:py-3"
                           style={{
                             background: "rgba(255,255,255,0.026)",
                             border: "1px solid rgba(242,185,104,0.10)",
@@ -4108,24 +4109,22 @@ function QuizProduto1() {
                           }}
                         >
                           {previousFlowLabel}
-                        </button>
+                        </OriButton>
                       )}
 
-                      <button
+                      <OriButton
                         type="button"
                         onClick={handleResultFlowNext}
-                        className="ori-journey-action rounded-full px-6 py-2.5 text-sm md:py-3"
+                        variant="gradient"
+                        className="px-6 py-2.5 text-sm md:py-3"
                         style={{
-                          background:
-                            "linear-gradient(90deg, var(--copper-primary), var(--gold-primary))",
-                          color: "#090506",
                           fontWeight: 700,
                           boxShadow:
                             "0 0 34px rgba(210,135,70,0.16), inset 0 0 14px rgba(255,255,255,0.16)",
                         }}
                       >
                         {resultFlowLabel}
-                      </button>
+                      </OriButton>
                     </div>
                   </section>
 
@@ -4297,15 +4296,16 @@ function QuizProduto1() {
                         })}
                       </div>
 
-                      <textarea
+                      <OriField
+                        as="textarea"
                         value={feedbackComment}
                         onChange={(event) => setFeedbackComment(event.target.value)}
                         rows={3}
                         placeholder="Quer me contar onde tocou, confundiu ou ficou distante?"
+                        variant="review"
                         className="ori-type-reading-soft mb-3 w-full resize-none rounded-[16px] px-3 py-3 text-sm outline-none"
                         style={{
                           background: "rgba(5,2,2,0.34)",
-                          border: "1px solid rgba(242,185,104,0.10)",
                           color: "rgba(255,245,235,0.76)",
                         }}
                       />
@@ -4318,19 +4318,19 @@ function QuizProduto1() {
                           Não é uma avaliação. É só uma forma de seguir com mais
                           cuidado.
                         </p>
-                        <button
+                        <OriButton
                           type="submit"
                           disabled={!feedbackResponse || feedbackSaving}
-                          className="ori-journey-action inline-flex justify-center rounded-full px-5 py-2.5 text-sm disabled:cursor-not-allowed disabled:opacity-55"
+                          variant="gradient"
+                          className="justify-center px-5 py-2.5 text-sm disabled:opacity-55"
                           style={{
                             background:
                               "linear-gradient(90deg, var(--copper-primary), var(--gold-primary))",
-                            color: "#090506",
                             fontWeight: 700,
                           }}
                         >
                           {feedbackSaving ? "Salvando..." : "Enviar e continuar"}
-                        </button>
+                        </OriButton>
                       </div>
 
                       {feedbackMessage && (

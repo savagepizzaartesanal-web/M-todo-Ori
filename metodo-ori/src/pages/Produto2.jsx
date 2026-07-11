@@ -328,14 +328,8 @@ function FileUploadControl({ value, onChange, uploadScope, onNotice }) {
 
 function FieldControl({ field, value, onChange, uploadScope, onNotice }) {
   const lockedByContext = Boolean(field.lockedFromContext && value);
-  const sharedClass =
-    "w-full rounded-[16px] border px-4 py-3.5 text-sm outline-none transition-all";
   const sharedStyle = {
-    background: lockedByContext
-      ? "rgba(242,185,104,0.055)"
-      : "rgba(255,255,255,0.032)",
-    borderColor: "rgba(242,185,104,0.12)",
-    color: "var(--text-primary)",
+    ...(lockedByContext ? { background: "rgba(242,185,104,0.055)" } : {}),
   };
 
   return (
@@ -462,7 +456,7 @@ function FieldControl({ field, value, onChange, uploadScope, onNotice }) {
           onChange={(event) => onChange(event.target.value)}
           rows={4}
           readOnly={lockedByContext}
-          className={`${sharedClass} resize-none`}
+          className="rounded-[16px] px-4 py-3.5 text-sm"
           style={sharedStyle}
         />
       ) : (
@@ -471,7 +465,7 @@ function FieldControl({ field, value, onChange, uploadScope, onNotice }) {
           onChange={(event) => onChange(event.target.value)}
           placeholder={field.placeholder || ""}
           readOnly={lockedByContext}
-          className={sharedClass}
+          className="rounded-[16px] px-4 py-3.5 text-sm"
           style={sharedStyle}
         />
       )}

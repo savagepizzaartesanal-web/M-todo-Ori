@@ -271,8 +271,8 @@ function Produto2ReviewPanel({ clienteId }) {
               value={diagnostics[key] || ""}
               onChange={(event) => setDiagnostics((current) => ({ ...current, [key]: event.target.value }))}
               rows={3}
+              variant="review"
               className="rounded-lg p-4 text-sm"
-              style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(242,185,104,0.1)", color: "var(--text-primary)" }}
               placeholder="Registre somente o diagnóstico validado."
             />
           ))}
@@ -294,12 +294,20 @@ function Produto2ReviewPanel({ clienteId }) {
 
         <div className="mt-6 grid gap-4 lg:grid-cols-[250px_minmax(0,1fr)]">
           <div className="grid content-start gap-2">
-            <label className="ori-type-system text-[9px]" style={{ color: "var(--gold-soft)" }} htmlFor="produto2-section">Seção em revisão</label>
-            <select id="produto2-section" value={activeIndex} onChange={(event) => setActiveIndex(Number(event.target.value))} className="w-full rounded-lg p-3 text-sm outline-none" style={{ background: "#160d0d", border: "1px solid rgba(242,185,104,0.12)", color: "var(--text-primary)" }}>
+            <OriField
+              id="produto2-section"
+              as="select"
+              label="Seção em revisão"
+              value={activeIndex}
+              onChange={(event) => setActiveIndex(Number(event.target.value))}
+              variant="solid"
+              className="rounded-lg p-3 text-sm"
+              style={{ background: "#160d0d" }}
+            >
               {DRAFT_SECTIONS.map(([key, label], index) => (
                 <option key={key} value={index}>{String(index + 1).padStart(2, "0")} · {label}</option>
               ))}
-            </select>
+            </OriField>
             <div className="mt-2 grid grid-cols-2 gap-2">
               <OriButton type="button" variant="secondary" aria-label="Seção anterior" disabled={activeIndex === 0} onClick={() => setActiveIndex((current) => current - 1)} className="w-full rounded-lg px-3 py-3">←</OriButton>
               <OriButton type="button" variant="secondary" aria-label="Próxima seção" disabled={activeIndex === DRAFT_SECTIONS.length - 1} onClick={() => setActiveIndex((current) => current + 1)} className="w-full rounded-lg px-3 py-3">→</OriButton>
@@ -317,8 +325,8 @@ function Produto2ReviewPanel({ clienteId }) {
               value={draft[activeKey] || ""}
               onChange={(event) => setDraft((current) => ({ ...current, [activeKey]: event.target.value }))}
               rows={16}
+              variant="review"
               className="rounded-lg p-5 text-sm leading-7"
-              style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(242,185,104,0.1)", color: "var(--text-primary)" }}
               placeholder="Esta seção aparecerá aqui após a geração ou pode ser escrita manualmente."
             />
           </label>

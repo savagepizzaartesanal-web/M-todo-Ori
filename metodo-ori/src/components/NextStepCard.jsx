@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 
 import { FEATURES } from "../config/features";
 import { JOURNEY_COPY, JOURNEY_LABELS } from "../content/journeyCopy";
+import OriButton from "./ui/OriButton";
 
 function NextStepCard() {
   return (
@@ -186,42 +187,34 @@ function NextStepCard() {
 
         <div className="flex flex-col md:flex-row md:items-center gap-4">
           {FEATURES.produto2 ? (
-            <Link
+            <OriButton
+              as={Link}
               to="/produto-2"
               className="
-              ori-journey-action
-              inline-flex
               justify-center
               px-6
               py-3.5
-              rounded-full
               text-sm
               font-medium
-              transition-all
-              duration-500
               hover:translate-x-1
               w-full
               md:w-fit
             "
               style={{
-                background: "var(--gold-primary)",
-                color: "#090506",
                 boxShadow:
                   "0 0 42px rgba(242,185,104,0.16), inset 0 0 18px rgba(255,255,255,0.18)",
               }}
             >
               Continuar para o Dossiê ORI
-            </Link>
+            </OriButton>
           ) : (
-            <button
+            <OriButton
               type="button"
               disabled
+              variant="disabled"
               className="
-                inline-flex
                 w-full
-                cursor-not-allowed
                 justify-center
-                rounded-full
                 px-6
                 py-3.5
                 text-sm
@@ -229,14 +222,9 @@ function NextStepCard() {
                 opacity-70
                 md:w-fit
               "
-              style={{
-                background: "rgba(255,255,255,0.035)",
-                border: "1px solid rgba(242,185,104,0.12)",
-                color: "rgba(255,245,235,0.58)",
-              }}
             >
               Dossiê em preparação
-            </button>
+            </OriButton>
           )}
 
           <p

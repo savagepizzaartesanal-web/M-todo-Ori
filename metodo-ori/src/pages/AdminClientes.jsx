@@ -446,12 +446,8 @@ function AdminClientes() {
               value={busca}
               onChange={(event) => setBusca(event.target.value)}
               placeholder="Buscar por nome, e-mail, leitura ou etapa..."
+              variant="compact"
               className="w-full rounded-full px-5 py-3.5 text-sm xl:max-w-[460px]"
-              style={{
-                background: "rgba(255,255,255,0.03)",
-                border: "1px solid rgba(242,185,104,0.10)",
-                color: "var(--text-primary)",
-              }}
             />
 
             <div className="flex flex-wrap gap-2">

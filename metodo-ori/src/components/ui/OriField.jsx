@@ -13,6 +13,28 @@ const variantStyles = {
     border: "1px solid var(--ori-border-primary)",
     color: "var(--ori-text-primary)",
   },
+  login: {
+    background: "rgba(255, 255, 255, 0.032)",
+    border: "1px solid rgba(242,185,104,0.10)",
+    color: "var(--ori-text-primary)",
+  },
+  compact: {
+    background: "rgba(255,255,255,0.03)",
+    border: "1px solid rgba(242,185,104,0.10)",
+    color: "var(--ori-text-primary)",
+  },
+  review: {
+    background: "rgba(255,255,255,0.025)",
+    border: "1px solid rgba(242,185,104,0.10)",
+    color: "var(--ori-text-primary)",
+  },
+  onboarding: {
+    background: "linear-gradient(135deg, rgba(255,255,255,0.035), rgba(255,255,255,0.010))",
+    border: "1px solid rgba(242,185,104,0.13)",
+    color: "rgba(247,234,216,0.92)",
+    boxShadow: "0 0 18px rgba(242,185,104,0.020), inset 0 0 18px rgba(255,255,255,0.012)",
+    caretColor: "rgba(242,185,104,0.96)",
+  },
 };
 
 function OriField({

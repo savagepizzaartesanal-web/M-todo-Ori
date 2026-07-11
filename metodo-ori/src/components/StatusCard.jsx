@@ -1,3 +1,5 @@
+import OriButton from "./ui/OriButton";
+
 function StatusCard({ status, progresso, onIniciar }) {
   return (
     <div
@@ -86,16 +88,13 @@ function StatusCard({ status, progresso, onIniciar }) {
         />
       </div>
 
-      <button
+      <OriButton
+        type="button"
         onClick={onIniciar}
-        className="ori-journey-action mt-6 px-6 py-3 rounded-full font-medium md:mt-10 md:px-8 md:py-4"
-        style={{
-          background: "var(--gold-primary)",
-          color: "#090506",
-        }}
+        className="mt-6 px-6 py-3 font-medium md:mt-10 md:px-8 md:py-4"
       >
         Iniciar Diagnóstico
-      </button>
+      </OriButton>
     </div>
   );
 }

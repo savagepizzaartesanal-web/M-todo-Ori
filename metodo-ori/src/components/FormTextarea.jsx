@@ -1,14 +1,12 @@
 import OriField from "./ui/OriField";
 
-function FormTextarea({ placeholder, value, onChange }) {
+function FormTextarea({ className = "", variant = "solid", ...props }) {
   return (
     <OriField
       as="textarea"
-      placeholder={placeholder}
-      value={value}
-      onChange={onChange}
-      className="w-auto"
-      variant="solid"
+      className={`w-auto ${className}`}
+      variant={variant}
+      {...props}
     />
   );
 }

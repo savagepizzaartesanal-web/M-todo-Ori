@@ -324,10 +324,6 @@ function Login() {
           animation: oriParticleFloat 5.8s ease-in-out infinite;
         }
 
-        .ori-input::placeholder {
-          color: rgba(255, 245, 235, 0.34);
-        }
-
         .ori-login-bg-video {
           opacity: 0.82;
         }
@@ -781,7 +777,8 @@ function Login() {
                         onChange={(event) => setNome(event.target.value)}
                         placeholder="Seu nome"
                         required={isCadastro}
-                        className="ori-input px-5 py-3.5 duration-500"
+                        variant="login"
+                        className="px-5 py-3.5 duration-500"
                         style={getInputStyle(nomeReady)}
                       />
                     </motion.div>
@@ -800,7 +797,8 @@ function Login() {
                     }}
                     placeholder="seunome@email.com"
                     required
-                    className="ori-input px-5 py-3.5 duration-500"
+                    variant="login"
+                    className="px-5 py-3.5 duration-500"
                     style={getInputStyle(emailReady)}
                   />
 
@@ -814,7 +812,8 @@ function Login() {
                       onChange={(event) => setSenha(event.target.value)}
                       placeholder="••••••••"
                       required
-                      className="ori-input px-5 py-3.5 duration-500"
+                      variant="login"
+                      className="px-5 py-3.5 duration-500"
                       style={getInputStyle(
                         isCadastro ? senhaReady : senha.length > 0,
                       )}

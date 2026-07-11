@@ -143,7 +143,8 @@ function RedefinirSenha() {
                 onChange={(event) => setSenha(event.target.value)}
                 placeholder="••••••••"
                 required
-                className="ori-input px-5 py-3.5 duration-500"
+                variant="login"
+                className="px-5 py-3.5 duration-500"
                 style={getInputStyle(senhaReady)}
               />
 
@@ -156,7 +157,8 @@ function RedefinirSenha() {
                 onChange={(event) => setConfirmacao(event.target.value)}
                 placeholder="••••••••"
                 required
-                className="ori-input px-5 py-3.5 duration-500"
+                variant="login"
+                className="px-5 py-3.5 duration-500"
                 style={getInputStyle(confirmacaoReady)}
               />
 

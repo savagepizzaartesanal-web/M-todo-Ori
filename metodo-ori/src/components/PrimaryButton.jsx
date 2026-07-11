@@ -1,13 +1,12 @@
 import OriButton from "./ui/OriButton";
 
-function PrimaryButton({ children, onClick, type = "button" }) {
+function PrimaryButton({ children, className = "", style, ...props }) {
   return (
     <OriButton
-      type={type}
-      onClick={onClick}
       size="lg"
-      className="hover:scale-105"
-      style={{ boxShadow: "none" }}
+      className={`hover:scale-105 ${className}`}
+      style={{ boxShadow: "none", ...style }}
+      {...props}
     >
       {children}
     </OriButton>

@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 
+import OriButton from "./ui/OriButton";
+
 function LockedProductCard({
   titulo,
   subtitulo,
@@ -53,16 +55,13 @@ function LockedProductCard({
         <p style={{ color: "var(--text-soft)" }}>{desbloqueio}</p>
       </div>
 
-      <Link
+      <OriButton
+        as={Link}
         to={link}
-        className="ori-journey-action inline-flex justify-center rounded-full px-6 py-3 font-medium md:px-8 md:py-4"
-        style={{
-          background: "var(--gold-primary)",
-          color: "#090506",
-        }}
+        className="justify-center px-6 py-3 font-medium md:px-8 md:py-4"
       >
         Voltar para a primeira leitura
-      </Link>
+      </OriButton>
     </section>
   );
 }

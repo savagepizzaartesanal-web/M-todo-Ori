@@ -1,3 +1,5 @@
+import OriButton from "./ui/OriButton";
+
 function QuizHero({
   onPrimaryAction,
   primaryActionLabel = "Começar minha leitura",
@@ -211,20 +213,19 @@ function QuizHero({
         </div>
 
         {onPrimaryAction && (
-          <button
+          <OriButton
             type="button"
+            variant="primary"
             onClick={onPrimaryAction}
-            className="ori-journey-action w-full px-7 py-3 rounded-full text-sm sm:w-auto md:text-[15px]"
+            className="w-full px-7 py-3 text-sm sm:w-auto md:text-[15px]"
             style={{
-              background: "var(--gold-primary)",
-              color: "#090506",
               fontWeight: 700,
               boxShadow:
                 "0 0 42px rgba(242,185,104,0.18), inset 0 0 16px rgba(255,255,255,0.18)",
             }}
           >
             {primaryActionLabel}
-          </button>
+          </OriButton>
         )}
       </div>
     </section>

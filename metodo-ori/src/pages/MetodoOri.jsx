@@ -1001,24 +1001,25 @@ function MetodoOriLayer({ activeLayer, activeProduct, setActiveProduct }) {
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3">
-        <Link
+        <OriButton
+          as={Link}
           to="/portal"
-          className="ori-journey-action inline-flex justify-center px-7 py-3.5 rounded-full text-sm"
+          variant="gradient"
+          className="justify-center px-7 py-3.5 text-sm"
           style={{
-            background:
-              "linear-gradient(90deg, var(--copper-primary), var(--gold-primary))",
-            color: "#090506",
             fontWeight: 750,
             boxShadow:
               "0 0 38px rgba(210,135,70,0.16), inset 0 0 16px rgba(255,255,255,0.16)",
           }}
         >
           Ir para minha etapa atual
-        </Link>
+        </OriButton>
 
-        <Link
+        <OriButton
+          as={Link}
           to="/portal"
-          className="inline-flex justify-center px-7 py-3.5 rounded-full text-sm"
+          variant="secondary"
+          className="justify-center px-7 py-3.5 text-sm"
           style={{
             background: "rgba(255,255,255,0.026)",
             border: "1px solid rgba(242,185,104,0.12)",
@@ -1026,7 +1027,7 @@ function MetodoOriLayer({ activeLayer, activeProduct, setActiveProduct }) {
           }}
         >
           Voltar ao portal
-        </Link>
+        </OriButton>
       </div>
     </SectionShell>
   );
@@ -1154,21 +1155,19 @@ function MetodoOri() {
           </p>
 
           <div className="flex flex-col gap-2.5 sm:flex-row sm:gap-3">
-            <button
+            <OriButton
               type="button"
               onClick={() => selectLayer(0)}
-              className="ori-journey-action inline-flex justify-center px-6 py-3 rounded-full text-sm md:px-7 md:py-3.5"
+              variant="gradient"
+              className="justify-center px-6 py-3 text-sm md:px-7 md:py-3.5"
               style={{
-                background:
-                  "linear-gradient(90deg, var(--copper-primary), var(--gold-primary))",
-                color: "#090506",
                 fontWeight: 750,
                 boxShadow:
                   "0 0 38px rgba(210,135,70,0.16), inset 0 0 16px rgba(255,255,255,0.16)",
               }}
             >
               Entender a jornada
-            </button>
+            </OriButton>
 
             <Link
               to="/portal"
@@ -1241,11 +1240,12 @@ function MetodoOri() {
 
             <div className="flex gap-2.5">
               {activeLayer > 0 && (
-              <button
+              <OriButton
                 type="button"
+                variant="secondary"
                 onClick={goBack}
                 aria-label="Voltar para a etapa anterior"
-                className="px-4 py-2.5 rounded-full text-xs md:text-sm"
+                className="px-4 py-2.5 text-xs md:text-sm"
                   style={{
                     background: "rgba(255,255,255,0.026)",
                     border: "1px solid rgba(242,185,104,0.10)",
@@ -1253,41 +1253,38 @@ function MetodoOri() {
                   }}
                 >
                   Etapa anterior
-                </button>
+                </OriButton>
               )}
 
               {activeLayer < layers.length - 1 ? (
-                <button
+                <OriButton
                   type="button"
                   onClick={goNext}
                   aria-label={`Avançar para ${nextButtonLabel}`}
-                  className="ori-journey-action px-5 py-2.5 rounded-full text-xs md:text-sm"
+                  variant="gradient"
+                  className="px-5 py-2.5 text-xs md:text-sm"
                   style={{
-                    background:
-                      "linear-gradient(90deg, var(--copper-primary), var(--gold-primary))",
-                    color: "#090506",
                     fontWeight: 750,
                     boxShadow:
                       "0 0 26px rgba(210,135,70,0.13), inset 0 0 12px rgba(255,255,255,0.14)",
                   }}
                 >
                   {nextButtonLabel}
-                </button>
+                </OriButton>
               ) : (
-                <Link
+                <OriButton
+                  as={Link}
                   to="/portal"
-                  className="ori-journey-action inline-flex justify-center px-5 py-2.5 rounded-full text-xs md:text-sm"
+                  variant="gradient"
+                  className="justify-center px-5 py-2.5 text-xs md:text-sm"
                   style={{
-                    background:
-                      "linear-gradient(90deg, var(--copper-primary), var(--gold-primary))",
-                    color: "#090506",
                     fontWeight: 750,
                     boxShadow:
                       "0 0 26px rgba(210,135,70,0.13), inset 0 0 12px rgba(255,255,255,0.14)",
                   }}
                 >
                   Continuar minha jornada
-                </Link>
+                </OriButton>
               )}
             </div>
           </div>
