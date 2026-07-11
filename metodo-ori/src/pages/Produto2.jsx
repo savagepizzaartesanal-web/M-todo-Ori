@@ -327,10 +327,13 @@ function FileUploadControl({ value, onChange, uploadScope, onNotice }) {
 }
 
 function FieldControl({ field, value, onChange, uploadScope, onNotice }) {
+  const lockedByContext = Boolean(field.lockedFromContext && value);
   const sharedClass =
     "w-full rounded-[16px] border px-4 py-3.5 text-sm outline-none transition-all";
   const sharedStyle = {
-    background: "rgba(255,255,255,0.032)",
+    background: lockedByContext
+      ? "rgba(242,185,104,0.055)"
+      : "rgba(255,255,255,0.032)",
     borderColor: "rgba(242,185,104,0.12)",
     color: "var(--text-primary)",
   };
@@ -355,6 +358,19 @@ function FieldControl({ field, value, onChange, uploadScope, onNotice }) {
         <p className="mb-2 text-xs" style={{ color: "rgba(247,234,216,0.58)" }}>
           {field.helper}
         </p>
+      ) : null}
+      {lockedByContext ? (
+        <OriBadge
+          tone="gold"
+          size="sm"
+          className="mb-3 w-fit rounded-full px-3 py-1 text-[11px]"
+          style={{
+            background: "rgba(242,185,104,0.10)",
+            color: "var(--gold-soft)",
+          }}
+        >
+          Vem da Entrada ORI
+        </OriBadge>
       ) : null}
 
       {field.referenceImage ? (
@@ -399,6 +415,7 @@ function FieldControl({ field, value, onChange, uploadScope, onNotice }) {
               <button
                 key={optionLabel}
                 type="button"
+                disabled={lockedByContext}
                 onClick={() => onChange(optionLabel)}
                 className={
                   optionImage
@@ -413,6 +430,8 @@ function FieldControl({ field, value, onChange, uploadScope, onNotice }) {
                     ? "1px solid rgba(242,185,104,0.32)"
                     : "1px solid rgba(242,185,104,0.10)",
                   color: selected ? "var(--gold-primary)" : "var(--text-soft)",
+                  cursor: lockedByContext ? "not-allowed" : "pointer",
+                  opacity: lockedByContext && !selected ? 0.45 : 1,
                 }}
               >
                 {optionImage ? (
@@ -442,6 +461,7 @@ function FieldControl({ field, value, onChange, uploadScope, onNotice }) {
           value={value}
           onChange={(event) => onChange(event.target.value)}
           rows={4}
+          readOnly={lockedByContext}
           className={`${sharedClass} resize-none`}
           style={sharedStyle}
         />
@@ -450,6 +470,7 @@ function FieldControl({ field, value, onChange, uploadScope, onNotice }) {
           value={value}
           onChange={(event) => onChange(event.target.value)}
           placeholder={field.placeholder || ""}
+          readOnly={lockedByContext}
           className={sharedClass}
           style={sharedStyle}
         />
@@ -748,17 +769,22 @@ function Produto2() {
     };
   }, []);
 
-  const step = produto2Steps[stepIndex];
   const status = dossie?.status || "aguardando_insumos";
   const produtoLiberado = Boolean(dossie?.produto_2_liberado);
   const isSubmitted = status === "em_analise" || status === "publicado";
   const uploadScope = dossie?.cliente_id || "rascunho";
   const pattonApplicable = isPattonApplicable(insumos);
-  const visibleFields = step.fields.filter((field) => {
-    if (field.path === "dados_base.autoidentificacao_racial") {
-      return !getPathValue(insumos, field.path);
-    }
+  const visibleSteps = useMemo(
+    () =>
+      produto2Steps.filter(
+        (item) => item.condition !== "pattonApplicable" || pattonApplicable,
+      ),
+    [pattonApplicable],
+  );
+  const activeStepIndex = Math.min(stepIndex, Math.max(visibleSteps.length - 1, 0));
+  const step = visibleSteps[activeStepIndex] || visibleSteps[0];
 
+  const visibleFields = step.fields.filter((field) => {
     if (field.path.startsWith("patton.")) {
       return pattonApplicable;
     }
@@ -1012,13 +1038,13 @@ function Produto2() {
                     className="ori-type-system text-[9px]"
                     style={{ color: "var(--gold-soft)" }}
                   >
-                    Etapa {String(stepIndex + 1).padStart(2, "0")} de{" "}
-                    {String(produto2Steps.length).padStart(2, "0")}
+                    Etapa {String(activeStepIndex + 1).padStart(2, "0")} de{" "}
+                    {String(visibleSteps.length).padStart(2, "0")}
                   </p>
                 </div>
 
                 <div className="flex gap-1.5">
-                  {produto2Steps.map((item, index) => (
+                  {visibleSteps.map((item, index) => (
                     <button
                       key={item.id}
                       type="button"
@@ -1027,11 +1053,11 @@ function Produto2() {
                       className="h-2.5 w-2.5 rounded-full transition-all"
                       style={{
                         background:
-                          index === stepIndex
+                          index === activeStepIndex
                             ? "var(--gold-primary)"
                             : "rgba(247,234,216,0.20)",
                         boxShadow:
-                          index === stepIndex
+                          index === activeStepIndex
                             ? "0 0 18px rgba(242,185,104,0.28)"
                             : "none",
                       }}
@@ -1095,8 +1121,12 @@ function Produto2() {
                 type="button"
                 variant="ghost"
                 size="md"
-                disabled={stepIndex === 0}
-                onClick={() => setStepIndex((current) => Math.max(current - 1, 0))}
+                disabled={activeStepIndex === 0}
+                onClick={() =>
+                  setStepIndex((current) =>
+                    Math.max(Math.min(current, activeStepIndex) - 1, 0),
+                  )
+                }
                 className="px-5 py-2.5 text-sm"
                 style={{
                   background: "rgba(255,255,255,0.035)",
@@ -1109,10 +1139,10 @@ function Produto2() {
                 type="button"
                 variant="ghost"
                 size="md"
-                disabled={stepIndex === produto2Steps.length - 1}
+                disabled={activeStepIndex === visibleSteps.length - 1}
                 onClick={() =>
-                  setStepIndex((current) =>
-                    Math.min(current + 1, produto2Steps.length - 1),
+                  setStepIndex(() =>
+                    Math.min(activeStepIndex + 1, visibleSteps.length - 1),
                   )
                 }
                 className="px-5 py-2.5 text-sm"

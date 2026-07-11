@@ -88,7 +88,8 @@ const field = (path, label, type = "text", options = [], meta = {}) => ({
   ...meta,
 });
 
-const radio = (path, label, options) => field(path, label, "radio", options);
+const radio = (path, label, options, meta = {}) =>
+  field(path, label, "radio", options, meta);
 
 const visualReferencePath = (page) =>
   `/images/produto-2/forms-referencias/form-page-${String(page).padStart(2, "0")}.jpg`;
@@ -199,7 +200,11 @@ const produto2RawSteps = [
         "Indígena",
         "Asiática",
         "Prefiro não declarar",
-      ]),
+      ], {
+        lockedFromContext: true,
+        helper:
+          "Este dado vem da Entrada ORI quando já foi informado. Se precisar corrigir, ajuste o cadastro/onboarding.",
+      }),
     ],
   },
   {
@@ -386,6 +391,16 @@ const produto2RawSteps = [
         "B. Tenho um equilíbrio; consigo transitar entre o brilho e o opaco sem grandes perdas. (Neutro)",
         "C. Minha pele tem um viço natural \"aceso\"; fico muito melhor com brilhos, acessórios polidos, pedras brilhantes e maquiagem iluminada.",
       ]),
+    ],
+  },
+  {
+    id: "patton",
+    eyebrow: "Jean Patton",
+    title: "Refinamento de pele",
+    description:
+      "Esta leitura aparece apenas quando sua autoidentificação pede um refinamento específico para peles negras ou miscigenadas.",
+    condition: "pattonApplicable",
+    fields: [
       radio("patton.tom_fundo", "29: Tom de Fundo. --> Instrução: Observe a nuance que mais se destaca na sua pele sob a luz do dia.", [
         "A. Azulada/Arroxeada: Sinto que minha pele tem uma sombra profunda, quase azul em certos ângulos. (Blues/Jazz)",
         "B. Acinzentada/Rosada: Minha pele é mais clara ou média, com um fundo que puxa para o cinza ou rosa frio. (Nilo)",
