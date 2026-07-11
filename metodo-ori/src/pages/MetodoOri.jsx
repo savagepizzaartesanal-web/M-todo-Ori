@@ -1169,9 +1169,11 @@ function MetodoOri() {
               Entender a jornada
             </OriButton>
 
-            <Link
+            <OriButton
+              as={Link}
               to="/portal"
-              className="ori-button-secondary inline-flex justify-center px-5 py-2.5 text-xs md:px-7 md:py-3.5 md:text-sm"
+              variant="secondary"
+              className="justify-center px-5 py-2.5 text-xs md:px-7 md:py-3.5 md:text-sm"
               style={{
                 background: "rgba(255,255,255,0.026)",
                 border: "1px solid rgba(242,185,104,0.12)",
@@ -1179,7 +1181,7 @@ function MetodoOri() {
               }}
             >
               Ver minha etapa atual
-            </Link>
+            </OriButton>
           </div>
         </div>
       </section>

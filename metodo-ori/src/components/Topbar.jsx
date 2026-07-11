@@ -1,3 +1,5 @@
+import { OriButton } from "./ui";
+
 function Topbar() {
   return (
     <header className="flex items-center justify-between mb-14">
@@ -30,15 +32,12 @@ function Topbar() {
           </p>
         </div>
 
-        <button
-          className="px-6 py-3 rounded-full font-medium hover:scale-105 transition-all duration-300"
-          style={{
-            background: "var(--gold-primary)",
-            color: "#090506",
-          }}
+        <OriButton
+          type="button"
+          className="px-6 py-3 font-medium hover:scale-105"
         >
           Novo Diagnóstico
-        </button>
+        </OriButton>
       </div>
     </header>
   );

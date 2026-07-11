@@ -2273,14 +2273,15 @@ function ReadingLayerPanel({ layer }) {
 
           {hasHiddenDesktopReading && (
             <div className="mt-3 hidden md:block">
-              <button
+              <OriButton
                 type="button"
+                variant="secondary"
                 onClick={() => setIsDeepReadingOpen((current) => !current)}
-                className="ori-button-secondary rounded-full px-4 py-2 text-xs"
+                className="px-4 py-2 text-xs"
                 aria-expanded={isDeepReadingOpen}
               >
                 {isDeepReadingOpen ? "Recolher leitura" : "Aprofundar leitura"}
-              </button>
+              </OriButton>
             </div>
           )}
         </div>
@@ -4165,9 +4166,11 @@ function QuizProduto1() {
                       </p>
                     </div>
 
-                    <Link
+                    <OriButton
+                      as={Link}
                       to="/produto-1/relatorio"
-                      className="ori-button-secondary inline-flex w-full shrink-0 justify-center rounded-full px-5 py-2.5 text-sm md:w-auto md:py-3"
+                      variant="secondary"
+                      className="w-full shrink-0 justify-center px-5 py-2.5 text-sm md:w-auto md:py-3"
                       style={{
                         background: "rgba(242,185,104,0.10)",
                         border: "1px solid rgba(242,185,104,0.18)",
@@ -4175,7 +4178,7 @@ function QuizProduto1() {
                       }}
                     >
                       Abrir relatório digital
-                    </Link>
+                    </OriButton>
                   </section>
 
                   {resultReadingCompleted && !feedbackSubmitted && (

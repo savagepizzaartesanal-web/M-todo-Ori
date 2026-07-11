@@ -351,13 +351,15 @@ function Produto1Relatorio() {
             >
               Sua leitura ainda não está pronta para relatório.
             </h1>
-            <Link
+            <OriButton
+              as={Link}
               to="/produto-1/leitura"
-              className="ori-button-secondary mt-6 inline-flex rounded-full px-5 py-3 text-sm"
+              variant="secondary"
+              className="mt-6 px-5 py-3 text-sm"
               style={{ color: "var(--gold-primary)" }}
             >
               Voltar para a leitura
-            </Link>
+            </OriButton>
           </div>
         </div>
       </main>

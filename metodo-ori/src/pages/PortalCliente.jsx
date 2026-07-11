@@ -1019,7 +1019,7 @@ function PortalCliente() {
                     to={recommendation.to}
                     variant="secondary"
                     size="md"
-                    className="ori-button-secondary min-h-9 w-full px-4 py-2 text-center text-xs sm:w-auto md:min-h-11 md:px-5 md:py-2.5 md:text-sm"
+                    className="min-h-9 w-full px-4 py-2 text-center text-xs sm:w-auto md:min-h-11 md:px-5 md:py-2.5 md:text-sm"
                     style={{
                       background: "rgba(255,255,255,0.024)",
                       border: "1px solid rgba(242,185,104,0.12)",

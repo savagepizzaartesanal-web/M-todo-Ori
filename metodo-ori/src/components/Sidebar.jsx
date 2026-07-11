@@ -177,7 +177,7 @@ function Sidebar() {
           variant="secondary"
           size="sm"
           onClick={() => setMobileOpen(true)}
-          className="ori-button-secondary inline-flex min-h-9 items-center gap-2 rounded-full px-3 py-1.5 text-[12px]"
+          className="min-h-9 gap-2 px-3 py-1.5 text-[12px]"
           style={{
             background: "rgba(5,2,2,0.58)",
             border: "1px solid rgba(242,185,104,0.11)",
@@ -250,7 +250,7 @@ function Sidebar() {
                   variant="secondary"
                   size="sm"
                   onClick={() => setMobileOpen(false)}
-                  className="ori-button-secondary grid h-10 w-10 place-items-center rounded-full text-lg"
+                  className="grid h-10 w-10 place-items-center text-lg"
                   style={{
                     background: "rgba(255,255,255,0.026)",
                     border: "1px solid rgba(242,185,104,0.12)",
@@ -293,7 +293,7 @@ function Sidebar() {
                   variant="success"
                   size="md"
                   onClick={handleLogout}
-                  className="ori-button-secondary ori-type-system w-full rounded-[14px] px-3.5 py-3 text-[12px]"
+                  className="ori-type-system w-full rounded-[14px] px-3.5 py-3 text-[12px]"
                   style={{
                     background: "rgba(255,255,255,0.020)",
                     border: "1px solid rgba(120,255,160,0.10)",
@@ -542,7 +542,7 @@ function Sidebar() {
               variant="secondary"
               size="sm"
               onClick={handleLogout}
-              className="ori-button-secondary ori-type-system group relative overflow-hidden w-full rounded-[14px] px-3.5 py-2.5 text-[12px] transition-all duration-500 hover:translate-x-0.5"
+              className="ori-type-system group relative overflow-hidden w-full rounded-[14px] px-3.5 py-2.5 text-[12px] hover:translate-x-0.5"
               style={{
                 transformOrigin: "center",
                 background:

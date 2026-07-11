@@ -2185,9 +2185,11 @@ function EspelhoOri() {
                               </p>
                             </div>
 
-                            <Link
+                            <OriButton
+                              as={Link}
                               to="/produto-1/relatorio"
-                              className="ori-button-secondary inline-flex w-full justify-center rounded-full px-5 py-3 text-sm md:w-auto"
+                              variant="secondary"
+                              className="w-full justify-center px-5 py-3 text-sm md:w-auto"
                               style={{
                                 background: "rgba(242,185,104,0.10)",
                                 border: "1px solid rgba(242,185,104,0.16)",
@@ -2195,7 +2197,7 @@ function EspelhoOri() {
                               }}
                             >
                               Abrir relatório completo
-                            </Link>
+                            </OriButton>
                           </div>
                         )}
 
