@@ -1489,25 +1489,6 @@ function AdminClienteDetalhe() {
 
             <OriButton
               type="button"
-              variant="lavender"
-              disabled={saving}
-              onClick={() =>
-                updateCliente({
-                  status_jornada: JOURNEY_STATUS.DOSSIE_ORI_PUBLICADO,
-                }, "Dossiê marcado como publicado")
-              }
-              className="w-full px-6 py-4"
-              style={{
-                background: "rgba(183,140,255,0.08)",
-                border: "1px solid rgba(183,140,255,0.16)",
-                color: "#d9bdff",
-              }}
-            >
-              Marcar Dossiê publicado
-            </OriButton>
-
-            <OriButton
-              type="button"
               variant="secondary"
               disabled={saving}
               onClick={() =>
