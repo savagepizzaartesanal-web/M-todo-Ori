@@ -159,7 +159,7 @@ function FileUploadControl({ value, onChange, uploadScope, onNotice }) {
 
       onChange([...files, ...uploaded]);
       onNotice?.(
-        "Imagens adicionadas. Salve e continue depois para manter este registro vinculado ao Dossiê.",
+        "Suas imagens chegaram até nós. Você pode continuar agora ou voltar depois — tudo fica guardado, ligado ao seu Dossiê.",
       );
     } catch (error) {
       console.error("Erro ao enviar fotos do Produto 2:", error);
@@ -830,7 +830,7 @@ function Produto2() {
     try {
       const data = await submitProduto2Insumos(insumos);
       setDossie(data);
-      setNotice("Informações enviadas. A análise preliminar já foi gerada para revisão.");
+      setNotice("Suas informações chegaram até nós. A análise preliminar já está pronta para revisão.");
     } catch (error) {
       console.log("Erro ao enviar Produto 2:", error);
       setNotice(error?.userMessage || "Não conseguimos enviar o Dossiê agora.");
@@ -1276,7 +1276,7 @@ function Produto2() {
               ))
             ) : (
               <p className="ori-type-reading-soft text-sm" style={{ color: "var(--text-soft)" }}>
-                O Dossiê foi publicado, mas ainda não há blocos preenchidos.
+                Sua entrega está quase pronta — voltamos em breve com os detalhes completos.
               </p>
             )}
           </div>

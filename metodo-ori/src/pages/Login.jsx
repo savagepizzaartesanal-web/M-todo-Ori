@@ -1001,8 +1001,8 @@ function Login() {
                     style={{ color: "var(--text-muted)" }}
                   >
                     {isCadastro
-                      ? "Seu cadastro será registrado como lead da jornada ORI."
-                      : "Acesso exclusivo para clientes com jornada liberada."}
+                      ? "Você está dando o primeiro passo dentro do Método ORI."
+                      : "Este espaço é reservado para quem já iniciou a jornada."}
                   </p>
 
                   <motion.div whileHover={{ x: 3 }}>
