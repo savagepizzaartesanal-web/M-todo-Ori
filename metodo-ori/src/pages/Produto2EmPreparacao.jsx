@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 
+import { OriButton, OriCard } from "../components/ui";
+
 function Produto2EmPreparacao() {
   return (
     <div className="ori-atmosphere ori-atmosphere-dossie relative max-w-[1320px] overflow-hidden">
@@ -98,20 +100,24 @@ function Produto2EmPreparacao() {
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Link
+            <OriButton
+              as={Link}
               to="/portal"
-              className="inline-flex justify-center rounded-full px-5 py-2.5 text-sm font-medium"
+              variant="primary"
+              className="px-5 py-2.5 text-sm"
               style={{
                 background: "var(--gold-primary)",
                 color: "#120706",
               }}
             >
               Voltar ao portal
-            </Link>
+            </OriButton>
 
-            <Link
+            <OriButton
+              as={Link}
               to="/produto-1/relatorio"
-              className="inline-flex justify-center rounded-full px-5 py-2.5 text-sm font-medium"
+              variant="secondary"
+              className="px-5 py-2.5 text-sm"
               style={{
                 background: "rgba(255,255,255,0.018)",
                 border: "1px solid rgba(242,185,104,0.14)",
@@ -119,7 +125,7 @@ function Produto2EmPreparacao() {
               }}
             >
               Rever primeira leitura
-            </Link>
+            </OriButton>
           </div>
         </div>
       </section>
@@ -138,7 +144,10 @@ function Produto2EmPreparacao() {
             ["Cor e beleza", "A temperatura, o contraste e a força visual."],
             ["Cabelo e rotina", "A moldura real da sua expressão diária."],
           ].map(([title, text]) => (
-            <div
+            <OriCard
+              variant="secondary"
+              padding="none"
+              radius="md"
               key={title}
               className="rounded-[18px] p-4"
               style={{
@@ -164,7 +173,7 @@ function Produto2EmPreparacao() {
               >
                 {text}
               </p>
-            </div>
+            </OriCard>
           ))}
         </div>
       </section>

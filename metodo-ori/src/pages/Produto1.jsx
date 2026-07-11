@@ -6,6 +6,7 @@ import { useProduto1Catalog } from "../hooks/useProduto1Catalog";
 import ResultHero from "../components/ResultHero";
 import NextStepCard from "../components/NextStepCard";
 import ReportSection from "../components/ReportSection";
+import { OriBadge, OriButton, OriCard } from "../components/ui";
 
 function QuizProduto1() {
   const {
@@ -129,11 +130,7 @@ function QuizProduto1() {
             </p>
 
             <div
-              className="hidden max-w-3xl max-h-[150px] overflow-y-auto pr-2 mb-6 md:block"
-              style={{
-                scrollbarWidth: "thin",
-                scrollbarColor: "rgba(242,185,104,0.22) transparent",
-              }}
+              className="hidden max-w-2xl pr-2 mb-6 md:block"
             >
               <p
                 className="ori-type-reading-soft text-sm md:text-base"
@@ -153,8 +150,10 @@ function QuizProduto1() {
                 "Imagem simbólica",
                 "Presença",
               ].map((item) => (
-                <span
+                <OriBadge
                   key={item}
+                  tone="muted"
+                  size="md"
                   className="ori-chip px-4 py-2 text-xs"
                   data-state="revealed"
                   style={{
@@ -164,14 +163,15 @@ function QuizProduto1() {
                   }}
                 >
                   {item}
-                </span>
+                </OriBadge>
               ))}
             </div>
 
-            <button
+            <OriButton
               type="button"
               onClick={handleScrollToQuiz}
-              className="w-fit px-6 py-3 md:px-8 md:py-4 rounded-full font-medium transition-all duration-300 hover:scale-[1.03]"
+              variant="primary"
+              className="w-fit px-6 py-3 md:px-8 md:py-4"
               style={{
                 background: "var(--gold-primary)",
                 color: "#090506",
@@ -179,7 +179,7 @@ function QuizProduto1() {
               }}
             >
               Começar minha leitura
-            </button>
+            </OriButton>
 
             <div
               className="mt-6 grid gap-2.5 rounded-[20px] p-3.5 sm:hidden"
@@ -199,8 +199,10 @@ function QuizProduto1() {
 
               <div className="grid grid-cols-3 gap-2">
                 {["Presença", "Essência", "Direção"].map((item) => (
-                  <span
+                  <OriBadge
                     key={item}
+                    tone="muted"
+                    size="sm"
                     className="rounded-full px-2 py-2 text-center text-[11px]"
                     style={{
                       background: "rgba(255,255,255,0.024)",
@@ -209,14 +211,17 @@ function QuizProduto1() {
                     }}
                   >
                     {item}
-                  </span>
+                  </OriBadge>
                 ))}
               </div>
             </div>
           </div>
 
           <div className="relative hidden lg:flex min-h-[520px] items-end p-8">
-            <div
+            <OriCard
+              variant="secondary"
+              padding="none"
+              radius="lg"
               className="ori-card-secondary w-full rounded-[28px] p-5"
               style={{
                 background: "rgba(5,2,2,0.36)",
@@ -237,7 +242,7 @@ function QuizProduto1() {
               >
                 1 = nada a ver comigo · 5 = totalmente eu
               </p>
-            </div>
+            </OriCard>
           </div>
         </div>
       </section>
@@ -263,7 +268,10 @@ function QuizProduto1() {
 
             <div className="flex flex-col gap-8">
               {blocoQuestions.map((question) => (
-                <div
+                <OriCard
+                  variant="secondary"
+                  padding="none"
+                  radius="xl"
                   key={question.id}
                   className="ori-card-secondary relative overflow-hidden p-8 rounded-[36px]"
                   style={{
@@ -302,6 +310,8 @@ function QuizProduto1() {
                       return (
                         <button
                           key={value}
+                          type="button"
+                          aria-pressed={active}
                           onClick={() => handleAnswer(question.id, value)}
                           className="w-14 h-14 rounded-full transition-all duration-300 hover:scale-105"
                           style={{
@@ -322,16 +332,18 @@ function QuizProduto1() {
                       );
                     })}
                   </div>
-                </div>
+                </OriCard>
               ))}
             </div>
           </section>
         ))}
       </div>
 
-      <button
+      <OriButton
+        type="button"
         onClick={handleCalculate}
-        className="mt-20 px-12 py-5 rounded-full font-medium transition-all duration-300 hover:scale-[1.03]"
+        variant="primary"
+        className="mt-20 px-12 py-5"
         style={{
           background: "var(--gold-primary)",
           color: "#090506",
@@ -339,7 +351,7 @@ function QuizProduto1() {
         }}
       >
         Revelar Resultado
-      </button>
+      </OriButton>
 
       {result && (
         <div className="mt-24">
@@ -416,7 +428,10 @@ function QuizProduto1() {
               <NextStepCard />
             </div>
           ) : (
-            <div
+            <OriCard
+              variant="secondary"
+              padding="none"
+              radius="xl"
               className="ori-card-secondary rounded-[40px] p-10"
               style={{
                 background:
@@ -427,7 +442,7 @@ function QuizProduto1() {
               <p style={{ color: "var(--text-soft)" }}>
                 Relatório completo ainda não cadastrado para este resultado.
               </p>
-            </div>
+            </OriCard>
           )}
         </div>
       )}

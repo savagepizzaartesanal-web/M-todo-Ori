@@ -24,6 +24,7 @@ import QuizHero from "../components/QuizHero";
 import ResultHero from "../components/ResultHero";
 import NextStepCard from "../components/NextStepCard";
 import SyncNotice from "../components/SyncNotice";
+import { OriBadge, OriButton } from "../components/ui";
 
 const LEGACY_STORAGE_KEY = "ori_produto_1_quiz";
 const ORACLE_PANEL_BACKGROUND =
@@ -1072,9 +1073,12 @@ function QuizIntro({
             cabelo, beleza, presença e armário.
           </p>
 
-          <motion.button
+          <OriButton
+            as={motion.button}
+            nativeButton
             type="button"
             onClick={onStart}
+            variant="gradient"
             whileHover={
               reduceMotion
                 ? undefined
@@ -1087,7 +1091,7 @@ function QuizIntro({
                   }
             }
             whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-            className="ori-journey-action px-6 py-3 rounded-full text-sm md:text-base"
+            className="px-6 py-3 text-sm md:text-base"
             style={{
               background:
                 "linear-gradient(90deg, var(--copper-primary), var(--gold-primary))",
@@ -1098,7 +1102,7 @@ function QuizIntro({
             }}
           >
             {hasProgress ? "Continuar minha leitura" : "Começar minha leitura"}
-          </motion.button>
+          </OriButton>
 
           <div
             className="mt-5 grid gap-2.5 rounded-[20px] p-3.5 sm:hidden"
@@ -1118,8 +1122,10 @@ function QuizIntro({
 
             <div className="grid grid-cols-3 gap-2">
               {["Como você chega", "Sua base", "Direção inicial"].map((item) => (
-                <span
+                <OriBadge
                   key={item}
+                  tone="muted"
+                  size="sm"
                   className="rounded-full px-2 py-2 text-center text-[11px]"
                   style={{
                     background: "rgba(255,255,255,0.024)",
@@ -1128,7 +1134,7 @@ function QuizIntro({
                   }}
                 >
                   {item}
-                </span>
+                </OriBadge>
               ))}
             </div>
           </div>
@@ -1351,12 +1357,15 @@ function LayerReveal({
           </div>
 
           <div className="flex flex-col items-center justify-center gap-2.5 sm:flex-row md:gap-3">
-            <motion.button
+            <OriButton
+              as={motion.button}
+              nativeButton
               type="button"
+              variant="secondary"
               onClick={onBack}
               whileHover={reduceMotion ? undefined : { x: -2 }}
               whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-              className="ori-button-secondary w-full min-w-[190px] px-6 py-3 text-sm sm:w-auto md:text-[15px]"
+              className="w-full min-w-[190px] px-6 py-3 text-sm sm:w-auto md:text-[15px]"
               style={{
                 background: "rgba(255,255,255,0.024)",
                 color: "rgba(255,245,235,0.70)",
@@ -1367,10 +1376,13 @@ function LayerReveal({
               }}
             >
               ← Voltar etapa anterior
-            </motion.button>
+            </OriButton>
 
-            <motion.button
+            <OriButton
+              as={motion.button}
+              nativeButton
               type="button"
+              variant="gradient"
               onClick={onContinue}
               whileHover={
                 reduceMotion
@@ -1383,7 +1395,7 @@ function LayerReveal({
                     }
               }
               whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-              className="ori-journey-action w-full min-w-[190px] rounded-full px-6 py-3 text-sm sm:w-auto md:text-[15px]"
+              className="w-full min-w-[190px] px-6 py-3 text-sm sm:w-auto md:text-[15px]"
               style={{
                 background: `linear-gradient(90deg, ${theme.accent}, rgba(255,245,235,0.92))`,
                 color: "#090506",
@@ -1394,7 +1406,7 @@ function LayerReveal({
               }}
             >
               {isFinalBlock ? "Preparar revelação" : "Continuar leitura"}
-            </motion.button>
+            </OriButton>
           </div>
         </div>
       </div>
@@ -3654,9 +3666,11 @@ function QuizProduto1() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3">
-              <Link
+              <OriButton
+                as={Link}
                 to="/espelho-ori"
-                className="ori-journey-action inline-flex justify-center px-7 py-3.5 rounded-full text-sm"
+                variant="primary"
+                className="px-7 py-3.5 text-sm"
                 style={{
                   background: colors.gold,
                   color: "#090506",
@@ -3666,13 +3680,14 @@ function QuizProduto1() {
                 }}
               >
                 Ver meu Espelho ORI
-              </Link>
+              </OriButton>
 
-              <button
+              <OriButton
                 type="button"
+                variant="secondary"
                 onClick={handleReset}
                 disabled={isResettingQuiz}
-                className="ori-button-secondary inline-flex justify-center px-7 py-3.5 text-sm disabled:opacity-60 disabled:cursor-not-allowed"
+                className="px-7 py-3.5 text-sm"
                 style={{
                   background: "rgba(255,255,255,0.026)",
                   border: "1px solid rgba(242,185,104,0.14)",
@@ -3680,7 +3695,7 @@ function QuizProduto1() {
                 }}
               >
                 {isResettingQuiz ? "Reiniciando leitura..." : "Refazer leitura"}
-              </button>
+              </OriButton>
             </div>
           </section>
         )}
@@ -3727,9 +3742,11 @@ function QuizProduto1() {
 
       <div className="relative z-10 w-full max-w-6xl mx-auto">
         <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-5">
-          <Link
+          <OriButton
+            as={Link}
             to="/produto-1"
-            className="inline-flex w-fit items-center gap-3 px-5 py-2.5 rounded-full text-sm"
+            variant="secondary"
+            className="w-fit gap-3 px-5 py-2.5 text-sm"
             style={{
               background: "rgba(255,255,255,0.026)",
               border: "1px solid rgba(242,185,104,0.12)",
@@ -3740,7 +3757,7 @@ function QuizProduto1() {
           >
             <span style={{ color: colors.gold }}>←</span>
             Voltar ao Código das Deusas
-          </Link>
+          </OriButton>
 
           <div
             className="inline-flex w-fit items-center gap-2 px-4 py-2 rounded-full text-[10px] uppercase tracking-[0.22em]"

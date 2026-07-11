@@ -161,13 +161,7 @@ function QuizHero({
             WebkitBackdropFilter: "blur(8px)",
           }}
         >
-          <div
-            className="max-h-[104px] overflow-y-auto px-4 py-3 pr-5"
-            style={{
-              scrollbarWidth: "thin",
-              scrollbarColor: "rgba(242,185,104,0.22) transparent",
-            }}
-          >
+          <div className="px-4 py-3 pr-5">
             <p
               className="ori-type-reading-soft text-sm mb-3"
               style={{
@@ -191,13 +185,6 @@ function QuizHero({
             </p>
           </div>
 
-          <div
-            className="absolute inset-x-0 bottom-0 h-8 pointer-events-none rounded-b-[22px]"
-            style={{
-              background:
-                "linear-gradient(180deg, transparent, rgba(5,2,2,0.38))",
-            }}
-          />
         </div>
 
         <div className="hidden flex-wrap gap-2.5 mb-5 sm:flex">

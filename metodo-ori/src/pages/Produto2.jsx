@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import SyncNotice from "../components/SyncNotice";
+import { OriBadge, OriButton, OriCard, OriField } from "../components/ui";
 import { JOURNEY_LABELS } from "../content/journeyCopy";
 import { supabase } from "../lib/supabaseClient";
 import {
@@ -181,7 +182,7 @@ function FileUploadControl({ value, onChange, uploadScope, onNotice }) {
 
   return (
     <div
-      className="grid gap-3 rounded-[18px] p-4 lg:grid-cols-[1fr_1fr_240px]"
+      className="grid gap-4 rounded-[18px] p-4 md:p-5 lg:grid-cols-[1fr_1fr_250px]"
       style={{
         background: "rgba(242,185,104,0.038)",
         border: "1px solid rgba(242,185,104,0.10)",
@@ -194,11 +195,11 @@ function FileUploadControl({ value, onChange, uploadScope, onNotice }) {
         >
           O que vamos observar
         </p>
-        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+        <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
           {photoGuides.map((guide) => (
             <div
               key={guide.title}
-              className="flex gap-3 rounded-[12px] px-3 py-2"
+              className="flex gap-3 rounded-[12px] px-3 py-2.5"
               style={{ background: "rgba(255,255,255,0.022)" }}
             >
               <span
@@ -244,17 +245,19 @@ function FileUploadControl({ value, onChange, uploadScope, onNotice }) {
                     </p>
                   ) : null}
                 </div>
-                <button
+                <OriButton
                   type="button"
+                  variant="ghost"
+                  size="sm"
                   onClick={() => handleRemove(file)}
-                  className="rounded-full px-3 py-1 text-xs"
+                  className="px-3 py-1 text-xs"
                   style={{
                     background: "rgba(255,255,255,0.035)",
                     color: "rgba(247,234,216,0.72)",
                   }}
                 >
                   Remover
-                </button>
+                </OriButton>
               </div>
             ))}
           </div>
@@ -262,7 +265,7 @@ function FileUploadControl({ value, onChange, uploadScope, onNotice }) {
       </div>
 
       <div
-        className="h-full rounded-[14px] p-4"
+        className="h-full rounded-[14px] p-4 md:p-5"
         style={{ background: "rgba(255,255,255,0.022)" }}
       >
         <p
@@ -303,12 +306,12 @@ function FileUploadControl({ value, onChange, uploadScope, onNotice }) {
           <span className="mt-1 text-xs" style={{ color: "rgba(247,234,216,0.58)" }}>
             JPG, PNG ou WEBP
           </span>
-          <span className="mt-3 rounded-full px-3 py-1 text-[11px]" style={{
+          <OriBadge tone="gold" size="sm" className="mt-3 px-3 py-1 text-[11px]" style={{
             background: "rgba(242,185,104,0.10)",
             color: "var(--gold-soft)",
           }}>
             Você pode selecionar várias imagens de uma vez
-          </span>
+          </OriBadge>
           <input
             type="file"
             accept="image/*"
@@ -325,7 +328,7 @@ function FileUploadControl({ value, onChange, uploadScope, onNotice }) {
 
 function FieldControl({ field, value, onChange, uploadScope, onNotice }) {
   const sharedClass =
-    "w-full rounded-[16px] border px-4 py-3 text-sm outline-none transition-all";
+    "w-full rounded-[16px] border px-4 py-3.5 text-sm outline-none transition-all";
   const sharedStyle = {
     background: "rgba(255,255,255,0.032)",
     borderColor: "rgba(242,185,104,0.12)",
@@ -384,7 +387,7 @@ function FieldControl({ field, value, onChange, uploadScope, onNotice }) {
           className={
             field.options.some((option) => option?.image)
               ? "grid gap-3 md:grid-cols-2"
-              : "grid gap-2"
+              : "grid gap-2.5"
           }
         >
           {field.options.map((option) => {
@@ -400,7 +403,7 @@ function FieldControl({ field, value, onChange, uploadScope, onNotice }) {
                 className={
                   optionImage
                     ? "overflow-hidden rounded-[16px] text-left text-sm transition-all"
-                    : "rounded-[14px] px-4 py-3 text-left text-sm transition-all"
+                    : "rounded-[14px] px-4 py-3.5 text-left text-sm transition-all"
                 }
                 style={{
                   background: selected
@@ -434,7 +437,8 @@ function FieldControl({ field, value, onChange, uploadScope, onNotice }) {
           })}
         </div>
       ) : field.type === "textarea" ? (
-        <textarea
+        <OriField
+          as="textarea"
           value={value}
           onChange={(event) => onChange(event.target.value)}
           rows={4}
@@ -442,7 +446,7 @@ function FieldControl({ field, value, onChange, uploadScope, onNotice }) {
           style={sharedStyle}
         />
       ) : (
-        <input
+        <OriField
           value={value}
           onChange={(event) => onChange(event.target.value)}
           placeholder={field.placeholder || ""}
@@ -462,7 +466,9 @@ function StatusBadge({ status }) {
   };
 
   return (
-    <span
+    <OriBadge
+      tone={status === "publicado" ? "success" : "lavender"}
+      size="sm"
       className="rounded-full px-3 py-1 text-[11px] font-medium"
       style={{
         background: "rgba(183,140,255,0.10)",
@@ -471,13 +477,17 @@ function StatusBadge({ status }) {
       }}
     >
       {labels[status] || status}
-    </span>
+    </OriBadge>
   );
 }
 
 function AnalysisCard({ title, children }) {
   return (
-    <article
+    <OriCard
+      as="article"
+      variant="secondary"
+      padding="none"
+      radius="md"
       className="rounded-[18px] p-4"
       style={{
         background: "linear-gradient(180deg, rgba(255,255,255,0.026), rgba(255,255,255,0.008))",
@@ -493,7 +503,7 @@ function AnalysisCard({ title, children }) {
       <div className="ori-type-reading-soft text-sm" style={{ color: "var(--text-soft)" }}>
         {children}
       </div>
-    </article>
+    </OriCard>
   );
 }
 
@@ -587,8 +597,10 @@ function ConnectedDataPanel({ insumos }) {
           {summary.length ? (
             <div className="flex flex-wrap gap-2">
               {summary.map((item) => (
-                <span
+                <OriBadge
                   key={item}
+                  tone="muted"
+                  size="sm"
                   className="rounded-full px-3 py-1 text-[11px]"
                   style={{
                     background: "rgba(255,255,255,0.030)",
@@ -597,15 +609,17 @@ function ConnectedDataPanel({ insumos }) {
                   }}
                 >
                   {item}
-                </span>
+                </OriBadge>
               ))}
             </div>
           ) : null}
 
-          <button
+          <OriButton
             type="button"
+            variant={expanded ? "secondary" : "ghost"}
+            size="sm"
             onClick={() => setExpanded((current) => !current)}
-            className="w-fit rounded-full px-4 py-2 text-xs font-medium"
+            className="w-fit px-4 py-2 text-xs"
             style={{
               background: expanded
                 ? "rgba(242,185,104,0.12)"
@@ -615,15 +629,19 @@ function ConnectedDataPanel({ insumos }) {
             }}
           >
             {expanded ? "Ocultar detalhes" : "Ver dados conectados"}
-          </button>
+          </OriButton>
         </div>
       </div>
 
       {expanded ? (
         <div className="mt-4 grid gap-2 md:grid-cols-2 xl:grid-cols-4">
           {items.map((item) => (
-            <article
+            <OriCard
+              as="article"
               key={item.title}
+              variant="secondary"
+              padding="none"
+              radius="md"
               className="rounded-[14px] p-3"
               style={{
                 background: "rgba(255,255,255,0.026)",
@@ -647,7 +665,7 @@ function ConnectedDataPanel({ insumos }) {
                   {item.text}
                 </p>
               ) : null}
-            </article>
+            </OriCard>
           ))}
         </div>
       ) : null}
@@ -939,9 +957,11 @@ function Produto2() {
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Link
+            <OriButton
+              as={Link}
               to="/portal"
-              className="inline-flex justify-center rounded-full px-5 py-2.5 text-sm font-medium"
+              variant="primary"
+              className="px-5 py-2.5 text-sm"
               style={{
                 background: "var(--gold-primary)",
                 color: "#090506",
@@ -949,10 +969,12 @@ function Produto2() {
               }}
             >
               Voltar ao portal
-            </Link>
-            <Link
+            </OriButton>
+            <OriButton
+              as={Link}
               to="/produto-1"
-              className="inline-flex justify-center rounded-full px-5 py-2.5 text-sm font-medium"
+              variant="secondary"
+              className="px-5 py-2.5 text-sm"
               style={{
                 background: "rgba(255,255,255,0.035)",
                 border: "1px solid rgba(242,185,104,0.12)",
@@ -960,7 +982,7 @@ function Produto2() {
               }}
             >
               Rever primeira leitura
-            </Link>
+            </OriButton>
           </div>
         </div>
       </section>
@@ -969,14 +991,14 @@ function Produto2() {
 
       {!loading && produtoLiberado && !isSubmitted ? (
         <section
-          className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[24px] p-4 md:rounded-[30px] md:p-6"
+          className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[24px] p-4 md:rounded-[30px] md:p-7"
           style={{
             background:
               "linear-gradient(180deg, rgba(18,9,10,0.70), rgba(5,2,2,0.90))",
             border: "1px solid rgba(242,185,104,0.10)",
           }}
         >
-          <div className="mb-5">
+          <div className="mb-6">
             <div>
               <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div
@@ -1018,7 +1040,7 @@ function Produto2() {
                 </div>
               </div>
 
-              <div className="mb-4">
+              <div className="mb-5">
                 <p
                   className="ori-type-system mb-2 text-[10px]"
                   style={{ color: "var(--gold-soft)" }}
@@ -1041,7 +1063,7 @@ function Produto2() {
 
               {step.id === "base" ? <MissingProfileHint insumos={insumos} /> : null}
 
-              <div className="grid gap-3 md:grid-cols-2">
+              <div className="grid gap-4 md:grid-cols-2">
                 {visibleFields.map((field) => (
                   <FieldControl
                     key={field.path}
@@ -1067,44 +1089,49 @@ function Produto2() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 border-t border-white/10 pt-5 sm:flex-row sm:justify-between">
+          <div className="flex flex-col gap-3 border-t border-white/10 pt-6 sm:flex-row sm:justify-between">
             <div className="flex gap-2">
-              <button
+              <OriButton
                 type="button"
+                variant="ghost"
+                size="md"
                 disabled={stepIndex === 0}
                 onClick={() => setStepIndex((current) => Math.max(current - 1, 0))}
-                className="rounded-full px-5 py-2.5 text-sm disabled:cursor-not-allowed disabled:opacity-40"
+                className="px-5 py-2.5 text-sm"
                 style={{
                   background: "rgba(255,255,255,0.035)",
                   color: "var(--text-soft)",
                 }}
               >
                 Voltar
-              </button>
-              <button
+              </OriButton>
+              <OriButton
                 type="button"
+                variant="ghost"
+                size="md"
                 disabled={stepIndex === produto2Steps.length - 1}
                 onClick={() =>
                   setStepIndex((current) =>
                     Math.min(current + 1, produto2Steps.length - 1),
                   )
                 }
-                className="rounded-full px-5 py-2.5 text-sm disabled:cursor-not-allowed disabled:opacity-40"
+                className="px-5 py-2.5 text-sm"
                 style={{
                   background: "rgba(255,255,255,0.035)",
                   color: "var(--text-soft)",
                 }}
               >
                 {JOURNEY_LABELS.proximoPasso}
-              </button>
+              </OriButton>
             </div>
 
             <div className="flex flex-col gap-2 sm:flex-row">
-              <button
+              <OriButton
                 type="button"
+                variant="lavender"
                 disabled={saving}
                 onClick={handleSave}
-                className="rounded-full px-5 py-2.5 text-sm font-medium disabled:opacity-60"
+                className="px-5 py-2.5 text-sm"
                 style={{
                   background: "rgba(183,140,255,0.10)",
                   border: "1px solid rgba(183,140,255,0.18)",
@@ -1112,19 +1139,20 @@ function Produto2() {
                 }}
               >
                 {saving ? "Salvando..." : "Salvar e continuar depois"}
-              </button>
-              <button
+              </OriButton>
+              <OriButton
                 type="button"
+                variant="primary"
                 disabled={saving}
                 onClick={handleSubmit}
-                className="rounded-full px-5 py-2.5 text-sm font-medium disabled:opacity-60"
+                className="px-5 py-2.5 text-sm"
                 style={{
                   background: "var(--gold-primary)",
                   color: "#090506",
                 }}
               >
                 {saving ? "Enviando..." : "Concluir e enviar para análise"}
-              </button>
+              </OriButton>
             </div>
           </div>
         </section>

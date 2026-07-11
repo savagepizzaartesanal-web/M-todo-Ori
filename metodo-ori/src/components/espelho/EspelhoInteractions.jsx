@@ -1,5 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 
+import { OriCard } from "../ui";
+
 export function AmbientMirrorField({ reduceMotion, intensity = "warm" }) {
   const staticGlow =
     "radial-gradient(circle at 64% 18%, rgba(210,135,70,0.095), transparent 34%), radial-gradient(circle at 18% 74%, rgba(107,90,110,0.08), transparent 38%), linear-gradient(180deg, rgba(5,2,2,0.14), rgba(5,2,2,0.32))";
@@ -110,7 +112,11 @@ export function MirrorSectionNav({ sections = [], colors }) {
 export function MatrixInsightPanel({ item, colors }) {
   return (
     <AnimatePresence mode="wait">
-      <motion.div
+      <OriCard
+        as={motion.div}
+        variant="secondary"
+        padding="none"
+        radius="xl"
         key={item?.label || "matrix-empty"}
         initial={{ opacity: 0, y: 14, filter: "blur(8px)" }}
         animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -150,8 +156,11 @@ export function MatrixInsightPanel({ item, colors }) {
             ["Sinal", item?.text],
             ["Movimento", item?.impact],
           ].map(([label, text]) => (
-            <div
+            <OriCard
               key={label}
+              variant="secondary"
+              padding="none"
+              radius="md"
               className="rounded-[20px] p-4"
               style={{
                 background: "rgba(5,2,2,0.25)",
@@ -167,10 +176,10 @@ export function MatrixInsightPanel({ item, colors }) {
               <p className="text-xs leading-relaxed" style={{ color: colors.text }}>
                 {text}
               </p>
-            </div>
+            </OriCard>
           ))}
         </div>
-      </motion.div>
+      </OriCard>
     </AnimatePresence>
   );
 }

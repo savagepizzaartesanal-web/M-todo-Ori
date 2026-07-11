@@ -12,6 +12,7 @@ import {
   getMapaVivo,
 } from "../services/api";
 import SyncNotice from "../components/SyncNotice";
+import { OriButton } from "../components/ui";
 
 const LEGACY_STORAGE_KEY = "ori_produto_1_quiz";
 const ONBOARDING_DATA_KEY = "ori_onboarding_data";
@@ -304,9 +305,11 @@ function MirrorHero() {
           </p>
 
           <div className="flex flex-col gap-2.5 sm:flex-row sm:gap-3">
-            <a
+            <OriButton
+              as="a"
               href="#espelho-resultados"
-              className="ori-journey-action inline-flex justify-center rounded-full px-6 py-3 text-sm md:px-7 md:py-3.5"
+              variant="gradient"
+              className="px-6 py-3 text-sm md:px-7 md:py-3.5"
               style={{
                 background:
                   "linear-gradient(90deg, var(--copper-primary), var(--gold-primary))",
@@ -317,11 +320,13 @@ function MirrorHero() {
               }}
             >
               Ver minha leitura
-            </a>
+            </OriButton>
 
-            <Link
+            <OriButton
+              as={Link}
               to="/oraculo"
-              className="ori-button-secondary inline-flex justify-center px-5 py-2.5 text-xs md:px-7 md:py-3.5 md:text-sm"
+              variant="secondary"
+              className="px-5 py-2.5 text-xs md:px-7 md:py-3.5 md:text-sm"
               style={{
                 background: "rgba(255,255,255,0.020)",
                 border: "1px solid rgba(242,185,104,0.16)",
@@ -332,7 +337,7 @@ function MirrorHero() {
               }}
             >
               Abrir Oráculo ORI
-            </Link>
+            </OriButton>
           </div>
         </div>
 
@@ -1336,9 +1341,11 @@ function EspelhoOri() {
             whileHover={reduceMotion ? undefined : { x: -2 }}
             whileTap={reduceMotion ? undefined : { scale: 0.98 }}
           >
-            <Link
+            <OriButton
+              as={Link}
               to="/portal"
-              className="inline-flex w-fit items-center gap-3 px-5 py-2.5 rounded-full text-sm transition-all"
+              variant="secondary"
+              className="w-fit gap-3 px-5 py-2.5 text-sm"
               style={{
                 background: "rgba(255,255,255,0.026)",
                 border: `1px solid ${colors.borderSoft}`,
@@ -1349,7 +1356,7 @@ function EspelhoOri() {
             >
               <span style={{ color: colors.gold }}>←</span>
               Voltar ao Portal
-            </Link>
+            </OriButton>
           </motion.div>
 
           <div
@@ -1667,9 +1674,11 @@ function EspelhoOri() {
 
                   <div className="mt-6">
                     {activeJourney.active ? (
-                      <Link
+                      <OriButton
+                        as={Link}
                         to={activeJourney.link}
-                        className="inline-flex justify-center rounded-full px-7 py-3 text-sm"
+                        variant="gradient"
+                        className="px-7 py-3 text-sm"
                         style={{
                           background:
                             "linear-gradient(90deg, var(--copper-primary), var(--gold-primary))",
@@ -1680,12 +1689,13 @@ function EspelhoOri() {
                         }}
                       >
                         {activeJourney.cta}
-                      </Link>
+                      </OriButton>
                     ) : (
-                      <button
+                      <OriButton
                         type="button"
+                        variant="disabled"
                         disabled
-                        className="inline-flex cursor-not-allowed justify-center rounded-full px-7 py-3 text-sm opacity-75"
+                        className="px-7 py-3 text-sm opacity-75"
                         style={{
                           background: "rgba(255,255,255,0.035)",
                           border: `1px solid ${colors.border}`,
@@ -1693,7 +1703,7 @@ function EspelhoOri() {
                         }}
                       >
                         {activeJourney.cta}
-                      </button>
+                      </OriButton>
                     )}
                   </div>
                 </motion.div>
@@ -3850,9 +3860,11 @@ function EspelhoOri() {
 
             <div className="flex flex-col gap-3 md:items-end">
               {produto2Liberado ? (
-                <Link
+                <OriButton
+                  as={Link}
                   to="/produto-2"
-                  className="inline-flex w-full justify-center rounded-full px-8 py-3.5 text-sm md:w-fit"
+                  variant="gradient"
+                  className="w-full px-8 py-3.5 text-sm md:w-fit"
                   style={{
                     background:
                       "linear-gradient(90deg, var(--copper-primary), var(--gold-primary))",
@@ -3863,11 +3875,13 @@ function EspelhoOri() {
                   }}
                 >
                   Continuar para o Dossiê ORI
-                </Link>
+                </OriButton>
               ) : (
-                <button
+                <OriButton
+                  type="button"
+                  variant="disabled"
                   disabled
-                  className="inline-flex w-full cursor-not-allowed justify-center rounded-full px-8 py-3.5 text-sm opacity-75 md:w-fit"
+                  className="w-full px-8 py-3.5 text-sm opacity-75 md:w-fit"
                   style={{
                     background: "rgba(255,255,255,0.035)",
                     border: `1px solid ${colors.border}`,
@@ -3875,12 +3889,14 @@ function EspelhoOri() {
                   }}
                 >
                   Dossiê ORI ainda selado
-                </button>
+                </OriButton>
               )}
 
-              <Link
+              <OriButton
+                as={Link}
                 to="/portal"
-                className="hidden w-full justify-center rounded-full px-8 py-3.5 text-sm md:inline-flex md:w-fit"
+                variant="secondary"
+                className="hidden w-full px-8 py-3.5 text-sm md:inline-flex md:w-fit"
                 style={{
                   background: "rgba(255,255,255,0.026)",
                   border: `1px solid ${colors.borderSoft}`,
@@ -3888,7 +3904,7 @@ function EspelhoOri() {
                 }}
               >
                 Voltar ao portal
-              </Link>
+              </OriButton>
             </div>
           </div>
         </MotionSection>
@@ -4103,9 +4119,11 @@ function EspelhoOri() {
                 </div>
 
                 {nextStep.active ? (
-                  <Link
+                  <OriButton
+                    as={Link}
                     to={nextStep.link}
-                    className="inline-flex shrink-0 justify-center rounded-full px-6 py-3 text-sm"
+                    variant="primary"
+                    className="shrink-0 px-6 py-3 text-sm"
                     style={{
                       background: colors.gold,
                       color: "#090506",
@@ -4115,11 +4133,13 @@ function EspelhoOri() {
                     }}
                   >
                     Abrir próxima etapa
-                  </Link>
+                  </OriButton>
                 ) : (
-                  <button
+                  <OriButton
+                    type="button"
+                    variant="disabled"
                     disabled
-                    className="inline-flex shrink-0 cursor-not-allowed justify-center rounded-full px-6 py-3 text-sm opacity-75"
+                    className="shrink-0 px-6 py-3 text-sm opacity-75"
                     style={{
                       background: "rgba(255,255,255,0.035)",
                       border: `1px solid ${colors.border}`,
@@ -4127,7 +4147,7 @@ function EspelhoOri() {
                     }}
                   >
                     Dossiê ORI ainda fechado
-                  </button>
+                  </OriButton>
                 )}
               </div>
             </div>
@@ -4174,9 +4194,11 @@ function EspelhoOri() {
 
           <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3">
             {nextStep.active ? (
-              <Link
+              <OriButton
+                as={Link}
                 to={nextStep.link}
-                className="inline-flex justify-center px-8 py-3.5 rounded-full text-sm"
+                variant="primary"
+                className="px-8 py-3.5 text-sm"
                 style={{
                   background: colors.gold,
                   color: "#090506",
@@ -4186,11 +4208,13 @@ function EspelhoOri() {
                 }}
               >
                 Abrir próxima etapa
-              </Link>
+              </OriButton>
             ) : (
-              <button
+              <OriButton
+                type="button"
+                variant="disabled"
                 disabled
-                className="inline-flex justify-center px-8 py-3.5 rounded-full text-sm opacity-75 cursor-not-allowed"
+                className="px-8 py-3.5 text-sm opacity-75"
                 style={{
                   background: "rgba(255,255,255,0.035)",
                   border: `1px solid ${colors.border}`,
@@ -4198,12 +4222,14 @@ function EspelhoOri() {
                 }}
               >
                 Dossiê ORI ainda fechado
-              </button>
+              </OriButton>
             )}
 
-            <Link
+            <OriButton
+              as={Link}
               to="/portal"
-              className="inline-flex justify-center px-8 py-3.5 rounded-full text-sm"
+              variant="secondary"
+              className="px-8 py-3.5 text-sm"
               style={{
                 background: "rgba(255,255,255,0.026)",
                 border: `1px solid ${colors.borderSoft}`,
@@ -4211,7 +4237,7 @@ function EspelhoOri() {
               }}
             >
               Voltar ao portal
-            </Link>
+            </OriButton>
           </div>
         </MotionSection>
           </>

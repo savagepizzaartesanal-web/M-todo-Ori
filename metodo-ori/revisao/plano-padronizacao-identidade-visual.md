@@ -196,7 +196,9 @@ Medio. A UI admin tem muitas acoes que alteram dados; validar visual e comportam
 
 ## Fase 5 - Produtos e formularios
 
-Status: fazer depois da migracao admin.
+Status: concluida no primeiro nivel para as paginas principais de produto.
+
+Progresso: `Produto1`, `Produto1Relatorio`, `Produto2`, `Produto2EmPreparacao` e `Produto3` receberam a camada comum de `OriButton`, `OriBadge`, `OriCard` e `OriField` nos pontos repetidos de UI. Em `Produto2`, controles customizados de radio, progresso e upload foram preservados quando carregam comportamento proprio ou layout visual especifico.
 
 ### Superficies
 
@@ -231,7 +233,9 @@ Medio-alto. Produto 2 tem upload, formulario longo e estados salvos.
 
 ## Fase 6 - Paginas editoriais complexas
 
-Status: deixar por ultimo.
+Status: concluida no primeiro nivel.
+
+Progresso: `MetodoOri` recebeu `OriCard`, `OriBadge` e `OriButton` em cards/chips/CTAs repetidos; `OraculoOri` recebeu `OriButton` e `OriCard` em CTAs e cards de leitura; `QuizProduto1` recebeu `OriButton`/`OriBadge` em CTAs e chips simples; `EspelhoOri` recebeu `OriButton` nos CTAs principais e de proxima etapa; `ReportAccordion` e `EspelhoInteractions` receberam `OriBadge`/`OriCard` em elementos informativos simples. Tabs, controles de escala, carta do oraculo, navegacao lateral e botoes expansivos permanecem preservados por serem interacoes autorais.
 
 ### Superficies
 
@@ -268,7 +272,9 @@ Alto. Validacao visual indispensavel.
 
 ## Fase 7 - Limpeza de legado visual
 
-Status: fazer quando os componentes novos estiverem em uso.
+Status: concluida no primeiro nivel.
+
+Progresso: assets de scaffold sem referencias foram removidos (`src/App.css`, `src/assets/react.svg`, `src/assets/vite.svg`, `src/assets/hero.png` e `public/icons.svg`) e `public/favicon.svg` foi substituido por um favicon ORI simples, alinhado a paleta escura/dourada. As classes legadas `.ori-*` foram preservadas como camada de compatibilidade, pois ainda existem usos ativos em componentes antigos e telas autorais; a remocao delas deve acontecer apenas depois de migrar esses pontos remanescentes.
 
 ### Itens candidatos
 
@@ -280,6 +286,7 @@ Status: fazer quando os componentes novos estiverem em uso.
 | `src/assets/hero.png` | Remover ou mover para `public/images` se for reaproveitado | Confirmar sem referencias |
 | `public/icons.svg` | Remover se for scaffold | Confirmar sem referencias |
 | `public/favicon.svg` | Substituir por favicon ORI | Criar/ter asset ORI aprovado |
+| `.ori-button-secondary`, `.ori-journey-action`, `.ori-chip`, `.ori-badge`, `.ori-pill` | Manter temporariamente | Ainda ha referencias ativas em componentes e telas; remover so apos migracao dedicada |
 
 ### Risco
 
@@ -298,10 +305,10 @@ Baixo-medio. `public/favicon.svg` e usado por `index.html:5`, entao precisa subs
 - [x] Fase 2: componentes base criados.
 - [x] Fase 3: Login, Redefinir, Sidebar e Portal migrados no primeiro nivel.
 - [x] Fase 4: Admin e status migrados no primeiro nivel.
-- [ ] Fase 5: Produtos e formularios migrados.
-- [ ] Fase 6: Paginas editoriais complexas revisadas.
-- [ ] Fase 7: legado visual limpo.
-- [ ] Build final executado.
+- [x] Fase 5: Produtos e formularios migrados no primeiro nivel.
+- [x] Fase 6: Paginas editoriais complexas revisadas no primeiro nivel.
+- [x] Fase 7: legado visual limpo no primeiro nivel.
+- [x] Build final executado.
 - [ ] Screenshots desktop/mobile das telas principais atualizados.
 
 ## Primeira tarefa concreta

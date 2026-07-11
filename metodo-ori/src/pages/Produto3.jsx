@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 
+import { OriBadge, OriButton, OriCard } from "../components/ui";
+
 function Produto3() {
   const finalLayers = [
     {
@@ -19,7 +21,7 @@ function Produto3() {
   return (
     <div className="ori-atmosphere ori-atmosphere-final relative overflow-hidden max-w-[1320px]">
       <section
-        className="ori-main-frame ori-hero-panel relative overflow-hidden rounded-[24px] md:rounded-[36px] p-4 pt-7 md:p-7 mb-5 cinematic-card min-h-[360px] md:min-h-[clamp(460px,calc(100vh-120px),580px)] flex items-center"
+        className="ori-main-frame ori-hero-panel relative overflow-hidden rounded-[24px] md:rounded-[36px] p-4 pt-7 md:p-7 mb-5 cinematic-card min-h-[360px] md:min-h-[clamp(430px,calc(100vh-170px),540px)] flex items-center"
         style={{
           background:
             "linear-gradient(135deg, rgba(18,9,10,0.88), rgba(5,2,2,0.96))",
@@ -143,7 +145,7 @@ function Produto3() {
           </p>
 
           <p
-            className="ori-type-reading-soft hidden text-sm md:mb-4 md:block md:text-[15px] max-w-[520px]"
+            className="ori-type-reading-soft hidden text-sm md:mb-3 md:block md:text-[15px] max-w-[520px]"
             style={{ color: "var(--text-soft)" }}
           >
             Depois de entender sua força e ver como ela aparece na imagem, o
@@ -152,7 +154,7 @@ function Produto3() {
           </p>
 
           <div
-            className="w-20 h-px mb-4"
+            className="w-20 h-px mb-3"
             style={{
               background:
                 "linear-gradient(to right, var(--gold-primary), transparent)",
@@ -160,7 +162,7 @@ function Produto3() {
           />
 
           <div
-            className="ori-card-teaser relative overflow-hidden rounded-[18px] p-3.5 md:rounded-[20px] md:p-4 max-w-[520px] mb-4"
+            className="ori-card-teaser relative overflow-hidden rounded-[18px] p-3.5 md:rounded-[20px] md:p-4 max-w-[520px] mb-3"
             data-state="sealed"
             style={{
               background:
@@ -181,7 +183,7 @@ function Produto3() {
               }}
             />
 
-            <div className="relative z-10 min-h-[96px] pr-8 flex flex-col justify-center md:min-h-[132px]">
+            <div className="relative z-10 min-h-[96px] pr-8 flex flex-col justify-center md:min-h-[112px]">
               <div
                 className="absolute right-0 top-0 text-lg leading-none"
                 style={{
@@ -220,15 +222,17 @@ function Produto3() {
             </div>
           </div>
 
-          <div className="hidden flex-wrap gap-2.5 mb-4 max-w-[540px] sm:flex">
+          <div className="hidden flex-wrap gap-2.5 mb-3 max-w-[540px] sm:flex">
             {[
               "Inventário do armário",
               "Cápsula funcional",
               "Fórmulas de look",
               "Estratégia de compra",
             ].map((item) => (
-              <div
+              <OriBadge
                 key={item}
+                tone="muted"
+                size="sm"
                 className="ori-chip px-3.5 py-1.5 text-[11px]"
                 data-state="soon"
                 style={{
@@ -240,13 +244,15 @@ function Produto3() {
                 }}
               >
                 {item}
-              </div>
+              </OriBadge>
             ))}
           </div>
 
-          <Link
+          <OriButton
+            as={Link}
             to="/produto-1"
-            className="ori-journey-action inline-flex justify-center px-5 py-2.5 rounded-full text-sm font-medium"
+            variant="primary"
+            className="px-5 py-2.5 text-sm"
             style={{
               background: "var(--gold-primary)",
               color: "#090506",
@@ -254,7 +260,7 @@ function Produto3() {
             }}
           >
             Ver minha primeira leitura
-          </Link>
+          </OriButton>
         </div>
       </section>
 
@@ -280,7 +286,11 @@ function Produto3() {
         </div>
 
         <div className="grid gap-3 lg:grid-cols-[1.1fr_0.9fr]">
-          <article
+          <OriCard
+            as="article"
+            variant="hero"
+            padding="none"
+            radius="md"
             className="ori-card-protagonist relative overflow-hidden rounded-[18px] p-3.5 md:rounded-[20px] md:p-5"
             style={{
               background:
@@ -312,12 +322,16 @@ function Produto3() {
             >
               {finalLayers[0].text}
             </p>
-          </article>
+          </OriCard>
 
           <div className="grid gap-2">
             {finalLayers.slice(1).map((item) => (
-          <article
+          <OriCard
+            as="article"
             key={item.title}
+            variant="teaser"
+            padding="none"
+            radius="md"
                 className="ori-card-teaser relative overflow-hidden rounded-[16px] p-3 md:rounded-[18px] md:p-3.5"
             style={{
               background:
@@ -349,7 +363,7 @@ function Produto3() {
             >
               {item.text}
             </p>
-          </article>
+          </OriCard>
             ))}
           </div>
         </div>

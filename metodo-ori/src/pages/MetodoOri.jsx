@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 
+import { OriBadge, OriButton, OriCard } from "../components/ui";
 import { FEATURES } from "../config/features";
 import { JOURNEY_LABELS } from "../content/journeyCopy";
 
@@ -268,7 +269,10 @@ function SectionShell({ layer, children }) {
 
 function ProductPhaseCard({ phase }) {
   return (
-    <div
+    <OriCard
+      variant="secondary"
+      padding="none"
+      radius="lg"
       className="ori-card-secondary rounded-[24px] p-4 md:p-5"
       style={{
         background:
@@ -280,7 +284,9 @@ function ProductPhaseCard({ phase }) {
       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <span
+            <OriBadge
+              tone="gold"
+              size="sm"
               className="inline-flex h-7 w-7 items-center justify-center rounded-full text-[10px]"
               style={{
                 background: "rgba(242,185,104,0.10)",
@@ -290,7 +296,7 @@ function ProductPhaseCard({ phase }) {
               }}
             >
               {phase.number}
-            </span>
+            </OriBadge>
 
             <p
               className="ori-type-system"
@@ -316,9 +322,11 @@ function ProductPhaseCard({ phase }) {
           </p>
         </div>
 
-        <Link
+        <OriButton
+          as={Link}
           to={phase.href}
-          className="ori-button-secondary inline-flex justify-center px-5 py-2.5 text-sm"
+          variant="secondary"
+          className="px-5 py-2.5 text-sm"
           style={{
             background: "rgba(242,185,104,0.09)",
             border: "1px solid rgba(242,185,104,0.15)",
@@ -327,7 +335,7 @@ function ProductPhaseCard({ phase }) {
           }}
         >
           {phase.cta}
-        </Link>
+        </OriButton>
       </div>
 
       <p
@@ -359,8 +367,10 @@ function ProductPhaseCard({ phase }) {
 
         <div className="grid gap-2 sm:grid-cols-2">
           {phase.delivers.slice(0, 4).map((item) => (
-            <span
+            <OriBadge
               key={item}
+              tone="muted"
+              size="sm"
               className="flex min-h-9 items-center rounded-[14px] px-3 py-2 text-[11px] leading-snug"
               style={{
                 background:
@@ -370,10 +380,12 @@ function ProductPhaseCard({ phase }) {
               }}
             >
               {item}
-            </span>
+            </OriBadge>
           ))}
           {phase.delivers.length > 4 && (
-            <span
+            <OriBadge
+              tone="gold"
+              size="sm"
               className="flex min-h-9 items-center rounded-[14px] px-3 py-2 text-[11px] leading-snug"
               style={{
                 background:
@@ -383,7 +395,7 @@ function ProductPhaseCard({ phase }) {
               }}
             >
               + {phase.delivers.length - 4} entregas guardadas para a etapa
-            </span>
+            </OriBadge>
           )}
         </div>
       </div>
@@ -406,13 +418,16 @@ function ProductPhaseCard({ phase }) {
           {phase.value}
         </p>
       </div>
-    </div>
+    </OriCard>
   );
 }
 
 function InfoPane({ title, text }) {
   return (
-    <div
+    <OriCard
+      variant="secondary"
+      padding="none"
+      radius="md"
       className="rounded-[18px] p-3.5"
       style={{
         background:
@@ -432,7 +447,7 @@ function InfoPane({ title, text }) {
       >
         {text}
       </p>
-    </div>
+    </OriCard>
   );
 }
 
@@ -542,8 +557,10 @@ function MetodoOriLayer({ activeLayer, activeProduct, setActiveProduct }) {
 
         <div className="flex flex-wrap gap-3 mb-7">
           {integrations.map((item) => (
-            <span
+            <OriBadge
               key={item}
+              tone="muted"
+              size="sm"
               className="ori-chip px-3 py-1.5 text-[11px]"
               data-state="revealed"
               style={{
@@ -553,7 +570,7 @@ function MetodoOriLayer({ activeLayer, activeProduct, setActiveProduct }) {
               }}
             >
               {item}
-            </span>
+            </OriBadge>
           ))}
         </div>
 
@@ -608,7 +625,10 @@ function MetodoOriLayer({ activeLayer, activeProduct, setActiveProduct }) {
 
         <div className="grid md:grid-cols-3 gap-3">
           {steps.map((step) => (
-            <div
+            <OriCard
+              variant="secondary"
+              padding="none"
+              radius="md"
               key={step.number}
               className="ori-card-secondary relative overflow-hidden rounded-[20px] p-4 min-h-[180px]"
               style={{
@@ -617,7 +637,9 @@ function MetodoOriLayer({ activeLayer, activeProduct, setActiveProduct }) {
                 border: "1px solid rgba(242,185,104,0.095)",
               }}
             >
-              <div
+              <OriBadge
+                tone="gold"
+                size="md"
                 className="h-8 w-8 rounded-full flex items-center justify-center mb-4 text-[11px]"
                 style={{
                   background: "rgba(242,185,104,0.10)",
@@ -627,7 +649,7 @@ function MetodoOriLayer({ activeLayer, activeProduct, setActiveProduct }) {
                 }}
               >
                 {step.number}
-              </div>
+              </OriBadge>
 
               <h3
                 className="ori-type-revelation text-xl mb-3"
@@ -642,7 +664,7 @@ function MetodoOriLayer({ activeLayer, activeProduct, setActiveProduct }) {
               >
                 {step.text}
               </p>
-            </div>
+            </OriCard>
           ))}
         </div>
       </SectionShell>
@@ -770,7 +792,10 @@ function MetodoOriLayer({ activeLayer, activeProduct, setActiveProduct }) {
       <SectionShell layer={layer}>
         <div className="grid lg:grid-cols-3 gap-3 mb-5">
           {questions.map(([product, question, answer]) => (
-            <div
+            <OriCard
+              variant="secondary"
+              padding="none"
+              radius="md"
               key={product}
               className="ori-card-secondary rounded-[18px] p-4"
               style={{
@@ -797,7 +822,7 @@ function MetodoOriLayer({ activeLayer, activeProduct, setActiveProduct }) {
               >
                 {answer}
               </p>
-            </div>
+            </OriCard>
           ))}
         </div>
 
@@ -842,8 +867,10 @@ function MetodoOriLayer({ activeLayer, activeProduct, setActiveProduct }) {
             </h3>
             <div className="flex flex-wrap gap-2">
               {notDo.map((item) => (
-                <span
+                <OriBadge
                   key={item}
+                  tone="muted"
+                  size="sm"
                   className="ori-chip px-3 py-1.5 text-[11px]"
                   data-state="sealed"
                   style={{
@@ -853,7 +880,7 @@ function MetodoOriLayer({ activeLayer, activeProduct, setActiveProduct }) {
                   }}
                 >
                   {item}
-                </span>
+                </OriBadge>
               ))}
             </div>
           </div>

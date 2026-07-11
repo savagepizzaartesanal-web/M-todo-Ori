@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { OriBadge } from "./ui";
+
 const themeStyles = {
   gold: {
     glow: "rgba(242,185,104,0.14)",
@@ -273,7 +275,9 @@ function ReportAccordion({
                 )}
 
                 <div className="mb-4">
-                  <span
+                  <OriBadge
+                    tone="gold"
+                    size="sm"
                     className="inline-flex items-center rounded-full px-3 py-1.5 uppercase text-[8px] md:text-[9px] tracking-[0.24em]"
                     style={{
                       color: isOpen
@@ -293,7 +297,7 @@ function ReportAccordion({
                     }}
                   >
                     {isOpen ? "Camada ativa" : "Camada disponível"}
-                  </span>
+                  </OriBadge>
                 </div>
 
                 <div

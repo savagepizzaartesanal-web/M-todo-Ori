@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import SyncNotice from "../components/SyncNotice";
+import { OriBadge, OriButton, OriCard } from "../components/ui";
 import { archetypeImages } from "../data/archetypeImages";
 import { archetypeThemes } from "../data/archetypeThemes";
 import { getReportVisualGuide } from "../data/reportVisualGuides";
@@ -369,22 +370,25 @@ function Produto1Relatorio() {
         <SyncNotice message={syncNotice} />
 
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-          <Link
+          <OriButton
+            as={Link}
             to="/produto-1/leitura"
-            className="ori-button-secondary inline-flex rounded-full px-5 py-2.5 text-sm"
+            variant="secondary"
+            className="px-5 py-2.5 text-sm"
             style={{ color: "var(--gold-primary)" }}
           >
             ← Voltar para leitura
-          </Link>
+          </OriButton>
 
-          <button
+          <OriButton
             type="button"
             onClick={handleDownloadPdf}
             disabled={downloadingPdf}
-            className="ori-button-primary inline-flex rounded-full px-5 py-2.5 text-sm disabled:cursor-wait disabled:opacity-70"
+            variant="primary"
+            className="px-5 py-2.5 text-sm"
           >
             {downloadingPdf ? "Preparando PDF..." : "Baixar PDF"}
-          </button>
+          </OriButton>
         </div>
 
         {downloadingPdf && (
@@ -467,8 +471,10 @@ function Produto1Relatorio() {
                 {[report.combinacao, report.formula, report.email]
                   .filter(Boolean)
                   .map((item) => (
-                    <span
+                    <OriBadge
                       key={item}
+                      tone="gold"
+                      size="md"
                       className="ori-chip px-5 py-2.5 text-[13px]"
                       style={{
                         background: "rgba(242,185,104,0.060)",
@@ -477,7 +483,7 @@ function Produto1Relatorio() {
                       }}
                     >
                       {item}
-                    </span>
+                    </OriBadge>
                   ))}
               </div>
             </div>
@@ -499,8 +505,11 @@ function Produto1Relatorio() {
         {perfilItems.length > 0 && (
           <section className="mt-5 grid gap-3 md:grid-cols-3">
             {perfilItems.map(([label, value]) => (
-              <div
+              <OriCard
                 key={label}
+                variant="secondary"
+                padding="none"
+                radius="md"
                 className="ori-card-secondary rounded-[22px] p-4 md:p-5"
                 style={{
                   background: "rgba(255,255,255,0.024)",
@@ -516,7 +525,7 @@ function Produto1Relatorio() {
                 >
                   {value}
                 </p>
-              </div>
+              </OriCard>
             ))}
           </section>
         )}
@@ -524,8 +533,11 @@ function Produto1Relatorio() {
         {report.highlights?.length > 0 && (
           <section className="mt-5 grid gap-3 md:grid-cols-2">
             {report.highlights.map((item) => (
-              <div
+              <OriCard
                 key={item.label}
+                variant="secondary"
+                padding="none"
+                radius="md"
                 className="ori-card-secondary rounded-[24px] p-5"
                 style={{
                   background: "rgba(242,185,104,0.045)",
@@ -541,15 +553,19 @@ function Produto1Relatorio() {
                 >
                   {item.text}
                 </p>
-              </div>
+              </OriCard>
             ))}
           </section>
         )}
 
         <section className="mt-6 grid gap-4">
           {report.sections?.map((section) => (
-            <article
+            <OriCard
+              as="article"
               key={section.id}
+              variant="secondary"
+              padding="none"
+              radius="lg"
               className="ori-main-frame ori-card-secondary rounded-[26px] p-5 md:rounded-[32px] md:p-7"
               style={{
                 background:
@@ -558,7 +574,9 @@ function Produto1Relatorio() {
               }}
             >
               <div className="mb-4 flex items-center gap-4">
-                <span
+                <OriBadge
+                  tone="gold"
+                  size="md"
                   className="inline-flex h-9 w-9 items-center justify-center rounded-full text-xs"
                   style={{
                     background: "rgba(242,185,104,0.10)",
@@ -567,7 +585,7 @@ function Produto1Relatorio() {
                   }}
                 >
                   {section.label}
-                </span>
+                </OriBadge>
                 <h2
                   className="ori-type-revelation text-2xl md:text-3xl"
                   style={{ color: "var(--gold-primary)", fontWeight: 620 }}
@@ -589,7 +607,7 @@ function Produto1Relatorio() {
               </div>
 
               <ReportSectionVisual sectionId={section.id} guide={visualGuide} />
-            </article>
+            </OriCard>
           ))}
         </section>
 

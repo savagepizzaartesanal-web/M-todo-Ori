@@ -9,6 +9,7 @@ import {
   saveDailyOracleCard,
 } from "../services/api";
 import SyncNotice from "../components/SyncNotice";
+import { OriButton, OriCard } from "../components/ui";
 
 const ORACLE_HERO_IMAGE = "/images/heroes/hero-oraculo-ori-v2.png";
 const LEGACY_STORAGE_KEY = "ori_produto_1_quiz";
@@ -689,16 +690,20 @@ function OraculoOri() {
               : "A carta diária abre depois que sua primeira leitura estiver pronta."}
           </p>
           <div className="mt-5 flex flex-wrap gap-2.5">
-            <Link
+            <OriButton
+              as={Link}
               to="/espelho-ori"
-              className="ori-button-secondary inline-flex min-h-11 items-center justify-center rounded-full px-5 text-sm"
+              variant="secondary"
+              className="min-h-11 px-5 text-sm"
             >
               Voltar ao Espelho
-            </Link>
+            </OriButton>
             {!hasResult && (
-              <Link
+              <OriButton
+                as={Link}
                 to="/produto-1"
-                className="inline-flex min-h-11 items-center justify-center rounded-full px-5 text-sm"
+                variant="gradient"
+                className="min-h-11 px-5 text-sm"
                 style={{
                   background: "linear-gradient(135deg, #f2b968, #d28746)",
                   color: "#160807",
@@ -706,7 +711,7 @@ function OraculoOri() {
                 }}
               >
                 Começar primeira leitura
-              </Link>
+              </OriButton>
             )}
           </div>
         </div>
@@ -835,11 +840,12 @@ function OraculoOri() {
             </button>
 
             {hasResult && (
-              <button
+              <OriButton
                 type="button"
+                variant={hasShuffled && !oracleLockedToday ? "gradient" : "secondary"}
                 disabled={oracleLockedToday || isShuffling}
                 onClick={handleOracleAction}
-                className="mt-3 inline-flex min-h-11 items-center justify-center rounded-full px-5 text-sm disabled:opacity-55 md:min-h-12 md:px-6"
+                className="mt-3 min-h-11 px-5 text-sm md:min-h-12 md:px-6"
                 style={{
                   background: oracleLockedToday
                     ? "rgba(255,255,255,0.026)"
@@ -860,7 +866,7 @@ function OraculoOri() {
                     : hasShuffled
                       ? "Abrir carta do dia"
                       : "Embaralhar cartas"}
-              </button>
+              </OriButton>
             )}
           </div>
 
@@ -915,22 +921,22 @@ function OraculoOri() {
             </blockquote>
 
             <div className="mt-4 grid gap-3 md:grid-cols-2">
-              <div className="rounded-[18px] p-3.5" style={{ border: "1px solid rgba(242,185,104,0.08)" }}>
+              <OriCard variant="secondary" padding="none" radius="md" className="rounded-[18px] p-3.5" style={{ border: "1px solid rgba(242,185,104,0.08)" }}>
                 <Eyebrow className="mb-2">Como observar hoje</Eyebrow>
                 <p className="text-sm leading-relaxed" style={{ color: colors.text }}>
                   {selectedCard
                     ? selectedCard.observe
                     : "Quando a carta abrir, ela aponta um gesto simples para acompanhar o dia."}
                 </p>
-              </div>
-              <div className="rounded-[18px] p-3.5" style={{ border: "1px solid rgba(242,185,104,0.08)" }}>
+              </OriCard>
+              <OriCard variant="secondary" padding="none" radius="md" className="rounded-[18px] p-3.5" style={{ border: "1px solid rgba(242,185,104,0.08)" }}>
                 <Eyebrow className="mb-2">O que evitar hoje</Eyebrow>
                 <p className="text-sm leading-relaxed" style={{ color: colors.text }}>
                   {selectedCard
                     ? selectedCard.avoid
                     : "Evite forçar resposta antes de a leitura mostrar o ponto certo."}
                 </p>
-              </div>
+              </OriCard>
             </div>
           </div>
         </div>
@@ -962,8 +968,12 @@ function OraculoOri() {
 
         <div className="grid gap-3 md:grid-cols-3">
           {personalReflection.map((item) => (
-            <article
+            <OriCard
+              as="article"
               key={item.label}
+              variant="secondary"
+              padding="none"
+              radius="md"
               className="rounded-[20px] p-4"
               style={{
                 background: "rgba(255,255,255,0.022)",
@@ -984,7 +994,7 @@ function OraculoOri() {
               <p className="mt-3 text-sm leading-relaxed" style={{ color: colors.text }}>
                 {item.text}
               </p>
-            </article>
+            </OriCard>
           ))}
         </div>
       </section>
