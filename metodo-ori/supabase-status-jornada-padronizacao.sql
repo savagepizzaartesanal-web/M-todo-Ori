@@ -10,8 +10,9 @@ set status_jornada = case status_jornada
   when 'Produto 1 concluído' then 'Código das Deusas concluído'
   when 'Código das Deusas reiniciado' then 'Código das Deusas em andamento'
   when 'Produto 2 liberado' then 'Dossiê ORI liberado'
-  when 'Dossiê enviado' then 'Dossiê ORI publicado'
+  when 'Dossiê enviado' then 'Dossiê ORI em análise'
   when 'Produto 3 liberado' then 'Código Final liberado'
+  when 'Codigo Final liberado' then 'Código Final liberado'
   when 'Codigo Final em analise' then 'Código Final em análise'
   when 'Codigo Final publicado' then 'Código Final publicado'
   when 'Finalizado' then 'Jornada finalizada'
@@ -26,6 +27,7 @@ where status_jornada in (
   'Produto 2 liberado',
   'Dossiê enviado',
   'Produto 3 liberado',
+  'Codigo Final liberado',
   'Codigo Final em analise',
   'Codigo Final publicado',
   'Finalizado'

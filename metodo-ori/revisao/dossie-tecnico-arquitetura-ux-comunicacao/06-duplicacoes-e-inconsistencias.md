@@ -116,18 +116,8 @@
 ## Inconsistências de nomenclatura
 
 - `produto_1_liberado` existe mas Produto 1 é tratado como disponível por padrão quando a flag é `null` ou ausente.
-- `status_jornada` usa textos variados:
-  - "Produto 1"
-  - "Cadastro recebido"
-  - "Perfil criado"
-  - "Código das Deusas concluído"
-  - "Código das Deusas reiniciado"
-  - "Produto 1 concluído"
-  - "Dossiê ORI em análise"
-  - "Dossiê ORI publicado"
-  - "Dossiê enviado"
-  - "Finalizado"
-- Admin usa "Código das Deusas concluído" em um arquivo e "Produto 1 concluído" em outro.
+- `status_jornada` agora deve usar apenas a lista oficial centralizada em `backend/app/constants/journey_status.py`, `metodo-ori/src/constants/journeyStatus.js` e na constraint de `metodo-ori/supabase-status-jornada-padronizacao.sql`.
+- Valores legados como "Produto 1", "Perfil criado", "Produto 1 concluído", "Código das Deusas reiniciado", "Dossiê enviado", "Codigo Final em analise" e "Finalizado" devem ser tratados somente pela migração de padronização.
 - `entradaOri` no schema de jornada usa camelCase em Python/Pydantic, enquanto banco usa `perfil_onboarding_concluido`.
 - Produto 2 usa `dossie`, `diagnosticos`, `analise_preliminar`, `ia_rascunho`; para comunicação externa, todos parecem "Dossiê ORI", mas são fases internas diferentes.
 

@@ -80,9 +80,9 @@ add column if not exists produto_3_liberado boolean not null default false;
 
 Status de jornada sugeridos:
 
-- `Codigo Final liberado`
-- `Codigo Final em analise`
-- `Codigo Final publicado`
+- `Código Final liberado`
+- `Código Final em análise`
+- `Código Final publicado`
 
 ## 3. RLS E Protecao
 
@@ -599,7 +599,7 @@ Regras:
 - Define `status = 'em_analise'`.
 - Define `enviado_em`.
 - Gera `analise_preliminar`.
-- Atualiza `clientes.status_jornada = 'Codigo Final em analise'`.
+- Atualiza `clientes.status_jornada = 'Código Final em análise'`.
 
 ## 12. Endpoints Admin
 
@@ -653,7 +653,7 @@ Efeitos:
 - Define `status = 'publicado'`.
 - Define `publicado_em`.
 - Define `ia_revisado_em`.
-- Atualiza `clientes.status_jornada = 'Codigo Final publicado'`.
+- Atualiza `clientes.status_jornada = 'Código Final publicado'`.
 
 ```txt
 POST /api/admin/produto-3/{cliente_id}/despublicar
@@ -664,7 +664,7 @@ Efeitos:
 - Volta `status = 'em_analise'`.
 - Limpa `publicado_em`.
 - Mantem diagnosticos/capsula para revisão.
-- Atualiza `clientes.status_jornada = 'Codigo Final em analise'`.
+- Atualiza `clientes.status_jornada = 'Código Final em análise'`.
 
 ## 13. Serviço Backend
 
@@ -789,4 +789,3 @@ Possível evolução futura:
 - Normalizar lacunas em `produto_3_lacunas`.
 
 Mas isso só vale quando o produto estiver estável e houver necessidade real de filtros, métricas ou relatórios avançados.
-

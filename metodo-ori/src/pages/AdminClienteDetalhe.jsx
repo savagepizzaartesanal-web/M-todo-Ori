@@ -20,6 +20,11 @@ import {
   FEEDBACK_LABELS,
   getFeedbackBridge,
 } from "../utils/feedbackInsights";
+import {
+  getBaseJourneyStatus,
+  getStatusAfterProduto2AccessChange,
+  getStatusAfterProduto3AccessChange,
+} from "../utils/journeyStatus";
 import { OriBadge, OriButton, OriCard, OriField } from "../components/ui";
 
 function AdminClienteDetalhe() {
@@ -215,12 +220,7 @@ function AdminClienteDetalhe() {
     );
   }
 
-  const getBaseJourneyStatus = () => {
-    if (cliente.resultado) return JOURNEY_STATUS.CODIGO_DAS_DEUSAS_CONCLUIDO;
-    if (cliente.perfil_onboarding_concluido) return JOURNEY_STATUS.ENTRADA_ORI_CONCLUIDA;
-    return JOURNEY_STATUS.CADASTRO_RECEBIDO;
-  };
-  const etapaAtual = cliente.status_jornada || getBaseJourneyStatus();
+  const etapaAtual = cliente.status_jornada || getBaseJourneyStatus(cliente);
 
   const timeline = [
     {
@@ -1428,9 +1428,10 @@ function AdminClienteDetalhe() {
               onClick={() =>
                 updateCliente({
                   produto_2_liberado: !cliente.produto_2_liberado,
-                  status_jornada: !cliente.produto_2_liberado
-                    ? JOURNEY_STATUS.DOSSIE_ORI_LIBERADO
-                    : getBaseJourneyStatus(),
+                  status_jornada: getStatusAfterProduto2AccessChange(
+                    cliente,
+                    !cliente.produto_2_liberado,
+                  ),
                 }, cliente.produto_2_liberado
                   ? "Acesso ao Dossiê ORI removido"
                   : "Dossiê ORI liberado")
@@ -1460,11 +1461,10 @@ function AdminClienteDetalhe() {
               onClick={() =>
                 updateCliente({
                   produto_3_liberado: !cliente.produto_3_liberado,
-                  status_jornada: !cliente.produto_3_liberado
-                    ? JOURNEY_STATUS.CODIGO_FINAL_LIBERADO
-                    : cliente.produto_2_liberado
-                      ? JOURNEY_STATUS.DOSSIE_ORI_LIBERADO
-                      : getBaseJourneyStatus(),
+                  status_jornada: getStatusAfterProduto3AccessChange(
+                    cliente,
+                    !cliente.produto_3_liberado,
+                  ),
                 }, cliente.produto_3_liberado
                   ? "Acesso ao Código Final removido"
                   : "Código Final liberado")

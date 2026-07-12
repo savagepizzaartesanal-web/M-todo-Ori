@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
-import { JOURNEY_STATUS } from "../constants/journeyStatus";
 import { getAdminClientes, updateAdminCliente } from "../services/api";
 import { getAdminClientPriority } from "../utils/adminClientPriority";
 import {
@@ -9,6 +8,10 @@ import {
   getFeedbackBridge,
   getFeedbackInsight,
 } from "../utils/feedbackInsights";
+import {
+  getStatusAfterProduto2AccessChange,
+  getStatusAfterProduto3AccessChange,
+} from "../utils/journeyStatus";
 import { OriBadge, OriButton, OriCard, OriField } from "../components/ui";
 
 function AdminClientes() {
@@ -68,20 +71,12 @@ function AdminClientes() {
     setUpdatingId(null);
   };
 
-  const getBaseJourneyStatus = (cliente) => {
-    if (cliente.resultado) return JOURNEY_STATUS.CODIGO_DAS_DEUSAS_CONCLUIDO;
-    if (cliente.perfil_onboarding_concluido) return JOURNEY_STATUS.ENTRADA_ORI_CONCLUIDA;
-    return JOURNEY_STATUS.CADASTRO_RECEBIDO;
-  };
-
   const toggleProduto2 = async (cliente) => {
     const novoValor = !cliente.produto_2_liberado;
 
     await updateCliente(cliente, {
       produto_2_liberado: novoValor,
-      status_jornada: novoValor
-        ? JOURNEY_STATUS.DOSSIE_ORI_LIBERADO
-        : getBaseJourneyStatus(cliente),
+      status_jornada: getStatusAfterProduto2AccessChange(cliente, novoValor),
     });
   };
 
@@ -90,11 +85,7 @@ function AdminClientes() {
 
     await updateCliente(cliente, {
       produto_3_liberado: novoValor,
-      status_jornada: novoValor
-        ? JOURNEY_STATUS.CODIGO_FINAL_LIBERADO
-        : cliente.produto_2_liberado
-          ? JOURNEY_STATUS.DOSSIE_ORI_LIBERADO
-          : getBaseJourneyStatus(cliente),
+      status_jornada: getStatusAfterProduto3AccessChange(cliente, novoValor),
     });
   };
 

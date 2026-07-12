@@ -6,6 +6,7 @@ import httpx
 from fastapi import HTTPException, status
 
 from app.constants import journey_status
+from app.constants.journey_status import JourneyStatus
 from app.schemas.auth import CurrentUser
 from app.schemas.produto2 import (
     Produto2AdminResponse,
@@ -405,7 +406,7 @@ async def patch_produto2_row(
 async def update_cliente_status_jornada(
     *,
     cliente_id: str,
-    status_jornada: str,
+    status_jornada: JourneyStatus,
     current_user: CurrentUser,
 ) -> None:
     supabase_url, _ = get_supabase_config()

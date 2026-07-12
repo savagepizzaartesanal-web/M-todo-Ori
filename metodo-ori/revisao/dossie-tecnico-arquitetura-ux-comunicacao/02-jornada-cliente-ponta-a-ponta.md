@@ -7,7 +7,7 @@
 - Opcional: recuperação de senha.
 - Regra que desbloqueia próxima etapa:
   - Supabase Auth cria ou valida a sessão.
-  - No cadastro, o frontend faz upsert em `public.clientes` com `user_id`, `nome`, `email`, `admin=false`, `produto_1_liberado=true`, `produto_2_liberado=false`, `produto_3_liberado=false`, `status_jornada="Código das Deusas liberado"`.
+  - No cadastro, o frontend faz upsert em `public.clientes` com `user_id`, `nome`, `email`, `admin=false`, `produto_1_liberado=true`, `produto_2_liberado=false`, `produto_3_liberado=false`, `status_jornada="Entrada ORI em andamento"`.
   - `ProtectedRoute` permite entrada se houver sessão; se onboarding não estiver concluído, redireciona para `/entrada-ori`.
 - Dados reaproveitados:
   - `user_metadata.nome`, `auth.user.email` e linha `clientes` alimentam onboarding e portal.
@@ -23,7 +23,7 @@
   - `mainPainCustom`, visível somente quando `mainPain === "Quero escrever com minhas palavras"`.
 - Regra que desbloqueia próxima etapa:
   - `canProceed` exige todos os campos required visíveis preenchidos.
-  - No passo `done`, o upsert em `clientes` salva `perfil_onboarding`, `perfil_onboarding_concluido=true`, `perfil_onboarding_concluido_em`, `principal_dor`, `objetivo_principal`, `momento_atual`, `status_jornada="Perfil ORI criado"` e `produto_1_liberado=true`.
+  - No passo `done`, o upsert em `clientes` salva `perfil_onboarding`, `perfil_onboarding_concluido=true`, `perfil_onboarding_concluido_em`, `principal_dor`, `objetivo_principal`, `momento_atual`, `status_jornada="Entrada ORI concluída"` e `produto_1_liberado=true`.
   - Depois disso navega para `/portal`.
 - Dados reaproveitados:
   - Identidade do Auth e `clientes.nome/email`.
