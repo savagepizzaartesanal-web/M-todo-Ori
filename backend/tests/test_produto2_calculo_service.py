@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 
 from app.services.produto2_calculo_service import (
+    apply_ancestry_modulation_to_kibbe,
     build_produto2_analise_preliminar,
     calculate_kibbe,
     calculate_patton,
@@ -37,7 +38,7 @@ def build_kibbe_insumos(letter: str, ancestry: str) -> dict:
 
 
 class Produto2CalculoServiceTest(unittest.TestCase):
-    def test_kibbe_matches_spreadsheet_structural_count_without_ancestry_bonus(self):
+    def test_kibbe_keeps_structural_scores_and_applies_african_modulation(self):
         result = calculate_kibbe(
             build_kibbe_insumos(
                 "C",
@@ -55,10 +56,19 @@ class Produto2CalculoServiceTest(unittest.TestCase):
                 "romantic": 0,
             },
         )
-        self.assertEqual(result["pontuacoes_moduladas"], result["pontuacoes_estruturais"])
+        self.assertEqual(
+            result["pontuacoes_moduladas"],
+            {
+                "dramatic": 0,
+                "natural": 2,
+                "classic": 14,
+                "gamine": 0,
+                "romantic": 2,
+            },
+        )
         self.assertEqual(result["pontuacoes"], result["pontuacoes_moduladas"])
 
-    def test_kibbe_ignores_indigenous_ancestry_to_match_spreadsheet(self):
+    def test_kibbe_applies_indigenous_modulation(self):
         result = calculate_kibbe(
             build_kibbe_insumos(
                 "C",
@@ -67,14 +77,38 @@ class Produto2CalculoServiceTest(unittest.TestCase):
         )
 
         self.assertEqual(result["pontuacoes_estruturais"]["classic"], 14)
-        self.assertEqual(result["pontuacoes_moduladas"], result["pontuacoes_estruturais"])
+        self.assertEqual(result["pontuacoes_moduladas"]["natural"], 2)
+        self.assertEqual(result["pontuacoes_moduladas"]["gamine"], 1)
 
-    def test_kibbe_ignores_european_and_mixed_ancestry_to_match_spreadsheet(self):
+    def test_kibbe_applies_european_and_mixed_modulation(self):
         european = calculate_kibbe(build_kibbe_insumos("C", "Predominantemente europeia"))
         mixed = calculate_kibbe(build_kibbe_insumos("C", "Mista"))
 
-        self.assertEqual(european["pontuacoes_moduladas"]["dramatic"], 0)
-        self.assertEqual(mixed["pontuacoes_moduladas"]["dramatic"], 0)
+        self.assertEqual(european["pontuacoes_moduladas"]["dramatic"], 1)
+        self.assertEqual(mixed["pontuacoes_moduladas"]["dramatic"], 1)
+
+    def test_kibbe_ancestry_modulation_rules_can_accumulate(self):
+        result = apply_ancestry_modulation_to_kibbe(
+            {
+                "dramatic": 0,
+                "natural": 0,
+                "classic": 0,
+                "gamine": 0,
+                "romantic": 0,
+            },
+            "Mista, predominantemente africana e predominantemente indígena",
+        )
+
+        self.assertEqual(
+            result,
+            {
+                "dramatic": 1,
+                "natural": 2,
+                "classic": 0,
+                "gamine": 1,
+                "romantic": 2,
+            },
+        )
 
     def test_kibbe_does_not_modulate_unknown_ancestry(self):
         result = calculate_kibbe(build_kibbe_insumos("C", "Não sei identificar"))
@@ -117,6 +151,14 @@ class Produto2CalculoServiceTest(unittest.TestCase):
                 expected = fixture["expected"]
 
                 self.assertEqual(analysis["kibbe"]["pontuacoes"], expected["kibbe_scores"])
+                self.assertEqual(
+                    analysis["kibbe"]["pontuacoes_moduladas"],
+                    expected["kibbe_scores"],
+                )
+                self.assertEqual(
+                    analysis["kibbe"]["pontuacoes_estruturais"],
+                    expected["kibbe_structural_scores"],
+                )
                 self.assertEqual(analysis["kibbe"]["sugestao"], expected["kibbe"])
                 self.assertEqual(
                     analysis["coloracao"]["sugestao_cartela_sazonal"],

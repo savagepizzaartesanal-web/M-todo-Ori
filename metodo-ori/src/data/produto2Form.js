@@ -91,82 +91,202 @@ const field = (path, label, type = "text", options = [], meta = {}) => ({
 const radio = (path, label, options, meta = {}) =>
   field(path, label, "radio", options, meta);
 
-const visualReferencePath = (page) =>
-  `/images/produto-2/forms-referencias/form-page-${String(page).padStart(2, "0")}.jpg`;
-
-const optionReferencePath = (fieldPath, index) =>
-  `/images/produto-2/opcoes-referencias/${fieldPath
-    .replaceAll(".", "-")
-    .replaceAll("_", "-")}-${"abcdef"[index]}.jpg`;
+const optionReferencePath = (fileName) =>
+  `/images/produto-2/opcoes-referencias/${fileName}`;
 
 const visualReferencesByPath = {
-  "estrutura_corporal.linha_vertical": visualReferencePath(5),
-  "estrutura_corporal.ombros": visualReferencePath(6),
-  "estrutura_corporal.bracos_pernas": visualReferencePath(7),
-  "estrutura_corporal.maos_pes": visualReferencePath(8),
-  "estrutura_corporal.forma_geral": visualReferencePath(9),
-  "estrutura_corporal.busto_tronco": visualReferencePath(10),
-  "estrutura_corporal.cintura": visualReferencePath(11),
-  "estrutura_corporal.quadris": visualReferencePath(12),
-  "estrutura_corporal.ganho_peso": visualReferencePath(13),
-  "estrutura_corporal.mandibula": visualReferencePath(14),
-  "estrutura_corporal.nariz": visualReferencePath(15),
-  "estrutura_corporal.macas_rosto": visualReferencePath(16),
-  "estrutura_corporal.olhos": visualReferencePath(17),
-  "estrutura_corporal.labios": visualReferencePath(18),
-  "estrutura_corporal.ancestralidade_fisica": visualReferencePath(19),
-  "coloracao.reacao_sol": visualReferencePath(20),
-  "coloracao.metais": visualReferencePath(21),
-  "coloracao.profundidade": visualReferencePath(22),
-  "coloracao.intensidade": visualReferencePath(23),
-  "coloracao.contraste_preto_branco": visualReferencePath(24),
-  "coloracao.azul_laranja": visualReferencePath(25),
-  "coloracao.veias_subtom": visualReferencePath(25),
-  "coloracao.batons": visualReferencePath(26),
-  "coloracao.nude": visualReferencePath(27),
-  "coloracao.cores_vibrantes": visualReferencePath(28),
-  "coloracao.gengiva_labios": visualReferencePath(28),
-  "coloracao.laranja_vibrante": visualReferencePath(29),
-  "coloracao.brilho_texturas": visualReferencePath(30),
-  "patton.tom_fundo": visualReferencePath(31),
-  "patton.reflexo_sol": visualReferencePath(32),
-  "cabelo.curvatura": visualReferencePath(33),
-  "cabelo.espessura_fio": visualReferencePath(33),
-  "cabelo.porosidade_absorcao": visualReferencePath(33),
-  "cabelo.densidade": visualReferencePath(34),
-  "cabelo.relacao_volume": visualReferencePath(34),
-  "cabelo.saude_quimica": visualReferencePath(35),
-  "cabelo.day_after": visualReferencePath(35),
-  "cabelo.tempo_rotina": visualReferencePath(35),
-  "cabelo.cabelo_dos_sonhos": visualReferencePath(36),
-  "cabelo.percepcao_moldura": visualReferencePath(36),
-  "essencia.deusa_principal": visualReferencePath(36),
-  "essencia.deusa_auxiliar": visualReferencePath(37),
-  "essencia.identificacao_arquetipo_mesclado": visualReferencePath(37),
-  "desafio_imagem.dificuldade_atual": visualReferencePath(37),
-  espaco_telurica: visualReferencePath(38),
+  "cabelo.curvatura": optionReferencePath("cabelo-curvatura-referencia.png"),
 };
 
-const optionReferenceCountsByPath = {
-  "estrutura_corporal.linha_vertical": 5,
+const optionReferenceFilesByPath = {
+  "estrutura_corporal.linha_vertical": [
+    "estrutura-corporal-linha-vertical-a.jpg",
+    "estrutura-corporal-linha-vertical-b.jpg",
+    "estrutura-corporal-linha-vertical-c.jpg",
+    "estrutura-corporal-linha-vertical-d.jpg",
+    "estrutura-corporal-linha-vertical-e.jpg",
+  ],
+  "estrutura_corporal.ombros": [
+    "estrutura-corporal-ombros-a.jpg",
+    "estrutura-corporal-ombros-b.jpg",
+    "estrutura-corporal-ombros-c.jpg",
+    "estrutura-corporal-ombros-d.jpg",
+    "estrutura-corporal-ombros-e.jpg",
+  ],
+  "estrutura_corporal.bracos_pernas": [
+    "estrutura-corporal-bracos-pernas-a.jpg",
+    "estrutura-corporal-bracos-pernas-b.jpg",
+    "estrutura-corporal-bracos-pernas-c.jpg",
+    "estrutura-corporal-bracos-pernas-d.jpg",
+    "estrutura-corporal-bracos-pernas-e.webp",
+  ],
+  "estrutura_corporal.maos_pes": [
+    "estrutura-corporal-maos-pes-a.jpg",
+    "estrutura-corporal-maos-pes-b.jpg",
+    "estrutura-corporal-maos-pes-c.jpg",
+    "estrutura-corporal-maos-pes-d.jpg",
+    "estrutura-corporal-maos-pes-e.jpg",
+  ],
+  "estrutura_corporal.forma_geral": [
+    "estrutura-corporal-forma-geral-a.jpg",
+    "estrutura-corporal-forma-geral-b.jpg",
+    "estrutura-corporal-forma-geral-c.jpg",
+    "estrutura-corporal-forma-geral-d.jpg",
+    "estrutura-corporal-forma-geral-e.jpg",
+  ],
+  "estrutura_corporal.busto_tronco": [
+    "estrutura-corporal-busto-tronco-a.jpg",
+    "estrutura-corporal-busto-tronco-b.jpg",
+    "estrutura-corporal-busto-tronco-c.jpg",
+    "estrutura-corporal-busto-tronco-d.jpg",
+    "estrutura-corporal-busto-tronco-e.jpg",
+  ],
+  "estrutura_corporal.cintura": [
+    "estrutura-corporal-cintura-a.jpg",
+    "estrutura-corporal-cintura-b.jpg",
+    "estrutura-corporal-cintura-c.jpg",
+    "estrutura-corporal-cintura-d.jpg",
+    "estrutura-corporal-cintura-e.jpg",
+  ],
+  "estrutura_corporal.quadris": [
+    "estrutura-corporal-quadris-a.jpg",
+    "estrutura-corporal-quadris-b.jpg",
+    "estrutura-corporal-quadris-c.jpg",
+    "estrutura-corporal-quadris-d.jpg",
+    "estrutura-corporal-quadris-e.jpg",
+  ],
+  "estrutura_corporal.mandibula": [
+    "estrutura-corporal-mandibula-a.jpg",
+    "estrutura-corporal-mandibula-b.jpg",
+    "estrutura-corporal-mandibula-c.jpg",
+    "estrutura-corporal-mandibula-d.jpg",
+    "estrutura-corporal-mandibula-e.jpg",
+  ],
+  "estrutura_corporal.nariz": [
+    "estrutura-corporal-nariz-a.jpg",
+    "estrutura-corporal-nariz-b.jpg",
+    "estrutura-corporal-nariz-c.jpg",
+    "estrutura-corporal-nariz-d.jpg",
+    "estrutura-corporal-nariz-e.jpg",
+  ],
+  "estrutura_corporal.macas_rosto": [
+    "estrutura-corporal-macas-rosto-a.jpg",
+    "estrutura-corporal-macas-rosto-b.jpg",
+    "estrutura-corporal-macas-rosto-c.jpg",
+    "estrutura-corporal-macas-rosto-d.jpg",
+    "estrutura-corporal-macas-rosto-e.jpg",
+  ],
+  "estrutura_corporal.olhos": [
+    "estrutura-corporal-olhos-a.jpg",
+    "estrutura-corporal-olhos-b.jpg",
+    "estrutura-corporal-olhos-c.jpg",
+    "estrutura-corporal-olhos-d.jpg",
+    "estrutura-corporal-olhos-e.jpg",
+  ],
+  "estrutura_corporal.labios": [
+    "estrutura-corporal-labios-a.jpg",
+    "estrutura-corporal-labios-b.jpg",
+    "estrutura-corporal-labios-c.jpg",
+    "estrutura-corporal-labios-d.jpg",
+    "estrutura-corporal-labios-e.jpg",
+  ],
+  "estrutura_corporal.ancestralidade_fisica": [
+    "estrutura-corporal-ancestralidade-fisica-a.jpg",
+    "estrutura-corporal-ancestralidade-fisica-b.jpg",
+    "estrutura-corporal-ancestralidade-fisica-c.jpg",
+    "estrutura-corporal-ancestralidade-fisica-d.jpg",
+  ],
+  "coloracao.reacao_sol": [
+    "coloracao-reacao-sol-a.jpg",
+    "coloracao-reacao-sol-b.jpg",
+    "coloracao-reacao-sol-c.jpg",
+  ],
+  "coloracao.metais": [
+    "coloracao-metais-a.jpg",
+    "coloracao-metais-b.jpg",
+    "coloracao-metais-c.jpg",
+  ],
+  "coloracao.profundidade": [
+    "coloracao-profundidade-a.jpg",
+    "coloracao-profundidade-b.jpg",
+    "coloracao-profundidade-c.jpg",
+  ],
+  "coloracao.intensidade": [
+    "coloracao-intensidade-a.jpg",
+    "coloracao-intensidade-b.jpg",
+    "coloracao-intensidade-c.jpg",
+  ],
+  "coloracao.contraste_preto_branco": [
+    "coloracao-contraste-preto-branco-a.png",
+    "coloracao-contraste-preto-branco-b.png",
+    "coloracao-contraste-preto-branco-c.png",
+  ],
+  "coloracao.azul_laranja": [
+    "coloracao-azul-laranja-a.jpg",
+    "coloracao-azul-laranja-b.jpg",
+    "coloracao-azul-laranja-c.jpg",
+  ],
+  "coloracao.batons": [
+    "coloracao-batons-a.jpg",
+    "coloracao-batons-b.jpg",
+    "coloracao-batons-c.jpg",
+  ],
+  "coloracao.nude": [
+    "coloracao-nude-a.jpg",
+    "coloracao-nude-b.jpg",
+    "coloracao-nude-c.jpg",
+  ],
+  "coloracao.cores_vibrantes": [
+    "coloracao-cores-vibrantes-a.jpg",
+    "coloracao-cores-vibrantes-b.jpg",
+    "coloracao-cores-vibrantes-c.jpg",
+  ],
+  "coloracao.laranja_vibrante": [
+    "coloracao-laranja-vibrante-a.jpg",
+    "coloracao-laranja-vibrante-b.jpg",
+    "coloracao-laranja-vibrante-c.jpg",
+  ],
+  "coloracao.brilho_texturas": [
+    "coloracao-brilho-texturas-a.jpg",
+    "coloracao-brilho-texturas-b.jpg",
+    "coloracao-brilho-texturas-c.jpg",
+  ],
+  "patton.tom_fundo": [
+    "patton-tom-fundo-a.jpg",
+    "patton-tom-fundo-b.jpg",
+    "patton-tom-fundo-c.jpg",
+    "patton-tom-fundo-d.jpg",
+  ],
+  "patton.reflexo_sol": [
+    "patton-reflexo-sol-a.png",
+    "patton-reflexo-sol-b.jpg",
+    "patton-reflexo-sol-c.jpg",
+    "patton-reflexo-sol-d.png",
+    "patton-reflexo-sol-e.png",
+    "patton-reflexo-sol-f.png",
+  ],
+  "cabelo.relacao_volume": [
+    "cabelo-relacao-volume-a.jpg",
+    "cabelo-relacao-volume-b.jpg",
+    "cabelo-relacao-volume-c.jpg",
+  ],
 };
 
 const addVisualReferences = (steps) =>
   steps.map((step) => ({
     ...step,
     fields: step.fields.map((item) => {
-      const optionReferenceCount = optionReferenceCountsByPath[item.path] || 0;
+      const optionReferenceFiles = optionReferenceFilesByPath[item.path] || [];
 
       return {
         ...item,
-        referenceImage: item.type === "radio" ? undefined : visualReferencesByPath[item.path],
-        options: optionReferenceCount
+        referenceImage: visualReferencesByPath[item.path],
+        options: optionReferenceFiles.length
           ? item.options.map((option, index) => ({
               label: option,
-              image:
-                index < optionReferenceCount
-                  ? optionReferencePath(item.path, index)
-                  : undefined,
+              image: optionReferenceFiles[index]
+                ? optionReferencePath(optionReferenceFiles[index])
+                : undefined,
             }))
           : item.options,
       };

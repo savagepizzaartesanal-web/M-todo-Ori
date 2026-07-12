@@ -137,6 +137,33 @@ def _resolve_kibbe_suggestion(scores: dict[str, int]) -> tuple[str, list[str]]:
     return suggestion, leaders
 
 
+def apply_ancestry_modulation_to_kibbe(
+    structural_scores: dict[str, int],
+    ancestry: Any,
+) -> dict[str, int]:
+    """Aplica a modulacao de ancestralidade definida na planilha do Produto 2."""
+    scores = dict(structural_scores)
+    ancestry_text = _lower(ancestry)
+
+    if "predominantemente europeia" in ancestry_text or "mista" in ancestry_text:
+        scores["dramatic"] += 1
+    if (
+        "predominantemente africana" in ancestry_text
+        or "predominantemente indígena" in ancestry_text
+        or "predominantemente indigena" in ancestry_text
+    ):
+        scores["natural"] += 2
+    if (
+        "predominantemente indígena" in ancestry_text
+        or "predominantemente indigena" in ancestry_text
+    ):
+        scores["gamine"] += 1
+    if "predominantemente africana" in ancestry_text:
+        scores["romantic"] += 2
+
+    return scores
+
+
 def calculate_kibbe(insumos: dict[str, Any]) -> dict[str, Any]:
     estrutura = insumos.get("estrutura_corporal") or {}
     structural_scores = {key: 0 for key in KIBBE_KEYS.values()}
@@ -148,7 +175,10 @@ def calculate_kibbe(insumos: dict[str, Any]) -> dict[str, Any]:
             structural_scores[KIBBE_KEYS[letter]] += 1
             answered_count += 1
 
-    scores = dict(structural_scores)
+    scores = apply_ancestry_modulation_to_kibbe(
+        structural_scores,
+        estrutura.get("ancestralidade_fisica"),
+    )
     suggestion, leaders = _resolve_kibbe_suggestion(scores)
 
     return {
