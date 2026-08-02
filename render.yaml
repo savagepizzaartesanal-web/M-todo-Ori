@@ -10,7 +10,7 @@ services:
       - key: APP_ENV
         value: production
       - key: FRONTEND_ORIGINS
-        value: https://metodo-ori.vercel.app
+        value: https://metodo-ori.vercel.app,https://metodoori.teluricabeleza.com
       - key: PYTHON_VERSION
         value: 3.12.8
       - key: SUPABASE_URL
@@ -23,7 +23,5 @@ services:
         sync: false
       - key: GEMINI_MODEL
         value: gemini-2.5-flash-lite
-      - key: OPENAI_API_KEY
-        sync: false
       - key: OPENAI_MODEL
         value: gpt-4.1-mini
