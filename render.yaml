@@ -2,7 +2,7 @@ services:
   - type: web
     name: metodo-ori-api
     runtime: docker
-    plan: free
+    plan: starter
     dockerfilePath: backend/Dockerfile
     dockerContext: backend
     healthCheckPath: /health
