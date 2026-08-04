@@ -1,0 +1,56 @@
+name: Deploy Método Ori
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "metodo-ori/**"
+      - ".github/workflows/deploy-metodo-ori.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: metodo-ori-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      deployments: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: metodo-ori/package-lock.json
+
+      - name: Install dependencies
+        working-directory: metodo-ori
+        run: npm ci
+
+      - name: Build
+        working-directory: metodo-ori
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+        run: npm run build
+
+      - name: Validate build
+        run: test -f metodo-ori/dist/index.html
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy metodo-ori/dist --project-name=metodo-ori-telurica --branch=main
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
