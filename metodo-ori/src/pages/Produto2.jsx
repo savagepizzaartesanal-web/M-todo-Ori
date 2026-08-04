@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import SyncNotice from "../components/SyncNotice";
+import OriReadingFrame from "../components/reading/OriReadingFrame";
 import { OriBadge, OriButton, OriCard, OriField } from "../components/ui";
 import { JOURNEY_LABELS } from "../content/journeyCopy";
 import { supabase } from "../lib/supabaseClient";
@@ -18,6 +19,50 @@ import {
 const PRODUTO_2_PHOTOS_BUCKET = "produto-2-fotos";
 const PHOTO_UPLOAD_ERROR_NOTICE =
   "Não conseguimos enviar suas imagens agora. Tente novamente em instantes — se continuar assim, chame a gente.";
+const PRODUTO_2_LAYER_THEMES = {
+  base: {
+    symbol: "I",
+    accent: "var(--gold-primary)",
+    soft: "var(--gold-soft)",
+    glow: "rgba(242,185,104,0.18)",
+    aura: "radial-gradient(circle at 12% 12%, rgba(242,185,104,0.14), transparent 30%)",
+  },
+  corpo: {
+    symbol: "II",
+    accent: "#e8c188",
+    soft: "#f3d7aa",
+    glow: "rgba(232,193,136,0.18)",
+    aura: "radial-gradient(circle at 15% 18%, rgba(183,118,74,0.16), transparent 34%)",
+  },
+  cor: {
+    symbol: "III",
+    accent: "#d8c4ff",
+    soft: "#e7d9ff",
+    glow: "rgba(183,140,255,0.18)",
+    aura: "radial-gradient(circle at 18% 12%, rgba(183,140,255,0.14), transparent 34%)",
+  },
+  patton: {
+    symbol: "IV",
+    accent: "#f0b886",
+    soft: "#ffd2aa",
+    glow: "rgba(240,184,134,0.18)",
+    aura: "radial-gradient(circle at 16% 14%, rgba(209,114,76,0.14), transparent 34%)",
+  },
+  cabelo: {
+    symbol: "V",
+    accent: "#d6e0a1",
+    soft: "#edf2c5",
+    glow: "rgba(214,224,161,0.16)",
+    aura: "radial-gradient(circle at 14% 12%, rgba(146,167,98,0.13), transparent 34%)",
+  },
+  essencia: {
+    symbol: "VI",
+    accent: "#f2b968",
+    soft: "var(--gold-soft)",
+    glow: "rgba(242,185,104,0.20)",
+    aura: "radial-gradient(circle at 12% 12%, rgba(242,185,104,0.16), transparent 34%), radial-gradient(circle at 82% 18%, rgba(183,140,255,0.10), transparent 28%)",
+  },
+};
 
 function cloneInsumos(source = {}) {
   return {
@@ -55,6 +100,16 @@ function cloneInsumos(source = {}) {
 
 function getPathValue(source, path) {
   return path.split(".").reduce((current, key) => current?.[key], source) || "";
+}
+
+function hasFieldValue(value) {
+  if (Array.isArray(value)) return value.length > 0;
+  if (typeof value === "boolean") return value;
+  return Boolean(String(value || "").trim());
+}
+
+function countAnsweredFields(fields, source) {
+  return fields.filter((field) => hasFieldValue(getPathValue(source, field.path))).length;
 }
 
 function setPathValue(source, path, value) {
@@ -328,6 +383,8 @@ function FileUploadControl({ value, onChange, uploadScope, onNotice }) {
 
 function FieldControl({ field, value, onChange, uploadScope, onNotice }) {
   const lockedByContext = Boolean(field.lockedFromContext && value);
+  const hasImageOptions =
+    field.type === "radio" && field.options.some((option) => option?.image);
   const sharedStyle = {
     ...(lockedByContext ? { background: "rgba(242,185,104,0.055)" } : {}),
   };
@@ -343,8 +400,15 @@ function FieldControl({ field, value, onChange, uploadScope, onNotice }) {
       }
     >
       <span
-        className="ori-type-system mb-2 block text-[10px]"
-        style={{ color: "rgba(242,185,104,0.72)" }}
+        className={
+          field.type === "radio"
+            ? "ori-type-reading mb-2 block text-base leading-snug md:text-xl"
+            : "ori-type-system mb-2 block text-[10px]"
+        }
+        style={{
+          color: field.type === "radio" ? "var(--gold-primary)" : "rgba(242,185,104,0.72)",
+          fontWeight: field.type === "radio" ? 620 : undefined,
+        }}
       >
         {field.label}
       </span>
@@ -369,7 +433,7 @@ function FieldControl({ field, value, onChange, uploadScope, onNotice }) {
 
       {field.referenceImage ? (
         <figure
-          className="mb-3 overflow-hidden rounded-[16px]"
+          className="mb-3 overflow-hidden rounded-[16px] p-2"
           style={{
             background: "rgba(255,255,255,0.94)",
             border: "1px solid rgba(242,185,104,0.12)",
@@ -395,8 +459,8 @@ function FieldControl({ field, value, onChange, uploadScope, onNotice }) {
       ) : field.type === "radio" ? (
         <div
           className={
-            field.options.some((option) => option?.image)
-              ? "grid gap-3 md:grid-cols-2"
+            hasImageOptions
+              ? "grid gap-3 md:grid-cols-2 xl:grid-cols-3"
               : "grid gap-2.5"
           }
         >
@@ -413,7 +477,7 @@ function FieldControl({ field, value, onChange, uploadScope, onNotice }) {
                 onClick={() => onChange(optionLabel)}
                 className={
                   optionImage
-                    ? "overflow-hidden rounded-[16px] text-left text-sm transition-all"
+                    ? "group overflow-hidden rounded-[16px] text-left text-sm transition-all"
                     : "rounded-[14px] px-4 py-3.5 text-left text-sm transition-all"
                 }
                 style={{
@@ -426,11 +490,12 @@ function FieldControl({ field, value, onChange, uploadScope, onNotice }) {
                   color: selected ? "var(--gold-primary)" : "var(--text-soft)",
                   cursor: lockedByContext ? "not-allowed" : "pointer",
                   opacity: lockedByContext && !selected ? 0.45 : 1,
+                  boxShadow: selected ? "0 0 26px rgba(242,185,104,0.10)" : "none",
                 }}
               >
                 {optionImage ? (
                   <span
-                    className="block aspect-[16/9] w-full overflow-hidden"
+                    className="block aspect-[4/3] w-full overflow-hidden p-2"
                     style={{ background: "rgba(250,247,242,0.96)" }}
                   >
                     <img
@@ -438,11 +503,11 @@ function FieldControl({ field, value, onChange, uploadScope, onNotice }) {
                       alt={optionLabel}
                       loading="lazy"
                       decoding="async"
-                      className="h-full w-full object-contain"
+                      className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-[1.025]"
                     />
                   </span>
                 ) : null}
-                <span className={optionImage ? "block px-3 py-3" : "block"}>
+                <span className={optionImage ? "block px-3 py-3 leading-relaxed" : "block"}>
                   {optionLabel}
                 </span>
               </button>
@@ -725,7 +790,7 @@ function MissingProfileHint({ insumos }) {
   );
 }
 
-function Produto2() {
+function Produto2({ immersive = false }) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState("");
@@ -785,6 +850,43 @@ function Produto2() {
 
     return true;
   });
+  const visibleStepFields = useMemo(
+    () =>
+      visibleSteps.map((item) => ({
+        ...item,
+        visibleFields: item.fields.filter((field) => {
+          if (field.path.startsWith("patton.")) {
+            return pattonApplicable;
+          }
+
+          return true;
+        }),
+      })),
+    [visibleSteps, pattonApplicable],
+  );
+  const totalFieldCount = visibleStepFields.reduce(
+    (total, item) => total + item.visibleFields.length,
+    0,
+  );
+  const answeredFieldCount = visibleStepFields.reduce(
+    (total, item) => total + countAnsweredFields(item.visibleFields, insumos),
+    0,
+  );
+  const answeredLayerFields = countAnsweredFields(visibleFields, insumos);
+  const totalProgress = totalFieldCount
+    ? (answeredFieldCount / totalFieldCount) * 100
+    : 0;
+  const layerProgress = visibleFields.length
+    ? (answeredLayerFields / visibleFields.length) * 100
+    : 100;
+  const layerTheme = PRODUTO_2_LAYER_THEMES[step.id] || PRODUTO_2_LAYER_THEMES.base;
+  const progressDots = visibleStepFields.map((item, index) => ({
+    id: item.id,
+    active: index === activeStepIndex,
+    answered:
+      item.visibleFields.length > 0 &&
+      countAnsweredFields(item.visibleFields, insumos) === item.visibleFields.length,
+  }));
   const analysis = dossie?.analise_preliminar || {};
   const publishedSections = useMemo(() => {
     const value = dossie?.dossie || {};
@@ -876,9 +978,43 @@ function Produto2() {
   const heroCard = renderHeroCard();
 
   return (
-    <div className="ori-atmosphere ori-atmosphere-dossie relative max-w-[1320px] overflow-hidden">
+    <div
+      className={
+        immersive
+          ? "ori-atmosphere ori-atmosphere-dossie relative min-h-screen overflow-hidden px-3 py-3 md:px-5 md:py-5"
+          : "ori-atmosphere ori-atmosphere-dossie relative max-w-[1320px] overflow-hidden"
+      }
+    >
       <SyncNotice message={notice} label="Dossiê ORI" />
 
+      {immersive ? (
+        <div className="relative z-20 mb-3 flex items-center justify-between gap-3">
+          <div>
+            <p className="ori-type-system text-[9px]" style={{ color: "var(--gold-soft)" }}>
+              Dossiê ORI
+            </p>
+            <p className="ori-type-reading-soft text-xs" style={{ color: "rgba(255,245,235,0.52)" }}>
+              Câmara em tela cheia
+            </p>
+          </div>
+
+          <OriButton
+            as={Link}
+            to="/produto-2"
+            variant="secondary"
+            className="px-4 py-2 text-xs"
+            style={{
+              background: "rgba(255,255,255,0.035)",
+              border: "1px solid rgba(242,185,104,0.12)",
+              color: "var(--text-soft)",
+            }}
+          >
+            Sair da leitura
+          </OriButton>
+        </div>
+      ) : null}
+
+      {!immersive ? (
       <section
         className="ori-main-frame ori-hero-panel cinematic-card relative mb-5 flex min-h-[360px] items-center overflow-hidden rounded-[24px] p-4 pt-7 md:min-h-[clamp(460px,calc(100vh-120px),580px)] md:rounded-[36px] md:p-7"
         style={{
@@ -977,14 +1113,39 @@ function Produto2() {
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row">
+            {!loading && produtoLiberado && !isSubmitted ? (
+              <OriButton
+                as={Link}
+                to="/produto-2/leitura"
+                variant="primary"
+                className="px-5 py-2.5 text-sm"
+                style={{
+                  background: "var(--gold-primary)",
+                  color: "#090506",
+                  boxShadow: "0 0 40px rgba(242,185,104,0.14)",
+                }}
+              >
+                Começar meu Dossiê
+              </OriButton>
+            ) : null}
             <OriButton
               as={Link}
               to="/portal"
-              variant="primary"
+              variant={!loading && produtoLiberado && !isSubmitted ? "secondary" : "primary"}
               className="px-5 py-2.5 text-sm"
               style={{
-                background: "var(--gold-primary)",
-                color: "#090506",
+                background:
+                  !loading && produtoLiberado && !isSubmitted
+                    ? "rgba(255,255,255,0.035)"
+                    : "var(--gold-primary)",
+                border:
+                  !loading && produtoLiberado && !isSubmitted
+                    ? "1px solid rgba(242,185,104,0.12)"
+                    : undefined,
+                color:
+                  !loading && produtoLiberado && !isSubmitted
+                    ? "var(--text-soft)"
+                    : "#090506",
                 boxShadow: "0 0 40px rgba(242,185,104,0.14)",
               }}
             >
@@ -1006,183 +1167,240 @@ function Produto2() {
           </div>
         </div>
       </section>
+      ) : null}
 
-      {!loading && produtoLiberado ? <ConnectedDataPanel insumos={insumos} /> : null}
+      {!loading && produtoLiberado && !immersive ? <ConnectedDataPanel insumos={insumos} /> : null}
 
-      {!loading && produtoLiberado && !isSubmitted ? (
+      {!loading && produtoLiberado && !isSubmitted && !immersive ? (
         <section
-          className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[24px] p-4 md:rounded-[30px] md:p-7"
+          className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[24px] p-4 md:rounded-[30px] md:p-6"
           style={{
             background:
               "linear-gradient(180deg, rgba(18,9,10,0.70), rgba(5,2,2,0.90))",
             border: "1px solid rgba(242,185,104,0.10)",
           }}
         >
-          <div className="mb-6">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
-              <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div
-                  className="inline-flex w-fit items-center gap-3 rounded-full px-3 py-2"
-                  style={{
-                    background: "rgba(255,255,255,0.026)",
-                    border: "1px solid rgba(242,185,104,0.08)",
-                  }}
-                >
-                  <p
-                    className="ori-type-system text-[9px]"
-                    style={{ color: "var(--gold-soft)" }}
-                  >
-                    Etapa {String(activeStepIndex + 1).padStart(2, "0")} de{" "}
-                    {String(visibleSteps.length).padStart(2, "0")}
-                  </p>
-                </div>
-
-                <div className="flex gap-1.5">
-                  {visibleSteps.map((item, index) => (
-                    <button
-                      key={item.id}
-                      type="button"
-                      onClick={() => setStepIndex(index)}
-                      aria-label={`Ir para ${item.title}`}
-                      className="h-2.5 w-2.5 rounded-full transition-all"
-                      style={{
-                        background:
-                          index === activeStepIndex
-                            ? "var(--gold-primary)"
-                            : "rgba(247,234,216,0.20)",
-                        boxShadow:
-                          index === activeStepIndex
-                            ? "0 0 18px rgba(242,185,104,0.28)"
-                            : "none",
-                      }}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <div className="mb-5">
-                <p
-                  className="ori-type-system mb-2 text-[10px]"
-                  style={{ color: "var(--gold-soft)" }}
-                >
-                  {step.eyebrow}
-                </p>
-                <h2
-                  className="ori-type-revelation mb-2 text-2xl"
-                  style={{ color: "var(--gold-primary)", fontWeight: 620 }}
-                >
-                  {step.title}
-                </h2>
-                <p
-                  className="ori-type-reading-soft max-w-2xl text-sm"
-                  style={{ color: "var(--text-soft)" }}
-                >
-                  {step.description}
-                </p>
-              </div>
-
-              {step.id === "base" ? <MissingProfileHint insumos={insumos} /> : null}
-
-              <div className="grid gap-4 md:grid-cols-2">
-                {visibleFields.map((field) => (
-                  <FieldControl
-                    key={field.path}
-                    field={field}
-                    value={getPathValue(insumos, field.path)}
-                    onChange={(value) => handleChange(field.path, value)}
-                    uploadScope={uploadScope}
-                    onNotice={setNotice}
-                  />
-                ))}
-                {!visibleFields.length ? (
-                  <p
-                    className="ori-type-reading-soft text-sm md:col-span-2"
-                    style={{ color: "var(--text-soft)" }}
-                  >
-                    Usamos essa informação para calibrar sua leitura de cor e
-                    corpo com mais fidelidade à sua pele e à sua ancestralidade
-                    — em vez de aplicar uma cartela pensada para outra
-                    realidade.
-                  </p>
-                ) : null}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-3 border-t border-white/10 pt-6 sm:flex-row sm:justify-between">
-            <div className="flex gap-2">
-              <OriButton
-                type="button"
-                variant="ghost"
-                size="md"
-                disabled={activeStepIndex === 0}
-                onClick={() =>
-                  setStepIndex((current) =>
-                    Math.max(Math.min(current, activeStepIndex) - 1, 0),
-                  )
-                }
-                className="px-5 py-2.5 text-sm"
-                style={{
-                  background: "rgba(255,255,255,0.035)",
-                  color: "var(--text-soft)",
-                }}
+              <p
+                className="ori-type-system mb-2 text-[10px]"
+                style={{ color: "var(--gold-soft)" }}
               >
-                Voltar
-              </OriButton>
-              <OriButton
-                type="button"
-                variant="ghost"
-                size="md"
-                disabled={activeStepIndex === visibleSteps.length - 1}
-                onClick={() =>
-                  setStepIndex(() =>
-                    Math.min(activeStepIndex + 1, visibleSteps.length - 1),
-                  )
-                }
-                className="px-5 py-2.5 text-sm"
-                style={{
-                  background: "rgba(255,255,255,0.035)",
-                  color: "var(--text-soft)",
-                }}
+                Câmara do Dossiê
+              </p>
+              <h2
+                className="ori-type-revelation text-2xl"
+                style={{ color: "var(--gold-primary)", fontWeight: 620 }}
               >
-                {JOURNEY_LABELS.proximoPasso}
-              </OriButton>
+                Entre em tela cheia para responder com mais espaço.
+              </h2>
+              <p
+                className="ori-type-reading-soft mt-2 max-w-2xl text-sm"
+                style={{ color: "var(--text-soft)" }}
+              >
+                As perguntas de estrutura corporal, coloração e cabelo agora abrem
+                fora da sidebar, com mais respiro para comparar as imagens de referência.
+              </p>
             </div>
 
-            <div className="flex flex-col gap-2 sm:flex-row">
-              <OriButton
-                type="button"
-                variant="lavender"
-                disabled={saving}
-                onClick={handleSave}
-                className="px-5 py-2.5 text-sm"
-                style={{
-                  background: "rgba(183,140,255,0.10)",
-                  border: "1px solid rgba(183,140,255,0.18)",
-                  color: "#d9bdff",
-                }}
-              >
-                {saving ? "Salvando..." : "Salvar e continuar depois"}
-              </OriButton>
-              <OriButton
-                type="button"
-                variant="primary"
-                disabled={saving}
-                onClick={handleSubmit}
-                className="px-5 py-2.5 text-sm"
-                style={{
-                  background: "var(--gold-primary)",
-                  color: "#090506",
-                }}
-              >
-                {saving ? "Enviando..." : "Concluir e enviar para análise"}
-              </OriButton>
-            </div>
+            <OriButton
+              as={Link}
+              to="/produto-2/leitura"
+              variant="primary"
+              className="w-full justify-center px-6 py-3 text-sm sm:w-auto"
+              style={{
+                background: "var(--gold-primary)",
+                color: "#090506",
+                boxShadow: "0 0 40px rgba(242,185,104,0.14)",
+              }}
+            >
+              Começar minha leitura
+            </OriButton>
           </div>
         </section>
       ) : null}
 
-      {!loading && produtoLiberado && status === "em_analise" ? (
+      {!loading && produtoLiberado && !isSubmitted && immersive ? (
+        <OriReadingFrame
+          eyebrow="Câmara do Dossiê ORI"
+          signalLabel={`Camada ${String(activeStepIndex + 1).padStart(2, "0")} de ${String(visibleSteps.length).padStart(2, "0")}`}
+          layerLabel={step.eyebrow}
+          layerTitle={step.title}
+          layerDescription={step.description}
+          layerSymbol={layerTheme.symbol}
+          progress={totalProgress}
+          layerProgress={layerProgress}
+          progressLabel="Dossiê preenchido"
+          layerProgressLabel="desta camada"
+          statusLabel={`${answeredLayerFields}/${visibleFields.length || 0} sinais`}
+          dots={progressDots}
+          theme={layerTheme}
+          footer={
+            <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
+              <div className="flex gap-2">
+                <OriButton
+                  type="button"
+                  variant="ghost"
+                  size="md"
+                  disabled={activeStepIndex === 0}
+                  onClick={() =>
+                    setStepIndex((current) =>
+                      Math.max(Math.min(current, activeStepIndex) - 1, 0),
+                    )
+                  }
+                  className="px-5 py-2.5 text-sm"
+                  style={{
+                    background: "rgba(255,255,255,0.035)",
+                    color: "var(--text-soft)",
+                  }}
+                >
+                  Voltar
+                </OriButton>
+                <OriButton
+                  type="button"
+                  variant="ghost"
+                  size="md"
+                  disabled={activeStepIndex === visibleSteps.length - 1}
+                  onClick={() =>
+                    setStepIndex(() =>
+                      Math.min(activeStepIndex + 1, visibleSteps.length - 1),
+                    )
+                  }
+                  className="px-5 py-2.5 text-sm"
+                  style={{
+                    background: "rgba(255,255,255,0.035)",
+                    color: "var(--text-soft)",
+                  }}
+                >
+                  {JOURNEY_LABELS.proximoPasso}
+                </OriButton>
+              </div>
+
+              <div className="flex flex-col gap-2 sm:flex-row">
+                <OriButton
+                  type="button"
+                  variant="lavender"
+                  disabled={saving}
+                  onClick={handleSave}
+                  className="px-5 py-2.5 text-sm"
+                  style={{
+                    background: "rgba(183,140,255,0.10)",
+                    border: "1px solid rgba(183,140,255,0.18)",
+                    color: "#d9bdff",
+                  }}
+                >
+                  {saving ? "Salvando..." : "Salvar e continuar depois"}
+                </OriButton>
+                <OriButton
+                  type="button"
+                  variant="primary"
+                  disabled={saving}
+                  onClick={handleSubmit}
+                  className="px-5 py-2.5 text-sm"
+                  style={{
+                    background: "var(--gold-primary)",
+                    color: "#090506",
+                  }}
+                >
+                  {saving ? "Enviando..." : "Concluir e enviar para análise"}
+                </OriButton>
+              </div>
+            </div>
+          }
+        >
+          <div>
+            <div className="mb-5 flex flex-wrap gap-2">
+              {visibleSteps.map((item, index) => {
+                const itemFields = visibleStepFields[index]?.visibleFields || [];
+                const itemAnswered =
+                  itemFields.length > 0 &&
+                  countAnsweredFields(itemFields, insumos) === itemFields.length;
+
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setStepIndex(index)}
+                    aria-label={`Ir para ${item.title}`}
+                    className="rounded-full px-3 py-1.5 text-[10px] uppercase tracking-[0.14em] transition-all"
+                    style={{
+                      background:
+                        index === activeStepIndex
+                          ? "rgba(242,185,104,0.12)"
+                          : "rgba(255,255,255,0.026)",
+                      border:
+                        index === activeStepIndex
+                          ? `1px solid ${layerTheme.glow}`
+                          : "1px solid rgba(242,185,104,0.08)",
+                      color:
+                        index === activeStepIndex || itemAnswered
+                          ? layerTheme.accent
+                          : "rgba(255,245,235,0.50)",
+                      boxShadow:
+                        index === activeStepIndex ? `0 0 18px ${layerTheme.glow}` : "none",
+                    }}
+                  >
+                    {String(index + 1).padStart(2, "0")} · {item.eyebrow}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="mb-5 text-center md:mb-6">
+              <p
+                className="mb-2 text-[8px] uppercase tracking-[0.22em] md:text-[9px]"
+                style={{ color: "rgba(255,245,235,0.45)" }}
+              >
+                {step.eyebrow}
+              </p>
+              <h2
+                className="mx-auto max-w-4xl text-[25px] leading-[1.08] md:text-[36px] xl:text-[40px]"
+                style={{
+                  color: layerTheme.accent,
+                  fontWeight: 690,
+                  textShadow: `0 0 38px ${layerTheme.glow}`,
+                }}
+              >
+                {step.title}
+              </h2>
+              <p
+                className="ori-type-reading-soft mx-auto mt-3 max-w-3xl text-sm"
+                style={{ color: "rgba(255,245,235,0.66)" }}
+              >
+                {step.description}
+              </p>
+            </div>
+
+            {step.id === "base" ? <MissingProfileHint insumos={insumos} /> : null}
+
+            <div className="grid gap-5 md:grid-cols-2">
+              {visibleFields.map((field) => (
+                <FieldControl
+                  key={field.path}
+                  field={field}
+                  value={getPathValue(insumos, field.path)}
+                  onChange={(value) => handleChange(field.path, value)}
+                  uploadScope={uploadScope}
+                  onNotice={setNotice}
+                />
+              ))}
+              {!visibleFields.length ? (
+                <p
+                  className="ori-type-reading-soft text-sm md:col-span-2"
+                  style={{ color: "var(--text-soft)" }}
+                >
+                  Usamos essa informação para calibrar sua leitura de cor e
+                  corpo com mais fidelidade à sua pele e à sua ancestralidade
+                  — em vez de aplicar uma cartela pensada para outra
+                  realidade.
+                </p>
+              ) : null}
+            </div>
+          </div>
+        </OriReadingFrame>
+      ) : null}
+
+      {!loading && produtoLiberado && status === "em_analise" && !immersive ? (
         <section
           className="ori-main-frame ori-card-secondary mt-5 rounded-[24px] p-4 md:rounded-[30px] md:p-6"
           style={{
@@ -1237,7 +1455,7 @@ function Produto2() {
         </section>
       ) : null}
 
-      {!loading && produtoLiberado && status === "publicado" ? (
+      {!loading && produtoLiberado && status === "publicado" && !immersive ? (
         <section
           className="ori-main-frame ori-card-secondary mt-5 rounded-[24px] p-4 md:rounded-[30px] md:p-6"
           style={{

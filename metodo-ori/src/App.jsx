@@ -186,6 +186,15 @@ function App() {
           />
 
           <Route
+            path="/produto-2/leitura"
+            element={
+              <ProtectedRoute>
+                {FEATURES.produto2 ? <Produto2 immersive /> : <Produto2EmPreparacao />}
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
             path="/produto-3"
             element={
               <ProtectedRoute>
