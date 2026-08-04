@@ -133,6 +133,11 @@ variavel ausente ou definida como `false`.
 
 Deploy recomendado: Vercel.
 
+### Frontend De Producao
+
+O frontend de producao do Metodo ORI e publicado automaticamente no Cloudflare
+Pages por GitHub Actions apos pushes na branch `main`.
+
 Configuracao:
 
 - Framework: Vite
