@@ -3,6 +3,10 @@ services:
     name: metodo-ori-api
     runtime: docker
     plan: starter
+    buildFilter:
+      paths:
+        - backend/**
+      ignoredPaths: []
     dockerfilePath: backend/Dockerfile
     dockerContext: backend
     healthCheckPath: /health
