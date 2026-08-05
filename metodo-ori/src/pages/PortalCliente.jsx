@@ -230,7 +230,7 @@ function PortalCliente() {
         : "Aguardando liberação";
 
   const buttonProduto1 = hasResult
-    ? "Ver minha primeira leitura"
+    ? "Revisitar minha leitura"
     : hasAnswers
       ? "Continuar leitura"
       : "Iniciar Código das Deusas";
@@ -295,7 +295,7 @@ function PortalCliente() {
       action: produto1Liberado ? (
         <OriButton
           as={Link}
-          to="/produto-1"
+          to={hasResult ? "/produto-1/leitura" : "/produto-1"}
           variant={hasResult ? "secondary" : "primary"}
           size="lg"
           className="w-full px-5 py-3 text-sm md:w-fit"
@@ -453,10 +453,10 @@ function PortalCliente() {
         eyebrow: "Seu espelho inicial já abriu",
         title: "Continue pelo passo que ajuda sua imagem a ganhar direção agora.",
         text: `${resultadoFinal} já foi nomeada. ${JOURNEY_COPY.dossieOri.nextBodyCompact}`,
-        primaryLabel: "Abrir Espelho ORI",
-        primaryTo: "/espelho-ori",
-        secondaryLabel: "Ver Método ORI",
-        secondaryTo: "/metodo-ori",
+        primaryLabel: "Revisitar minha leitura",
+        primaryTo: "/produto-1/leitura",
+        secondaryLabel: "Ir para o Espelho ORI",
+        secondaryTo: "/espelho-ori",
       }
     : {
         eyebrow: "Primeiro gesto",
