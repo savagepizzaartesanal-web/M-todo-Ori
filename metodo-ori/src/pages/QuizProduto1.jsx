@@ -8,6 +8,8 @@ import { calculateResult } from "../services/calculateResult";
 import {
   calculateQuizResult,
   completeProduto1,
+  createPaymentCheckout,
+  getPaymentCatalog,
   getProduto1Reading,
   getProduto1Answers,
   getProduto1Feedback,
@@ -21,10 +23,17 @@ import { supabase } from "../lib/supabaseClient";
 import { useProduto1Catalog } from "../hooks/useProduto1Catalog";
 
 import QuizHero from "../components/QuizHero";
+import Produto1Paywall from "../components/Produto1Paywall";
 import ResultHero from "../components/ResultHero";
 import NextStepCard from "../components/NextStepCard";
 import SyncNotice from "../components/SyncNotice";
 import { OriBadge, OriButton, OriField } from "../components/ui";
+import { PRODUTO1_COMPLETE_PRODUCT_CODE } from "../content/produto1PaywallCopy";
+import {
+  forgetProduto1CheckoutOrder,
+  getProduto1QuizStorageKey,
+  rememberProduto1CheckoutOrder,
+} from "../utils/produto1Cache";
 
 const LEGACY_STORAGE_KEY = "ori_produto_1_quiz";
 const ORACLE_PANEL_BACKGROUND =
@@ -53,10 +62,6 @@ const FEEDBACK_OPTIONS = [
     text: "A leitura ainda não pareceu minha.",
   },
 ];
-
-const getQuizStorageKey = (userId) => {
-  return userId ? `ori_produto_1_quiz_${userId}` : "ori_produto_1_quiz_guest";
-};
 
 const readQuizFromStorage = (storageKey) => {
   try {
@@ -2398,6 +2403,7 @@ function LayerTabNavigation({ tabs, activeNumber, onSelect }) {
         {tabs.map((item, index) => {
           const isActive = activeNumber === item.number;
           const isPast = index < activeIndex;
+          const isLocked = Boolean(item.locked);
 
           return (
             <motion.button
@@ -2405,7 +2411,11 @@ function LayerTabNavigation({ tabs, activeNumber, onSelect }) {
               type="button"
               onClick={() => onSelect(item.number)}
               aria-current={isActive ? "step" : undefined}
-              aria-label={`Abrir seção ${item.number}: ${item.label}`}
+              aria-label={
+                isLocked
+                  ? `Abrir desbloqueio da seção ${item.number}: ${item.label}`
+                  : `Abrir seção ${item.number}: ${item.label}`
+              }
               data-layer-tab={item.number}
               whileHover={{ y: -2 }}
               whileTap={{ scale: 0.98 }}
@@ -2414,9 +2424,13 @@ function LayerTabNavigation({ tabs, activeNumber, onSelect }) {
               style={{
                 background: isActive
                   ? "linear-gradient(90deg, rgba(242,185,104,0.13), rgba(242,185,104,0.035))"
+                  : isLocked
+                    ? "linear-gradient(90deg, rgba(255,255,255,0.014), rgba(242,185,104,0.018))"
                   : "rgba(255,255,255,0.022)",
                 border: isActive
                   ? "1px solid rgba(242,185,104,0.28)"
+                  : isLocked
+                    ? "1px solid rgba(242,185,104,0.07)"
                   : "1px solid rgba(242,185,104,0.08)",
                 boxShadow: isActive
                   ? "0 0 24px rgba(242,185,104,0.075), inset 0 0 18px rgba(242,185,104,0.018)"
@@ -2443,6 +2457,16 @@ function LayerTabNavigation({ tabs, activeNumber, onSelect }) {
               >
                 {item.number}
               </span>
+
+              {isLocked && (
+                <span
+                  aria-hidden="true"
+                  className="text-[11px]"
+                  style={{ color: "rgba(242,185,104,0.72)" }}
+                >
+                  🔒
+                </span>
+              )}
 
               <p
                 className="ori-type-reading-soft text-[10px] leading-tight md:text-xs"
@@ -2514,6 +2538,11 @@ function QuizProduto1() {
   const [feedbackSaving, setFeedbackSaving] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [backendReading, setBackendReading] = useState(null);
+  const [paymentCatalog, setPaymentCatalog] = useState(null);
+  const [paymentCatalogLoading, setPaymentCatalogLoading] = useState(false);
+  const [paywallOpen, setPaywallOpen] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [paymentError, setPaymentError] = useState("");
   const [syncNotice, setSyncNotice] = useState("");
 
   const resultRef = useRef(null);
@@ -2538,7 +2567,7 @@ function QuizProduto1() {
     async function loadUserStorage() {
       const { data: sessionData } = await supabase.auth.getSession();
       const user = sessionData?.session?.user || null;
-      const userStorageKey = getQuizStorageKey(user?.id);
+      const userStorageKey = getProduto1QuizStorageKey(user?.id);
 
       setStorageKey(userStorageKey);
       localStorage.removeItem(LEGACY_STORAGE_KEY);
@@ -3065,6 +3094,71 @@ function QuizProduto1() {
     }
   };
 
+  const loadPaymentCatalog = async () => {
+    setPaymentCatalogLoading(true);
+    setPaymentError("");
+
+    try {
+      const catalog = await getPaymentCatalog();
+      setPaymentCatalog(catalog);
+      return catalog;
+    } catch (apiError) {
+      console.log("Catálogo de pagamentos indisponível:", apiError);
+      setPaymentError(
+        apiError?.userMessage ||
+          "Não conseguimos consultar a liberação da leitura completa agora.",
+      );
+      return null;
+    } finally {
+      setPaymentCatalogLoading(false);
+    }
+  };
+
+  const openProduto1Paywall = () => {
+    setPaywallOpen(true);
+    setPaymentError("");
+
+    if (!paymentCatalog) {
+      loadPaymentCatalog();
+    }
+  };
+
+  const handleProduto1Checkout = async () => {
+    if (checkoutLoading) return;
+
+    setCheckoutLoading(true);
+    setPaymentError("");
+
+    try {
+      const response = await createPaymentCheckout(PRODUTO1_COMPLETE_PRODUCT_CODE);
+
+      if (response.status === "already_granted" || response.status === "approved") {
+        setPaywallOpen(false);
+        forgetProduto1CheckoutOrder();
+        const reading = await getProduto1Reading();
+        setBackendReading(reading);
+        return;
+      }
+
+      const checkoutUrl = response.checkout_url;
+
+      if (!checkoutUrl || !/^https:\/\//i.test(checkoutUrl)) {
+        throw new Error("checkout_url_invalid");
+      }
+
+      rememberProduto1CheckoutOrder(response.order_id);
+      window.location.assign(checkoutUrl);
+    } catch (apiError) {
+      console.log("Erro ao criar checkout do Produto 1:", apiError);
+      setPaymentError(
+        apiError?.userMessage ||
+          "Não conseguimos abrir o Mercado Pago agora. Tente novamente em instantes.",
+      );
+    } finally {
+      setCheckoutLoading(false);
+    }
+  };
+
   const baseReport = result ? reports[result.nomeComposto] : null;
   useEffect(() => {
     if (!result) {
@@ -3103,19 +3197,59 @@ function QuizProduto1() {
       isMounted = false;
     };
   }, [result]);
+
   const activeBackendReading =
     backendReading?.resultado === result?.nomeComposto ? backendReading : null;
 
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+
+    if (
+      activeBackendReading?.produto_1_completo_liberado === true &&
+      params.get("camada") === "vidaReal"
+    ) {
+      const timeout = window.setTimeout(() => {
+        setActiveResultCore("estrutura");
+        setActiveEstruturaInterna("04");
+      }, 0);
+
+      return () => window.clearTimeout(timeout);
+    }
+
+    return undefined;
+  }, [activeBackendReading, location.search]);
+  const produto1FullUnlocked =
+    activeBackendReading?.produto_1_completo_liberado === true;
+  const produto1LockedLayerIds = new Set(
+    activeBackendReading?.locked_layer_ids || [],
+  );
+  const produto1Blocks = activeBackendReading?.blocks || [];
+  const produto1UnlockProductCode =
+    activeBackendReading?.unlock_product_code || PRODUTO1_COMPLETE_PRODUCT_CODE;
+  const produto1PaymentProduct =
+    paymentCatalog?.products?.find(
+      (product) => product.product_code === produto1UnlockProductCode,
+    ) || null;
+  const isProduto1LayerLocked = (layerId) =>
+    !produto1FullUnlocked && produto1LockedLayerIds.has(layerId);
+  const isProduto1CoreLocked = (coreId) => {
+    const block = produto1Blocks.find((item) => item.id === coreId);
+
+    if (!block || produto1FullUnlocked) return false;
+
+    return block.layers?.every((layer) => layer.locked) || false;
+  };
+
   const report = useMemo(
     () => {
-      if (!baseReport) return null;
-
       if (
         activeBackendReading?.report &&
         Object.keys(activeBackendReading.report).length > 0
       ) {
         return activeBackendReading.report;
       }
+
+      if (!baseReport) return null;
 
       if (
         activeBackendReading?.camadas &&
@@ -3157,6 +3291,7 @@ function QuizProduto1() {
   const estruturaInternaTabs = report
     ? [
         {
+          layerId: "reconhecimento",
           number: "01",
           theme: "gold",
           eyebrow: "Reconhecimento",
@@ -3168,6 +3303,7 @@ function QuizProduto1() {
           image: "/images/panels/reconhecimento.png",
         },
         {
+          layerId: "essencia",
           number: "02",
           theme: "purple",
           eyebrow: "Base interna",
@@ -3179,6 +3315,7 @@ function QuizProduto1() {
           image: "/images/panels/essencia.png",
         },
         {
+          layerId: "dinamica",
           number: "03",
           theme: "silver",
           eyebrow: "Dinâmica Psíquica",
@@ -3190,6 +3327,7 @@ function QuizProduto1() {
           image: "/images/panels/dinamica-psiquica.png",
         },
         {
+          layerId: "vidaReal",
           number: "04",
           theme: "gold",
           eyebrow: "Vida Real",
@@ -3198,9 +3336,11 @@ function QuizProduto1() {
           description:
             "Aqui a leitura simbólica vira comportamento, decisão e pequenos sinais observáveis na rotina.",
           content: report.vidaReal,
+          locked: isProduto1LayerLocked("vidaReal"),
           image: "/images/panels/leitura-final.png",
         },
         {
+          layerId: "percebida",
           number: "05",
           theme: "red",
           eyebrow: "Percepção",
@@ -3209,6 +3349,7 @@ function QuizProduto1() {
           description:
             "Sua imagem não comunica apenas aparência. \nEla ativa sensações, leituras e projeções.",
           content: report.percebida,
+          locked: isProduto1LayerLocked("percebida"),
           image: "/images/panels/percepcao.png",
         },
       ]
@@ -3216,6 +3357,7 @@ function QuizProduto1() {
   const sombraVinculosTabs = report
     ? [
         {
+          layerId: "sombra",
           number: "05",
           theme: "cyan",
           eyebrow: "Sombra",
@@ -3224,9 +3366,11 @@ function QuizProduto1() {
           description:
             "Todo arquétipo possui excessos, compensações \ne mecanismos de defesa inconscientes.",
           content: report.sombra,
+          locked: isProduto1LayerLocked("sombra"),
           image: "/images/panels/sombra.png",
         },
         {
+          layerId: "padraoRelacional",
           number: "06",
           theme: "green",
           eyebrow: "Padrão Relacional",
@@ -3235,9 +3379,11 @@ function QuizProduto1() {
           description:
             "Esta leitura mostra como sua energia \ncria aproximação, intimidade e pertencimento.",
           content: report.padraoRelacional,
+          locked: isProduto1LayerLocked("padraoRelacional"),
           image: "/images/panels/padrao-relacional.png",
         },
         {
+          layerId: "caminho",
           number: "07",
           theme: "gold",
           eyebrow: "Individuação",
@@ -3246,6 +3392,7 @@ function QuizProduto1() {
           description:
             "Aqui começa o movimento onde sua \nimagem deixa de compensar e fica mais coerente.",
           content: report.caminho,
+          locked: isProduto1LayerLocked("caminho"),
           image: "/images/panels/individuacao.png",
         },
       ]
@@ -3253,6 +3400,7 @@ function QuizProduto1() {
   const imagemPresencaTabs = report
     ? [
         {
+          layerId: "essenciaImagem",
           number: "08",
           theme: "purple",
           eyebrow: "Direção de imagem",
@@ -3261,9 +3409,11 @@ function QuizProduto1() {
           description:
             "Sua estética ideal nasce quando sua \nimagem expressa sua energia com mais naturalidade.",
           content: report.essenciaImagem,
+          locked: isProduto1LayerLocked("essenciaImagem"),
           image: "/images/panels/essencia-imagem.png",
         },
         {
+          layerId: "paleta",
           number: "09",
           theme: "silver",
           eyebrow: "Paleta",
@@ -3272,9 +3422,11 @@ function QuizProduto1() {
           description:
             "As cores certas reforçam sua atmosfera \nnatural e aumentam sua coerência visual.",
           content: report.paleta,
+          locked: isProduto1LayerLocked("paleta"),
           image: "/images/panels/paleta.png",
         },
         {
+          layerId: "modelagem",
           number: "10",
           theme: "red",
           eyebrow: "Modelagem",
@@ -3283,9 +3435,11 @@ function QuizProduto1() {
           description:
             "As formas que você veste alteram \ndiretamente a percepção da sua energia.",
           content: report.modelagem,
+          locked: isProduto1LayerLocked("modelagem"),
           image: "/images/panels/modelagem.png",
         },
         {
+          layerId: "tecidos",
           number: "11",
           theme: "cyan",
           eyebrow: "Tecidos",
@@ -3294,9 +3448,11 @@ function QuizProduto1() {
           description:
             "Cada tecido cria uma sensação \nvisual, tátil e simbólica diferente.",
           content: report.tecidos,
+          locked: isProduto1LayerLocked("tecidos"),
           image: "/images/panels/tecidos.png",
         },
         {
+          layerId: "beleza",
           number: "12",
           theme: "green",
           eyebrow: "Beleza",
@@ -3305,9 +3461,11 @@ function QuizProduto1() {
           description:
             "Sua beleza funciona melhor quando \nreforça o que você quer comunicar.",
           content: report.beleza,
+          locked: isProduto1LayerLocked("beleza"),
           image: "/images/panels/beleza.png",
         },
         {
+          layerId: "presenca",
           number: "13",
           theme: "gold",
           eyebrow: "Como você chega",
@@ -3316,6 +3474,7 @@ function QuizProduto1() {
           description:
             "Sua imagem ganha força quando corpo, \nescolha e energia apontam para a mesma direção.",
           content: report.presenca,
+          locked: isProduto1LayerLocked("presenca"),
           image: "/images/panels/presenca.png",
         },
       ]
@@ -3323,6 +3482,7 @@ function QuizProduto1() {
   const sinteseFinalTabs = report
     ? [
         {
+          layerId: "evitar",
           number: "14",
           theme: "purple",
           eyebrow: "Evitar",
@@ -3333,9 +3493,11 @@ function QuizProduto1() {
           content: Array.isArray(report.evitar)
             ? report.evitar.join("\n")
             : report.evitar,
+          locked: isProduto1LayerLocked("evitar"),
           image: "/images/panels/evitar.png",
         },
         {
+          layerId: "formula",
           number: "15",
           theme: "silver",
           eyebrow: "Fórmula",
@@ -3344,9 +3506,11 @@ function QuizProduto1() {
           description:
             "Sua fórmula estética organiza visualmente \na força principal da sua leitura.",
           content: report.formula,
+          locked: isProduto1LayerLocked("formula"),
           image: "/images/panels/formula.png",
         },
         {
+          layerId: "leituraFinal",
           number: "16",
           theme: "red",
           eyebrow: "Leitura Final",
@@ -3355,6 +3519,7 @@ function QuizProduto1() {
           description:
             "A etapa final mostra onde imagem, \nidentidade e escolhas começam a se alinhar.",
           content: report.leituraFinal,
+          locked: isProduto1LayerLocked("leituraFinal"),
           image: "/images/panels/leitura-final.png",
         },
       ]
@@ -3375,27 +3540,35 @@ function QuizProduto1() {
   const resultCoreTabs = [
     {
       id: "estrutura",
+      blockId: "base",
       number: "01",
       title: "Base da leitura",
       text: "Reconhecimento, base interna, dinâmica e percepção.",
+      locked: false,
     },
     {
       id: "sombra",
+      blockId: "sombra_vinculos",
       number: "02",
       title: "Sombra e Vínculos",
       text: "Sombra, padrão relacional e individuação.",
+      locked: isProduto1CoreLocked("sombra_vinculos"),
     },
     {
       id: "imagem",
+      blockId: "imagem_pratica",
       number: "03",
       title: "Imagem na prática",
       text: "Direção visual, beleza, cores, corpo e presença.",
+      locked: isProduto1CoreLocked("imagem_pratica"),
     },
     {
       id: "sintese",
+      blockId: "sintese_final",
       number: "04",
       title: "Síntese Final",
       text: "O que evitar, fórmula e leitura final.",
+      locked: isProduto1CoreLocked("sintese_final"),
     },
   ];
   const activeResultCoreIndex = resultCoreTabs.findIndex(
@@ -3499,9 +3672,29 @@ function QuizProduto1() {
   };
 
   const handleSelectResultCore = (coreId) => {
+    const targetCore = resultCoreTabs.find((item) => item.id === coreId);
+
+    if (targetCore?.locked) {
+      openProduto1Paywall();
+      return;
+    }
+
     setActiveResultCore(coreId);
     scrollToReadingNavigation();
     scrollToCoreTab(coreId);
+  };
+
+  const handleSelectResultLayer = (setActiveNumber) => (layerNumber) => {
+    const targetLayer = activeResultLayerState?.tabs.find(
+      (item) => item.number === layerNumber,
+    );
+
+    if (targetLayer?.locked) {
+      openProduto1Paywall();
+      return;
+    }
+
+    setActiveNumber(layerNumber);
   };
 
   const handleResultFlowNext = () => {
@@ -3510,6 +3703,12 @@ function QuizProduto1() {
     if (hasNextResultLayer) {
       const nextLayer =
         activeResultLayerState.tabs[activeResultLayerIndex + 1]?.number;
+      const nextLayerData = activeResultLayerState.tabs[activeResultLayerIndex + 1];
+
+      if (nextLayerData?.locked) {
+        openProduto1Paywall();
+        return;
+      }
 
       if (nextLayer) {
         activeResultLayerState.setActiveNumber(nextLayer);
@@ -3520,6 +3719,11 @@ function QuizProduto1() {
     }
 
     if (nextResultCore) {
+      if (nextResultCore.locked) {
+        openProduto1Paywall();
+        return;
+      }
+
       setActiveResultCore(nextResultCore.id);
 
       const nextLayerState = resultCoreLayerState[nextResultCore.id];
@@ -3883,21 +4087,31 @@ function QuizProduto1() {
                       <div className="ori-premium-scroll flex gap-2 overflow-x-auto pb-1 md:grid md:grid-cols-4 md:overflow-visible md:pb-0">
                         {resultCoreTabs.map((item) => {
                           const isActive = activeResultCore === item.id;
+                          const isLocked = Boolean(item.locked);
 
                           return (
                             <button
                               key={item.number}
                               type="button"
                               onClick={() => handleSelectResultCore(item.id)}
+                              aria-label={
+                                isLocked
+                                  ? `Abrir desbloqueio do núcleo ${item.number}: ${item.title}`
+                                  : `Abrir núcleo ${item.number}: ${item.title}`
+                              }
                               data-core-tab={item.id}
                               className="ori-tab min-w-[136px] shrink-0 rounded-[15px] px-2.5 py-2 text-left transition-all duration-500 hover:-translate-y-0.5 md:min-w-0 md:rounded-[16px] md:px-3 md:py-2.5"
                               data-state={isActive ? "active" : "sealed"}
                               style={{
                                 background: isActive
                                   ? "rgba(242,185,104,0.085)"
+                                  : isLocked
+                                    ? "rgba(255,255,255,0.014)"
                                   : "rgba(255,255,255,0.022)",
                                 border: isActive
                                   ? "1px solid rgba(242,185,104,0.22)"
+                                  : isLocked
+                                    ? "1px solid rgba(242,185,104,0.06)"
                                   : "1px solid rgba(242,185,104,0.08)",
                                 boxShadow: isActive
                                   ? "0 0 28px rgba(242,185,104,0.060), inset 0 0 18px rgba(242,185,104,0.018)"
@@ -3936,6 +4150,15 @@ function QuizProduto1() {
                                 >
                                   {item.title}
                                 </h3>
+                                {isLocked && (
+                                  <span
+                                    aria-hidden="true"
+                                    className="ml-auto shrink-0 text-[12px]"
+                                    style={{ color: "rgba(242,185,104,0.72)" }}
+                                  >
+                                    🔒
+                                  </span>
+                                )}
                               </div>
                             </button>
                           );
@@ -3973,7 +4196,7 @@ function QuizProduto1() {
                         <LayerTabNavigation
                           tabs={estruturaInternaTabs}
                           activeNumber={activeEstruturaInterna}
-                          onSelect={setActiveEstruturaInterna}
+                          onSelect={handleSelectResultLayer(setActiveEstruturaInterna)}
                         />
 
                         <AnimatePresence mode="wait">
@@ -4001,7 +4224,7 @@ function QuizProduto1() {
                         <LayerTabNavigation
                           tabs={sombraVinculosTabs}
                           activeNumber={activeSombraVinculos}
-                          onSelect={setActiveSombraVinculos}
+                          onSelect={handleSelectResultLayer(setActiveSombraVinculos)}
                         />
 
                         <AnimatePresence mode="wait">
@@ -4029,7 +4252,7 @@ function QuizProduto1() {
                         <LayerTabNavigation
                           tabs={imagemPresencaTabs}
                           activeNumber={activeImagemPresenca}
-                          onSelect={setActiveImagemPresenca}
+                          onSelect={handleSelectResultLayer(setActiveImagemPresenca)}
                         />
 
                         <AnimatePresence mode="wait">
@@ -4057,7 +4280,7 @@ function QuizProduto1() {
                         <LayerTabNavigation
                           tabs={sinteseFinalTabs}
                           activeNumber={activeSinteseFinal}
-                          onSelect={setActiveSinteseFinal}
+                          onSelect={handleSelectResultLayer(setActiveSinteseFinal)}
                         />
 
                         <AnimatePresence mode="wait">
@@ -4166,19 +4389,35 @@ function QuizProduto1() {
                       </p>
                     </div>
 
-                    <OriButton
-                      as={Link}
-                      to="/produto-1/relatorio"
-                      variant="secondary"
-                      className="w-full shrink-0 justify-center px-5 py-2.5 text-sm md:w-auto md:py-3"
-                      style={{
-                        background: "rgba(242,185,104,0.10)",
-                        border: "1px solid rgba(242,185,104,0.18)",
-                        color: "var(--gold-primary)",
-                      }}
-                    >
-                      Abrir relatório digital
-                    </OriButton>
+                    {produto1FullUnlocked ? (
+                      <OriButton
+                        as={Link}
+                        to="/produto-1/relatorio"
+                        variant="secondary"
+                        className="w-full shrink-0 justify-center px-5 py-2.5 text-sm md:w-auto md:py-3"
+                        style={{
+                          background: "rgba(242,185,104,0.10)",
+                          border: "1px solid rgba(242,185,104,0.18)",
+                          color: "var(--gold-primary)",
+                        }}
+                      >
+                        Abrir relatório digital
+                      </OriButton>
+                    ) : (
+                      <OriButton
+                        type="button"
+                        onClick={openProduto1Paywall}
+                        variant="secondary"
+                        className="w-full shrink-0 justify-center px-5 py-2.5 text-sm md:w-auto md:py-3"
+                        style={{
+                          background: "rgba(242,185,104,0.10)",
+                          border: "1px solid rgba(242,185,104,0.18)",
+                          color: "var(--gold-primary)",
+                        }}
+                      >
+                        Desbloquear relatório digital
+                      </OriButton>
+                    )}
                   </section>
 
                   {resultReadingCompleted && !feedbackSubmitted && (
@@ -4383,6 +4622,16 @@ function QuizProduto1() {
           </>
         )}
       </div>
+
+      <Produto1Paywall
+        open={paywallOpen}
+        product={produto1PaymentProduct}
+        loadingCatalog={paymentCatalogLoading}
+        checkoutLoading={checkoutLoading}
+        errorMessage={paymentError}
+        onClose={() => setPaywallOpen(false)}
+        onCheckout={handleProduto1Checkout}
+      />
     </main>
   );
 }

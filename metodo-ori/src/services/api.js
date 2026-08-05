@@ -237,6 +237,27 @@ export function downloadProduto1ReportPdf() {
   return requestAuthenticatedFile("/api/produto-1/relatorio/me/pdf");
 }
 
+export function getPaymentCatalog() {
+  return requestAuthenticatedApi("/api/payments/catalog");
+}
+
+export function createPaymentCheckout(productCode) {
+  return requestAuthenticatedApi("/api/payments/checkout", {
+    method: "POST",
+    body: JSON.stringify({ product_code: productCode }),
+  });
+}
+
+export function getPaymentOrderStatus(orderId) {
+  return requestAuthenticatedApi(
+    `/api/payments/${encodeURIComponent(orderId)}/status`,
+  );
+}
+
+export function getMyPaymentOrders() {
+  return requestAuthenticatedApi("/api/payments/me");
+}
+
 export function getProduto2Dossie() {
   return requestAuthenticatedApi("/api/produto-2/me");
 }

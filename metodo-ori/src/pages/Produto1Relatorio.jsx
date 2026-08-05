@@ -1,15 +1,24 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+import Produto1Paywall from "../components/Produto1Paywall";
 import SyncNotice from "../components/SyncNotice";
 import { OriBadge, OriButton, OriCard } from "../components/ui";
 import { archetypeImages } from "../data/archetypeImages";
 import { archetypeThemes } from "../data/archetypeThemes";
 import { getReportVisualGuide } from "../data/reportVisualGuides";
 import {
+  createPaymentCheckout,
   downloadProduto1ReportPdf,
+  getPaymentCatalog,
   getProduto1Report,
+  getProduto1Reading,
 } from "../services/api";
+import { PRODUTO1_COMPLETE_PRODUCT_CODE } from "../content/produto1PaywallCopy";
+import {
+  forgetProduto1CheckoutOrder,
+  rememberProduto1CheckoutOrder,
+} from "../utils/produto1Cache";
 
 const reportCoverImages = {
   "Amante Nutridora": "/images/report-covers/amante-nutridora-mobile.png",
@@ -228,6 +237,11 @@ function Produto1Relatorio() {
   const [loading, setLoading] = useState(true);
   const [downloadingPdf, setDownloadingPdf] = useState(false);
   const [syncNotice, setSyncNotice] = useState("");
+  const [paymentCatalog, setPaymentCatalog] = useState(null);
+  const [paymentCatalogLoading, setPaymentCatalogLoading] = useState(false);
+  const [paywallOpen, setPaywallOpen] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [paymentError, setPaymentError] = useState("");
 
   useEffect(() => {
     let isMounted = true;
@@ -274,8 +288,82 @@ function Produto1Relatorio() {
   const archetypeImage = report ? archetypeImages[report.resultado]?.image : "";
   const reportCoverImage = report ? reportCoverImages[report.resultado] : "";
   const theme = report ? archetypeThemes[report.resultado] : null;
+  const produto1FullUnlocked = report?.produto_1_completo_liberado === true;
+  const produto1PaymentProduct =
+    paymentCatalog?.products?.find(
+      (product) =>
+        product.product_code ===
+        (report?.unlock_product_code || PRODUTO1_COMPLETE_PRODUCT_CODE),
+    ) || null;
+
+  async function loadPaymentCatalog() {
+    setPaymentCatalogLoading(true);
+    setPaymentError("");
+
+    try {
+      const catalog = await getPaymentCatalog();
+      setPaymentCatalog(catalog);
+    } catch (error) {
+      console.log("Catálogo de pagamentos indisponível no relatório:", error);
+      setPaymentError(
+        error?.userMessage ||
+          "Não conseguimos consultar a liberação da leitura completa agora.",
+      );
+    } finally {
+      setPaymentCatalogLoading(false);
+    }
+  }
+
+  function openProduto1Paywall() {
+    setPaywallOpen(true);
+    setPaymentError("");
+
+    if (!paymentCatalog) {
+      loadPaymentCatalog();
+    }
+  }
+
+  async function handleProduto1Checkout() {
+    if (checkoutLoading) return;
+
+    setCheckoutLoading(true);
+    setPaymentError("");
+
+    try {
+      const response = await createPaymentCheckout(PRODUTO1_COMPLETE_PRODUCT_CODE);
+
+      if (response.status === "already_granted" || response.status === "approved") {
+        setPaywallOpen(false);
+        forgetProduto1CheckoutOrder();
+        await getProduto1Reading();
+        const refreshedReport = await getProduto1Report();
+        setReport(refreshedReport);
+        return;
+      }
+
+      if (!response.checkout_url || !/^https:\/\//i.test(response.checkout_url)) {
+        throw new Error("checkout_url_invalid");
+      }
+
+      rememberProduto1CheckoutOrder(response.order_id);
+      window.location.assign(response.checkout_url);
+    } catch (error) {
+      console.log("Erro ao criar checkout pelo relatório:", error);
+      setPaymentError(
+        error?.userMessage ||
+          "Não conseguimos abrir o Mercado Pago agora. Tente novamente em instantes.",
+      );
+    } finally {
+      setCheckoutLoading(false);
+    }
+  }
 
   async function handleDownloadPdf() {
+    if (!produto1FullUnlocked) {
+      openProduto1Paywall();
+      return;
+    }
+
     setDownloadingPdf(true);
     setSyncNotice(
       "Estamos preparando seu relatório em PDF. Nesta fase de protótipo, o arquivo pode levar alguns instantes para ficar pronto. Mantenha esta página aberta até o download começar.",
@@ -389,7 +477,11 @@ function Produto1Relatorio() {
             variant="primary"
             className="px-5 py-2.5 text-sm"
           >
-            {downloadingPdf ? "Preparando PDF..." : "Baixar PDF"}
+            {downloadingPdf
+              ? "Preparando PDF..."
+              : produto1FullUnlocked
+                ? "Baixar PDF"
+                : "Desbloquear PDF"}
           </OriButton>
         </div>
 
@@ -635,6 +727,15 @@ function Produto1Relatorio() {
         )}
 
       </div>
+      <Produto1Paywall
+        open={paywallOpen}
+        product={produto1PaymentProduct}
+        loadingCatalog={paymentCatalogLoading}
+        checkoutLoading={checkoutLoading}
+        errorMessage={paymentError}
+        onClose={() => setPaywallOpen(false)}
+        onCheckout={handleProduto1Checkout}
+      />
     </main>
   );
 }
