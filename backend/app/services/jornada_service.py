@@ -13,6 +13,7 @@ CLIENTE_SELECT = ",".join(
         "nome",
         "resultado",
         "produto_1_liberado",
+        "produto_1_completo_liberado",
         "produto_2_liberado",
         "produto_3_liberado",
         "perfil_onboarding_concluido",
@@ -141,6 +142,9 @@ async def get_current_jornada(current_user: CurrentUser) -> JornadaResponse:
         status_jornada=cliente.get("status_jornada"),
         perfil_onboarding_concluido=bool(cliente.get("perfil_onboarding_concluido")),
         produto_1_liberado=cliente.get("produto_1_liberado") is not False,
+        produto_1_completo_liberado=bool(
+            cliente.get("produto_1_completo_liberado")
+        ),
         produto_2_liberado=bool(cliente.get("produto_2_liberado")),
         produto_3_liberado=bool(cliente.get("produto_3_liberado")),
         jornada=jornada,

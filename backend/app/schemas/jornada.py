@@ -21,6 +21,7 @@ class JornadaResponse(BaseModel):
     status_jornada: JourneyStatus | None = None
     perfil_onboarding_concluido: bool = False
     produto_1_liberado: bool = True
+    produto_1_completo_liberado: bool = False
     produto_2_liberado: bool = False
     produto_3_liberado: bool = False
     jornada: JornadaStatus
