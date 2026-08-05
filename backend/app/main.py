@@ -15,11 +15,13 @@ from app.routes import (
     jornada,
     mapa_vivo,
     oraculo,
+    payments,
     produto1,
     produto2,
     produto3,
     quiz,
     status,
+    webhooks,
 )
 
 load_dotenv()
@@ -106,11 +108,13 @@ app.include_router(feedback.router)
 app.include_router(jornada.router)
 app.include_router(mapa_vivo.router)
 app.include_router(oraculo.router)
+app.include_router(payments.router)
 app.include_router(produto1.router)
 app.include_router(produto2.router)
 app.include_router(produto3.router)
 app.include_router(quiz.router)
 app.include_router(status.router)
+app.include_router(webhooks.router)
 
 
 @app.get("/")
