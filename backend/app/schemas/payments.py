@@ -26,6 +26,21 @@ class PaymentListResponse(BaseModel):
     orders: list[PaymentStatusResponse]
 
 
+class PaymentCatalogProductResponse(BaseModel):
+    product_code: str
+    name: str
+    active: bool
+    amount_cents: int | None = None
+    currency: str
+    already_unlocked: bool
+    eligible: bool
+    blocking_reason: str | None = None
+
+
+class PaymentCatalogResponse(BaseModel):
+    products: list[PaymentCatalogProductResponse]
+
+
 class MercadoPagoWebhookResponse(BaseModel):
     status: str
     event_id: str | None = None

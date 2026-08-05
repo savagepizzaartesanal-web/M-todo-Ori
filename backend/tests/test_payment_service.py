@@ -13,6 +13,7 @@ from app.services.mercado_pago_service import (
 )
 from app.services.payment_service import (
     create_checkout,
+    get_payment_catalog,
     get_payment_status,
     map_mercado_pago_status,
     process_mercado_pago_webhook,
@@ -133,6 +134,9 @@ class FakeRepository:
 
     async def fetch_product(self, product_code: str):
         return self.products.get(product_code)
+
+    async def list_payment_products(self):
+        return list(self.products.values())
 
     async def fetch_approved_order(self, *, cliente_id: str, product_code: str):
         for order in self.orders.values():
@@ -470,6 +474,79 @@ class PaymentServiceTest(unittest.IsolatedAsyncioTestCase):
             )
 
         self.assertEqual(error.exception.status_code, 409)
+
+    async def test_catalog_does_not_return_grants_product_or_secrets(self):
+        catalog = await get_payment_catalog(
+            current_user=self.user,
+            repository=self.repo,
+        )
+        serialized = catalog.model_dump()
+
+        self.assertNotIn("grants_product", str(serialized))
+        self.assertNotIn("secret", str(serialized).lower())
+        self.assertNotIn("token", str(serialized).lower())
+
+    async def test_catalog_returns_inactive_product_as_inactive(self):
+        self.repo.products["produto_1_completo"]["active"] = False
+
+        catalog = await get_payment_catalog(
+            current_user=self.user,
+            repository=self.repo,
+        )
+        product = catalog.products[0]
+
+        self.assertEqual(product.product_code, "produto_1_completo")
+        self.assertFalse(product.active)
+        self.assertTrue(product.eligible)
+
+    async def test_catalog_returns_product_without_price_as_inactive(self):
+        self.repo.products["produto_1_completo"]["amount_cents"] = None
+
+        catalog = await get_payment_catalog(
+            current_user=self.user,
+            repository=self.repo,
+        )
+        product = catalog.products[0]
+
+        self.assertFalse(product.active)
+        self.assertIsNone(product.amount_cents)
+        self.assertTrue(product.eligible)
+
+    async def test_catalog_returns_already_unlocked(self):
+        self.repo.clientes["cliente-1"]["produto_1_completo_liberado"] = True
+
+        catalog = await get_payment_catalog(
+            current_user=self.user,
+            repository=self.repo,
+        )
+        product = catalog.products[0]
+
+        self.assertTrue(product.already_unlocked)
+        self.assertFalse(product.eligible)
+        self.assertEqual(product.blocking_reason, "already_unlocked")
+
+    async def test_catalog_product1_requires_result_for_eligibility(self):
+        self.repo.clientes["cliente-1"]["resultado"] = None
+
+        catalog = await get_payment_catalog(
+            current_user=self.user,
+            repository=self.repo,
+        )
+        product = catalog.products[0]
+
+        self.assertFalse(product.eligible)
+        self.assertEqual(product.blocking_reason, "produto_1_result_required")
+
+    async def test_catalog_product1_with_result_is_eligible(self):
+        catalog = await get_payment_catalog(
+            current_user=self.user,
+            repository=self.repo,
+        )
+        product = catalog.products[0]
+
+        self.assertTrue(product.eligible)
+        self.assertFalse(product.already_unlocked)
+        self.assertIsNone(product.blocking_reason)
 
     async def test_checkout_rejects_already_granted_product_without_charge(self):
         self.repo.clientes["cliente-1"]["produto_1_completo_liberado"] = True

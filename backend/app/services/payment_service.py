@@ -7,6 +7,8 @@ from fastapi import HTTPException, status
 from app.constants import journey_status
 from app.schemas.auth import CurrentUser
 from app.schemas.payments import (
+    PaymentCatalogProductResponse,
+    PaymentCatalogResponse,
     PaymentCheckoutResponse,
     PaymentListResponse,
     PaymentStatusResponse,
@@ -179,6 +181,29 @@ def validate_checkout_prerequisites(cliente: dict, product_code: str) -> None:
             )
 
 
+def get_checkout_prerequisite_blocking_reason(
+    cliente: dict,
+    product_code: str,
+) -> str | None:
+    has_produto1_result = bool(cliente.get("resultado"))
+    status_jornada = cliente.get("status_jornada")
+
+    if product_code == "produto_1_completo":
+        return None if has_produto1_result else "produto_1_result_required"
+
+    if product_code == "produto_2":
+        if not has_produto1_result or status_jornada not in PRODUTO1_DONE_STATUSES:
+            return "produto_1_completion_required"
+        return None
+
+    if product_code == "produto_3":
+        if status_jornada not in PRODUTO2_DONE_STATUSES:
+            return "produto_2_publication_required"
+        return None
+
+    return "product_not_allowed"
+
+
 def status_response_from_order(order: dict, *, entitlement_granted: bool) -> PaymentStatusResponse:
     return PaymentStatusResponse(
         order_id=order["id"],
@@ -340,6 +365,68 @@ async def list_my_payments(
         )
 
     return PaymentListResponse(orders=responses)
+
+
+async def get_payment_catalog(
+    *,
+    current_user: CurrentUser,
+    repository: Any | None = None,
+) -> PaymentCatalogResponse:
+    repository = repository or get_payment_repository()
+    cliente = await repository.fetch_current_cliente(
+        user_id=current_user.user_id,
+        email=current_user.email,
+    )
+
+    if not cliente or not cliente.get("id"):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Perfil da cliente não encontrado.",
+        )
+
+    products_by_code = {
+        product.get("product_code"): product
+        for product in await repository.list_payment_products()
+        if product.get("product_code") in ALLOWED_PRODUCT_ENTITLEMENTS
+    }
+    responses = []
+
+    for product_code in ALLOWED_PRODUCT_ENTITLEMENTS:
+        product = products_by_code.get(product_code)
+
+        if not product:
+            continue
+
+        already_unlocked = cliente_has_entitlement(cliente, product_code)
+        blocking_reason = get_checkout_prerequisite_blocking_reason(
+            cliente,
+            product_code,
+        )
+
+        if already_unlocked:
+            blocking_reason = "already_unlocked"
+
+        if product.get("grants_product") != ALLOWED_PRODUCT_ENTITLEMENTS[product_code]:
+            blocking_reason = "catalog_inconsistent"
+
+        product_is_publicly_active = bool(
+            product.get("active") and product.get("amount_cents") is not None
+        )
+
+        responses.append(
+            PaymentCatalogProductResponse(
+                product_code=product["product_code"],
+                name=product["name"],
+                active=product_is_publicly_active,
+                amount_cents=product.get("amount_cents"),
+                currency=product["currency"],
+                already_unlocked=already_unlocked,
+                eligible=blocking_reason is None,
+                blocking_reason=blocking_reason,
+            )
+        )
+
+    return PaymentCatalogResponse(products=responses)
 
 
 def should_preserve_approved(current_status: str | None, new_status: str) -> bool:

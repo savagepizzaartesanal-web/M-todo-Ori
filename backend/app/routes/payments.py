@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 
 from app.schemas.auth import CurrentUser
 from app.schemas.payments import (
+    PaymentCatalogResponse,
     PaymentCheckoutRequest,
     PaymentCheckoutResponse,
     PaymentListResponse,
@@ -10,6 +11,7 @@ from app.schemas.payments import (
 from app.services.auth_service import get_current_user
 from app.services.payment_service import (
     create_checkout,
+    get_payment_catalog,
     get_payment_status,
     list_my_payments,
 )
@@ -31,6 +33,11 @@ async def create_payment_checkout(
 @router.get("/me", response_model=PaymentListResponse)
 async def read_my_payments(current_user: CurrentUser = Depends(get_current_user)):
     return await list_my_payments(current_user=current_user)
+
+
+@router.get("/catalog", response_model=PaymentCatalogResponse)
+async def read_payment_catalog(current_user: CurrentUser = Depends(get_current_user)):
+    return await get_payment_catalog(current_user=current_user)
 
 
 @router.get("/{order_id}/status", response_model=PaymentStatusResponse)

@@ -141,6 +141,22 @@ class SupabaseAdminRepository:
         rows = response.json()
         return rows[0] if rows else None
 
+    async def list_payment_products(self) -> list[dict]:
+        response = await self._request(
+            "GET",
+            PAYMENT_PRODUCTS_TABLE,
+            params={
+                "select": "product_code,name,grants_product,active,amount_cents,currency",
+                "order": "product_code.asc",
+            },
+        )
+        if response.status_code >= 400:
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail="Não foi possível carregar o catálogo de pagamentos.",
+            )
+        return response.json()
+
     async def fetch_approved_order(self, *, cliente_id: str, product_code: str) -> dict | None:
         response = await self._request(
             "GET",
