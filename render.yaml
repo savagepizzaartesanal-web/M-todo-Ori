@@ -14,7 +14,7 @@ services:
       - key: APP_ENV
         value: production
       - key: FRONTEND_ORIGINS
-        value: https://metodo-ori.vercel.app,https://metodoori.teluricabeleza.com,https://metodo-ori-telurica.pages.dev
+        value: https://metodoori.teluricabeleza.com,https://metodo-ori-telurica.pages.dev
       - key: PYTHON_VERSION
         value: 3.12.8
       - key: SUPABASE_URL
