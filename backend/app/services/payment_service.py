@@ -1,3 +1,4 @@
+import os
 from datetime import UTC, datetime
 from typing import Any
 from uuid import uuid4
@@ -38,6 +39,7 @@ PAYMENT_INTERNAL_STATUSES = {
     "refunded",
     "error",
 }
+DEFAULT_CHECKOUT_PRODUCT_CODES = ("produto_1_completo",)
 PRODUTO1_DONE_STATUSES = {
     journey_status.CODIGO_DAS_DEUSAS_CONCLUIDO,
     journey_status.DOSSIE_ORI_LIBERADO,
@@ -100,6 +102,14 @@ def get_provider_event_id(payload: dict[str, Any], x_request_id: str, data_id: s
     return f"{x_request_id}:{data_id}"
 
 
+def get_checkout_enabled_product_codes() -> set[str]:
+    raw_value = os.getenv(
+        "PAYMENT_CHECKOUT_PRODUCT_CODES",
+        ",".join(DEFAULT_CHECKOUT_PRODUCT_CODES),
+    )
+    return {code.strip() for code in raw_value.split(",") if code.strip()}
+
+
 def validate_product_for_checkout(product: dict | None, product_code: str) -> dict:
     if not product or product.get("product_code") != product_code:
         raise HTTPException(
@@ -111,6 +121,12 @@ def validate_product_for_checkout(product: dict | None, product_code: str) -> di
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Produto não disponível para checkout.",
+        )
+
+    if product_code not in get_checkout_enabled_product_codes():
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Produto em preparação para checkout.",
         )
 
     expected_entitlement = ALLOWED_PRODUCT_ENTITLEMENTS[product_code]
@@ -185,6 +201,9 @@ def get_checkout_prerequisite_blocking_reason(
     cliente: dict,
     product_code: str,
 ) -> str | None:
+    if product_code not in get_checkout_enabled_product_codes():
+        return "checkout_not_enabled"
+
     has_produto1_result = bool(cliente.get("resultado"))
     status_jornada = cliente.get("status_jornada")
 
@@ -410,7 +429,9 @@ async def get_payment_catalog(
             blocking_reason = "catalog_inconsistent"
 
         product_is_publicly_active = bool(
-            product.get("active") and product.get("amount_cents") is not None
+            product.get("active")
+            and product.get("amount_cents") is not None
+            and product_code in get_checkout_enabled_product_codes()
         )
 
         responses.append(

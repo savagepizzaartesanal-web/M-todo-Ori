@@ -24,6 +24,7 @@ from app.services.payment_service import (
 
 
 SECRET = "webhook-secret"
+ALL_CHECKOUT_PRODUCTS = "produto_1_completo,produto_2,produto_3"
 
 
 class MercadoPagoWebhookRouteTest(unittest.IsolatedAsyncioTestCase):
@@ -592,6 +593,21 @@ class PaymentServiceTest(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(product.already_unlocked)
         self.assertIsNone(product.blocking_reason)
 
+    async def test_catalog_disables_product2_and_product3_checkout_by_default(self):
+        catalog = await get_payment_catalog(
+            current_user=self.user,
+            repository=self.repo,
+        )
+        products = {product.product_code: product for product in catalog.products}
+
+        self.assertTrue(products["produto_1_completo"].active)
+        self.assertFalse(products["produto_2"].active)
+        self.assertFalse(products["produto_2"].eligible)
+        self.assertEqual(products["produto_2"].blocking_reason, "checkout_not_enabled")
+        self.assertFalse(products["produto_3"].active)
+        self.assertFalse(products["produto_3"].eligible)
+        self.assertEqual(products["produto_3"].blocking_reason, "checkout_not_enabled")
+
     async def test_checkout_rejects_already_granted_product_without_charge(self):
         self.repo.clientes["cliente-1"]["produto_1_completo_liberado"] = True
         mercado_pago = FakeMercadoPago()
@@ -632,9 +648,7 @@ class PaymentServiceTest(unittest.IsolatedAsyncioTestCase):
 
         self.assertEqual(error.exception.status_code, 409)
 
-    async def test_product2_requires_product1_completion(self):
-        self.repo.clientes["cliente-1"]["status_jornada"] = "Código das Deusas em andamento"
-
+    async def test_product2_checkout_is_disabled_by_default_for_rc1(self):
         with self.assertRaises(HTTPException) as error:
             await create_checkout(
                 payload_product_code="produto_2",
@@ -644,15 +658,37 @@ class PaymentServiceTest(unittest.IsolatedAsyncioTestCase):
             )
 
         self.assertEqual(error.exception.status_code, 409)
+        self.assertEqual(error.exception.detail, "Produto em preparação para checkout.")
 
-    async def test_product3_requires_product2_publication(self):
-        with self.assertRaises(HTTPException) as error:
-            await create_checkout(
-                payload_product_code="produto_3",
-                current_user=self.user,
-                repository=self.repo,
-                mercado_pago=FakeMercadoPago(),
-            )
+    async def test_product2_requires_product1_completion_when_checkout_enabled(self):
+        self.repo.clientes["cliente-1"]["status_jornada"] = "Código das Deusas em andamento"
+
+        with patch.dict(
+            os.environ,
+            {"PAYMENT_CHECKOUT_PRODUCT_CODES": ALL_CHECKOUT_PRODUCTS},
+        ):
+            with self.assertRaises(HTTPException) as error:
+                await create_checkout(
+                    payload_product_code="produto_2",
+                    current_user=self.user,
+                    repository=self.repo,
+                    mercado_pago=FakeMercadoPago(),
+                )
+
+        self.assertEqual(error.exception.status_code, 409)
+
+    async def test_product3_requires_product2_publication_when_checkout_enabled(self):
+        with patch.dict(
+            os.environ,
+            {"PAYMENT_CHECKOUT_PRODUCT_CODES": ALL_CHECKOUT_PRODUCTS},
+        ):
+            with self.assertRaises(HTTPException) as error:
+                await create_checkout(
+                    payload_product_code="produto_3",
+                    current_user=self.user,
+                    repository=self.repo,
+                    mercado_pago=FakeMercadoPago(),
+                )
 
         self.assertEqual(error.exception.status_code, 409)
 
@@ -1128,16 +1164,20 @@ class PaymentServiceTest(unittest.IsolatedAsyncioTestCase):
 
     async def test_product2_grants_correct_flag(self):
         order = await self.create_pending_order("produto_2")
-        await self.process_payment_webhook(
-            order,
-            {
-                "id": "pay-1",
-                "external_reference": order["external_reference"],
-                "transaction_amount": 199,
-                "currency_id": "BRL",
-                "status": "approved",
-            },
-        )
+        with patch.dict(
+            os.environ,
+            {"PAYMENT_CHECKOUT_PRODUCT_CODES": ALL_CHECKOUT_PRODUCTS},
+        ):
+            await self.process_payment_webhook(
+                order,
+                {
+                    "id": "pay-1",
+                    "external_reference": order["external_reference"],
+                    "transaction_amount": 199,
+                    "currency_id": "BRL",
+                    "status": "approved",
+                },
+            )
 
         self.assertTrue(self.repo.clientes["cliente-1"]["produto_2_liberado"])
         self.assertFalse(self.repo.clientes["cliente-1"]["produto_3_liberado"])
@@ -1145,16 +1185,20 @@ class PaymentServiceTest(unittest.IsolatedAsyncioTestCase):
     async def test_product3_grants_correct_flag(self):
         self.repo.clientes["cliente-1"]["status_jornada"] = "Dossiê ORI publicado"
         order = await self.create_pending_order("produto_3")
-        await self.process_payment_webhook(
-            order,
-            {
-                "id": "pay-1",
-                "external_reference": order["external_reference"],
-                "transaction_amount": 299,
-                "currency_id": "BRL",
-                "status": "approved",
-            },
-        )
+        with patch.dict(
+            os.environ,
+            {"PAYMENT_CHECKOUT_PRODUCT_CODES": ALL_CHECKOUT_PRODUCTS},
+        ):
+            await self.process_payment_webhook(
+                order,
+                {
+                    "id": "pay-1",
+                    "external_reference": order["external_reference"],
+                    "transaction_amount": 299,
+                    "currency_id": "BRL",
+                    "status": "approved",
+                },
+            )
 
         self.assertTrue(self.repo.clientes["cliente-1"]["produto_3_liberado"])
 
