@@ -1,4 +1,5 @@
 import os
+import logging
 from typing import Any
 
 import httpx
@@ -10,10 +11,16 @@ PAYMENT_ORDERS_TABLE = "payment_orders"
 PAYMENT_WEBHOOK_EVENTS_TABLE = "payment_webhook_events"
 ADMIN_EVENTS_TABLE = "admin_cliente_eventos"
 
+logger = logging.getLogger(__name__)
+
 
 def get_supabase_url() -> str:
     supabase_url = os.getenv("SUPABASE_URL")
     if not supabase_url:
+        try:
+            raise RuntimeError("Supabase admin URL is not configured")
+        except RuntimeError:
+            logger.exception("Payment Supabase admin URL configuration is missing.")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Pagamentos indisponíveis no momento.",
@@ -24,6 +31,12 @@ def get_supabase_url() -> str:
 def get_supabase_secret_key() -> str:
     secret_key = os.getenv("SUPABASE_SECRET_KEY")
     if not secret_key:
+        try:
+            raise RuntimeError("Supabase admin secret is not configured")
+        except RuntimeError:
+            logger.exception(
+                "Payment Supabase admin secret configuration is missing."
+            )
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Pagamentos indisponíveis no momento.",
