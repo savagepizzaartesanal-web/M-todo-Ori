@@ -14,12 +14,14 @@ services:
       - key: APP_ENV
         value: production
       - key: FRONTEND_ORIGINS
-        value: https://metodo-ori.vercel.app,https://metodoori.teluricabeleza.com,https://metodo-ori-telurica.pages.dev
+        value: https://metodoori.teluricabeleza.com,https://metodo-ori-telurica.pages.dev
       - key: PYTHON_VERSION
         value: 3.12.8
       - key: SUPABASE_URL
         sync: false
       - key: SUPABASE_PUBLISHABLE_KEY
+        sync: false
+      - key: SUPABASE_SECRET_KEY
         sync: false
       - key: AI_PROVIDER
         value: gemini
@@ -29,3 +31,15 @@ services:
         value: gemini-2.5-flash-lite
       - key: OPENAI_MODEL
         value: gpt-4.1-mini
+      - key: MERCADO_PAGO_ACCESS_TOKEN
+        sync: false
+      - key: MERCADO_PAGO_WEBHOOK_SECRET
+        sync: false
+      - key: PUBLIC_API_BASE_URL
+        sync: false
+      - key: PAYMENT_SUCCESS_URL
+        sync: false
+      - key: PAYMENT_PENDING_URL
+        sync: false
+      - key: PAYMENT_FAILURE_URL
+        sync: false

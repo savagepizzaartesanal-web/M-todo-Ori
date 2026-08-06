@@ -6,12 +6,14 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
 import { FEATURES } from "./config/features";
+import { migrateProduto1PremiumCache } from "./utils/produto1Cache";
 
 const Produto2 = lazy(() => import("./pages/Produto2"));
 const Produto2EmPreparacao = lazy(() => import("./pages/Produto2EmPreparacao"));
 const Produto3 = lazy(() => import("./pages/Produto3"));
 const QuizProduto1 = lazy(() => import("./pages/QuizProduto1"));
 const Produto1Relatorio = lazy(() => import("./pages/Produto1Relatorio"));
+const PagamentoRetorno = lazy(() => import("./pages/PagamentoRetorno"));
 const EspelhoOri = lazy(() => import("./pages/EspelhoOri"));
 const OraculoOri = lazy(() => import("./pages/OraculoOri"));
 const MetodoOri = lazy(() => import("./pages/MetodoOri"));
@@ -49,6 +51,10 @@ function PageFallback() {
 }
 
 function App() {
+  useEffect(() => {
+    migrateProduto1PremiumCache();
+  }, []);
+
   return (
     <BrowserRouter>
       <ScrollToTop />
@@ -170,6 +176,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <QuizProduto1 />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/pagamento/retorno"
+            element={
+              <ProtectedRoute>
+                <PagamentoRetorno />
               </ProtectedRoute>
             }
           />

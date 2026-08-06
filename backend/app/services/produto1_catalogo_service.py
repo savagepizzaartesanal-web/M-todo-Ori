@@ -3,6 +3,7 @@ from copy import deepcopy
 from pathlib import Path
 
 from app.data.quiz import ARCHETYPES, COMBINATIONS, QUESTIONS
+from app.services.produto1_access_service import filter_produto1_report_for_access
 
 CATALOG_VERSION = "2026-07-09"
 REPORTS_PATH = Path(__file__).resolve().parents[1] / "data" / "reports.json"
@@ -31,6 +32,13 @@ def get_archetypes_catalog() -> dict:
 
 def get_produto1_catalogo() -> dict:
     reports = load_reports()
+    safe_reports = {
+        result_name: filter_produto1_report_for_access(
+            report,
+            full_access=False,
+        )
+        for result_name, report in reports.items()
+    }
 
     return {
         "version": CATALOG_VERSION,
@@ -38,7 +46,7 @@ def get_produto1_catalogo() -> dict:
         "total_questions": len(QUESTIONS),
         "archetypes": get_archetypes_catalog(),
         "combinations": deepcopy(COMBINATIONS),
-        "reports": reports,
+        "reports": safe_reports,
     }
 
 

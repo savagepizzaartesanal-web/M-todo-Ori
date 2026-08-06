@@ -24,6 +24,12 @@ from app.services.admin_ai_service import (
     get_ai_provider_config,
 )
 from app.services.jornada_service import fetch_current_cliente
+from app.services.produto1_access_service import (
+    build_produto1_access_payload,
+    filter_produto1_camadas_for_access,
+    filter_produto1_report_for_access,
+    has_produto1_full_access,
+)
 from app.services.produto1_service import (
     get_produto1_respostas,
     save_produto1_ai_report,
@@ -1377,14 +1383,24 @@ async def get_produto1_leitura_personalizada(
                     current_user=current_user,
                 )
 
+    full_access = has_produto1_full_access(cliente)
+    access_payload = build_produto1_access_payload(full_access=full_access)
+
     return Produto1LeituraResponse(
         user_id=current_user.user_id,
         email=(cliente or {}).get("email") or current_user.email,
         resultado=result_name,
         perfil=perfil,
         highlights=highlights,
-        camadas=camadas,
-        report=report,
+        camadas=filter_produto1_camadas_for_access(
+            camadas,
+            full_access=full_access,
+        ),
+        report=filter_produto1_report_for_access(
+            report,
+            full_access=full_access,
+        ),
+        **access_payload,
     )
 
 
@@ -1441,4 +1457,11 @@ async def get_produto1_relatorio(
         sections=build_relatorio_sections(report),
         formula=report.get("formula"),
         next_step=report.get("proximoPasso"),
+        access_mode=leitura.access_mode,
+        produto_1_completo_liberado=leitura.produto_1_completo_liberado,
+        unlock_product_code=leitura.unlock_product_code,
+        first_paywall_layer_id=leitura.first_paywall_layer_id,
+        free_layer_ids=leitura.free_layer_ids,
+        locked_layer_ids=leitura.locked_layer_ids,
+        blocks=leitura.blocks,
     )

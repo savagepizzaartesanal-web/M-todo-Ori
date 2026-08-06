@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 
 import { OriBadge, OriButton, OriCard, OriSheet } from "./ui";
 import { supabase } from "../lib/supabaseClient";
+import { clearProduto1PersonalCaches } from "../utils/produto1Cache";
 
 const mainLinks = [
   ["Portal Cliente", "/portal"],
@@ -73,6 +74,7 @@ function Sidebar() {
   }, []);
 
   const handleLogout = async () => {
+    clearProduto1PersonalCaches();
     await supabase.auth.signOut();
     setMobileOpen(false);
     navigate("/entrar");

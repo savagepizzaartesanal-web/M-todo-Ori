@@ -8,6 +8,8 @@ import { calculateResult } from "../services/calculateResult";
 import {
   calculateQuizResult,
   completeProduto1,
+  createPaymentCheckout,
+  getPaymentCatalog,
   getProduto1Reading,
   getProduto1Answers,
   getProduto1Feedback,
@@ -21,10 +23,17 @@ import { supabase } from "../lib/supabaseClient";
 import { useProduto1Catalog } from "../hooks/useProduto1Catalog";
 
 import QuizHero from "../components/QuizHero";
+import Produto1Paywall from "../components/Produto1Paywall";
 import ResultHero from "../components/ResultHero";
 import NextStepCard from "../components/NextStepCard";
 import SyncNotice from "../components/SyncNotice";
 import { OriBadge, OriButton, OriField } from "../components/ui";
+import { PRODUTO1_COMPLETE_PRODUCT_CODE } from "../content/produto1PaywallCopy";
+import {
+  forgetProduto1CheckoutOrder,
+  getProduto1QuizStorageKey,
+  rememberProduto1CheckoutOrder,
+} from "../utils/produto1Cache";
 
 const LEGACY_STORAGE_KEY = "ori_produto_1_quiz";
 const ORACLE_PANEL_BACKGROUND =
@@ -53,10 +62,6 @@ const FEEDBACK_OPTIONS = [
     text: "A leitura ainda não pareceu minha.",
   },
 ];
-
-const getQuizStorageKey = (userId) => {
-  return userId ? `ori_produto_1_quiz_${userId}` : "ori_produto_1_quiz_guest";
-};
 
 const readQuizFromStorage = (storageKey) => {
   try {
@@ -1985,65 +1990,7 @@ function createGuidedReadingBlocks(paragraphs, layer) {
   });
 }
 
-function splitParagraphForDesktop(paragraph, maxPreviewLength = 360) {
-  const trimmedParagraph = String(paragraph || "").trim();
-
-  if (!trimmedParagraph) {
-    return {
-      visible: "",
-      hidden: "",
-    };
-  }
-
-  if (trimmedParagraph.length <= maxPreviewLength) {
-    return {
-      visible: trimmedParagraph,
-      hidden: "",
-    };
-  }
-
-  const punctuationCut = Math.max(
-    trimmedParagraph.lastIndexOf(". ", maxPreviewLength),
-    trimmedParagraph.lastIndexOf("! ", maxPreviewLength),
-    trimmedParagraph.lastIndexOf("? ", maxPreviewLength),
-  );
-  const cutPoint = punctuationCut > 180 ? punctuationCut + 1 : maxPreviewLength;
-  const visible = trimmedParagraph.slice(0, cutPoint).trim();
-  const hidden = trimmedParagraph.slice(cutPoint).trim();
-
-  if (hidden.length < 90) {
-    return {
-      visible: trimmedParagraph,
-      hidden: "",
-    };
-  }
-
-  return {
-    visible,
-    hidden,
-  };
-}
-
-function splitDesktopReadingBlock(block, maxPreviewLength = 360) {
-  const [firstParagraph = "", ...extraParagraphs] = block.paragraphs;
-  const splitFirstParagraph = splitParagraphForDesktop(
-    firstParagraph,
-    maxPreviewLength,
-  );
-
-  return {
-    visibleParagraphs: splitFirstParagraph.visible
-      ? [splitFirstParagraph.visible]
-      : [],
-    hiddenParagraphs: [
-      ...(splitFirstParagraph.hidden ? [splitFirstParagraph.hidden] : []),
-      ...extraParagraphs,
-    ],
-  };
-}
-
 function ReadingLayerPanel({ layer }) {
-  const [isDeepReadingOpen, setIsDeepReadingOpen] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const mobileMotionOff = useMobileMotionOff();
   const reduceMotion = prefersReducedMotion || mobileMotionOff;
@@ -2057,41 +2004,10 @@ function ReadingLayerPanel({ layer }) {
   const copy = getReadingLayerCopy(layer);
   const [leadParagraph, ...bodyParagraphs] = paragraphs;
   const guidedBlocks = createGuidedReadingBlocks(bodyParagraphs, layer);
-  const showCompleteText = mobileMotionOff;
-  const leadSplit = showCompleteText
-    ? { visible: leadParagraph, hidden: "" }
-    : splitParagraphForDesktop(leadParagraph, 460);
-  const desktopReadingBlocks = guidedBlocks
-    .map((block) => ({
-      ...block,
-      ...splitDesktopReadingBlock(block),
-    }))
-    .filter(
-      (block) =>
-        block.visibleParagraphs.length > 0 || block.hiddenParagraphs.length > 0,
-    );
-  const hiddenDesktopBlocks = [
-    ...(leadSplit.hidden
-      ? [
-          {
-            label: copy.lead,
-            paragraphs: [leadSplit.hidden],
-          },
-        ]
-      : []),
-    ...desktopReadingBlocks
-    .map((block) => ({
-      label: block.label,
-      paragraphs: block.hiddenParagraphs,
-    }))
-    .filter((block) => block.paragraphs.length > 0),
-  ];
-  const hiddenDesktopCount = hiddenDesktopBlocks.reduce(
-    (total, block) => total + block.paragraphs.length,
-    0,
+  const formattedLayerDescription = String(layer.description || "").replace(
+    "como você",
+    "como\nvocê",
   );
-  const hasHiddenDesktopReading = !showCompleteText && hiddenDesktopCount > 0;
-  const visibleLeadParagraph = showCompleteText ? leadParagraph : leadSplit.visible;
 
   return (
     <motion.article
@@ -2100,13 +2016,13 @@ function ReadingLayerPanel({ layer }) {
       animate={reduceMotion ? undefined : { opacity: 1, y: 0, filter: "blur(0px)" }}
       exit={reduceMotion ? undefined : { opacity: 0, y: -10, filter: "blur(6px)" }}
       transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-      className="relative overflow-hidden rounded-[18px] md:rounded-[26px] lg:min-h-[350px]"
+      className="relative mx-auto overflow-hidden rounded-[26px] md:rounded-[32px]"
       style={{
         background:
-          "radial-gradient(circle at top right, rgba(242,185,104,0.10), transparent 34%), linear-gradient(135deg, rgba(18,9,10,0.56), rgba(5,2,2,0.70))",
-        border: "1px solid rgba(242,185,104,0.11)",
+          "radial-gradient(circle at 84% 10%, rgba(242,185,104,0.105), transparent 30%), radial-gradient(circle at 8% 92%, rgba(183,140,255,0.045), transparent 34%), linear-gradient(180deg, rgba(18,9,10,0.58), rgba(5,2,2,0.86))",
+        border: "1px solid rgba(242,185,104,0.095)",
         boxShadow:
-          "0 0 66px rgba(242,185,104,0.035), inset 0 0 40px rgba(255,255,255,0.010)",
+          "0 24px 70px rgba(0,0,0,0.18), 0 0 54px rgba(242,185,104,0.026), inset 0 0 34px rgba(255,255,255,0.010)",
         backdropFilter: "blur(10px)",
         WebkitBackdropFilter: "blur(10px)",
       }}
@@ -2120,284 +2036,187 @@ function ReadingLayerPanel({ layer }) {
         }}
       />
 
-      <div className="absolute right-0 top-0 hidden h-[350px] w-[46%] lg:block">
-        <img
-          src={layer.image}
-          alt={layer.eyebrow}
-          loading="lazy"
-          decoding="async"
-          className="h-full w-full object-cover object-right opacity-[0.86] scale-[1.06]"
-        />
-      </div>
-
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(90deg, rgba(5,2,2,0.90) 0%, rgba(5,2,2,0.82) 34%, rgba(5,2,2,0.58) 50%, rgba(5,2,2,0.20) 72%, rgba(5,2,2,0.04) 100%)",
-        }}
-      />
-
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(circle at 82% 38%, rgba(242,185,104,0.08), transparent 28%), linear-gradient(90deg, transparent 0%, rgba(5,2,2,0.06) 52%, rgba(5,2,2,0.20) 100%)",
-        }}
-      />
-
-      <div className="relative z-10 lg:min-h-[350px]">
-        <div
-          className="flex min-h-0 max-w-full flex-col justify-center p-3 md:p-5 lg:min-h-[350px] lg:max-w-[54%]"
+      <div className="relative z-10 mx-auto max-w-[1120px] px-2.5 py-2.5 md:px-3 md:py-3">
+        <header
+          className="relative mb-6 min-h-[330px] overflow-hidden rounded-[22px] md:mb-8 md:min-h-[360px] md:rounded-[24px] xl:min-h-[372px]"
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(18,9,10,0.72), rgba(5,2,2,0.90))",
+            border: "1px solid rgba(242,185,104,0.16)",
+            boxShadow:
+              "0 20px 54px rgba(0,0,0,0.24), 0 0 0 1px rgba(242,185,104,0.035), 0 0 38px rgba(242,185,104,0.035), inset 0 0 24px rgba(255,255,255,0.008)",
+          }}
         >
-          <div className="mb-2 flex flex-wrap items-center gap-2 md:mb-2.5">
-            <span
-              className="flex h-7 w-7 items-center justify-center rounded-full text-[10px] md:h-8 md:w-8 md:text-[11px]"
-              style={{
-                background: "rgba(242,185,104,0.09)",
-                border: "1px solid rgba(242,185,104,0.16)",
-                color: "var(--gold-primary)",
-                boxShadow: "0 0 26px rgba(242,185,104,0.07)",
-                fontWeight: 650,
-              }}
-            >
-              {layer.number}
-            </span>
+          {layer.image && (
+            <img
+              src={layer.image}
+              alt={`Imagem editorial da camada ${layer.label}`}
+              loading="lazy"
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover object-[72%_center] opacity-92 md:object-center"
+            />
+          )}
 
-            <div className="min-w-0">
-              <p
-                className="ori-type-system mb-0.5 text-[8px]"
-                style={{ color: "var(--gold-soft)" }}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                "linear-gradient(90deg, rgba(5,2,2,0.94) 0%, rgba(5,2,2,0.76) 34%, rgba(5,2,2,0.30) 62%, rgba(5,2,2,0.06) 100%)",
+            }}
+          />
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(5,2,2,0.12) 0%, transparent 46%, rgba(5,2,2,0.48) 100%), radial-gradient(circle at 18% 42%, rgba(242,185,104,0.11), transparent 34%)",
+            }}
+          />
+
+          <div className="relative z-10 flex min-h-[330px] items-center px-5 py-6 md:min-h-[360px] md:px-10 md:py-8 lg:px-12 xl:min-h-[372px]">
+            <div className="max-w-[700px]">
+              <div className="mb-4 flex flex-wrap items-center gap-2.5">
+                <span
+                  className="flex h-8 w-8 items-center justify-center rounded-full text-[10px] md:h-9 md:w-9 md:text-[11px]"
+                  style={{
+                    background: "rgba(242,185,104,0.12)",
+                    border: "1px solid rgba(242,185,104,0.24)",
+                    color: "var(--gold-primary)",
+                    boxShadow: "0 0 28px rgba(242,185,104,0.10)",
+                    fontWeight: 650,
+                  }}
+                >
+                  {layer.number}
+                </span>
+
+                <p
+                  className="ori-type-system text-[10px] md:text-[11px]"
+                  style={{ color: "var(--gold-soft)" }}
+                >
+                  {layer.label}
+                </p>
+              </div>
+
+              <h2
+                className="ori-type-revelation whitespace-pre-line text-[30px] md:text-[40px] xl:text-[44px]"
+                style={{
+                  color: "var(--gold-primary)",
+                  fontWeight: 650,
+                  letterSpacing: 0,
+                  textShadow:
+                    "0 0 34px rgba(242,185,104,0.16), 0 12px 28px rgba(0,0,0,0.32)",
+                }}
               >
-                {layer.eyebrow}
-              </p>
+                {layer.title}
+              </h2>
+
               <p
-                className="ori-type-reading-soft text-[11px] md:text-xs"
-                style={{ color: "rgba(255,245,235,0.62)" }}
+                className="ori-type-reading-soft mt-3 max-w-[560px] whitespace-pre-line text-[14px] leading-[1.68] md:text-[15px]"
+                style={{
+                  color: "rgba(255,245,235,0.76)",
+                  textShadow: "0 8px 22px rgba(0,0,0,0.36)",
+                }}
               >
-                Camada ativa da leitura
+                {formattedLayerDescription}
               </p>
             </div>
           </div>
+        </header>
 
-          <h3
-            className="ori-type-revelation mb-2 max-w-3xl whitespace-pre-line text-[22px] md:text-[30px] xl:text-[34px]"
-            style={{
-              color: "var(--gold-primary)",
-              fontWeight: 650,
-              letterSpacing: "-0.065em",
-              textShadow: "0 0 38px rgba(242,185,104,0.12)",
-            }}
-          >
-            {layer.title}
-          </h3>
-
-          <p
-            className="ori-type-reading-soft mb-2.5 max-w-2xl text-[13px] md:mb-3 md:text-sm"
-            style={{ color: "rgba(255,245,235,0.66)" }}
-          >
-            {layer.description}
-          </p>
-
-          {visibleLeadParagraph && (
-            <div
-              className="mb-2 w-full rounded-[15px] px-3 py-2.5 text-left transition-transform md:mb-2.5 md:px-3.5 md:py-3 md:hover:-translate-y-0.5"
-              style={{
-                background:
-                  "linear-gradient(90deg, rgba(242,185,104,0.060), rgba(255,255,255,0.010))",
-                border: "1px solid rgba(242,185,104,0.10)",
-                backdropFilter: "blur(8px)",
-                WebkitBackdropFilter: "blur(8px)",
-              }}
-            >
+        <div className="mx-auto max-w-[780px] space-y-8 px-1 pb-5 md:space-y-10 md:pb-7">
+          {leadParagraph && (
+            <section>
               <p
-                className="ori-type-system ori-label-sm mb-1.5"
+                className="ori-type-system mb-4 text-[10px] md:text-[11px]"
                 style={{ color: "var(--gold-soft)" }}
               >
                 {copy.lead}
               </p>
 
               <p
-                className="ori-type-reading text-[13px] leading-relaxed md:text-sm"
+                className="ori-type-reading text-[16px] leading-[1.72] md:text-[17px]"
                 style={{ color: "rgba(255,245,235,0.88)" }}
               >
-                {visibleLeadParagraph}
+                {leadParagraph}
               </p>
-            </div>
+            </section>
           )}
 
-          {desktopReadingBlocks.length > 0 && (
-            <div className="grid gap-2 md:gap-2.5">
-              {desktopReadingBlocks.map((block) => {
-                const visibleParagraphs = showCompleteText
-                  ? block.paragraphs
-                  : block.visibleParagraphs;
-
-                return (
-                visibleParagraphs.length > 0 && (
-                <div
-                  key={`${layer.number}-${block.label}`}
-                  className="rounded-[14px] px-3 py-2 text-left transition-transform md:py-2.5"
-                  style={{
-                    background:
-                      "linear-gradient(180deg, rgba(255,255,255,0.024), rgba(255,255,255,0.007))",
-                    border: "1px solid rgba(242,185,104,0.065)",
-                  }}
-                >
-                  <p
-                    className="ori-type-system ori-label-sm mb-1.5"
-                    style={{ color: "var(--gold-soft)" }}
-                  >
-                    {block.label}
-                  </p>
-
-                  <div className="space-y-1.5">
-                    {visibleParagraphs.map((paragraph, index) => (
-                      <p
-                        key={`${layer.number}-${block.label}-${index}`}
-                        className="ori-type-reading-soft text-xs leading-relaxed md:text-[13px]"
-                        style={{
-                          color: "rgba(255,245,235,0.68)",
-                        }}
-                      >
-                        {paragraph}
-                      </p>
-                    ))}
-                  </div>
-                </div>
-                )
-                );
-              })}
-            </div>
-          )}
-
-          {hasHiddenDesktopReading && (
-            <div className="mt-3 hidden md:block">
-              <OriButton
-                type="button"
-                variant="secondary"
-                onClick={() => setIsDeepReadingOpen((current) => !current)}
-                className="px-4 py-2 text-xs"
-                aria-expanded={isDeepReadingOpen}
-              >
-                {isDeepReadingOpen ? "Recolher leitura" : "Aprofundar leitura"}
-              </OriButton>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {hasHiddenDesktopReading && isDeepReadingOpen && (
-        <div className="relative z-10 hidden border-t border-[rgba(242,185,104,0.08)] p-5 md:block">
-          <div
-            className="rounded-[18px] px-4 py-4"
-            style={{
-              background:
-                "linear-gradient(180deg, rgba(255,255,255,0.022), rgba(255,255,255,0.007))",
-              border: "1px solid rgba(242,185,104,0.075)",
-            }}
-          >
-            <div className="mb-3 flex items-center justify-between gap-4">
-              <p
-                className="ori-type-system ori-label-sm"
+          {guidedBlocks.map((block) => (
+            <section
+              key={`${layer.number}-${block.label}`}
+              className="border-t pt-7"
+              style={{ borderColor: "rgba(242,185,104,0.09)" }}
+            >
+              <h3
+                className="ori-type-system ori-label-sm mb-4"
                 style={{ color: "var(--gold-soft)" }}
               >
-                Leitura completa da seção
-              </p>
-              <span
-                className="text-[11px]"
-                style={{ color: "rgba(255,245,235,0.48)" }}
-              >
-                {hiddenDesktopCount} {hiddenDesktopCount === 1 ? "trecho" : "trechos"}
-              </span>
-            </div>
+                {block.label}
+              </h3>
 
-            <div className="grid gap-3">
-              {hiddenDesktopBlocks.map((block, blockIndex) => (
-                <div
-                  key={`${layer.number}-deep-${block.label}-${blockIndex}`}
-                  className="space-y-2"
-                >
-                  {block.paragraphs.map((paragraph, index) => (
-                    <p
-                      key={`${layer.number}-complete-${block.label}-${blockIndex}-${index}`}
-                      className="ori-type-reading-soft text-sm leading-relaxed"
-                      style={{ color: "rgba(255,245,235,0.74)" }}
-                    >
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
+              <div className="space-y-5">
+                {block.paragraphs.map((paragraph, index) => (
+                  <p
+                    key={`${layer.number}-${block.label}-${index}`}
+                    className="ori-type-reading-soft text-[15px] leading-[1.72] md:text-base"
+                    style={{
+                      color: "rgba(255,245,235,0.74)",
+                    }}
+                  >
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            </section>
+          ))}
+
+          {paragraphs.length === 0 && (
+            <p
+              className="ori-type-reading-soft text-sm"
+              style={{ color: "rgba(255,245,235,0.62)" }}
+            >
+              Esta camada será carregada quando a leitura estiver sincronizada.
+            </p>
+          )}
         </div>
-      )}
+
+      </div>
     </motion.article>
   );
 }
-
-function LayerTabNavigation({ tabs, activeNumber, onSelect }) {
+function LayerTabNavigation({
+  tabs,
+  activeNumber,
+  onSelect,
+  blockNumber,
+  readingProgress,
+}) {
   const activeIndex = Math.max(
     tabs.findIndex((item) => item.number === activeNumber),
     0,
   );
-  const activeTab = tabs[activeIndex] || tabs[0];
-  const progress =
+  const localProgress =
     tabs.length > 0 ? Math.round(((activeIndex + 1) / tabs.length) * 100) : 0;
+  const progress = readingProgress?.percent ?? localProgress;
+  const progressTotal = readingProgress?.total || tabs.length;
+  const progressActiveIndex = readingProgress?.activeIndex ?? activeIndex;
 
   return (
     <div className="relative z-10 mb-3 md:mb-4">
-      <div className="mb-2.5 flex flex-col gap-2.5 md:flex-row md:items-end md:justify-between md:gap-3">
-        <div>
-          <p
-            className="ori-type-system ori-label-sm mb-1"
-            style={{ color: "var(--gold-soft)" }}
-          >
-            Camada atual
-          </p>
-          <p
-            className="ori-type-reading-soft text-xs md:text-sm"
-            style={{ color: "rgba(255,245,235,0.58)" }}
-          >
-            {activeTab?.number} · {activeTab?.label}
-          </p>
-        </div>
-
-        <div className="w-full md:w-48">
-          <div className="mb-1.5 flex items-center justify-between">
-            <span
-              className="text-[10px]"
-              style={{ color: "rgba(255,245,235,0.58)" }}
-            >
-              Progresso
-            </span>
-            <span className="text-[10px]" style={{ color: "var(--gold-soft)" }}>
-              {progress}%
-            </span>
-          </div>
-          <div
-            className="ori-progress h-1.5"
-            style={{ background: "rgba(255,255,255,0.045)" }}
-          >
-            <motion.div
-              className="h-full rounded-full"
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-              style={{
-                background:
-                  "linear-gradient(90deg, rgba(242,185,104,0.32), rgba(242,185,104,0.95))",
-                boxShadow: "0 0 18px rgba(242,185,104,0.18)",
-              }}
-            />
-          </div>
-        </div>
-      </div>
-
-      <div className="ori-premium-scroll relative flex gap-1.5 overflow-x-auto pb-1 md:gap-2">
+      <div className="ori-premium-scroll relative overflow-x-auto px-3 pb-3 pt-2.5">
+        <div
+          className="pointer-events-none absolute left-7 right-7 top-[23px] h-px"
+          style={{
+            background:
+              "linear-gradient(90deg, rgba(242,185,104,0.08), rgba(242,185,104,0.22), rgba(242,185,104,0.08))",
+          }}
+        />
+        <div className="relative mx-auto flex min-w-max max-w-[1060px] items-start gap-6 md:min-w-0 md:justify-between md:gap-6">
         {tabs.map((item, index) => {
           const isActive = activeNumber === item.number;
           const isPast = index < activeIndex;
+          const isLocked = Boolean(item.locked);
+          const displayNumber = `${blockNumber}.${index + 1}`;
 
           return (
             <motion.button
@@ -2405,63 +2224,113 @@ function LayerTabNavigation({ tabs, activeNumber, onSelect }) {
               type="button"
               onClick={() => onSelect(item.number)}
               aria-current={isActive ? "step" : undefined}
-              aria-label={`Abrir seção ${item.number}: ${item.label}`}
+              aria-label={
+                isLocked
+                  ? `Abrir desbloqueio da seção ${displayNumber}: ${item.label}`
+                  : `Abrir seção ${displayNumber}: ${item.label}`
+              }
               data-layer-tab={item.number}
-              whileHover={{ y: -2 }}
+              whileHover={{ y: -1 }}
               whileTap={{ scale: 0.98 }}
-              className="ori-tab group relative flex min-h-[38px] w-[102px] shrink-0 items-center gap-1.5 overflow-hidden rounded-[13px] px-2 py-1.5 text-left transition-all duration-300 md:min-h-[48px] md:w-[154px] md:gap-2.5 md:rounded-[16px] md:px-3 md:py-2"
+              className="group relative flex w-[104px] shrink-0 flex-col items-center gap-1.5 overflow-visible text-center transition-all duration-300 md:w-auto md:min-w-[108px]"
               data-state={isActive ? "active" : isPast ? "done" : "sealed"}
-              style={{
-                background: isActive
-                  ? "linear-gradient(90deg, rgba(242,185,104,0.13), rgba(242,185,104,0.035))"
-                  : "rgba(255,255,255,0.022)",
-                border: isActive
-                  ? "1px solid rgba(242,185,104,0.28)"
-                  : "1px solid rgba(242,185,104,0.08)",
-                boxShadow: isActive
-                  ? "0 0 24px rgba(242,185,104,0.075), inset 0 0 18px rgba(242,185,104,0.018)"
-                  : "inset 0 0 16px rgba(255,255,255,0.006)",
-              }}
             >
+              {isActive && (
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute top-0 h-11 w-11 rounded-full"
+                  style={{
+                    background:
+                      "radial-gradient(circle, rgba(210,135,70,0.28), rgba(210,135,70,0.10) 42%, transparent 72%)",
+                    filter: "blur(1px)",
+                  }}
+                />
+              )}
               <span
-                className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[8px] md:h-7 md:w-7 md:text-[10px]"
+                className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[8px]"
                 style={{
                   background: isActive
-                    ? "var(--gold-primary)"
+                    ? "radial-gradient(circle, rgba(210,135,70,0.92), rgba(128,53,34,0.94))"
                     : isPast
-                      ? "rgba(242,185,104,0.16)"
-                      : "rgba(255,255,255,0.026)",
+                      ? "linear-gradient(180deg, rgba(22,11,10,0.96), rgba(5,2,2,0.98))"
+                      : "linear-gradient(180deg, rgba(5,2,2,0.99), rgba(2,0,0,1))",
                   border: isActive
-                    ? "1px solid rgba(242,185,104,0.42)"
-                    : "1px solid rgba(242,185,104,0.12)",
-                  color: isActive ? "#0a0505" : "var(--gold-soft)",
+                    ? "1px solid rgba(242,185,104,0.56)"
+                    : "1px solid rgba(242,185,104,0.16)",
+                  color: isActive ? "rgba(255,238,206,0.96)" : "rgba(242,185,104,0.88)",
                   fontWeight: 650,
                   boxShadow: isActive
-                    ? "0 0 14px rgba(242,185,104,0.18)"
-                    : "inset 0 0 10px rgba(255,255,255,0.006)",
+                    ? "0 0 24px rgba(210,135,70,0.24), 0 0 0 5px rgba(210,135,70,0.065), inset 0 0 12px rgba(255,226,175,0.10)"
+                    : "0 0 14px rgba(242,185,104,0.040), inset 0 0 16px rgba(0,0,0,0.62)",
                 }}
               >
-                {item.number}
+                {displayNumber}
               </span>
 
               <p
-                className="ori-type-reading-soft text-[10px] leading-tight md:text-xs"
+                className="ori-type-reading-soft max-w-[92px] truncate text-[9px] leading-tight md:max-w-[116px] md:text-[10px]"
                 style={{
                   color: isActive
                     ? "var(--text-primary)"
-                    : "rgba(255,245,235,0.62)",
+                    : "rgba(255,245,235,0.54)",
                   fontWeight: isActive ? 620 : 440,
-                  display: "-webkit-box",
-                  WebkitBoxOrient: "vertical",
-                  WebkitLineClamp: 2,
-                  overflow: "hidden",
                 }}
               >
-                {item.label}
+                {item.label}{isLocked ? "  🔒" : ""}
               </p>
             </motion.button>
           );
         })}
+        </div>
+      </div>
+
+      <div className="mt-5 flex justify-end md:mt-6">
+        <div
+          className="relative flex w-full items-center gap-2 rounded-full px-2 py-1.5 md:w-[250px]"
+          role="progressbar"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={progress}
+          aria-label="Progresso da navegação de camadas"
+          style={{
+            background:
+              "linear-gradient(90deg, rgba(5,2,2,0.72), rgba(18,9,10,0.42))",
+            border: "1px solid rgba(242,185,104,0.12)",
+            boxShadow:
+              "inset 0 0 16px rgba(0,0,0,0.42), 0 0 18px rgba(210,135,70,0.035)",
+          }}
+        >
+          <div className="flex flex-1 items-center gap-1">
+            {Array.from({ length: progressTotal }).map((_, index) => {
+              const isFilled = index <= progressActiveIndex;
+
+              return (
+                <span
+                  key={`progress-${index}`}
+                  className="h-1.5 flex-1 rounded-full"
+                  style={{
+                    background: isFilled
+                      ? "linear-gradient(90deg, rgba(128,53,34,0.92), rgba(210,135,70,0.92))"
+                      : "rgba(255,245,235,0.075)",
+                    boxShadow: isFilled
+                      ? "0 0 12px rgba(210,135,70,0.22)"
+                      : "inset 0 0 8px rgba(0,0,0,0.32)",
+                  }}
+                />
+              );
+            })}
+          </div>
+          <span
+            className="ori-type-system rounded-full px-2 py-0.5 text-[8px]"
+            style={{
+              background: "rgba(210,135,70,0.10)",
+              border: "1px solid rgba(210,135,70,0.16)",
+              color: "rgba(242,185,104,0.88)",
+            }}
+          >
+            {progress}%
+          </span>
+        </div>
       </div>
     </div>
   );
@@ -2514,6 +2383,11 @@ function QuizProduto1() {
   const [feedbackSaving, setFeedbackSaving] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [backendReading, setBackendReading] = useState(null);
+  const [paymentCatalog, setPaymentCatalog] = useState(null);
+  const [paymentCatalogLoading, setPaymentCatalogLoading] = useState(false);
+  const [paywallOpen, setPaywallOpen] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [paymentError, setPaymentError] = useState("");
   const [syncNotice, setSyncNotice] = useState("");
 
   const resultRef = useRef(null);
@@ -2538,7 +2412,7 @@ function QuizProduto1() {
     async function loadUserStorage() {
       const { data: sessionData } = await supabase.auth.getSession();
       const user = sessionData?.session?.user || null;
-      const userStorageKey = getQuizStorageKey(user?.id);
+      const userStorageKey = getProduto1QuizStorageKey(user?.id);
 
       setStorageKey(userStorageKey);
       localStorage.removeItem(LEGACY_STORAGE_KEY);
@@ -3065,6 +2939,71 @@ function QuizProduto1() {
     }
   };
 
+  const loadPaymentCatalog = async () => {
+    setPaymentCatalogLoading(true);
+    setPaymentError("");
+
+    try {
+      const catalog = await getPaymentCatalog();
+      setPaymentCatalog(catalog);
+      return catalog;
+    } catch (apiError) {
+      console.log("Catálogo de pagamentos indisponível:", apiError);
+      setPaymentError(
+        apiError?.userMessage ||
+          "Não conseguimos consultar a liberação da leitura completa agora.",
+      );
+      return null;
+    } finally {
+      setPaymentCatalogLoading(false);
+    }
+  };
+
+  const openProduto1Paywall = () => {
+    setPaywallOpen(true);
+    setPaymentError("");
+
+    if (!paymentCatalog) {
+      loadPaymentCatalog();
+    }
+  };
+
+  const handleProduto1Checkout = async () => {
+    if (checkoutLoading) return;
+
+    setCheckoutLoading(true);
+    setPaymentError("");
+
+    try {
+      const response = await createPaymentCheckout(PRODUTO1_COMPLETE_PRODUCT_CODE);
+
+      if (response.status === "already_granted" || response.status === "approved") {
+        setPaywallOpen(false);
+        forgetProduto1CheckoutOrder();
+        const reading = await getProduto1Reading();
+        setBackendReading(reading);
+        return;
+      }
+
+      const checkoutUrl = response.checkout_url;
+
+      if (!checkoutUrl || !/^https:\/\//i.test(checkoutUrl)) {
+        throw new Error("checkout_url_invalid");
+      }
+
+      rememberProduto1CheckoutOrder(response.order_id);
+      window.location.assign(checkoutUrl);
+    } catch (apiError) {
+      console.log("Erro ao criar checkout do Produto 1:", apiError);
+      setPaymentError(
+        apiError?.userMessage ||
+          "Não conseguimos abrir o Mercado Pago agora. Tente novamente em instantes.",
+      );
+    } finally {
+      setCheckoutLoading(false);
+    }
+  };
+
   const baseReport = result ? reports[result.nomeComposto] : null;
   useEffect(() => {
     if (!result) {
@@ -3103,19 +3042,59 @@ function QuizProduto1() {
       isMounted = false;
     };
   }, [result]);
+
   const activeBackendReading =
     backendReading?.resultado === result?.nomeComposto ? backendReading : null;
 
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+
+    if (
+      activeBackendReading?.produto_1_completo_liberado === true &&
+      params.get("camada") === "vidaReal"
+    ) {
+      const timeout = window.setTimeout(() => {
+        setActiveResultCore("estrutura");
+        setActiveEstruturaInterna("04");
+      }, 0);
+
+      return () => window.clearTimeout(timeout);
+    }
+
+    return undefined;
+  }, [activeBackendReading, location.search]);
+  const produto1FullUnlocked =
+    activeBackendReading?.produto_1_completo_liberado === true;
+  const produto1LockedLayerIds = new Set(
+    activeBackendReading?.locked_layer_ids || [],
+  );
+  const produto1Blocks = activeBackendReading?.blocks || [];
+  const produto1UnlockProductCode =
+    activeBackendReading?.unlock_product_code || PRODUTO1_COMPLETE_PRODUCT_CODE;
+  const produto1PaymentProduct =
+    paymentCatalog?.products?.find(
+      (product) => product.product_code === produto1UnlockProductCode,
+    ) || null;
+  const isProduto1LayerLocked = (layerId) =>
+    !produto1FullUnlocked && produto1LockedLayerIds.has(layerId);
+  const isProduto1CoreLocked = (coreId) => {
+    const block = produto1Blocks.find((item) => item.id === coreId);
+
+    if (!block || produto1FullUnlocked) return false;
+
+    return block.layers?.every((layer) => layer.locked) || false;
+  };
+
   const report = useMemo(
     () => {
-      if (!baseReport) return null;
-
       if (
         activeBackendReading?.report &&
         Object.keys(activeBackendReading.report).length > 0
       ) {
         return activeBackendReading.report;
       }
+
+      if (!baseReport) return null;
 
       if (
         activeBackendReading?.camadas &&
@@ -3157,6 +3136,7 @@ function QuizProduto1() {
   const estruturaInternaTabs = report
     ? [
         {
+          layerId: "reconhecimento",
           number: "01",
           theme: "gold",
           eyebrow: "Reconhecimento",
@@ -3168,6 +3148,7 @@ function QuizProduto1() {
           image: "/images/panels/reconhecimento.png",
         },
         {
+          layerId: "essencia",
           number: "02",
           theme: "purple",
           eyebrow: "Base interna",
@@ -3179,6 +3160,7 @@ function QuizProduto1() {
           image: "/images/panels/essencia.png",
         },
         {
+          layerId: "dinamica",
           number: "03",
           theme: "silver",
           eyebrow: "Dinâmica Psíquica",
@@ -3190,6 +3172,7 @@ function QuizProduto1() {
           image: "/images/panels/dinamica-psiquica.png",
         },
         {
+          layerId: "vidaReal",
           number: "04",
           theme: "gold",
           eyebrow: "Vida Real",
@@ -3198,9 +3181,11 @@ function QuizProduto1() {
           description:
             "Aqui a leitura simbólica vira comportamento, decisão e pequenos sinais observáveis na rotina.",
           content: report.vidaReal,
+          locked: isProduto1LayerLocked("vidaReal"),
           image: "/images/panels/leitura-final.png",
         },
         {
+          layerId: "percebida",
           number: "05",
           theme: "red",
           eyebrow: "Percepção",
@@ -3209,6 +3194,7 @@ function QuizProduto1() {
           description:
             "Sua imagem não comunica apenas aparência. \nEla ativa sensações, leituras e projeções.",
           content: report.percebida,
+          locked: isProduto1LayerLocked("percebida"),
           image: "/images/panels/percepcao.png",
         },
       ]
@@ -3216,6 +3202,7 @@ function QuizProduto1() {
   const sombraVinculosTabs = report
     ? [
         {
+          layerId: "sombra",
           number: "05",
           theme: "cyan",
           eyebrow: "Sombra",
@@ -3224,9 +3211,11 @@ function QuizProduto1() {
           description:
             "Todo arquétipo possui excessos, compensações \ne mecanismos de defesa inconscientes.",
           content: report.sombra,
+          locked: isProduto1LayerLocked("sombra"),
           image: "/images/panels/sombra.png",
         },
         {
+          layerId: "padraoRelacional",
           number: "06",
           theme: "green",
           eyebrow: "Padrão Relacional",
@@ -3235,9 +3224,11 @@ function QuizProduto1() {
           description:
             "Esta leitura mostra como sua energia \ncria aproximação, intimidade e pertencimento.",
           content: report.padraoRelacional,
+          locked: isProduto1LayerLocked("padraoRelacional"),
           image: "/images/panels/padrao-relacional.png",
         },
         {
+          layerId: "caminho",
           number: "07",
           theme: "gold",
           eyebrow: "Individuação",
@@ -3246,6 +3237,7 @@ function QuizProduto1() {
           description:
             "Aqui começa o movimento onde sua \nimagem deixa de compensar e fica mais coerente.",
           content: report.caminho,
+          locked: isProduto1LayerLocked("caminho"),
           image: "/images/panels/individuacao.png",
         },
       ]
@@ -3253,6 +3245,7 @@ function QuizProduto1() {
   const imagemPresencaTabs = report
     ? [
         {
+          layerId: "essenciaImagem",
           number: "08",
           theme: "purple",
           eyebrow: "Direção de imagem",
@@ -3261,9 +3254,11 @@ function QuizProduto1() {
           description:
             "Sua estética ideal nasce quando sua \nimagem expressa sua energia com mais naturalidade.",
           content: report.essenciaImagem,
+          locked: isProduto1LayerLocked("essenciaImagem"),
           image: "/images/panels/essencia-imagem.png",
         },
         {
+          layerId: "paleta",
           number: "09",
           theme: "silver",
           eyebrow: "Paleta",
@@ -3272,9 +3267,11 @@ function QuizProduto1() {
           description:
             "As cores certas reforçam sua atmosfera \nnatural e aumentam sua coerência visual.",
           content: report.paleta,
+          locked: isProduto1LayerLocked("paleta"),
           image: "/images/panels/paleta.png",
         },
         {
+          layerId: "modelagem",
           number: "10",
           theme: "red",
           eyebrow: "Modelagem",
@@ -3283,9 +3280,11 @@ function QuizProduto1() {
           description:
             "As formas que você veste alteram \ndiretamente a percepção da sua energia.",
           content: report.modelagem,
+          locked: isProduto1LayerLocked("modelagem"),
           image: "/images/panels/modelagem.png",
         },
         {
+          layerId: "tecidos",
           number: "11",
           theme: "cyan",
           eyebrow: "Tecidos",
@@ -3294,9 +3293,11 @@ function QuizProduto1() {
           description:
             "Cada tecido cria uma sensação \nvisual, tátil e simbólica diferente.",
           content: report.tecidos,
+          locked: isProduto1LayerLocked("tecidos"),
           image: "/images/panels/tecidos.png",
         },
         {
+          layerId: "beleza",
           number: "12",
           theme: "green",
           eyebrow: "Beleza",
@@ -3305,9 +3306,11 @@ function QuizProduto1() {
           description:
             "Sua beleza funciona melhor quando \nreforça o que você quer comunicar.",
           content: report.beleza,
+          locked: isProduto1LayerLocked("beleza"),
           image: "/images/panels/beleza.png",
         },
         {
+          layerId: "presenca",
           number: "13",
           theme: "gold",
           eyebrow: "Como você chega",
@@ -3316,6 +3319,7 @@ function QuizProduto1() {
           description:
             "Sua imagem ganha força quando corpo, \nescolha e energia apontam para a mesma direção.",
           content: report.presenca,
+          locked: isProduto1LayerLocked("presenca"),
           image: "/images/panels/presenca.png",
         },
       ]
@@ -3323,6 +3327,7 @@ function QuizProduto1() {
   const sinteseFinalTabs = report
     ? [
         {
+          layerId: "evitar",
           number: "14",
           theme: "purple",
           eyebrow: "Evitar",
@@ -3333,9 +3338,11 @@ function QuizProduto1() {
           content: Array.isArray(report.evitar)
             ? report.evitar.join("\n")
             : report.evitar,
+          locked: isProduto1LayerLocked("evitar"),
           image: "/images/panels/evitar.png",
         },
         {
+          layerId: "formula",
           number: "15",
           theme: "silver",
           eyebrow: "Fórmula",
@@ -3344,9 +3351,11 @@ function QuizProduto1() {
           description:
             "Sua fórmula estética organiza visualmente \na força principal da sua leitura.",
           content: report.formula,
+          locked: isProduto1LayerLocked("formula"),
           image: "/images/panels/formula.png",
         },
         {
+          layerId: "leituraFinal",
           number: "16",
           theme: "red",
           eyebrow: "Leitura Final",
@@ -3355,6 +3364,7 @@ function QuizProduto1() {
           description:
             "A etapa final mostra onde imagem, \nidentidade e escolhas começam a se alinhar.",
           content: report.leituraFinal,
+          locked: isProduto1LayerLocked("leituraFinal"),
           image: "/images/panels/leitura-final.png",
         },
       ]
@@ -3375,35 +3385,40 @@ function QuizProduto1() {
   const resultCoreTabs = [
     {
       id: "estrutura",
+      blockId: "base",
       number: "01",
-      title: "Base da leitura",
+      title: "Comece por aqui",
       text: "Reconhecimento, base interna, dinâmica e percepção.",
+      locked: false,
     },
     {
       id: "sombra",
+      blockId: "sombra_vinculos",
       number: "02",
       title: "Sombra e Vínculos",
       text: "Sombra, padrão relacional e individuação.",
+      locked: isProduto1CoreLocked("sombra_vinculos"),
     },
     {
       id: "imagem",
+      blockId: "imagem_pratica",
       number: "03",
       title: "Imagem na prática",
       text: "Direção visual, beleza, cores, corpo e presença.",
+      locked: isProduto1CoreLocked("imagem_pratica"),
     },
     {
       id: "sintese",
+      blockId: "sintese_final",
       number: "04",
       title: "Síntese Final",
       text: "O que evitar, fórmula e leitura final.",
+      locked: isProduto1CoreLocked("sintese_final"),
     },
   ];
   const activeResultCoreIndex = resultCoreTabs.findIndex(
     (item) => item.id === activeResultCore,
   );
-  const activeResultCoreTab =
-    resultCoreTabs.find((item) => item.id === activeResultCore) ||
-    resultCoreTabs[0];
   const previousResultCore = resultCoreTabs[activeResultCoreIndex - 1] || null;
   const nextResultCore = resultCoreTabs[activeResultCoreIndex + 1] || null;
   const resultCoreLayerState = {
@@ -3429,6 +3444,29 @@ function QuizProduto1() {
     },
   };
   const activeResultLayerState = resultCoreLayerState[activeResultCore];
+  const resultReadingProgress = (() => {
+    const coreOrder = ["estrutura", "sombra", "imagem", "sintese"];
+    const orderedLayers = coreOrder.flatMap((coreId) =>
+      (resultCoreLayerState[coreId]?.tabs || []).map((layer) => ({
+        coreId,
+        number: layer.number,
+      })),
+    );
+    const activeIndex = orderedLayers.findIndex(
+      (layer) =>
+        layer.coreId === activeResultCore &&
+        layer.number === activeResultLayerState?.activeNumber,
+    );
+    const safeActiveIndex = Math.max(activeIndex, 0);
+
+    return {
+      activeIndex: safeActiveIndex,
+      total: orderedLayers.length,
+      percent: orderedLayers.length
+        ? Math.round(((safeActiveIndex + 1) / orderedLayers.length) * 100)
+        : 0,
+    };
+  })();
   const activeResultLayerIndex =
     activeResultLayerState?.tabs.findIndex(
       (item) => item.number === activeResultLayerState.activeNumber,
@@ -3499,9 +3537,29 @@ function QuizProduto1() {
   };
 
   const handleSelectResultCore = (coreId) => {
+    const targetCore = resultCoreTabs.find((item) => item.id === coreId);
+
+    if (targetCore?.locked) {
+      openProduto1Paywall();
+      return;
+    }
+
     setActiveResultCore(coreId);
     scrollToReadingNavigation();
     scrollToCoreTab(coreId);
+  };
+
+  const handleSelectResultLayer = (setActiveNumber) => (layerNumber) => {
+    const targetLayer = activeResultLayerState?.tabs.find(
+      (item) => item.number === layerNumber,
+    );
+
+    if (targetLayer?.locked) {
+      openProduto1Paywall();
+      return;
+    }
+
+    setActiveNumber(layerNumber);
   };
 
   const handleResultFlowNext = () => {
@@ -3510,6 +3568,12 @@ function QuizProduto1() {
     if (hasNextResultLayer) {
       const nextLayer =
         activeResultLayerState.tabs[activeResultLayerIndex + 1]?.number;
+      const nextLayerData = activeResultLayerState.tabs[activeResultLayerIndex + 1];
+
+      if (nextLayerData?.locked) {
+        openProduto1Paywall();
+        return;
+      }
 
       if (nextLayer) {
         activeResultLayerState.setActiveNumber(nextLayer);
@@ -3520,6 +3584,11 @@ function QuizProduto1() {
     }
 
     if (nextResultCore) {
+      if (nextResultCore.locked) {
+        openProduto1Paywall();
+        return;
+      }
+
       setActiveResultCore(nextResultCore.id);
 
       const nextLayerState = resultCoreLayerState[nextResultCore.id];
@@ -3669,7 +3738,7 @@ function QuizProduto1() {
             <div className="flex flex-col sm:flex-row gap-3">
               <OriButton
                 as={Link}
-                to="/espelho-ori"
+                to="/produto-1/leitura"
                 variant="primary"
                 className="px-7 py-3.5 text-sm"
                 style={{
@@ -3680,7 +3749,21 @@ function QuizProduto1() {
                     "0 0 38px rgba(242,185,104,0.16), inset 0 0 16px rgba(255,255,255,0.16)",
                 }}
               >
-                Ver meu Espelho ORI
+                Ler meu Código das Deusas
+              </OriButton>
+
+              <OriButton
+                as={Link}
+                to="/espelho-ori"
+                variant="secondary"
+                className="px-7 py-3.5 text-sm"
+                style={{
+                  background: "rgba(255,255,255,0.026)",
+                  border: "1px solid rgba(242,185,104,0.14)",
+                  color: colors.soft,
+                }}
+              >
+                Ir para o Espelho ORI
               </OriButton>
 
               <OriButton
@@ -3690,9 +3773,9 @@ function QuizProduto1() {
                 disabled={isResettingQuiz}
                 className="px-7 py-3.5 text-sm"
                 style={{
-                  background: "rgba(255,255,255,0.026)",
-                  border: "1px solid rgba(242,185,104,0.14)",
-                  color: colors.soft,
+                  background: "transparent",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  color: "rgba(255,245,235,0.58)",
                 }}
               >
                 {isResettingQuiz ? "Reiniciando leitura..." : "Refazer leitura"}
@@ -3706,7 +3789,7 @@ function QuizProduto1() {
 
   return (
     <main
-      className="ori-atmosphere ori-atmosphere-reading relative min-h-screen overflow-hidden px-4 py-5 md:px-7 md:py-6"
+      className="ori-atmosphere ori-atmosphere-reading relative min-h-screen overflow-hidden px-4 pb-5 pt-0 md:px-7 md:pb-6 md:pt-0"
       style={{ color: colors.text }}
     >
       <div
@@ -3741,16 +3824,16 @@ function QuizProduto1() {
         </div>
       )}
 
-      <div className="relative z-10 w-full max-w-6xl mx-auto">
-        <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-5">
+      <div className="relative z-10 w-full max-w-[1180px] mx-auto">
+        <header className="pointer-events-none absolute left-0 right-0 top-7 z-30 flex px-3 sm:top-8">
           <OriButton
             as={Link}
             to="/produto-1"
             variant="secondary"
-            className="w-fit gap-3 px-5 py-2.5 text-sm"
+            className="pointer-events-auto w-fit gap-3 px-5 py-2.5 text-sm"
             style={{
-              background: "rgba(255,255,255,0.026)",
-              border: "1px solid rgba(242,185,104,0.12)",
+              background: "rgba(5,2,2,0.42)",
+              border: "1px solid rgba(242,185,104,0.14)",
               color: "rgba(255,245,235,0.72)",
               backdropFilter: "blur(12px)",
               WebkitBackdropFilter: "blur(12px)",
@@ -3759,19 +3842,6 @@ function QuizProduto1() {
             <span style={{ color: colors.gold }}>←</span>
             Voltar ao Código das Deusas
           </OriButton>
-
-          <div
-            className="inline-flex w-fit items-center gap-2 px-4 py-2 rounded-full text-[10px] uppercase tracking-[0.22em]"
-            style={{
-              background: "rgba(255,255,255,0.022)",
-              border: "1px solid rgba(242,185,104,0.10)",
-              color: "rgba(242,185,104,0.72)",
-              backdropFilter: "blur(12px)",
-              WebkitBackdropFilter: "blur(12px)",
-            }}
-          >
-            Câmara de Leitura ORI
-          </div>
         </header>
 
         {catalogUnavailable ? (
@@ -3832,7 +3902,7 @@ function QuizProduto1() {
 
         {hasLoadedStorage && result && !isLoadingPreview && (
           <>
-            <div className="mt-4 fade-up">
+            <div className="fade-up">
               <div ref={resultRef} className="scroll-mt-10">
                 <ResultHero
                   nome={result.nomeComposto}
@@ -3849,15 +3919,9 @@ function QuizProduto1() {
 
               {report && isFullReveal ? (
                 <div
-                  className="ori-main-frame ori-card-secondary relative overflow-hidden rounded-[24px] p-3 md:rounded-[30px] md:p-4"
+                  className="relative overflow-visible rounded-[24px] md:rounded-[30px]"
                   style={{
-                    background:
-                      "radial-gradient(circle at top right, rgba(242,185,104,0.09), transparent 34%), linear-gradient(180deg, rgba(18,9,10,0.64), rgba(5,2,2,0.88))",
-                    border: "1px solid rgba(242,185,104,0.10)",
-                    boxShadow:
-                      "0 0 48px rgba(242,185,104,0.032), inset 0 0 28px rgba(255,255,255,0.010)",
-                    backdropFilter: "blur(12px)",
-                    WebkitBackdropFilter: "blur(12px)",
+                    background: "transparent",
                   }}
                 >
                   <div
@@ -3869,94 +3933,109 @@ function QuizProduto1() {
                     }}
                   />
 
-                  <section ref={readingNavigationRef} className="relative z-10 scroll-mt-8 pb-3">
-                    <div className="relative z-10">
-                      <div className="ori-label-line mb-2.5 md:mb-3">
-                        <p
-                          className="ori-type-system text-[9px] md:text-[10px]"
-                          style={{ color: "var(--gold-soft)" }}
-                        >
-                          Navegação da Leitura
-                        </p>
+                  <section ref={readingNavigationRef} className="relative z-10 scroll-mt-8 pb-4">
+                    <div
+                      className="relative z-10 px-1 py-3 md:px-0 md:py-4"
+                      style={{
+                        borderColor: "rgba(242,185,104,0.10)",
+                      }}
+                    >
+                      <div className="mb-14 flex items-center justify-between gap-4 md:mb-16">
+                        <div className="flex items-center gap-3">
+                          <span
+                            className="h-px w-8"
+                            style={{
+                              background:
+                                "linear-gradient(90deg, rgba(242,185,104,0.82), transparent)",
+                            }}
+                          />
+                          <p
+                            className="ori-type-system text-[10px] md:text-[11px]"
+                            style={{ color: "var(--gold-soft)" }}
+                          >
+                            Navegação da Leitura
+                          </p>
+                        </div>
+                        <span
+                          className="hidden h-px flex-1 md:block"
+                          style={{
+                            background:
+                              "linear-gradient(90deg, rgba(242,185,104,0.10), transparent)",
+                          }}
+                        />
                       </div>
 
-                      <div className="ori-premium-scroll flex gap-2 overflow-x-auto pb-1 md:grid md:grid-cols-4 md:overflow-visible md:pb-0">
+                      <div className="ori-premium-scroll relative overflow-x-auto pb-2 md:overflow-visible md:pb-1">
+                        <div
+                          className="pointer-events-none absolute left-[10%] right-[10%] top-[24px] h-px"
+                          style={{
+                            background:
+                              "linear-gradient(90deg, rgba(242,185,104,0.08), rgba(242,185,104,0.32), rgba(242,185,104,0.08))",
+                          }}
+                        />
+                        <div className="relative mx-auto flex min-w-[760px] max-w-[1080px] items-start justify-between gap-6 md:min-w-0">
                         {resultCoreTabs.map((item) => {
                           const isActive = activeResultCore === item.id;
+                          const isLocked = Boolean(item.locked);
 
                           return (
                             <button
                               key={item.number}
                               type="button"
                               onClick={() => handleSelectResultCore(item.id)}
+                              aria-label={
+                                isLocked
+                                  ? `Abrir desbloqueio do núcleo ${item.number}: ${item.title}`
+                                  : `Abrir núcleo ${item.number}: ${item.title}`
+                              }
                               data-core-tab={item.id}
-                              className="ori-tab min-w-[136px] shrink-0 rounded-[15px] px-2.5 py-2 text-left transition-all duration-500 hover:-translate-y-0.5 md:min-w-0 md:rounded-[16px] md:px-3 md:py-2.5"
+                              className="group relative flex w-[172px] shrink-0 flex-col items-center gap-2.5 text-center transition-all duration-500 hover:-translate-y-0.5 md:w-[23%]"
                               data-state={isActive ? "active" : "sealed"}
                               style={{
-                                background: isActive
-                                  ? "rgba(242,185,104,0.085)"
-                                  : "rgba(255,255,255,0.022)",
-                                border: isActive
-                                  ? "1px solid rgba(242,185,104,0.22)"
-                                  : "1px solid rgba(242,185,104,0.08)",
-                                boxShadow: isActive
-                                  ? "0 0 28px rgba(242,185,104,0.060), inset 0 0 18px rgba(242,185,104,0.018)"
-                                  : "inset 0 0 18px rgba(242,185,104,0.012), 0 0 18px rgba(0,0,0,0.14)",
+                                opacity: isLocked && !isActive ? 0.72 : 1,
                               }}
                             >
-                              <div className="flex min-w-0 items-center gap-2 md:gap-2.5">
+                              <div className="relative flex flex-col items-center gap-3">
                                 <div
-                                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[11px] md:h-8 md:w-8 md:rounded-[12px]"
+                                  className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full"
                                   style={{
-                                    background:
-                                      "linear-gradient(180deg, rgba(255,255,255,0.026), rgba(255,255,255,0.008))",
+                                    background: isActive
+                                      ? "radial-gradient(circle, rgba(242,185,104,0.98), rgba(210,135,70,0.78))"
+                                      : "linear-gradient(180deg, rgba(5,2,2,0.99), rgba(2,0,0,1))",
                                     border: isActive
-                                      ? "1px solid rgba(242,185,104,0.22)"
-                                      : "1px solid rgba(242,185,104,0.08)",
+                                      ? "1px solid rgba(255,226,175,0.62)"
+                                      : "1px solid rgba(242,185,104,0.16)",
                                     color: isActive
-                                      ? "var(--gold-primary)"
-                                      : "rgba(242,185,104,0.88)",
+                                      ? "#0a0505"
+                                      : "rgba(242,185,104,0.86)",
                                     boxShadow: isActive
-                                      ? "0 0 18px rgba(242,185,104,0.10)"
-                                      : "0 0 14px rgba(242,185,104,0.03)",
+                                      ? "0 0 26px rgba(242,185,104,0.25), 0 0 0 6px rgba(242,185,104,0.055)"
+                                      : "0 0 16px rgba(242,185,104,0.035), inset 0 0 16px rgba(0,0,0,0.64)",
                                   }}
                                 >
-                                  <span className="text-xs font-medium tracking-[-0.02em] md:text-sm md:tracking-[-0.06em]">
+                                  <span className="text-xs font-semibold">
                                     {item.number}
                                   </span>
                                 </div>
 
                                 <h3
-                                  className="ori-type-revelation min-w-0 text-xs md:text-[15px]"
+                                  className="ori-type-reading-soft max-w-[170px] text-[13px] md:text-sm"
                                   style={{
-                                    color: "var(--text-primary)",
-                                    fontWeight: isActive ? 620 : 440,
-                                    letterSpacing: "-0.025em",
+                                    color: isActive
+                                      ? "var(--text-primary)"
+                                      : "rgba(255,245,235,0.66)",
+                                    fontWeight: isActive ? 650 : 440,
                                   }}
                                 >
-                                  {item.title}
+                                  {item.title}{isLocked ? "  🔒" : ""}
                                 </h3>
                               </div>
                             </button>
                           );
                         })}
+                        </div>
                       </div>
 
-                      <div
-                        className="mt-2.5 rounded-[15px] px-3 py-2.5 md:mt-3 md:rounded-[16px] md:px-3.5 md:py-3"
-                        style={{
-                          background:
-                            "linear-gradient(90deg, rgba(242,185,104,0.050), rgba(255,255,255,0.012))",
-                          border: "1px solid rgba(242,185,104,0.075)",
-                        }}
-                      >
-                        <p
-                          className="ori-mobile-preview-3 ori-type-reading-soft text-xs md:text-sm"
-                          style={{ color: "rgba(255,245,235,0.66)" }}
-                        >
-                          {activeResultCoreTab.text}
-                        </p>
-                      </div>
                     </div>
                   </section>
 
@@ -3965,7 +4044,7 @@ function QuizProduto1() {
                       <section
                         ref={readingLayerRef}
                         id="nucleo-estrutura-interna"
-                        className="relative z-10 scroll-mt-8 overflow-hidden pt-3"
+                        className="relative z-10 scroll-mt-8 overflow-visible pt-1 md:pt-2"
                         style={{
                           background: "transparent",
                         }}
@@ -3973,7 +4052,9 @@ function QuizProduto1() {
                         <LayerTabNavigation
                           tabs={estruturaInternaTabs}
                           activeNumber={activeEstruturaInterna}
-                          onSelect={setActiveEstruturaInterna}
+                          blockNumber="1"
+                          readingProgress={resultReadingProgress}
+                          onSelect={handleSelectResultLayer(setActiveEstruturaInterna)}
                         />
 
                         <AnimatePresence mode="wait">
@@ -3993,7 +4074,7 @@ function QuizProduto1() {
                       <section
                         ref={readingLayerRef}
                         id="nucleo-sombra-vinculos"
-                        className="relative z-10 scroll-mt-8 overflow-hidden pt-3"
+                        className="relative z-10 scroll-mt-8 overflow-visible pt-1 md:pt-2"
                         style={{
                           background: "transparent",
                         }}
@@ -4001,7 +4082,9 @@ function QuizProduto1() {
                         <LayerTabNavigation
                           tabs={sombraVinculosTabs}
                           activeNumber={activeSombraVinculos}
-                          onSelect={setActiveSombraVinculos}
+                          blockNumber="2"
+                          readingProgress={resultReadingProgress}
+                          onSelect={handleSelectResultLayer(setActiveSombraVinculos)}
                         />
 
                         <AnimatePresence mode="wait">
@@ -4021,7 +4104,7 @@ function QuizProduto1() {
                       <section
                         ref={readingLayerRef}
                         id="nucleo-imagem-presenca"
-                        className="relative z-10 scroll-mt-8 overflow-hidden pt-3"
+                        className="relative z-10 scroll-mt-8 overflow-visible pt-1 md:pt-2"
                         style={{
                           background: "transparent",
                         }}
@@ -4029,7 +4112,9 @@ function QuizProduto1() {
                         <LayerTabNavigation
                           tabs={imagemPresencaTabs}
                           activeNumber={activeImagemPresenca}
-                          onSelect={setActiveImagemPresenca}
+                          blockNumber="3"
+                          readingProgress={resultReadingProgress}
+                          onSelect={handleSelectResultLayer(setActiveImagemPresenca)}
                         />
 
                         <AnimatePresence mode="wait">
@@ -4049,7 +4134,7 @@ function QuizProduto1() {
                       <section
                         ref={readingLayerRef}
                         id="nucleo-sintese-final"
-                        className="relative z-10 scroll-mt-8 overflow-hidden pt-3"
+                        className="relative z-10 scroll-mt-8 overflow-visible pt-1 md:pt-2"
                         style={{
                           background: "transparent",
                         }}
@@ -4057,7 +4142,9 @@ function QuizProduto1() {
                         <LayerTabNavigation
                           tabs={sinteseFinalTabs}
                           activeNumber={activeSinteseFinal}
-                          onSelect={setActiveSinteseFinal}
+                          blockNumber="4"
+                          readingProgress={resultReadingProgress}
+                          onSelect={handleSelectResultLayer(setActiveSinteseFinal)}
                         />
 
                         <AnimatePresence mode="wait">
@@ -4073,12 +4160,9 @@ function QuizProduto1() {
                   )}
 
                   <section
-                    className="mt-3 flex flex-col gap-3 rounded-[18px] p-3 md:mt-5 md:flex-row md:items-center md:justify-between md:gap-4 md:rounded-[22px] md:p-4"
+                    className="mx-auto mt-5 flex max-w-[1060px] flex-col gap-3 border-t pt-4 md:mt-7 md:flex-row md:items-center md:justify-between md:gap-4 md:pt-5"
                     style={{
-                      background:
-                        "linear-gradient(180deg, rgba(18,9,10,0.58), rgba(5,2,2,0.82))",
-                      border: "1px solid rgba(242,185,104,0.10)",
-                      boxShadow: "inset 0 0 24px rgba(255,255,255,0.010)",
+                      borderColor: "rgba(242,185,104,0.11)",
                     }}
                   >
                     <div>
@@ -4130,7 +4214,7 @@ function QuizProduto1() {
                   </section>
 
                   <section
-                    className="mt-3 flex flex-col gap-3 rounded-[18px] p-3 md:mt-4 md:flex-row md:items-center md:justify-between md:gap-5 md:rounded-[22px] md:p-4"
+                    className="mx-auto mt-4 flex max-w-[1060px] flex-col gap-3 rounded-[18px] p-3 md:mt-5 md:flex-row md:items-center md:justify-between md:gap-5 md:rounded-[22px] md:p-4"
                     style={{
                       background:
                         "linear-gradient(135deg, rgba(242,185,104,0.070), rgba(255,255,255,0.012))",
@@ -4166,19 +4250,35 @@ function QuizProduto1() {
                       </p>
                     </div>
 
-                    <OriButton
-                      as={Link}
-                      to="/produto-1/relatorio"
-                      variant="secondary"
-                      className="w-full shrink-0 justify-center px-5 py-2.5 text-sm md:w-auto md:py-3"
-                      style={{
-                        background: "rgba(242,185,104,0.10)",
-                        border: "1px solid rgba(242,185,104,0.18)",
-                        color: "var(--gold-primary)",
-                      }}
-                    >
-                      Abrir relatório digital
-                    </OriButton>
+                    {produto1FullUnlocked ? (
+                      <OriButton
+                        as={Link}
+                        to="/produto-1/relatorio"
+                        variant="secondary"
+                        className="w-full shrink-0 justify-center px-5 py-2.5 text-sm md:w-auto md:py-3"
+                        style={{
+                          background: "rgba(242,185,104,0.10)",
+                          border: "1px solid rgba(242,185,104,0.18)",
+                          color: "var(--gold-primary)",
+                        }}
+                      >
+                        Abrir relatório digital
+                      </OriButton>
+                    ) : (
+                      <OriButton
+                        type="button"
+                        onClick={openProduto1Paywall}
+                        variant="secondary"
+                        className="w-full shrink-0 justify-center px-5 py-2.5 text-sm md:w-auto md:py-3"
+                        style={{
+                          background: "rgba(242,185,104,0.10)",
+                          border: "1px solid rgba(242,185,104,0.18)",
+                          color: "var(--gold-primary)",
+                        }}
+                      >
+                        Desbloquear relatório digital
+                      </OriButton>
+                    )}
                   </section>
 
                   {resultReadingCompleted && !feedbackSubmitted && (
@@ -4383,6 +4483,16 @@ function QuizProduto1() {
           </>
         )}
       </div>
+
+      <Produto1Paywall
+        open={paywallOpen}
+        product={produto1PaymentProduct}
+        loadingCatalog={paymentCatalogLoading}
+        checkoutLoading={checkoutLoading}
+        errorMessage={paymentError}
+        onClose={() => setPaywallOpen(false)}
+        onCheckout={handleProduto1Checkout}
+      />
     </main>
   );
 }

@@ -47,6 +47,21 @@ class Produto1LeituraHighlight(BaseModel):
     text: str
 
 
+class Produto1LayerAccess(BaseModel):
+    id: str
+    label: str
+    title: str
+    free: bool
+    locked: bool
+
+
+class Produto1BlockAccess(BaseModel):
+    id: str
+    title: str
+    locked: bool
+    layers: list[Produto1LayerAccess]
+
+
 class Produto1LeituraResponse(BaseModel):
     user_id: str
     email: str | None = None
@@ -55,6 +70,13 @@ class Produto1LeituraResponse(BaseModel):
     highlights: list[Produto1LeituraHighlight]
     camadas: dict[str, str]
     report: dict | None = None
+    access_mode: str = "freemium"
+    produto_1_completo_liberado: bool = False
+    unlock_product_code: str = "produto_1_completo"
+    first_paywall_layer_id: str | None = "vidaReal"
+    free_layer_ids: list[str] = Field(default_factory=list)
+    locked_layer_ids: list[str] = Field(default_factory=list)
+    blocks: list[Produto1BlockAccess] = Field(default_factory=list)
 
 
 class Produto1RelatorioSection(BaseModel):
@@ -77,3 +99,10 @@ class Produto1RelatorioResponse(BaseModel):
     sections: list[Produto1RelatorioSection]
     formula: str | None = None
     next_step: str | None = None
+    access_mode: str = "freemium"
+    produto_1_completo_liberado: bool = False
+    unlock_product_code: str = "produto_1_completo"
+    first_paywall_layer_id: str | None = "vidaReal"
+    free_layer_ids: list[str] = Field(default_factory=list)
+    locked_layer_ids: list[str] = Field(default_factory=list)
+    blocks: list[Produto1BlockAccess] = Field(default_factory=list)
