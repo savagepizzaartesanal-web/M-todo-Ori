@@ -1,10 +1,13 @@
 import hashlib
 import hmac
+import os
 import unittest
 from unittest.mock import patch
 
-from fastapi import HTTPException
+import httpx
+from fastapi import FastAPI, HTTPException
 
+from app.routes.webhooks import router as webhooks_router
 from app.schemas.auth import CurrentUser
 from app.services.auth_service import get_current_user
 from app.services.mercado_pago_service import (
@@ -21,6 +24,47 @@ from app.services.payment_service import (
 
 
 SECRET = "webhook-secret"
+
+
+class MercadoPagoWebhookRouteTest(unittest.IsolatedAsyncioTestCase):
+    def setUp(self):
+        app = FastAPI()
+        app.include_router(webhooks_router)
+        self.transport = httpx.ASGITransport(app=app)
+
+    async def test_webhook_get_health_returns_ok_without_secrets(self):
+        async with httpx.AsyncClient(
+            transport=self.transport,
+            base_url="http://testserver",
+        ) as client:
+            response = await client.get("/api/webhooks/mercadopago")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {"status": "ok"})
+
+        body = response.text.lower()
+        self.assertNotIn("secret", body)
+        self.assertNotIn("token", body)
+        self.assertNotIn("signature", body)
+        self.assertNotIn("mercado_pago", body)
+        self.assertNotIn("supabase", body)
+
+    async def test_webhook_post_still_requires_signature(self):
+        with patch.dict(
+            os.environ,
+            {
+                "MERCADO_PAGO_WEBHOOK_SECRET": SECRET,
+                "SUPABASE_URL": "https://supabase.example.test",
+                "SUPABASE_SECRET_KEY": "test-service-role-key",
+            },
+        ):
+            async with httpx.AsyncClient(
+                transport=self.transport,
+                base_url="http://testserver",
+            ) as client:
+                response = await client.post("/api/webhooks/mercadopago", json={})
+
+        self.assertEqual(response.status_code, 401)
 
 
 def signed_headers(data_id: str, request_id: str = "req-1") -> dict[str, str]:
