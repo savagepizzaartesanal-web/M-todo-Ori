@@ -2767,6 +2767,7 @@ function QuizProduto1() {
   const [feedbackComment, setFeedbackComment] = useState("");
   const [feedbackSaving, setFeedbackSaving] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [feedbackValidationError, setFeedbackValidationError] = useState("");
   const [backendReading, setBackendReading] = useState(null);
   const [paymentCatalog, setPaymentCatalog] = useState(null);
   const [paymentCatalogLoading, setPaymentCatalogLoading] = useState(false);
@@ -4129,8 +4130,14 @@ function QuizProduto1() {
   const handleSaveReadingFeedback = async (event) => {
     event.preventDefault();
 
-    if (!feedbackResponse || feedbackSaving || !result) return;
+    if (!feedbackResponse) {
+      setFeedbackValidationError("Escolha uma opção para enviar e continuar.");
+      return;
+    }
 
+    if (feedbackSaving || !result) return;
+
+    setFeedbackValidationError("");
     setFeedbackSaving(true);
     setFeedbackMessage("");
 
@@ -4862,6 +4869,7 @@ function QuizProduto1() {
                               onClick={() => {
                                 setFeedbackResponse(option.id);
                                 setFeedbackMessage("");
+                                setFeedbackValidationError("");
                               }}
                               aria-pressed={isSelected}
                               className="group relative flex min-h-[46px] items-start gap-2.5 overflow-hidden rounded-[15px] border px-3 py-2.5 text-left transition duration-300 hover:-translate-y-0.5"
@@ -4956,9 +4964,16 @@ function QuizProduto1() {
                         </p>
                         <OriButton
                           type="submit"
-                          disabled={!feedbackResponse || feedbackSaving}
+                          aria-disabled={
+                            !feedbackResponse || feedbackSaving ? "true" : undefined
+                          }
+                          aria-describedby={
+                            feedbackValidationError
+                              ? "produto1-feedback-validation"
+                              : undefined
+                          }
                           variant="gradient"
-                          className="justify-center px-5 py-2.5 text-sm disabled:opacity-55"
+                          className="justify-center px-5 py-2.5 text-sm aria-disabled:cursor-not-allowed aria-disabled:opacity-55"
                           style={{
                             background:
                               "linear-gradient(90deg, var(--copper-primary), var(--gold-primary))",
@@ -4968,6 +4983,23 @@ function QuizProduto1() {
                           {feedbackSaving ? "Salvando..." : "Enviar e continuar"}
                         </OriButton>
                       </div>
+
+                      <p
+                        id="produto1-feedback-validation"
+                        aria-live="polite"
+                        className={
+                          feedbackValidationError
+                            ? "ori-type-reading-soft mt-2 text-xs"
+                            : "sr-only"
+                        }
+                        style={
+                          feedbackValidationError
+                            ? { color: "var(--ori-danger-text, #f2b968)" }
+                            : undefined
+                        }
+                      >
+                        {feedbackValidationError}
+                      </p>
 
                       {feedbackMessage && (
                         <p
