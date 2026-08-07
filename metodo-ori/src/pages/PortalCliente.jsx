@@ -330,9 +330,14 @@ function PortalCliente() {
     {
       number: "02",
       title: "Dossiê ORI",
-      description:
-        JOURNEY_COPY.dossieOri.shortDescription,
-      status: produto2Liberado ? "Liberado" : JOURNEY_LABELS.proximoPasso,
+      description: FEATURES.produto2
+        ? JOURNEY_COPY.dossieOri.shortDescription
+        : "Seu Dossiê ORI será a próxima etapa da jornada: a tradução da primeira leitura para corpo, rosto, cores, cabelo, beleza e presença.",
+      status: produto2Liberado
+        ? "Liberado"
+        : FEATURES.produto2
+          ? JOURNEY_LABELS.proximoPasso
+          : "Em preparação",
       released: produto2Liberado,
       active: produto2Liberado,
       tone: "lavender",
@@ -347,7 +352,9 @@ function PortalCliente() {
           aria-label={
             produto2Liberado
               ? "Acessar Dossiê ORI"
-              : "Dossiê ORI ainda não liberado"
+              : FEATURES.produto2
+                ? "Dossiê ORI ainda não liberado"
+                : "Dossiê ORI em preparação"
           }
           className="w-full px-5 py-3 text-sm md:w-fit"
           style={{
@@ -360,7 +367,11 @@ function PortalCliente() {
             color: produto2Liberado ? "#d9bdff" : "var(--text-muted)",
           }}
         >
-          {produto2Liberado ? "Acessar Dossiê" : "Ainda não liberado"}
+          {produto2Liberado
+            ? "Acessar Dossiê"
+            : FEATURES.produto2
+              ? "Ainda não liberado"
+              : "Em preparação"}
         </OriButton>
       ),
     },
