@@ -530,36 +530,91 @@ Evidência de conclusão:
 ## MASTER-001 — Fechamento gratuito / transição premium
 
 **Severidade:** P1  
-**Status:** confirmado em navegador
+**Status:** ✅ CONCLUÍDO / VERDE EM PRODUÇÃO
 
-Problema atual:
+Problema resolvido:
 
 ```text
-3ª camada gratuita
+Reconhecimento
 ↓
-progresso ainda ~18%
+Essência
 ↓
-avançar
+Dinâmica
 ↓
-paywall
+Concluir minha primeira leitura
+↓
+fechamento explícito da experiência gratuita
+↓
+aprofundamento opcional
 ```
 
-Modelo mental percebido:
+O fluxo deixou de comunicar:
 
 > “Comecei uma leitura e agora preciso pagar para terminar.”
 
-Modelo desejado:
+E passou a comunicar:
 
 > “Concluí minha primeira leitura. Agora posso aprofundar.”
 
-Implementação mínima:
+Comportamento final:
 
-- [ ] criar fechamento perceptível após a 3ª camada
-- [ ] entregar síntese da experiência gratuita
-- [ ] mudar percepção de “interrupção” para “conclusão + aprofundamento”
-- [ ] revisar progresso apresentado
-- [ ] conectar o paywall como convite
-- [ ] preservar conteúdo atual das três camadas
+```text
+FREE
+
+Reconhecimento → 1/3
+↓
+Essência → 2/3
+↓
+Dinâmica → 3/3 / 100%
+↓
+“Concluir minha primeira leitura”
+↓
+estado explícito de conclusão
+↓
+“Aprofundar minha leitura” → paywall
+
+ou
+
+“Revisitar minha leitura”
+```
+
+- [x] criar fechamento perceptível após a 3ª camada
+- [x] entregar síntese da experiência gratuita
+- [x] mudar percepção de “interrupção” para “conclusão + aprofundamento”
+- [x] revisar progresso apresentado
+- [x] conectar o paywall como convite
+- [x] preservar conteúdo atual das três camadas
+
+Garantias preservadas:
+
+- paywall não abre automaticamente;
+- as três entregas gratuitas aparecem como concluídas;
+- premium permanece locked sem entitlement;
+- cliente full preserva fluxo Dinâmica → Vida real;
+- progresso full continua referente à leitura completa.
+
+Evidência de conclusão:
+
+- implementação `2b2815a`;
+- PR #6;
+- merge commit `06e2012`;
+- Cloudflare Production: PASS;
+- validação controlada free 1/3, 2/3, 3/3: PASS;
+- conclusão explícita: PASS;
+- único CTA premium: PASS;
+- foco na região de conclusão: PASS;
+- teclado: PASS;
+- focus trap: PASS;
+- Escape: PASS;
+- retorno de foco: PASS;
+- Revisitar: PASS;
+- P0 gating: PASS;
+- desktop: PASS;
+- mobile: PASS;
+- reduced motion: PASS;
+- cliente full: PASS;
+- smoke produção FREE: PASS;
+- smoke produção FULL: PASS.
 
 ---
 
@@ -1337,7 +1392,7 @@ O `auth-state.json` é sensível.
 ## Marco C — Consolidação UX/robustez da RC1
 - [x] MASTER-002
 - [x] MASTER-003
-- [ ] MASTER-001 mínimo
+- [x] MASTER-001 mínimo
 - [ ] MASTER-005 recomendado
 - [ ] acessibilidade essencial
 - [ ] recovery operacional
@@ -1374,13 +1429,9 @@ O `auth-state.json` é sensível.
 
 # 28. ORDEM OBRIGATÓRIA IMEDIATA
 
-O P1 já está vendendo. GATE-001, MASTER-002, MASTER-003 e P0-GATING-001 foram concluídos e validados em produção.
+O P1 já está vendendo. GATE-001, MASTER-002, MASTER-003, MASTER-001 e P0-GATING-001 foram concluídos e validados em produção.
 
 ```text
-MASTER-001 mínimo
-↓
-validar
-↓
 MASTER-005 + acessibilidade essencial
 ↓
 demais ondas
@@ -1392,6 +1443,7 @@ Histórico recente concluído:
 
 - MASTER-002 ✅
 - MASTER-003 ✅
+- MASTER-001 ✅
 - P0-GATING-001 ✅
 
 ---
@@ -1402,22 +1454,21 @@ Histórico recente concluído:
 **Nenhum release gate de pagamento pendente. O P1 está em produção comercial ativa.**
 
 ## P1 RC1 crítico
-1. MASTER-001 — concluir gratuito antes do paywall
-2. MASTER-005 — consequência do Voltar
-3. acessibilidade essencial
+1. MASTER-005 — consequência do Voltar
+2. acessibilidade essencial
 
 ## P1 operação / pós-RC1
-4. operação “pagou e não liberou”
-5. observabilidade
-6. segurança/LGPD
-7. validação de produto / abstração
-8. revisão de arquitetura de IA
-9. alinhamento da configuração Gemini
+3. operação “pagou e não liberou”
+4. observabilidade
+5. segurança/LGPD
+6. validação de produto / abstração
+7. revisão de arquitetura de IA
+8. alinhamento da configuração Gemini
 
 ## P2
-10. jornada comercial completa
-11. robustez React
-12. instrumentação
+9. jornada comercial completa
+10. robustez React
+11. instrumentação
 13. pipeline imagem P2
 14. jurídico de assets
 15. RC2
@@ -1442,7 +1493,7 @@ Histórico recente concluído:
 | P2 parecer comprável na RC1 | mitigado | MASTER-002 concluído / risco mitigado em produção em 06/08/2026 |
 | modal permitir foco atrás | mitigado | MASTER-003 concluído / validado em produção |
 | premium aparecer antes da confirmação do entitlement | mitigado | P0-GATING-001 concluído / deny-by-default / validado em produção |
-| gratuito parecer leitura interrompida | alto | MASTER-001 |
+| gratuito parecer leitura interrompida | mitigado | MASTER-001 concluído / fechamento gratuito explícito / progresso free 100% em Dinâmica / aprofundamento premium por escolha / smoke produção FREE e FULL: PASS |
 | P1 continuar abstrato | alto de produto | pesquisa + UX/copy |
 | IA substituir cálculo determinístico | alto | arquitetura IA |
 | baixa confiança baseada só no LLM | alto | score composto observável |
@@ -1498,8 +1549,14 @@ O Método Ori já possui:
 - leitura premium liberada em produção;
 - Produto 1 habilitado para vendas reais;
 - focus trap do paywall validado em desktop/mobile;
+- MASTER-001 verde em produção;
+- experiência gratuita termina explicitamente após 3 layers;
+- progresso free chega a 100% em Dinâmica;
+- paywall acionado apenas por convite de aprofundamento;
+- cliente full preservado no fluxo completo;
 - gating frontend do P1 fail-closed;
 - conteúdo premium não renderizado sem entitlement positivo;
+- P0 e MASTER-003 sem regressão após MASTER-001;
 - fluxo pós-quiz free validado em produção;
 - auditoria UX/UI completa;
 - backlog priorizado;
@@ -1514,15 +1571,14 @@ P2, P3 e Bundle continuam fora do checkout nesta release.
 
 ## Próxima frente imediata
 
-O release gate de pagamentos, o focus trap do paywall e o P0 de gating pós-quiz foram encerrados. O trabalho crítico agora é cirúrgico:
+O release gate de pagamentos, o focus trap do paywall, o fechamento gratuito e o P0 de gating pós-quiz foram encerrados. O trabalho crítico agora é cirúrgico:
 
-1. transformar as três camadas gratuitas em experiência claramente concluída — MASTER-001;
-2. corrigir consequência/comunicação do Voltar — MASTER-005;
-3. corrigir acessibilidade essencial;
-4. fortalecer operação, observabilidade e recovery;
-5. consolidar o P1 com clientes;
-6. revisar a arquitetura de IA com a especialista;
-7. avançar para RC2 / Produto 2.
+1. corrigir consequência/comunicação do Voltar — MASTER-005;
+2. corrigir acessibilidade essencial;
+3. fortalecer operação, observabilidade e recovery;
+4. consolidar o P1 com clientes;
+5. revisar a arquitetura de IA com a especialista;
+6. avançar para RC2 / Produto 2.
 
 ## Pendências pós-RC1 que não bloqueiam vendas
 
