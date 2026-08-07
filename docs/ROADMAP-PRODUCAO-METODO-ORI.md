@@ -756,26 +756,98 @@ Evidência de conclusão:
 
 ## MASTER-006 — Semântica do onboarding
 
-- [ ] revisar controles customizados
-- [ ] aplicar semântica adequada a seleção única/múltipla
-- [ ] validar teclado/leitor de tela
+**Status:** ✅ CONCLUÍDO / VERDE EM PRODUÇÃO
+
+- [x] revisar controles customizados
+- [x] aplicar semântica adequada a seleção única/múltipla
+- [x] validar teclado/leitor de tela
+
+Evidência de conclusão:
+
+- seleção única migrada para `radio` nativo;
+- `fieldset`/`legend`;
+- labels/IDs associados;
+- `checked` controlado via React;
+- teclado nativo preservado;
+- associação semântica pergunta ↔ opções;
+- leitor de tela real (Orca) validado;
+- caminho de seleção múltipla (`field.type === "checkbox"`) permanece dormente e não foi alterado nesta frente; revalidar sua semântica caso seja ativado futuramente;
+- PR #11;
+- merge commit `962dddde38360b2c21952e9210bca362fcf59966`.
 
 ## MASTER-007 — Escala 1–5
 
-- [ ] avaliar `radiogroup/radio`
-- [ ] preservar comportamento atual
-- [ ] validar leitor de tela
+**Status:** ✅ CONCLUÍDO / VERDE EM PRODUÇÃO
+
+- [x] avaliar `radiogroup/radio`
+- [x] preservar comportamento atual
+- [x] validar leitor de tela
+
+Decisão: manter `button` + `aria-pressed` (sem migrar para `radiogroup/radio`); a lacuna real era a ausência de associação programática entre a pergunta e a escala, não o papel semântico dos botões.
+
+Evidência de conclusão:
+
+- heading da pergunta recebe `id` estável;
+- container da escala recebe `role="group"` com `aria-labelledby` apontando para esse `id`;
+- os cinco `button`/`aria-pressed`/`aria-label` preservados sem alteração;
+- Tab, Shift+Tab, Enter e Space preservados (comportamento nativo do `button`);
+- ausência de navegação por setas mantida como coerente com o padrão `button` + `aria-pressed` (não é `radiogroup`);
+- árvore de acessibilidade validada via Chrome/CDP antes e depois da mudança;
+- leitor de tela real (Orca) validado em produção;
+- PR #13;
+- merge commit `6ab430489a8707dbb82b24fd9809c1f9207cede2`.
 
 ## MASTER-008 — Obrigatoriedade sem feedback
 
-- [ ] informar o que falta para avançar
-- [ ] evitar apenas desabilitar CTA silenciosamente
-- [ ] considerar deficiência cognitiva e baixa visão
+**Status:** ✅ CONCLUÍDO / VERDE EM PRODUÇÃO
+
+- [x] informar o que falta para avançar
+- [x] evitar apenas desabilitar CTA silenciosamente
+- [x] considerar deficiência cognitiva e baixa visão
+
+Duas frentes concluídas:
+
+**1. Onboarding**
+
+- primeiro campo obrigatório incompleto identificado e comunicado;
+- `showWhen` respeitado;
+- CTA continua `disabled` nativamente enquanto incompleto;
+- feedback inline explícito;
+- `aria-describedby`;
+- sem `aria-live` desnecessário;
+- leitor de tela real validado;
+- PR #11;
+- merge commit `962dddde38360b2c21952e9210bca362fcf59966`.
+
+**2. Pós-leitura**
+
+- CTA permanece focável mesmo quando falta seleção;
+- sem `disabled` HTML nativo nesse estado;
+- estado exposto por `aria-disabled`;
+- mensagem dinâmica: "Escolha uma opção para enviar e continuar.";
+- região `aria-live="polite"`;
+- `aria-describedby` associando o CTA à mensagem;
+- Enter, Space e clique via comportamento nativo do `button`;
+- sem mudança automática de foco;
+- submissão duplicada durante `saving` protegida;
+- leitor de tela real (Orca) validado;
+- smoke real em produção: PASS;
+- PR #12;
+- merge commit `b7180086af1be3286aa2741cc2d9282cbb192e6f`.
 
 ## MASTER-009 — Idioma global
 
-- [ ] alterar `lang="en"` para `pt-BR`
-- [ ] smoke test
+**Status:** ✅ CONCLUÍDO / VERDE EM PRODUÇÃO
+
+- [x] alterar `lang="en"` para `pt-BR`
+- [x] smoke test
+
+Evidência de conclusão:
+
+- `html lang` corrigido para `pt-BR`;
+- produção validada;
+- PR #10;
+- merge commit `8730ad5a3bd034a27410e89625fc4192c2e2052f`.
 
 ## MASTER-011 — localStorage
 
@@ -1405,6 +1477,7 @@ Antes de implementar:
 - [ ] alinhar `GEMINI_MODEL` entre Render, código, `render.yaml`, `.env.example`, fallback e documentação
 - [ ] PAYMENT-TECH-001 — TTL/expiração de `payment_orders`
 - [ ] PAYMENT-TECH-002 — notificações legacy Mercado Pago
+- [ ] setTimeout de avanço automático (360ms) em `QuizProduto1.jsx` sem cancelamento explícito — risco de timer concorrente/obsoleto em interações rápidas; identificado durante a auditoria do MASTER-007; não é defeito de acessibilidade e não bloqueou o MASTER-007
 - [ ] documentação histórica
 
 ---
@@ -1497,7 +1570,7 @@ O `auth-state.json` é sensível.
 - [x] MASTER-003
 - [x] MASTER-001 mínimo
 - [x] MASTER-005 recomendado
-- [ ] acessibilidade essencial
+- [x] acessibilidade essencial (MASTER-006, MASTER-007, MASTER-008, MASTER-009)
 - [ ] recovery operacional
 - [ ] observabilidade mínima
 
@@ -1532,7 +1605,7 @@ O `auth-state.json` é sensível.
 
 # 28. ORDEM OBRIGATÓRIA IMEDIATA
 
-O P1 já está vendendo. GATE-001, MASTER-002, MASTER-003, MASTER-001, P0-GATING-001 e MASTER-005 foram concluídos e validados em produção.
+O P1 já está vendendo. GATE-001, MASTER-002, MASTER-003, MASTER-001, P0-GATING-001, MASTER-005, MASTER-006, MASTER-007, MASTER-008 e MASTER-009 foram concluídos e validados em produção.
 
 ```text
 acessibilidade essencial
@@ -1546,7 +1619,7 @@ demais ondas
 
 Marco C permanece aberto até concluir a sequência:
 
-1. acessibilidade essencial;
+1. acessibilidade essencial; ✅ concluída — ver seção 28.2
 2. recovery operacional;
 3. observabilidade mínima.
 
@@ -1559,6 +1632,10 @@ Histórico recente concluído:
 - MASTER-001 ✅
 - P0-GATING-001 ✅
 - MASTER-005 ✅
+- MASTER-006 ✅
+- MASTER-007 ✅
+- MASTER-008 ✅
+- MASTER-009 ✅
 
 ---
 
@@ -1645,16 +1722,58 @@ Não iniciar nova frente de produto, IA, infraestrutura ou redesign antes de res
 
 ---
 
+# 28.2 GATE ROADMAP — RECONCILIAÇÃO PÓS ACESSIBILIDADE ESSENCIAL
+
+**Data operacional:** 07/08/2026
+**Objetivo:** reconciliar roadmap × Git/PRs × código após a conclusão da acessibilidade essencial (MASTER-006, MASTER-007, MASTER-008, MASTER-009).
+
+## Confirmados concluídos
+
+- MASTER-006 — semântica do onboarding; seleção única em `radio` nativo, `fieldset`/`legend`, leitor de tela real validado; PR #11; merge commit `962dddde38360b2c21952e9210bca362fcf59966`;
+- MASTER-007 — associação acessível da escala 1–5; `button` + `aria-pressed` preservado, `role="group"`/`aria-labelledby` adicionados; leitor de tela real validado; PR #13; merge commit `6ab430489a8707dbb82b24fd9809c1f9207cede2`;
+- MASTER-008 (onboarding) — obrigatoriedade com feedback inline; PR #11; merge commit `962dddde38360b2c21952e9210bca362fcf59966`;
+- MASTER-008 (pós-leitura) — CTA focável com `aria-disabled`, mensagem dinâmica, `aria-live="polite"`; leitor de tela real validado; smoke real em produção PASS; PR #12; merge commit `b7180086af1be3286aa2741cc2d9282cbb192e6f`;
+- MASTER-009 — `lang="pt-BR"` global; PR #10; merge commit `8730ad5a3bd034a27410e89625fc4192c2e2052f`.
+
+## Estado da frente
+
+**Acessibilidade essencial: CONCLUÍDA.**
+
+Isso não encerra o Marco C. A sequência obrigatória definida no gate anterior (seção 28.1) permanece:
+
+1. acessibilidade essencial — ✅ concluída;
+2. recovery operacional — pendente;
+3. observabilidade mínima — pendente.
+
+## Bloqueantes agora
+
+**Recovery operacional** passa a ser a próxima frente obrigatória sequencial para o fechamento do Marco C. Não iniciar observabilidade mínima nem nova frente de produto, IA, infraestrutura ou redesign antes de resolver ou reclassificar explicitamente recovery operacional.
+
+## Dívida técnica identificada durante a auditoria
+
+Durante a auditoria do MASTER-007 foi identificado, em `QuizProduto1.jsx`, um `setTimeout(..., 360)` de avanço automático sem cancelamento explícito, com risco teórico de timer concorrente/obsoleto em interações rápidas (ex.: navegação manual dentro da janela de 360ms).
+
+- não é defeito de acessibilidade;
+- não bloqueou o MASTER-007;
+- não foi alterado nas PRs de acessibilidade (#11, #12, #13);
+- registrada como dívida técnica não bloqueante na seção 24.
+
+## Próxima ação permitida
+
+**Recovery operacional.**
+
+---
+
 # 29. TOP PRIORIDADES
 
 ## P0
 **Nenhum release gate de pagamento pendente. O P1 está em produção comercial ativa.**
 
 ## P1 RC1 crítico
-1. acessibilidade essencial
+1. acessibilidade essencial ✅ concluída (MASTER-006, MASTER-007, MASTER-008, MASTER-009 — ver seção 28.2)
 
 ## Obrigatórias sequenciais para fechar Marco C
-2. recovery operacional
+2. recovery operacional ← próxima frente obrigatória
 3. observabilidade mínima
 
 ## P1 operação / pós-RC1
@@ -1765,6 +1884,7 @@ O Método Ori já possui:
 - saves do questionário foram serializados para evitar sobrescrita por requisição antiga;
 - `completeProduto1` aguarda a fila de saves;
 - MASTER-001, P0-GATING-001 e MASTER-003 preservados após MASTER-005;
+- acessibilidade essencial concluída (MASTER-006, MASTER-007, MASTER-008, MASTER-009) — onboarding com `radio` nativo, escala 1–5 associada à pergunta via `role="group"`/`aria-labelledby`, feedback de obrigatoriedade acessível no onboarding e no pós-leitura, idioma `pt-BR` global;
 - auditoria UX/UI completa;
 - backlog priorizado;
 - infraestrutura Cloudflare + Render + Supabase em produção;
@@ -1780,8 +1900,8 @@ P2, P3 e Bundle continuam fora do checkout nesta release.
 
 O release gate de pagamentos, o focus trap do paywall, o fechamento gratuito, o P0 de gating pós-quiz e o MASTER-005 foram encerrados. O trabalho crítico agora é cirúrgico:
 
-1. corrigir acessibilidade essencial;
-2. fortalecer recovery operacional;
+1. acessibilidade essencial — ✅ concluída (MASTER-006, MASTER-007, MASTER-008, MASTER-009);
+2. fortalecer recovery operacional — próxima frente obrigatória;
 3. fortalecer observabilidade mínima;
 4. consolidar o P1 com clientes;
 5. revisar a arquitetura de IA com a especialista;
