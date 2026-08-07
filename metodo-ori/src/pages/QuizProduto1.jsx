@@ -1483,6 +1483,7 @@ function QuizQuestionView({
   reduceMotion,
 }) {
   const selectedValue = answers[currentQuestion.id];
+  const questionHeadingId = `produto1-question-${currentQuestion.id}`;
   const currentBlock = currentQuestion.bloco;
   const blockIndex = blockOrder.indexOf(currentBlock);
   const currentBlockQuestions = groupedQuestions[currentBlock] || [];
@@ -1718,6 +1719,7 @@ function QuizQuestionView({
                 </p>
 
                 <h3
+                  id={questionHeadingId}
                   className="text-[21px] md:text-[34px] xl:text-[38px] leading-[1.08] md:leading-[1.04] max-w-[820px] mx-auto [text-wrap:balance]"
                   style={{
                     color: theme.accent,
@@ -1751,7 +1753,11 @@ function QuizQuestionView({
                   </motion.p>
                 </AnimatePresence>
 
-                <div className="ori-quiz-mobile-scale relative z-10 grid grid-cols-5 gap-1.5 md:gap-1.5">
+                <div
+                  role="group"
+                  aria-labelledby={questionHeadingId}
+                  className="ori-quiz-mobile-scale relative z-10 grid grid-cols-5 gap-1.5 md:gap-1.5"
+                >
                   {scaleLabels.map((item) => {
                     const active = selectedValue === item.value;
 
