@@ -6,6 +6,30 @@ import {
 } from "../content/produto1PaywallCopy";
 import { OriButton } from "./ui";
 
+const FOCUSABLE_SELECTOR = [
+  "a[href]",
+  "button:not([disabled])",
+  "textarea:not([disabled])",
+  "input:not([disabled])",
+  "select:not([disabled])",
+  "[tabindex]:not([tabindex='-1'])",
+].join(",");
+
+function getFocusableElements(container) {
+  return Array.from(container.querySelectorAll(FOCUSABLE_SELECTOR)).filter(
+    (element) => {
+      if (element.tabIndex < 0) return false;
+      if (element.hidden || element.getAttribute("aria-hidden") === "true") {
+        return false;
+      }
+      if (element.getAttribute("aria-disabled") === "true") return false;
+
+      const styles = window.getComputedStyle(element);
+      return styles.display !== "none" && styles.visibility !== "hidden";
+    },
+  );
+}
+
 function formatCurrency(amountCents, currency) {
   if (!Number.isInteger(amountCents)) return "Em breve";
 
@@ -58,6 +82,43 @@ function Produto1Paywall({
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
         onClose?.();
+        return;
+      }
+
+      if (event.key !== "Tab") {
+        return;
+      }
+
+      const dialog = dialogRef.current;
+      if (!dialog) return;
+
+      const focusableElements = getFocusableElements(dialog);
+
+      if (!focusableElements.length) {
+        event.preventDefault();
+        dialog.focus();
+        return;
+      }
+
+      const firstFocusable = focusableElements[0];
+      const lastFocusable = focusableElements[focusableElements.length - 1];
+      const activeElement = document.activeElement;
+
+      if (activeElement === dialog || !dialog.contains(activeElement)) {
+        event.preventDefault();
+        (event.shiftKey ? lastFocusable : firstFocusable).focus();
+        return;
+      }
+
+      if (!event.shiftKey && activeElement === lastFocusable) {
+        event.preventDefault();
+        firstFocusable.focus();
+        return;
+      }
+
+      if (event.shiftKey && activeElement === firstFocusable) {
+        event.preventDefault();
+        lastFocusable.focus();
       }
     };
 
