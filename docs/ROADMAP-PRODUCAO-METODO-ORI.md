@@ -1,7 +1,7 @@
 # ROADMAP DE PRODUÇÃO — MÉTODO ORI
-## Versão 2.1 — P1 em produção comercial + Auditoria UX/UI + Briefing da Idealizadora + Handoffs Consolidados
+## Versão 2.2 — P1 em produção comercial + Onda 0 + MASTER-005 + Reconciliação pós-smoke
 
-**Data de recalibração:** 06/08/2026  
+**Data de recalibração:** 07/08/2026
 **Status:** documento mestre operacional  
 **Substitui como fonte de verdade operacional:** versões anteriores do roadmap e guias históricos quando houver divergência temporal.
 
@@ -140,11 +140,18 @@ Na RC1:
 - não deve parecer comercialmente disponível;
 - pode existir apenas como próxima etapa narrativa.
 
-### Atenção atual
+### Atenção mitigada
 
-A auditoria em produção confirmou que o Produto 2 ainda aparece com peso visual de produto ativo e CTA “Acessar Dossiê”.
+O risco de o Produto 2 parecer comercialmente ativo na RC1 foi mitigado pelo MASTER-002.
 
-Isso é um item **RC1 crítico de UX/comercial**.
+Estado vigente:
+
+- Produto 2 permanece visível como próxima etapa narrativa;
+- estado público em produção: `Em preparação`;
+- sem preço;
+- sem checkout;
+- sem CTA comercial ativo;
+- rotas diretas protegidas por estado de preparação.
 
 ## 2.3 Produto 3 — Código Final
 
@@ -427,11 +434,11 @@ Notificações legacy como `?id=...&topic=payment` ou `merchant_order` podem ret
 
 # 7. ONDA 0 — RELEASE SAFETY MÍNIMO
 
-O GATE-001 está concluído. Esta é a próxima onda de consolidação da RC1.
+O GATE-001 e os itens mínimos de safety da RC1 foram concluídos e validados em produção.
 
 ## MASTER-002 — P2 parece ativo
 
-**Severidade:** P1  
+**Severidade:** P1
 **Status:** ✅ CONCLUÍDO / VERDE EM PRODUÇÃO
 
 - [x] transformar P2 em futuro narrativo / indisponível na RC1
@@ -454,7 +461,7 @@ Evidência de conclusão:
 
 ## MASTER-003 — Focus trap do paywall
 
-**Severidade:** P1  
+**Severidade:** P1
 **Status:** ✅ CONCLUÍDO / VERDE EM PRODUÇÃO
 
 Hoje:
@@ -529,7 +536,7 @@ Evidência de conclusão:
 
 ## MASTER-001 — Fechamento gratuito / transição premium
 
-**Severidade:** P1  
+**Severidade:** P1
 **Status:** ✅ CONCLUÍDO / VERDE EM PRODUÇÃO
 
 Problema resolvido:
@@ -639,10 +646,100 @@ Evidência de conclusão:
 ## MASTER-005 — Botão Voltar
 
 **Severidade:** P1
+**Status:** ✅ CONCLUÍDO / VERDE EM PRODUÇÃO
 
-- [ ] avisar antes da ação que voltar pode alterar/remover respostas posteriores
-- [ ] não assumir automaticamente que preservar respostas é correto
-- [ ] respeitar a lógica adaptativa do questionário
+Problema resolvido:
+
+- o botão Voltar apagava imediatamente a resposta de destino e respostas posteriores;
+- isso prejudicava revisão, controle e retomada do questionário;
+- a persistência podia ficar inconsistente se a poda local não chegasse ao backend.
+
+Contrato final:
+
+```text
+Voltar
+↓
+apenas revisa
+↓
+preserva resposta de destino
+↓
+preserva respostas posteriores
+```
+
+```text
+Mesma resposta
+↓
+sem confirmação
+↓
+preserva posteriores
+```
+
+```text
+Mudança real com posteriores
+↓
+confirmação acessível
+↓
+Cancelar/Escape = nada muda
+↓
+Confirmar = snapshot podado persistido
+↓
+posteriores removidas
+↓
+continuação consistente
+```
+
+- [x] avisar antes da ação que voltar pode alterar/remover respostas posteriores
+- [x] não assumir automaticamente que preservar respostas é correto
+- [x] respeitar a lógica adaptativa do questionário
+
+Nota de precisão:
+
+- na RC1, o questionário atual é linear, sem perguntas condicionais ou ramificação;
+- a implementação respeita a ordem real de `questions` e não depende de IDs numéricos;
+- o critério fica válido para a implementação atual;
+- se lógica adaptativa/ramificada for introduzida futuramente, a regra de poda deve ser revalidada e pode precisar mudar de “todas as perguntas posteriores” para “somente o caminho/subárvore invalidado”.
+
+Garantias implementadas:
+
+- Voltar apenas navega;
+- resposta de destino preservada;
+- respostas posteriores preservadas ao apenas voltar;
+- confirmação aparece somente em mudança real com respostas posteriores;
+- diálogo com `role="dialog"`, `aria-modal`, `aria-labelledby`, `aria-describedby`;
+- foco inicial em Cancelar;
+- Tab/Shift+Tab contidos;
+- Escape cancela antes do save;
+- Cancelar devolve foco ao gatilho;
+- confirmação aguarda save PASS antes de aplicar poda;
+- falha de save não consolida poda local nem avança;
+- retry permanece possível;
+- fila local serializa saves de `handleAnswer`;
+- fila sobrevive a falha anterior;
+- `completeProduto1` aguarda a fila antes de concluir;
+- ordem real de `questions` define respostas posteriores, sem depender de IDs sequenciais.
+
+Evidência de conclusão:
+
+- implementação `19da1a1`;
+- PR #8;
+- merge commit `ab0598404cdb9fc02f7068e65c4a1c306c7bf7d0`;
+- Cloudflare Production: PASS;
+- smoke produção: PASS;
+- Voltar preserva resposta: PASS;
+- Voltar preserva posteriores: PASS;
+- mesma resposta não abre confirmação: PASS;
+- mudança real abre confirmação: PASS;
+- Cancelar: PASS;
+- Escape: PASS;
+- confirmar remove posteriores: PASS;
+- reload não ressuscita respostas: PASS;
+- retomada: PASS;
+- teclado/foco: PASS;
+- mobile: PASS;
+- conclusão do quiz: PASS;
+- MASTER-001 preservado: PASS;
+- P0-GATING-001 preservado: PASS;
+- MASTER-003 preservado: PASS.
 
 ## MASTER-010 — Retomada da camada exata
 
@@ -812,18 +909,24 @@ backlog aprovado
 ↓
 GATE-001 ✅ concluído
 ↓
-Onda 0
+Onda 0 ✅ concluída
 ↓
-validação
+MASTER-005 ✅ concluído
 ↓
-Onda 1
+acessibilidade essencial
 ↓
-Onda 2
+recovery operacional
 ↓
-Onda 3
+observabilidade mínima
 ↓
-Onda 4
+demais ondas
 ```
+
+Neste fluxo:
+
+- acessibilidade essencial bloqueia a próxima frente agora;
+- recovery operacional não bloqueia iniciar acessibilidade, mas é etapa obrigatória sequencial antes de fechar Marco C;
+- observabilidade mínima não bloqueia iniciar acessibilidade, mas é etapa obrigatória sequencial antes de fechar Marco C.
 
 ---
 
@@ -1393,7 +1496,7 @@ O `auth-state.json` é sensível.
 - [x] MASTER-002
 - [x] MASTER-003
 - [x] MASTER-001 mínimo
-- [ ] MASTER-005 recomendado
+- [x] MASTER-005 recomendado
 - [ ] acessibilidade essencial
 - [ ] recovery operacional
 - [ ] observabilidade mínima
@@ -1429,13 +1532,23 @@ O `auth-state.json` é sensível.
 
 # 28. ORDEM OBRIGATÓRIA IMEDIATA
 
-O P1 já está vendendo. GATE-001, MASTER-002, MASTER-003, MASTER-001 e P0-GATING-001 foram concluídos e validados em produção.
+O P1 já está vendendo. GATE-001, MASTER-002, MASTER-003, MASTER-001, P0-GATING-001 e MASTER-005 foram concluídos e validados em produção.
 
 ```text
-MASTER-005 + acessibilidade essencial
+acessibilidade essencial
+↓
+recovery operacional
+↓
+observabilidade mínima
 ↓
 demais ondas
 ```
+
+Marco C permanece aberto até concluir a sequência:
+
+1. acessibilidade essencial;
+2. recovery operacional;
+3. observabilidade mínima.
 
 Mudanças pequenas, uma por vez.
 
@@ -1445,6 +1558,90 @@ Histórico recente concluído:
 - MASTER-003 ✅
 - MASTER-001 ✅
 - P0-GATING-001 ✅
+- MASTER-005 ✅
+
+---
+
+# 28.1 GATE ROADMAP — RECONCILIAÇÃO PÓS MASTER-005
+
+**Data operacional:** 07/08/2026
+**Objetivo:** reconciliar roadmap × Git/PRs × código após smoke real do MASTER-005.
+
+## Confirmados concluídos
+
+- GATE-001 — Mercado Pago E2E;
+- MASTER-002 — Produto 2 como etapa futura / sem venda RC1;
+- MASTER-003 — focus trap do paywall;
+- P0-GATING-001 — premium fail-closed pós-quiz;
+- MASTER-001 mínimo — fechamento gratuito antes do premium;
+- MASTER-005 — Voltar preserva revisão e só poda respostas após mudança real confirmada.
+
+## Bloqueantes agora
+
+1. **Acessibilidade essencial**
+
+Não considerar concluída apenas porque MASTER-003, MASTER-001 e MASTER-005 entregaram melhorias pontuais de foco/teclado.
+
+Critérios ainda pendentes:
+
+- MASTER-006 — semântica do onboarding;
+- MASTER-007 — semântica da escala 1–5;
+- MASTER-008 — obrigatoriedade com feedback inline;
+- MASTER-009 — `lang="en"` global ainda aparece em `metodo-ori/index.html` e precisa virar `pt-BR` com smoke test.
+
+## Pendências obrigatórias sequenciais do Marco C
+
+1. acessibilidade essencial;
+2. recovery operacional;
+3. observabilidade mínima.
+
+HÁ ETAPA INDEVIDAMENTE PULADA ATÉ MASTER-005?
+
+**Não.** GATE-001, Onda 0, MASTER-002, MASTER-003, P0-GATING-001, MASTER-001 mínimo e MASTER-005 foram concluídos/validados antes de avançar.
+
+HÁ PENDÊNCIAS OBRIGATÓRIAS ANTES DE FECHAR MARCO C?
+
+**Sim.** Acessibilidade essencial vem agora; recovery operacional e observabilidade mínima vêm depois, nessa ordem. Não iniciar recovery antes da acessibilidade essencial, nem nova frente de produto antes de resolver ou reclassificar explicitamente essa sequência.
+
+## Onda 1 — tarefas abertas reconciliadas
+
+- MASTER-001 completo: não executado; não foi pulado indevidamente; volta à fila na consolidação posterior da jornada comercial.
+- MASTER-004 — Leitura / relatório / PDF: não executado; não foi pulado indevidamente; volta à fila na consolidação posterior de oferta, leitura, relatório e PDF.
+- MASTER-010 — Retomada da camada exata: inferido / requer teste; não foi pulado indevidamente; volta à fila quando houver reprodução/validação funcional.
+
+Onda 1 permanece aberta.
+
+## Dívidas não bloqueantes agora
+
+- TTL/expiração de `payment_orders`;
+- notificações legacy Mercado Pago;
+- alinhamento de `GEMINI_MODEL` entre documentação/configuração/código;
+- suíte permanente E2E no projeto;
+- design system, skill Ori Copy e refatorações.
+
+## Futuras / corretamente adiadas
+
+- RC2 Produto 2;
+- RC3 Produto 3;
+- Bundle;
+- Assistente ORI;
+- continuidade/escala;
+- arquitetura de IA completa com revisão especializada.
+
+## Inconsistências corrigidas neste gate
+
+- MASTER-005 estava pendente no roadmap, mas já está concluído/validado em produção;
+- ordem imediata ainda citava MASTER-005 como pendência ativa;
+- Top prioridades ainda listava MASTER-005 como P1 crítico;
+- risco de perda de progresso no Voltar ainda não estava marcado como mitigado.
+- recovery operacional e observabilidade mínima estavam listadas como dívidas não bloqueantes sem a ressalva de que continuam obrigatórias para fechar Marco C;
+- Onda 1 precisava explicitar que MASTER-001 completo, MASTER-004 e MASTER-010 continuam abertos e corretamente adiados.
+
+## Próxima ação permitida
+
+**Acessibilidade essencial.**
+
+Não iniciar nova frente de produto, IA, infraestrutura ou redesign antes de resolver ou reclassificar explicitamente os critérios essenciais de acessibilidade acima.
 
 ---
 
@@ -1454,34 +1651,35 @@ Histórico recente concluído:
 **Nenhum release gate de pagamento pendente. O P1 está em produção comercial ativa.**
 
 ## P1 RC1 crítico
-1. MASTER-005 — consequência do Voltar
-2. acessibilidade essencial
+1. acessibilidade essencial
+
+## Obrigatórias sequenciais para fechar Marco C
+2. recovery operacional
+3. observabilidade mínima
 
 ## P1 operação / pós-RC1
-3. operação “pagou e não liberou”
-4. observabilidade
-5. segurança/LGPD
-6. validação de produto / abstração
-7. revisão de arquitetura de IA
-8. alinhamento da configuração Gemini
+4. segurança/LGPD
+5. validação de produto / abstração
+6. revisão de arquitetura de IA
+7. alinhamento da configuração Gemini
 
 ## P2
-9. jornada comercial completa
-10. robustez React
-11. instrumentação
-13. pipeline imagem P2
-14. jurídico de assets
-15. RC2
-16. TTL de orders / legacy notifications
+8. jornada comercial completa
+9. robustez React
+10. instrumentação
+11. pipeline imagem P2
+12. jurídico de assets
+13. RC2
+14. TTL de orders / legacy notifications
 
 ## P3
-17. design system
-18. skill Ori Copy
-19. refatorações
-20. RC3
-21. continuidade
-22. Bundle
-23. Assistente ORI
+15. design system
+16. skill Ori Copy
+17. refatorações
+18. RC3
+19. continuidade
+20. Bundle
+21. Assistente ORI
 
 ---
 
@@ -1494,6 +1692,7 @@ Histórico recente concluído:
 | modal permitir foco atrás | mitigado | MASTER-003 concluído / validado em produção |
 | premium aparecer antes da confirmação do entitlement | mitigado | P0-GATING-001 concluído / deny-by-default / validado em produção |
 | gratuito parecer leitura interrompida | mitigado | MASTER-001 concluído / fechamento gratuito explícito / progresso free 100% em Dinâmica / aprofundamento premium por escolha / smoke produção FREE e FULL: PASS |
+| Voltar apagar progresso do questionário | mitigado | MASTER-005 concluído / Voltar preserva respostas / mudança real exige confirmação / snapshot podado persistido / smoke produção: PASS |
 | P1 continuar abstrato | alto de produto | pesquisa + UX/copy |
 | IA substituir cálculo determinístico | alto | arquitetura IA |
 | baixa confiança baseada só no LLM | alto | score composto observável |
@@ -1558,6 +1757,14 @@ O Método Ori já possui:
 - conteúdo premium não renderizado sem entitlement positivo;
 - P0 e MASTER-003 sem regressão após MASTER-001;
 - fluxo pós-quiz free validado em produção;
+- MASTER-005 verde em produção;
+- Voltar do questionário preserva resposta de destino;
+- Voltar preserva respostas posteriores;
+- mudança real em resposta anterior com posteriores exige confirmação acessível;
+- snapshot podado é persistido antes de remover posteriores;
+- saves do questionário foram serializados para evitar sobrescrita por requisição antiga;
+- `completeProduto1` aguarda a fila de saves;
+- MASTER-001, P0-GATING-001 e MASTER-003 preservados após MASTER-005;
 - auditoria UX/UI completa;
 - backlog priorizado;
 - infraestrutura Cloudflare + Render + Supabase em produção;
@@ -1571,21 +1778,22 @@ P2, P3 e Bundle continuam fora do checkout nesta release.
 
 ## Próxima frente imediata
 
-O release gate de pagamentos, o focus trap do paywall, o fechamento gratuito e o P0 de gating pós-quiz foram encerrados. O trabalho crítico agora é cirúrgico:
+O release gate de pagamentos, o focus trap do paywall, o fechamento gratuito, o P0 de gating pós-quiz e o MASTER-005 foram encerrados. O trabalho crítico agora é cirúrgico:
 
-1. corrigir consequência/comunicação do Voltar — MASTER-005;
-2. corrigir acessibilidade essencial;
-3. fortalecer operação, observabilidade e recovery;
+1. corrigir acessibilidade essencial;
+2. fortalecer recovery operacional;
+3. fortalecer observabilidade mínima;
 4. consolidar o P1 com clientes;
 5. revisar a arquitetura de IA com a especialista;
 6. avançar para RC2 / Produto 2.
 
-## Pendências pós-RC1 que não bloqueiam vendas
+Recovery operacional e observabilidade mínima não bloqueiam iniciar acessibilidade, mas seguem como pendências obrigatórias sequenciais para fechar Marco C.
+
+## Pendências pós-RC1 que não bloqueiam vendas nem o início da acessibilidade
 
 - TTL/expiração de `payment_orders`;
 - avaliação de notificações legacy do Mercado Pago;
 - alinhamento da configuração Gemini entre ambiente e repositório;
-- observabilidade e recovery operacional;
 - demais dívidas técnicas classificadas neste roadmap.
 
 A expansão futura continua:
