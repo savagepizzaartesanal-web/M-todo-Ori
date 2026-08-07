@@ -9,6 +9,7 @@ export default function OnboardingShell({
   totalSteps,
   progress,
   formData,
+  firstIncompleteRequiredField,
   onFieldChange,
   onCheckboxChange,
   canProceed,
@@ -181,6 +182,7 @@ export default function OnboardingShell({
                     <OnboardingQuestionStep
                       step={step}
                       formData={formData}
+                      firstIncompleteRequiredField={firstIncompleteRequiredField}
                       onFieldChange={onFieldChange}
                       onCheckboxChange={onCheckboxChange}
                     />

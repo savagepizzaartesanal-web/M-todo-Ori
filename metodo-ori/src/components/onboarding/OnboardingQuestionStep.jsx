@@ -3,6 +3,7 @@ import OriField from "../ui/OriField";
 export default function OnboardingQuestionStep({
   step,
   formData,
+  firstIncompleteRequiredField,
   onFieldChange,
   onCheckboxChange,
 }) {
@@ -66,6 +67,7 @@ export default function OnboardingQuestionStep({
               key={field.name}
               field={field}
               value={formData[field.name]}
+              isFirstIncomplete={firstIncompleteRequiredField?.name === field.name}
               onFieldChange={onFieldChange}
               onCheckboxChange={onCheckboxChange}
             />
@@ -76,24 +78,39 @@ export default function OnboardingQuestionStep({
   );
 }
 
-function FieldRenderer({ field, value, onFieldChange, onCheckboxChange }) {
+function FieldRenderer({
+  field,
+  value,
+  isFirstIncomplete = false,
+  onFieldChange,
+  onCheckboxChange,
+}) {
   const fieldId = `ori-entry-${field.name}`;
+  const requirementId = `${fieldId}-requirement`;
+  const requirementMessage =
+    field.type === "radio"
+      ? "Selecione uma opção para continuar."
+      : "Preencha este campo para continuar.";
+  const describedBy = isFirstIncomplete ? requirementId : undefined;
 
   return (
     <div className="relative">
-      <label
-        htmlFor={fieldId}
-        className="ori-type-system mb-1.5 block text-[10px]"
-        style={{ color: "rgba(242,185,104,0.68)" }}
-      >
-        {field.label}
-      </label>
+      {field.type !== "radio" ? (
+        <label
+          htmlFor={fieldId}
+          className="ori-type-system mb-1.5 block text-[10px]"
+          style={{ color: "rgba(242,185,104,0.68)" }}
+        >
+          {field.label}
+        </label>
+      ) : null}
 
       {field.type === "text" || field.type === "date" || field.type === "tel" ? (
         <OriField
           id={fieldId}
           type={field.type}
           value={value || ""}
+          aria-describedby={describedBy}
           onChange={(e) => onFieldChange(field.name, e.target.value)}
           placeholder={field.placeholder}
           variant="onboarding"
@@ -106,6 +123,7 @@ function FieldRenderer({ field, value, onFieldChange, onCheckboxChange }) {
           as="textarea"
           id={fieldId}
           value={value || ""}
+          aria-describedby={describedBy}
           onChange={(e) => onFieldChange(field.name, e.target.value)}
           placeholder={field.placeholder}
           rows={3}
@@ -115,70 +133,104 @@ function FieldRenderer({ field, value, onFieldChange, onCheckboxChange }) {
       ) : null}
 
       {field.type === "radio" ? (
-        <div
-          className={`grid gap-2 ${
-            field.options.length > 4 ? "md:grid-cols-2" : ""
-          }`}
-        >
-          {field.options.map((option) => {
-            const active = value === option;
+        <fieldset className="m-0 border-0 p-0">
+          <legend
+            className="ori-type-system mb-1.5 block text-[10px]"
+            style={{ color: "rgba(242,185,104,0.68)" }}
+          >
+            {field.label}
+          </legend>
 
-            return (
-              <button
-                key={option}
-                type="button"
-                onClick={() => onFieldChange(field.name, option)}
-                aria-pressed={active}
-                className="ori-step group relative flex min-h-[38px] items-center gap-2.5 overflow-hidden rounded-[15px] border px-3 py-2 text-left text-[12.5px] leading-snug transition duration-300 hover:-translate-y-0.5"
-                data-state={active ? "active" : "sealed"}
-                style={{
-                  background: active
-                    ? "linear-gradient(135deg, rgba(242,185,104,0.125), rgba(210,135,70,0.050))"
-                    : "linear-gradient(135deg, rgba(255,255,255,0.024), rgba(255,255,255,0.008))",
-                  borderColor: active
-                    ? "rgba(242,185,104,0.34)"
-                    : "rgba(242,185,104,0.10)",
-                  color: active
-                    ? "rgba(247,234,216,0.96)"
-                    : "rgba(255,245,235,0.72)",
-                  boxShadow: active
-                    ? "0 0 28px rgba(242,185,104,0.10), inset 0 0 18px rgba(242,185,104,0.030)"
-                    : "inset 0 0 14px rgba(255,255,255,0.008)",
-                }}
-              >
-                <span
-                  className="absolute inset-x-4 top-0 h-px"
-                  style={{
-                    background: active
-                      ? "linear-gradient(90deg, transparent, rgba(242,185,104,0.42), transparent)"
-                      : "linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent)",
-                  }}
-                />
-                <span
-                  className="grid h-[18px] w-[18px] shrink-0 place-items-center rounded-full border transition"
-                  style={{
-                    borderColor: active
-                      ? "rgba(242,185,104,0.76)"
-                      : "rgba(255,245,235,0.20)",
-                    boxShadow: active
-                      ? "0 0 14px rgba(242,185,104,0.24)"
-                      : "none",
-                  }}
-                >
-                  <span
-                    className="h-1.5 w-1.5 rounded-full transition"
+          <div
+            className={`grid gap-2 ${
+              field.options.length > 4 ? "md:grid-cols-2" : ""
+            }`}
+          >
+            {field.options.map((option, optionIndex) => {
+              const active = value === option;
+              const optionId = `${fieldId}-${optionIndex}`;
+
+              return (
+                <div key={option} className="relative">
+                  <input
+                    id={optionId}
+                    type="radio"
+                    name={field.name}
+                    value={option}
+                    required={field.required}
+                    checked={active}
+                    aria-describedby={describedBy}
+                    onChange={() => onFieldChange(field.name, option)}
+                    className="peer sr-only"
+                  />
+                  <label
+                    htmlFor={optionId}
+                    className="ori-step group relative flex min-h-[38px] cursor-pointer items-center gap-2.5 overflow-hidden rounded-[15px] border px-3 py-2 text-left text-[12.5px] leading-snug transition duration-300 hover:-translate-y-0.5 peer-focus-visible:ring-2 peer-focus-visible:ring-[rgba(242,185,104,0.48)] peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-[#090506]"
+                    data-state={active ? "active" : "sealed"}
                     style={{
                       background: active
-                        ? "rgba(242,185,104,0.95)"
-                        : "transparent",
+                        ? "linear-gradient(135deg, rgba(242,185,104,0.125), rgba(210,135,70,0.050))"
+                        : "linear-gradient(135deg, rgba(255,255,255,0.024), rgba(255,255,255,0.008))",
+                      borderColor: active
+                        ? "rgba(242,185,104,0.34)"
+                        : "rgba(242,185,104,0.10)",
+                      color: active
+                        ? "rgba(247,234,216,0.96)"
+                        : "rgba(255,245,235,0.72)",
+                      boxShadow: active
+                        ? "0 0 28px rgba(242,185,104,0.10), inset 0 0 18px rgba(242,185,104,0.030)"
+                        : "inset 0 0 14px rgba(255,255,255,0.008)",
                     }}
-                  />
-                </span>
-                <span>{option}</span>
-              </button>
-            );
-          })}
-        </div>
+                  >
+                    <span
+                      className="absolute inset-x-4 top-0 h-px"
+                      style={{
+                        background: active
+                          ? "linear-gradient(90deg, transparent, rgba(242,185,104,0.42), transparent)"
+                          : "linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent)",
+                      }}
+                    />
+                    <span
+                      className="grid h-[18px] w-[18px] shrink-0 place-items-center rounded-full border transition"
+                      style={{
+                        borderColor: active
+                          ? "rgba(242,185,104,0.76)"
+                          : "rgba(255,245,235,0.20)",
+                        boxShadow: active
+                          ? "0 0 14px rgba(242,185,104,0.24)"
+                          : "none",
+                      }}
+                    >
+                      <span
+                        className="h-1.5 w-1.5 rounded-full transition"
+                        style={{
+                          background: active
+                            ? "rgba(242,185,104,0.95)"
+                            : "transparent",
+                        }}
+                      />
+                    </span>
+                    <span>{option}</span>
+                  </label>
+                </div>
+              );
+            })}
+          </div>
+        </fieldset>
+      ) : null}
+
+      {isFirstIncomplete ? (
+        <p
+          id={requirementId}
+          className="ori-type-reading-soft mt-2 rounded-[14px] px-3 py-2 text-xs leading-relaxed"
+          style={{
+            background: "rgba(242,185,104,0.075)",
+            border: "1px solid rgba(242,185,104,0.16)",
+            color: "rgba(255,245,235,0.78)",
+          }}
+        >
+          {requirementMessage}
+        </p>
       ) : null}
 
       {field.type === "checkbox" ? (
