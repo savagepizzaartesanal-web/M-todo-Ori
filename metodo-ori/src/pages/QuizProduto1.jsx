@@ -49,6 +49,13 @@ const PRODUTO1_FREE_LAYER_IDS = new Set([
   "essencia",
   "dinamica",
 ]);
+const PRODUTO1_FREE_COMPLETION_CORE_ID = "estrutura";
+const PRODUTO1_FREE_COMPLETION_LAYER_ID = "dinamica";
+const PRODUTO1_FREE_COMPLETION_LAYERS = [
+  { id: "reconhecimento", label: "Reconhecimento" },
+  { id: "essencia", label: "Essência" },
+  { id: "dinamica", label: "Dinâmica" },
+];
 
 const FEEDBACK_OPTIONS = [
   {
@@ -2378,6 +2385,129 @@ function LayerTabNavigation({
   );
 }
 
+function FreeReadingCompletionCard({
+  completionRef,
+  onUnlock,
+  onRevisit,
+  reduceMotion,
+}) {
+  const titleId = "produto-1-free-completion-title";
+
+  return (
+    <motion.section
+      ref={completionRef}
+      tabIndex={-1}
+      role="region"
+      aria-labelledby={titleId}
+      initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+      animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+      transition={
+        reduceMotion ? undefined : { duration: 0.34, ease: [0.22, 1, 0.36, 1] }
+      }
+      className="mx-auto mt-4 scroll-mt-8 rounded-[18px] p-4 md:mt-5 md:rounded-[24px] md:p-5"
+      style={{
+        background:
+          "linear-gradient(135deg, rgba(242,185,104,0.095), rgba(255,255,255,0.018))",
+        border: "1px solid rgba(242,185,104,0.18)",
+        boxShadow:
+          "0 0 38px rgba(242,185,104,0.05), inset 0 0 28px rgba(255,255,255,0.012)",
+      }}
+    >
+      <div className="grid gap-4 md:grid-cols-[1fr_auto] md:items-start md:gap-6">
+        <div className="min-w-0">
+          <p
+            className="mb-2 text-[9px] uppercase tracking-[0.22em] md:tracking-[0.28em]"
+            style={{ color: "var(--gold-soft)" }}
+          >
+            Primeira leitura concluída
+          </p>
+          <h3
+            id={titleId}
+            className="ori-type-revelation text-2xl md:text-3xl"
+            style={{
+              color: "var(--gold-primary)",
+              fontWeight: 650,
+              letterSpacing: "-0.045em",
+            }}
+          >
+            Sua primeira leitura está completa.
+          </h3>
+          <p
+            className="ori-mobile-preview-3 mt-2 max-w-3xl text-[13px] leading-relaxed md:text-base"
+            style={{ color: "rgba(255,245,235,0.70)" }}
+          >
+            {JOURNEY_COPY.codigoDasDeusas.completedDescription} Você percorreu
+            Reconhecimento, Essência e Dinâmica. Sua primeira leitura está salva
+            e pode ser revisitada quando quiser.
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-2.5 sm:flex-row md:flex-col md:items-stretch">
+          <OriButton
+            type="button"
+            onClick={onUnlock}
+            variant="gradient"
+            className="w-full justify-center px-5 py-2.5 text-sm md:w-auto md:py-3"
+            style={{
+              fontWeight: 700,
+              boxShadow:
+                "0 0 34px rgba(210,135,70,0.16), inset 0 0 14px rgba(255,255,255,0.16)",
+            }}
+          >
+            Aprofundar minha leitura
+          </OriButton>
+          <OriButton
+            type="button"
+            onClick={onRevisit}
+            variant="secondary"
+            className="w-full justify-center px-5 py-2.5 text-sm md:w-auto md:py-3"
+            style={{
+              background: "rgba(255,255,255,0.026)",
+              border: "1px solid rgba(242,185,104,0.10)",
+              color: "rgba(255,245,235,0.72)",
+            }}
+          >
+            Revisitar minha leitura
+          </OriButton>
+        </div>
+      </div>
+
+      <div className="mt-4 grid gap-2.5 sm:grid-cols-3">
+        {PRODUTO1_FREE_COMPLETION_LAYERS.map((layer) => (
+          <div
+            key={layer.id}
+            className="rounded-[14px] px-3 py-3"
+            style={{
+              background: "rgba(5,2,2,0.48)",
+              border: "1px solid rgba(242,185,104,0.12)",
+            }}
+          >
+            <p
+              className="text-[9px] uppercase tracking-[0.20em]"
+              style={{ color: "rgba(242,185,104,0.64)" }}
+            >
+              Entrega recebida
+            </p>
+            <p
+              className="mt-1 text-sm"
+              style={{ color: "rgba(255,245,235,0.86)", fontWeight: 650 }}
+            >
+              {layer.label}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <p
+        className="ori-mobile-preview-3 mt-4 text-[13px] leading-relaxed md:text-sm"
+        style={{ color: "rgba(255,245,235,0.58)" }}
+      >
+        Vida real é a próxima camada de aprofundamento da leitura completa.
+      </p>
+    </motion.section>
+  );
+}
+
 function QuizProduto1() {
   const prefersReducedMotion = useReducedMotion();
   const mobileMotionOff = useMobileMotionOff();
@@ -2419,6 +2549,7 @@ function QuizProduto1() {
   const [activeImagemPresenca, setActiveImagemPresenca] = useState("08");
   const [activeSinteseFinal, setActiveSinteseFinal] = useState("14");
   const [resultReadingCompleted, setResultReadingCompleted] = useState(false);
+  const [freeCompletionResultKey, setFreeCompletionResultKey] = useState(null);
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [feedbackResponse, setFeedbackResponse] = useState("");
   const [feedbackComment, setFeedbackComment] = useState("");
@@ -2437,6 +2568,7 @@ function QuizProduto1() {
   const quizRef = useRef(null);
   const readingNavigationRef = useRef(null);
   const readingLayerRef = useRef(null);
+  const freeCompletionRef = useRef(null);
   const feedbackRef = useRef(null);
   const nextStepRef = useRef(null);
 
@@ -3166,6 +3298,9 @@ function QuizProduto1() {
     [activeBackendReading, answers, baseReport, questions, result],
   );
   const archetypeVisual = result ? archetypeImages[result.nomeComposto] : null;
+  const freeReadingCompleted =
+    freeCompletionResultKey === result?.nomeComposto;
+
   const estruturaInternaTabs = report
     ? [
         {
@@ -3483,14 +3618,25 @@ function QuizProduto1() {
     },
   };
   const activeResultLayerState = resultCoreLayerState[activeResultCore];
+  const isFreeCompletionBoundary =
+    !produto1FullUnlocked &&
+    activeResultCore === PRODUTO1_FREE_COMPLETION_CORE_ID &&
+    activeEstruturaInternaTab?.layerId === PRODUTO1_FREE_COMPLETION_LAYER_ID;
   const resultReadingProgress = (() => {
     const coreOrder = ["estrutura", "sombra", "imagem", "sintese"];
-    const orderedLayers = coreOrder.flatMap((coreId) =>
-      (resultCoreLayerState[coreId]?.tabs || []).map((layer) => ({
-        coreId,
-        number: layer.number,
-      })),
-    );
+    const orderedLayers = produto1FullUnlocked
+      ? coreOrder.flatMap((coreId) =>
+          (resultCoreLayerState[coreId]?.tabs || []).map((layer) => ({
+            coreId,
+            number: layer.number,
+          })),
+        )
+      : estruturaInternaTabs
+          .filter((layer) => PRODUTO1_FREE_LAYER_IDS.has(layer.layerId))
+          .map((layer) => ({
+            coreId: PRODUTO1_FREE_COMPLETION_CORE_ID,
+            number: layer.number,
+          }));
     const activeIndex = orderedLayers.findIndex(
       (layer) =>
         layer.coreId === activeResultCore &&
@@ -3524,18 +3670,28 @@ function QuizProduto1() {
       : null;
   const isLastResultLayerOfLastCore =
     activeResultCore === "sintese" && !hasNextResultLayer;
-  const resultFlowLabel = hasNextResultLayer
-    ? JOURNEY_LABELS.proximoPasso
-    : nextResultCore
-      ? "Avançar para o próximo núcleo"
-      : "Concluir minha leitura";
-  const resultFlowText = hasNextResultLayer
-    ? "Continue pelas etapas deste núcleo antes de avançar."
-    : nextResultCore
-      ? `Este núcleo foi atravessado. Agora você pode seguir para ${nextResultCore.title}.`
-      : resultReadingCompleted
-        ? JOURNEY_COPY.dossieOri.nextBody
-        : "Você chegou à última etapa da sua primeira leitura.";
+  const resultFlowLabel = isFreeCompletionBoundary
+    ? freeReadingCompleted
+      ? "Aprofundar minha leitura"
+      : "Concluir minha primeira leitura"
+    : hasNextResultLayer
+      ? JOURNEY_LABELS.proximoPasso
+      : nextResultCore
+        ? "Avançar para o próximo núcleo"
+        : "Concluir minha leitura";
+  const resultFlowText = isFreeCompletionBoundary
+    ? freeReadingCompleted
+      ? "Sua primeira leitura gratuita está concluída. A próxima camada é um aprofundamento opcional."
+      : "Você chegou à terceira entrega gratuita. Conclua esta primeira leitura antes de decidir se quer aprofundar."
+    : hasNextResultLayer
+      ? "Continue pelas etapas deste núcleo antes de avançar."
+      : nextResultCore
+        ? `Este núcleo foi atravessado. Agora você pode seguir para ${nextResultCore.title}.`
+        : resultReadingCompleted
+          ? JOURNEY_COPY.dossieOri.nextBody
+          : "Você chegou à última etapa da sua primeira leitura.";
+  const showResultFlowNextAction =
+    !(isFreeCompletionBoundary && freeReadingCompleted);
 
   const scrollToReadingNavigation = () => {
     window.setTimeout(() => {
@@ -3563,6 +3719,19 @@ function QuizProduto1() {
     }, 100);
   };
 
+  const scrollToFreeCompletion = () => {
+    window.setTimeout(() => {
+      const completionElement = freeCompletionRef.current;
+
+      completionElement?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+
+      completionElement?.focus({ preventScroll: true });
+    }, 100);
+  };
+
   const scrollToCoreTab = (coreId) => {
     window.setTimeout(() => {
       document
@@ -3583,6 +3752,7 @@ function QuizProduto1() {
       return;
     }
 
+    setFreeCompletionResultKey(null);
     setActiveResultCore(coreId);
     scrollToReadingNavigation();
     scrollToCoreTab(coreId);
@@ -3598,11 +3768,31 @@ function QuizProduto1() {
       return;
     }
 
+    setFreeCompletionResultKey(null);
     setActiveNumber(layerNumber);
+  };
+
+  const handleRevisitFreeReading = () => {
+    setFreeCompletionResultKey(null);
+    setActiveResultCore(PRODUTO1_FREE_COMPLETION_CORE_ID);
+    setActiveEstruturaInterna("01");
+    scrollToCurrentLayer("01");
+    scrollToCoreTab(PRODUTO1_FREE_COMPLETION_CORE_ID);
   };
 
   const handleResultFlowNext = () => {
     if (!activeResultLayerState) return;
+
+    if (isFreeCompletionBoundary) {
+      if (!freeReadingCompleted) {
+        setFreeCompletionResultKey(result?.nomeComposto || null);
+        scrollToFreeCompletion();
+        return;
+      }
+
+      openProduto1Paywall();
+      return;
+    }
 
     if (hasNextResultLayer) {
       const nextLayer =
@@ -3704,12 +3894,14 @@ function QuizProduto1() {
     if (!activeResultLayerState) return;
 
     if (previousResultLayer) {
+      setFreeCompletionResultKey(null);
       activeResultLayerState.setActiveNumber(previousResultLayer.number);
       scrollToCurrentLayer(previousResultLayer.number);
       return;
     }
 
     if (previousResultCore) {
+      setFreeCompletionResultKey(null);
       setActiveResultCore(previousResultCore.id);
 
       const previousLayerState = resultCoreLayerState[previousResultCore.id];
@@ -4236,21 +4428,32 @@ function QuizProduto1() {
                         </OriButton>
                       )}
 
-                      <OriButton
-                        type="button"
-                        onClick={handleResultFlowNext}
-                        variant="gradient"
-                        className="px-6 py-2.5 text-sm md:py-3"
-                        style={{
-                          fontWeight: 700,
-                          boxShadow:
-                            "0 0 34px rgba(210,135,70,0.16), inset 0 0 14px rgba(255,255,255,0.16)",
-                        }}
-                      >
-                        {resultFlowLabel}
-                      </OriButton>
+                      {showResultFlowNextAction && (
+                        <OriButton
+                          type="button"
+                          onClick={handleResultFlowNext}
+                          variant="gradient"
+                          className="px-6 py-2.5 text-sm md:py-3"
+                          style={{
+                            fontWeight: 700,
+                            boxShadow:
+                              "0 0 34px rgba(210,135,70,0.16), inset 0 0 14px rgba(255,255,255,0.16)",
+                          }}
+                        >
+                          {resultFlowLabel}
+                        </OriButton>
+                      )}
                     </div>
                   </section>
+
+                  {isFreeCompletionBoundary && freeReadingCompleted && (
+                    <FreeReadingCompletionCard
+                      completionRef={freeCompletionRef}
+                      onUnlock={openProduto1Paywall}
+                      onRevisit={handleRevisitFreeReading}
+                      reduceMotion={reduceMotion}
+                    />
+                  )}
 
                   <section
                     className="mx-auto mt-4 flex max-w-[1060px] flex-col gap-3 rounded-[18px] p-3 md:mt-5 md:flex-row md:items-center md:justify-between md:gap-5 md:rounded-[22px] md:p-4"
