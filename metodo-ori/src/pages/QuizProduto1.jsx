@@ -336,6 +336,44 @@ function getBlockProgress(blockQuestions, answers) {
   return blockQuestions.filter((question) => answers[question.id]).length;
 }
 
+function getFocusableElements(container) {
+  return Array.from(
+    container.querySelectorAll(
+      [
+        "a[href]",
+        "button:not([disabled])",
+        "textarea:not([disabled])",
+        "input:not([disabled])",
+        "select:not([disabled])",
+        "[tabindex]:not([tabindex='-1'])",
+      ].join(","),
+    ),
+  ).filter((element) => {
+    if (element.tabIndex < 0) return false;
+    if (element.hidden || element.getAttribute("aria-hidden") === "true") {
+      return false;
+    }
+    if (element.getAttribute("aria-disabled") === "true") return false;
+
+    const styles = window.getComputedStyle(element);
+    return styles.display !== "none" && styles.visibility !== "hidden";
+  });
+}
+
+function pruneAnswersAfterQuestion(questions, answers, questionIndex, value) {
+  const nextAnswers = {};
+
+  questions.forEach((question, index) => {
+    if (index < questionIndex && answers[question.id] !== undefined) {
+      nextAnswers[question.id] = answers[question.id];
+    }
+  });
+
+  nextAnswers[questions[questionIndex].id] = value;
+
+  return nextAnswers;
+}
+
 function Eyebrow({ children, className = "", line = false }) {
   if (line) {
     return (
@@ -1721,7 +1759,13 @@ function QuizQuestionView({
                       <motion.button
                         key={item.value}
                         type="button"
-                        onClick={() => onAnswer(currentQuestion.id, item.value)}
+                        onClick={(event) =>
+                          onAnswer(
+                            currentQuestion.id,
+                            item.value,
+                            event.currentTarget,
+                          )
+                        }
                         aria-pressed={active}
                         aria-label={`Responder ${item.value}: ${item.short}`}
                         whileHover={
@@ -2508,6 +2552,174 @@ function FreeReadingCompletionCard({
   );
 }
 
+function AnswerChangeConfirmationDialog({
+  open,
+  errorMessage,
+  isSaving,
+  onCancel,
+  onConfirm,
+}) {
+  const dialogRef = useRef(null);
+  const cancelButtonRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return undefined;
+
+    window.setTimeout(() => cancelButtonRef.current?.focus(), 0);
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape" && !isSaving) {
+        event.preventDefault();
+        onCancel?.();
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+
+      const dialog = dialogRef.current;
+      if (!dialog) return;
+
+      const focusableElements = getFocusableElements(dialog);
+
+      if (!focusableElements.length) {
+        event.preventDefault();
+        dialog.focus();
+        return;
+      }
+
+      const firstFocusable = focusableElements[0];
+      const lastFocusable = focusableElements[focusableElements.length - 1];
+      const activeElement = document.activeElement;
+
+      if (activeElement === dialog || !dialog.contains(activeElement)) {
+        event.preventDefault();
+        (event.shiftKey ? lastFocusable : firstFocusable).focus();
+        return;
+      }
+
+      if (!event.shiftKey && activeElement === lastFocusable) {
+        event.preventDefault();
+        firstFocusable.focus();
+        return;
+      }
+
+      if (event.shiftKey && activeElement === firstFocusable) {
+        event.preventDefault();
+        lastFocusable.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [isSaving, onCancel, open]);
+
+  if (!open) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-[95] flex items-end justify-center bg-black/72 px-4 py-5 backdrop-blur-md md:items-center"
+      role="presentation"
+      onMouseDown={(event) => {
+        if (!isSaving && event.target === event.currentTarget) onCancel?.();
+      }}
+    >
+      <section
+        ref={dialogRef}
+        tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="answer-change-confirmation-title"
+        aria-describedby="answer-change-confirmation-description"
+        className="ori-main-frame w-full max-w-lg rounded-[24px] p-5 outline-none md:rounded-[30px] md:p-6"
+        style={{
+          background:
+            "radial-gradient(circle at 82% 12%, rgba(242,185,104,0.14), transparent 34%), linear-gradient(135deg, rgba(18,9,10,0.97), rgba(5,2,2,0.99))",
+          border: "1px solid rgba(242,185,104,0.16)",
+          boxShadow:
+            "0 0 72px rgba(242,185,104,0.10), inset 0 0 42px rgba(255,255,255,0.016)",
+        }}
+      >
+        <p
+          className="ori-type-system text-[9px]"
+          style={{ color: "var(--gold-soft)" }}
+        >
+          Revisão do questionário
+        </p>
+
+        <h2
+          id="answer-change-confirmation-title"
+          className="ori-type-revelation mt-3 text-2xl md:text-3xl"
+          style={{
+            color: "var(--gold-primary)",
+            fontWeight: 660,
+          }}
+        >
+          Atualizar esta resposta?
+        </h2>
+
+        <p
+          id="answer-change-confirmation-description"
+          className="ori-type-reading-soft mt-3 text-sm leading-relaxed md:text-base"
+          style={{ color: "rgba(255,245,235,0.74)" }}
+        >
+          Se você mudar esta resposta, as respostas dadas depois dela serão
+          removidas para manter sua leitura consistente.
+        </p>
+
+        {errorMessage && (
+          <p
+            className="ori-type-reading-soft mt-4 rounded-2xl px-4 py-3 text-sm"
+            role="alert"
+            style={{
+              background: "rgba(255,110,90,0.10)",
+              border: "1px solid rgba(255,110,90,0.22)",
+              color: "rgba(255,226,220,0.88)",
+            }}
+          >
+            {errorMessage}
+          </p>
+        )}
+
+        <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+          <button
+            ref={cancelButtonRef}
+            type="button"
+            onClick={onCancel}
+            disabled={isSaving}
+            className="ori-journey-action inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-medium transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-60"
+            style={{
+              background: "var(--ori-action-secondary-bg)",
+              border: "1px solid var(--ori-action-secondary-border)",
+              color: "var(--ori-action-secondary-text)",
+            }}
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            onClick={onConfirm}
+            disabled={isSaving}
+            className="ori-journey-action inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-medium transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-60"
+            style={{
+              background: "var(--ori-action-primary-bg)",
+              border: "1px solid transparent",
+              color: "var(--ori-action-primary-text)",
+              boxShadow: "0 0 40px rgba(242,185,104,0.14)",
+            }}
+          >
+            {isSaving ? "Atualizando..." : "Atualizar e continuar"}
+          </button>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 function QuizProduto1() {
   const prefersReducedMotion = useReducedMotion();
   const mobileMotionOff = useMobileMotionOff();
@@ -2562,6 +2774,9 @@ function QuizProduto1() {
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [paymentError, setPaymentError] = useState("");
   const [syncNotice, setSyncNotice] = useState("");
+  const [pendingAnswerChange, setPendingAnswerChange] = useState(null);
+  const [answerChangeError, setAnswerChangeError] = useState("");
+  const [isSavingAnswerChange, setIsSavingAnswerChange] = useState(false);
 
   const resultRef = useRef(null);
   const loadingRef = useRef(null);
@@ -2571,6 +2786,7 @@ function QuizProduto1() {
   const freeCompletionRef = useRef(null);
   const feedbackRef = useRef(null);
   const nextStepRef = useRef(null);
+  const saveQueueRef = useRef(Promise.resolve());
 
   const groupedQuestions = useMemo(
     () => getGroupedQuestions(questions),
@@ -2731,6 +2947,30 @@ function QuizProduto1() {
   const currentQuestion = questions[currentQuestionIndex] || questions[0];
   const catalogUnavailable = Boolean(catalogError) && !questions.length;
 
+  const enqueueAnswersSave = (nextAnswers) => {
+    const saveTask = saveQueueRef.current
+      .catch(() => {})
+      .then(() => saveProduto1Answers(nextAnswers));
+
+    saveQueueRef.current = saveTask.catch(() => {});
+
+    return saveTask;
+  };
+
+  const resetQuizDerivedState = () => {
+    setResult(null);
+    setResultReadingCompleted(false);
+    setFeedbackSubmitted(false);
+    setFeedbackResponse("");
+    setFeedbackComment("");
+    setFeedbackMessage("");
+  };
+
+  const applyAnswerSnapshot = (nextAnswers) => {
+    setAnswers(nextAnswers);
+    resetQuizDerivedState();
+  };
+
   const saveResultToSupabase = async (resultado) => {
     const { data: sessionData } = await supabase.auth.getSession();
     const user = sessionData?.session?.user;
@@ -2781,6 +3021,7 @@ function QuizProduto1() {
 
   const completeProduto1WithFallback = async () => {
     try {
+      await saveQueueRef.current.catch(() => {});
       const conclusao = await completeProduto1(answers);
       return conclusao.result;
     } catch (apiError) {
@@ -2914,20 +3155,37 @@ function QuizProduto1() {
     setCurrentQuestionIndex(nextIndex);
   };
 
-  const handleAnswer = (questionId, value) => {
+  const handleAnswer = (questionId, value, triggerElement = null) => {
+    const questionIndex = questions.findIndex(
+      (question) => question.id === questionId,
+    );
+    const currentStoredValue = answers[questionId];
+    const hasLaterAnswers =
+      questionIndex >= 0 &&
+      questions
+        .slice(questionIndex + 1)
+        .some((question) => answers[question.id] !== undefined);
+    const isActualChange =
+      currentStoredValue !== undefined && currentStoredValue !== value;
+
+    if (isActualChange && hasLaterAnswers) {
+      setPendingAnswerChange({
+        questionId,
+        questionIndex,
+        value,
+        triggerElement,
+      });
+      setAnswerChangeError("");
+      return;
+    }
+
     const nextAnswers = {
       ...answers,
       [questionId]: value,
     };
 
-    setAnswers(nextAnswers);
-    setResult(null);
-    setResultReadingCompleted(false);
-    setFeedbackSubmitted(false);
-    setFeedbackResponse("");
-    setFeedbackComment("");
-    setFeedbackMessage("");
-    saveProduto1Answers(nextAnswers)
+    applyAnswerSnapshot(nextAnswers);
+    enqueueAnswersSave(nextAnswers)
       .then(() => setSyncNotice(""))
       .catch((apiError) => {
         console.log("API de respostas indisponível, mantendo salvamento local:", apiError);
@@ -2942,30 +3200,11 @@ function QuizProduto1() {
     }, 360);
   };
 
-  const clearAnswersFromIndex = (questionIndex) => {
-    setAnswers((currentAnswers) => {
-      const nextAnswers = { ...currentAnswers };
-
-      questions.slice(questionIndex).forEach((question) => {
-        delete nextAnswers[question.id];
-      });
-
-      return nextAnswers;
-    });
-    setResult(null);
-    setResultReadingCompleted(false);
-    setFeedbackSubmitted(false);
-    setFeedbackResponse("");
-    setFeedbackComment("");
-    setFeedbackMessage("");
-  };
-
   const handlePreviousQuestion = () => {
     if (currentQuestionIndex <= 0) return;
 
     const previousIndex = Math.max(currentQuestionIndex - 1, 0);
 
-    clearAnswersFromIndex(previousIndex);
     setCompletedLayer(null);
     setPendingNextIndex(null);
     setCurrentQuestionIndex(previousIndex);
@@ -2979,7 +3218,6 @@ function QuizProduto1() {
   };
 
   const handleBackFromLayerReveal = () => {
-    clearAnswersFromIndex(currentQuestionIndex);
     setCompletedLayer(null);
     setPendingNextIndex(null);
     setShowQuiz(true);
@@ -2991,6 +3229,51 @@ function QuizProduto1() {
         block: "start",
       });
     }, 80);
+  };
+
+  const handleCancelAnswerChange = () => {
+    const triggerElement = pendingAnswerChange?.triggerElement;
+
+    setPendingAnswerChange(null);
+    setAnswerChangeError("");
+    setIsSavingAnswerChange(false);
+
+    window.setTimeout(() => {
+      triggerElement?.focus?.();
+    }, 0);
+  };
+
+  const handleConfirmAnswerChange = async () => {
+    if (!pendingAnswerChange) return;
+
+    const { questionIndex, value } = pendingAnswerChange;
+    const nextAnswers = pruneAnswersAfterQuestion(
+      questions,
+      answers,
+      questionIndex,
+      value,
+    );
+
+    setIsSavingAnswerChange(true);
+    setAnswerChangeError("");
+
+    try {
+      await enqueueAnswersSave(nextAnswers);
+      applyAnswerSnapshot(nextAnswers);
+      setSyncNotice("");
+      setPendingAnswerChange(null);
+      advanceFromQuestion(nextAnswers);
+    } catch (apiError) {
+      console.log("API de respostas indisponível durante revisão:", apiError);
+      const message =
+        apiError?.userMessage ||
+        "Não conseguimos salvar a revisão agora. Tente novamente em instantes.";
+
+      setAnswerChangeError(message);
+      setSyncNotice(message);
+    } finally {
+      setIsSavingAnswerChange(false);
+    }
   };
 
   const handleCalculate = () => {
@@ -4054,6 +4337,14 @@ function QuizProduto1() {
           />
         </div>
       )}
+
+      <AnswerChangeConfirmationDialog
+        open={Boolean(pendingAnswerChange)}
+        errorMessage={answerChangeError}
+        isSaving={isSavingAnswerChange}
+        onCancel={handleCancelAnswerChange}
+        onConfirm={handleConfirmAnswerChange}
+      />
 
       <div className="relative z-10 w-full max-w-[1180px] mx-auto">
         <header className="pointer-events-none absolute left-0 right-0 top-7 z-30 flex px-3 sm:top-8">
