@@ -125,6 +125,12 @@ Entitlement esperado:
 
 `clientes.produto_1_completo_liberado = true`
 
+O frontend também adota política **fail-closed** para premium:
+
+- `produto_1_completo_liberado === true` é a única confirmação positiva que libera conteúdo premium;
+- sem essa confirmação, somente `reconhecimento`, `essencia` e `dinamica` ficam acessíveis;
+- qualquer outra camada permanece bloqueada.
+
 ## 2.2 Produto 2 — Dossiê ORI
 
 Na RC1:
@@ -449,7 +455,7 @@ Evidência de conclusão:
 ## MASTER-003 — Focus trap do paywall
 
 **Severidade:** P1  
-**Status:** confirmado em navegador
+**Status:** ✅ CONCLUÍDO / VERDE EM PRODUÇÃO
 
 Hoje:
 
@@ -460,10 +466,66 @@ Hoje:
 
 Correção:
 
-- [ ] conter foco dentro do modal
-- [ ] preservar Escape
-- [ ] preservar retorno ao gatilho
-- [ ] testar teclado real
+- [x] conter foco dentro do modal
+- [x] preservar Escape
+- [x] preservar retorno ao gatilho
+- [x] testar teclado real
+
+Evidência de conclusão:
+
+- implementação local em `Produto1Paywall.jsx`, sem dependência externa;
+- Tab e Shift+Tab contidos no modal;
+- foco inicial no dialog preservado;
+- Escape preservado;
+- retorno do foco ao gatilho preservado;
+- CTA principal e checkout preservados;
+- PR #3;
+- implementação `b3f52f0d116a1c7784acac4feb5b3f21597c1876`;
+- merge commit `6c2883f`;
+- Cloudflare Production deploy após PR #3: PASS;
+- validação real desktop: PASS;
+- validação real mobile: PASS.
+
+## P0-GATING-001 — Premium exposto na primeira entrada pós-quiz
+
+**Severidade:** P0
+**Status:** ✅ CONCLUÍDO / VERDE EM PRODUÇÃO
+
+Problema:
+
+- após uma cliente nova concluir o quiz, a primeira entrada automática em `/produto-1/leitura` podia exibir conteúdo premium temporariamente;
+- a cliente não havia pago;
+- `clientes.produto_1_completo_liberado = false`;
+- após sair e voltar, o paywall aparecia corretamente.
+
+Causa:
+
+- o frontend fazia fail-open antes do entitlement carregar;
+- `activeBackendReading` ainda estava `null`;
+- `locked_layer_ids` era tratado como lista vazia;
+- ausência de informação podia virar ausência de bloqueio;
+- conteúdo premium enriquecido localmente podia chegar ao DOM antes da reconciliação.
+
+Correção:
+
+- política frontend deny-by-default;
+- `produto_1_completo_liberado === true` libera premium;
+- qualquer outro estado libera somente `reconhecimento`, `essencia` e `dinamica`;
+- qualquer outra layer fica locked sem entitlement positivo;
+- core locking derivado das próprias layers;
+- core desconhecido fica locked;
+- `ReadingLayerPanel` retorna antes de renderizar `layer.content` quando `layer.locked=true`.
+
+Evidência de conclusão:
+
+- PR #4;
+- commit `765e5c6`;
+- merge commit `e1bb758`;
+- Cloudflare Production deploy após PR #4: PASS;
+- primeira entrada pós-quiz free: PASS;
+- reentrada free: PASS;
+- cliente full: PASS;
+- premium textual sem entitlement: NÃO.
 
 ## MASTER-001 — Fechamento gratuito / transição premium
 
@@ -1274,7 +1336,7 @@ O `auth-state.json` é sensível.
 
 ## Marco C — Consolidação UX/robustez da RC1
 - [x] MASTER-002
-- [ ] MASTER-003
+- [x] MASTER-003
 - [ ] MASTER-001 mínimo
 - [ ] MASTER-005 recomendado
 - [ ] acessibilidade essencial
@@ -1312,13 +1374,9 @@ O `auth-state.json` é sensível.
 
 # 28. ORDEM OBRIGATÓRIA IMEDIATA
 
-O P1 já está vendendo, o GATE-001 está concluído e o MASTER-002 foi concluído em produção.
+O P1 já está vendendo. GATE-001, MASTER-002, MASTER-003 e P0-GATING-001 foram concluídos e validados em produção.
 
 ```text
-MASTER-003
-↓
-validar
-↓
 MASTER-001 mínimo
 ↓
 validar
@@ -1330,6 +1388,12 @@ demais ondas
 
 Mudanças pequenas, uma por vez.
 
+Histórico recente concluído:
+
+- MASTER-002 ✅
+- MASTER-003 ✅
+- P0-GATING-001 ✅
+
 ---
 
 # 29. TOP PRIORIDADES
@@ -1338,36 +1402,35 @@ Mudanças pequenas, uma por vez.
 **Nenhum release gate de pagamento pendente. O P1 está em produção comercial ativa.**
 
 ## P1 RC1 crítico
-1. MASTER-003 — focus trap
-2. MASTER-001 — concluir gratuito antes do paywall
-3. MASTER-005 — consequência do Voltar
-4. acessibilidade essencial
+1. MASTER-001 — concluir gratuito antes do paywall
+2. MASTER-005 — consequência do Voltar
+3. acessibilidade essencial
 
 ## P1 operação / pós-RC1
-5. operação “pagou e não liberou”
-6. observabilidade
-7. segurança/LGPD
-8. validação de produto / abstração
-9. revisão de arquitetura de IA
-10. alinhamento da configuração Gemini
+4. operação “pagou e não liberou”
+5. observabilidade
+6. segurança/LGPD
+7. validação de produto / abstração
+8. revisão de arquitetura de IA
+9. alinhamento da configuração Gemini
 
 ## P2
-11. jornada comercial completa
-12. robustez React
-13. instrumentação
-14. pipeline imagem P2
-15. jurídico de assets
-16. RC2
-17. TTL de orders / legacy notifications
+10. jornada comercial completa
+11. robustez React
+12. instrumentação
+13. pipeline imagem P2
+14. jurídico de assets
+15. RC2
+16. TTL de orders / legacy notifications
 
 ## P3
-18. design system
-19. skill Ori Copy
-20. refatorações
-21. RC3
-22. continuidade
-23. Bundle
-24. Assistente ORI
+17. design system
+18. skill Ori Copy
+19. refatorações
+20. RC3
+21. continuidade
+22. Bundle
+23. Assistente ORI
 
 ---
 
@@ -1377,7 +1440,8 @@ Mudanças pequenas, uma por vez.
 |---|---|---|
 | falha futura de entitlement em venda real | operacional | observabilidade + recovery; E2E atual validado |
 | P2 parecer comprável na RC1 | mitigado | MASTER-002 concluído / risco mitigado em produção em 06/08/2026 |
-| modal permitir foco atrás | alto | MASTER-003 |
+| modal permitir foco atrás | mitigado | MASTER-003 concluído / validado em produção |
+| premium aparecer antes da confirmação do entitlement | mitigado | P0-GATING-001 concluído / deny-by-default / validado em produção |
 | gratuito parecer leitura interrompida | alto | MASTER-001 |
 | P1 continuar abstrato | alto de produto | pesquisa + UX/copy |
 | IA substituir cálculo determinístico | alto | arquitetura IA |
@@ -1433,6 +1497,10 @@ O Método Ori já possui:
 - retorno de pagamento validado;
 - leitura premium liberada em produção;
 - Produto 1 habilitado para vendas reais;
+- focus trap do paywall validado em desktop/mobile;
+- gating frontend do P1 fail-closed;
+- conteúdo premium não renderizado sem entitlement positivo;
+- fluxo pós-quiz free validado em produção;
 - auditoria UX/UI completa;
 - backlog priorizado;
 - infraestrutura Cloudflare + Render + Supabase em produção;
@@ -1446,13 +1514,13 @@ P2, P3 e Bundle continuam fora do checkout nesta release.
 
 ## Próxima frente imediata
 
-O release gate de pagamentos foi encerrado. O trabalho crítico agora é cirúrgico:
+O release gate de pagamentos, o focus trap do paywall e o P0 de gating pós-quiz foram encerrados. O trabalho crítico agora é cirúrgico:
 
-1. corrigir o focus trap do paywall;
-2. transformar as três camadas gratuitas em experiência claramente concluída;
+1. transformar as três camadas gratuitas em experiência claramente concluída — MASTER-001;
+2. corrigir consequência/comunicação do Voltar — MASTER-005;
 3. corrigir acessibilidade essencial;
 4. fortalecer operação, observabilidade e recovery;
-5. consolidar o P1 com clientes pagantes;
+5. consolidar o P1 com clientes;
 6. revisar a arquitetura de IA com a especialista;
 7. avançar para RC2 / Produto 2.
 
