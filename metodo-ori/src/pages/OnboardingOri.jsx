@@ -89,6 +89,31 @@ const parseStoredProfile = (profile) => {
   }
 };
 
+const isFieldVisible = (field, data) => {
+  if (!field.showWhen) return true;
+
+  return data[field.showWhen.field] === field.showWhen.equals;
+};
+
+const isFieldFilled = (field, data) => {
+  const value = data[field.name];
+
+  if (Array.isArray(value)) return value.length > 0;
+
+  return Boolean(String(value || "").trim());
+};
+
+const getFirstIncompleteRequiredField = (step, data) => {
+  if (!step?.fields?.length) return null;
+
+  return (
+    step.fields.find(
+      (field) =>
+        isFieldVisible(field, data) && field.required && !isFieldFilled(field, data),
+    ) || null
+  );
+};
+
 function OnboardingOri() {
   const navigate = useNavigate();
   const [stepIndex, setStepIndex] = useState(0);
@@ -168,25 +193,14 @@ function OnboardingOri() {
   const step = onboardingSteps[stepIndex];
   const totalSteps = onboardingSteps.length;
   const progress = Math.round(((stepIndex + 1) / totalSteps) * 100);
+  const firstIncompleteRequiredField = useMemo(
+    () => getFirstIncompleteRequiredField(step, formData),
+    [formData, step],
+  );
 
   const canProceed = useMemo(() => {
-    if (!step?.fields?.length) return true;
-
-    return step.fields.every((field) => {
-      if (field.showWhen) {
-        const dependentValue = formData[field.showWhen.field];
-        if (dependentValue !== field.showWhen.equals) return true;
-      }
-
-      if (!field.required) return true;
-
-      const value = formData[field.name];
-
-      if (Array.isArray(value)) return value.length > 0;
-
-      return Boolean(String(value || "").trim());
-    });
-  }, [formData, step]);
+    return !firstIncompleteRequiredField;
+  }, [firstIncompleteRequiredField]);
 
   const updateFormData = (nextData) => {
     setFormData(nextData);
@@ -297,6 +311,7 @@ function OnboardingOri() {
       progress={progress}
       formData={formData}
       canProceed={canProceed}
+      firstIncompleteRequiredField={firstIncompleteRequiredField}
       onFieldChange={handleFieldChange}
       onCheckboxChange={handleCheckboxChange}
       onBack={handleBack}
