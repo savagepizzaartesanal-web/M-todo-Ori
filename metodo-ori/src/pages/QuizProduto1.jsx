@@ -44,6 +44,11 @@ const REVEAL_LEVELS = {
   FULL: "full",
 };
 const DEFAULT_REVEAL_LEVEL = REVEAL_LEVELS.FULL;
+const PRODUTO1_FREE_LAYER_IDS = new Set([
+  "reconhecimento",
+  "essencia",
+  "dinamica",
+]);
 
 const FEEDBACK_OPTIONS = [
   {
@@ -1997,6 +2002,43 @@ function ReadingLayerPanel({ layer }) {
 
   if (!layer) return null;
 
+  if (layer.locked) {
+    return (
+      <motion.article
+        key={layer.number}
+        initial={reduceMotion ? false : { opacity: 0, y: 16, filter: "blur(8px)" }}
+        animate={reduceMotion ? undefined : { opacity: 1, y: 0, filter: "blur(0px)" }}
+        exit={reduceMotion ? undefined : { opacity: 0, y: -10, filter: "blur(6px)" }}
+        transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+        className="relative mx-auto overflow-hidden rounded-[26px] px-6 py-12 text-center md:rounded-[32px] md:px-8 md:py-16"
+        style={{
+          background: "linear-gradient(180deg, rgba(18,9,10,0.58), rgba(5,2,2,0.86))",
+          border: "1px solid rgba(242,185,104,0.095)",
+          boxShadow: "0 24px 70px rgba(0,0,0,0.18)",
+        }}
+      >
+        <p
+          className="ori-type-system mb-3 text-[10px] md:text-[11px]"
+          style={{ color: "var(--gold-soft)" }}
+        >
+          Camada premium
+        </p>
+        <h2
+          className="ori-type-revelation text-[28px] md:text-[38px]"
+          style={{ color: "var(--gold-primary)", fontWeight: 650 }}
+        >
+          {layer.label}
+        </h2>
+        <p
+          className="ori-type-reading-soft mx-auto mt-4 max-w-[520px] text-sm leading-relaxed md:text-base"
+          style={{ color: "rgba(255,245,235,0.68)" }}
+        >
+          Esta camada permanece protegida até o acesso completo ser confirmado.
+        </p>
+      </motion.article>
+    );
+  }
+
   const paragraphs = String(layer.content || "")
     .split(/\n+/)
     .map((paragraph) => paragraph.trim())
@@ -3065,24 +3107,15 @@ function QuizProduto1() {
   }, [activeBackendReading, location.search]);
   const produto1FullUnlocked =
     activeBackendReading?.produto_1_completo_liberado === true;
-  const produto1LockedLayerIds = new Set(
-    activeBackendReading?.locked_layer_ids || [],
-  );
-  const produto1Blocks = activeBackendReading?.blocks || [];
   const produto1UnlockProductCode =
     activeBackendReading?.unlock_product_code || PRODUTO1_COMPLETE_PRODUCT_CODE;
   const produto1PaymentProduct =
     paymentCatalog?.products?.find(
       (product) => product.product_code === produto1UnlockProductCode,
     ) || null;
-  const isProduto1LayerLocked = (layerId) =>
-    !produto1FullUnlocked && produto1LockedLayerIds.has(layerId);
-  const isProduto1CoreLocked = (coreId) => {
-    const block = produto1Blocks.find((item) => item.id === coreId);
-
-    if (!block || produto1FullUnlocked) return false;
-
-    return block.layers?.every((layer) => layer.locked) || false;
+  const isProduto1LayerLocked = (layerId) => {
+    if (produto1FullUnlocked) return false;
+    return !PRODUTO1_FREE_LAYER_IDS.has(layerId);
   };
 
   const report = useMemo(
@@ -3382,6 +3415,12 @@ function QuizProduto1() {
   const activeSinteseFinalTab =
     sinteseFinalTabs.find((item) => item.number === activeSinteseFinal) ||
     sinteseFinalTabs[0];
+  const isProduto1CoreLocked = (layers) => {
+    if (produto1FullUnlocked) return false;
+    if (!Array.isArray(layers) || layers.length === 0) return true;
+
+    return layers.every((layer) => layer.locked);
+  };
   const resultCoreTabs = [
     {
       id: "estrutura",
@@ -3389,7 +3428,7 @@ function QuizProduto1() {
       number: "01",
       title: "Comece por aqui",
       text: "Reconhecimento, base interna, dinâmica e percepção.",
-      locked: false,
+      locked: isProduto1CoreLocked(estruturaInternaTabs),
     },
     {
       id: "sombra",
@@ -3397,7 +3436,7 @@ function QuizProduto1() {
       number: "02",
       title: "Sombra e Vínculos",
       text: "Sombra, padrão relacional e individuação.",
-      locked: isProduto1CoreLocked("sombra_vinculos"),
+      locked: isProduto1CoreLocked(sombraVinculosTabs),
     },
     {
       id: "imagem",
@@ -3405,7 +3444,7 @@ function QuizProduto1() {
       number: "03",
       title: "Imagem na prática",
       text: "Direção visual, beleza, cores, corpo e presença.",
-      locked: isProduto1CoreLocked("imagem_pratica"),
+      locked: isProduto1CoreLocked(imagemPresencaTabs),
     },
     {
       id: "sintese",
@@ -3413,7 +3452,7 @@ function QuizProduto1() {
       number: "04",
       title: "Síntese Final",
       text: "O que evitar, fórmula e leitura final.",
-      locked: isProduto1CoreLocked("sintese_final"),
+      locked: isProduto1CoreLocked(sinteseFinalTabs),
     },
   ];
   const activeResultCoreIndex = resultCoreTabs.findIndex(
