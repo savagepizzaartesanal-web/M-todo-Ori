@@ -155,6 +155,38 @@ class MercadoPagoClient:
 
         return response.json()
 
+    async def get_payment_for_reconciliation(self, payment_id: str) -> dict:
+        """Mesma consulta de get_payment, mas distingue pagamento inexistente
+        (404) de indisponibilidade/erro técnico do provider (5xx, timeout,
+        erro de rede). Usado apenas pela reconciliação administrativa
+        (RECOVERY-2); não altera o comportamento existente de get_payment,
+        usado pelo fluxo de webhook."""
+        try:
+            async with httpx.AsyncClient(timeout=10) as client:
+                response = await client.get(
+                    f"{MERCADO_PAGO_API_URL}/v1/payments/{payment_id}",
+                    headers=self.get_headers(),
+                )
+        except httpx.HTTPError as error:
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail="Não foi possível confirmar o pagamento agora.",
+            ) from error
+
+        if response.status_code == 404:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Pagamento não encontrado no Mercado Pago.",
+            )
+
+        if response.status_code >= 400:
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail="Não foi possível confirmar o pagamento agora.",
+            )
+
+        return response.json()
+
 
 def build_preference_payload(*, order: dict, product: dict) -> dict:
     urls = get_payment_urls()
