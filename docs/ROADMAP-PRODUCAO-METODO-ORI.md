@@ -1481,6 +1481,7 @@ Antes de implementar:
 - [ ] `CREATE TABLE public.clientes` ausente dos scripts versionados (`metodo-ori/supabase-*.sql`) — a tabela existe de fato em produção (confirmado durante o RECOVERY-1) e por isso não bloqueia backup/restore, mas os scripts sozinhos não reconstroem o schema do zero; identificado durante a auditoria de recovery operacional, não corrigido no Git
 - [ ] resposta 2xx do Mercado Pago com corpo não-JSON não é tratada estruturalmente em `MercadoPagoClient.get_payment_for_reconciliation` — hoje resultaria em erro não controlado; identificado durante o RECOVERY-2, não corrigido, endpoint segue exclusivamente admin-only
 - [ ] `PaymentReconcileResponse.result` tipado como `str` livre, não `Literal` dos valores possíveis (`reconciled`, `already_entitled`, `rejected`, `inconsistency_requires_manual_review`, `technical_error`) — identificado durante o RECOVERY-2 (fase B1.2), não corrigido para não expandir escopo da correção
+- [ ] aviso de manutenção do GitHub Actions sobre depreciação futura de actions em Node.js 20 em favor de Node.js 24 no workflow `.github/workflows/deploy-metodo-ori.yml` — identificado durante o RECOVERY-3, não corrigido, não bloqueia deploys atuais
 - [ ] documentação histórica
 
 ---
@@ -1574,7 +1575,7 @@ O `auth-state.json` é sensível.
 - [x] MASTER-001 mínimo
 - [x] MASTER-005 recomendado
 - [x] acessibilidade essencial (MASTER-006, MASTER-007, MASTER-008, MASTER-009)
-- [ ] recovery operacional (RECOVERY-1 concluído, RECOVERY-2 concluído; RECOVERY-3/4 pendentes — ver seção 28.4)
+- [ ] recovery operacional (RECOVERY-1 concluído, RECOVERY-2 concluído, RECOVERY-3 concluído; RECOVERY-4 pendente — ver seção 28.5)
 - [ ] observabilidade mínima
 
 ## Marco D — P1 consolidado
@@ -1623,7 +1624,7 @@ demais ondas
 Marco C permanece aberto até concluir a sequência:
 
 1. acessibilidade essencial; ✅ concluída — ver seção 28.2
-2. recovery operacional; RECOVERY-1 (backup/restore) ✅ concluído, RECOVERY-2 (reconciliação pagamento → entitlement) ✅ concluído, RECOVERY-3/4 pendentes — ver seção 28.4
+2. recovery operacional; RECOVERY-1 (backup/restore) ✅ concluído, RECOVERY-2 (reconciliação pagamento → entitlement) ✅ concluído, RECOVERY-3 (rollback Cloudflare/Render) ✅ concluído, RECOVERY-4 pendente — ver seção 28.5
 3. observabilidade mínima.
 
 Mudanças pequenas, uma por vez.
@@ -1641,6 +1642,7 @@ Histórico recente concluído:
 - MASTER-009 ✅
 - RECOVERY-1 ✅ (backup + restore Supabase — ver seção 28.3)
 - RECOVERY-2 ✅ (reconciliação segura de pagamento → entitlement — ver seção 28.4)
+- RECOVERY-3 ✅ (rollback Cloudflare + Render, primitivas nativas confirmadas e fallback Git validado — ver seção 28.5)
 
 ---
 
@@ -1871,6 +1873,60 @@ RECOVERY-2 deixa de bloquear a sequência. **RECOVERY-3 — validação/document
 
 ---
 
+# 28.5 GATE ROADMAP — RECOVERY-3 CONCLUÍDO (ROLLBACK CLOUDFLARE + RENDER)
+
+**Data operacional:** 08/08/2026
+**Objetivo:** registrar a conclusão validada do RECOVERY-3 — auditoria e validação read-only do procedimento de rollback operacional para frontend (Cloudflare) e backend (Render), incluindo teste isolado do fallback Git — terceira etapa da sequência de recovery operacional aberta na seção 28.4.
+
+## Status
+
+**RECOVERY-3 — Rollback Cloudflare + Render: ✅ CONCLUÍDO / PASS (primitivas nativas comprovadas nos projetos reais, fallback Git validado em ambiente isolado, nenhum rollback real de produção executado).**
+
+Isso **não** encerra o bloco de recovery operacional como um todo — RECOVERY-4 continua pendente (ver "Próxima ação" abaixo).
+
+## Arquitetura de deploy confirmada
+
+Frontend em Cloudflare Pages e backend em Render, com pipelines de deploy independentes, separados por `paths`/`buildFilter`: frontend via GitHub Actions (`.github/workflows/deploy-metodo-ori.yml`, disparado por push em `main` tocando `metodo-ori/**`); backend via Render Auto-Deploy On Commit (`render.yaml`, `buildFilter.paths: backend/**`).
+
+## Cloudflare (frontend)
+
+Projeto `metodo-ori-telurica`; produção a partir de `main`; domínio oficial `metodoori.teluricabeleza.com`. Deployment observado durante a validação: ID `ba0284d4-36ec-4ddb-bf08-87757896b2ea`, status `success`, vinculado ao commit curto `6ab43048` via GitHub Actions. Histórico de deployments de Produção disponível no projeto; opção nativa **"Rollback to this deployment"** confirmada visualmente em um deployment de Produção anterior. Nenhum rollback real foi executado.
+
+## Render (backend)
+
+Serviço `metodo-ori-api` (repositório `telurica-digital/M-todo-Ori`, branch `main`), gerenciado via Blueprint, runtime Docker (`backend/Dockerfile`, contexto `backend`), health check `/health`. Deployment observado do merge do RECOVERY-2 (`11683845ea62a2f21743118f4bfa292a97d0c3e4`): commit curto `1168384`, evento "New commit via Auto-Deploy", iniciado 08/08/2026 09:48, live 09:50. Histórico de deploys disponível; botão **Rollback** confirmado; Manual Deploy oferece "Deploy latest commit", "Deploy a specific commit", "Clear build cache & deploy" e "Restart service" — classificados como: Rollback = primitiva real de recuperação; Deploy a specific commit = fallback operacional (cria novo deploy, desabilita Auto-Deploy); os demais são ferramentas operacionais gerais, não rollback. Auto-Deploy On Commit confirmado visualmente no dashboard. Nenhuma dessas ações foi executada.
+
+## Fallback Git validado
+
+`git revert -m 1 <merge_commit>` testado tecnicamente em clone local descartável (`/tmp`, nunca no repositório de trabalho nem em produção), usando o merge real do RECOVERY-2 (`11683845ea62a2f21743118f4bfa292a97d0c3e4`, parent 1 `6030ecf340279f6d577da00306acb93203464e0a`, parent 2 `f8e971e1bcfd6c786e80b46b53e045113c461934`): `exit 0`, zero conflitos, exatamente 8 arquivos afetados, resultado byte-a-byte equivalente ao parent 1, nenhum commit/push/deploy criado, produção intacta durante todo o teste.
+
+## Decisão sobre rollback real
+
+Rollback real de produção **não** foi executado, por decisão deliberada: as primitivas nativas foram comprovadas visualmente nos projetos reais (Cloudflare e Render), o histórico de deployments está disponível em ambas as plataformas, deployments ativos foram identificados com evidência concreta, o fallback Git foi exercitado isoladamente com sucesso, e acionar um rollback real apenas para fins de teste introduziria risco operacional sem ganho proporcional de evidência.
+
+## Documentação
+
+Evidências técnicas consolidadas em `docs/infraestrutura-producao.md`, via PR #18 (commit documental `4839bcaeeac8a2b49a85132b5da99d9521ffe99e`, merge commit `7643cf71a563b89d6abfda493a7c0e0498ad1e3b`, `mergedAt` 2026-08-08T14:54:52Z). Drift documental de CORS (origem Vercel legada que não constava mais em `render.yaml`) corrigido no mesmo PR. Nenhum código ou infraestrutura foi alterado.
+
+## Gaps / dívidas remanescentes (não bloqueantes ao fechamento do RECOVERY-3)
+
+- Runbook operacional completo de rollback ainda não existe — pertence ao RECOVERY-4.
+- Rollback nativo (Cloudflare/Render) é contenção rápida, não remove o commit problemático de `main` — remediação permanente exige revert/fix + PR + merge controlado + novo deploy + smoke.
+- Estado do Auto-Deploy no Render precisa fazer parte do futuro runbook: rollback via dashboard desabilita Auto-Deploy automaticamente, rollback via API não desabilita — um push subsequente pode reintroduzir a versão problemática se o Git não tiver sido corrigido antes.
+- Preview deployments do frontend não estão implementados no pipeline atual (workflow fixo em `--branch=main`).
+- Testes automatizados de contrato entre frontend e backend ainda não existem.
+- Aviso de manutenção observado no GitHub Actions sobre depreciação futura de actions em Node.js 20 em favor de Node.js 24 — registrado como dívida de pipeline (P2), não bloqueia o RECOVERY-3 (ver seção 24).
+
+## Bloqueantes agora
+
+RECOVERY-3 deixa de bloquear a sequência. **RECOVERY-4 — runbook consolidado de recuperação** passa a ser a próxima frente obrigatória. Só depois dele, observabilidade mínima, e só então o Marco C pode ser reavaliado para fechamento.
+
+## Próxima ação permitida
+
+**RECOVERY-4 — runbook consolidado de recuperação.**
+
+---
+
 # 29. TOP PRIORIDADES
 
 ## P0
@@ -1880,7 +1936,7 @@ RECOVERY-2 deixa de bloquear a sequência. **RECOVERY-3 — validação/document
 1. acessibilidade essencial ✅ concluída (MASTER-006, MASTER-007, MASTER-008, MASTER-009 — ver seção 28.2)
 
 ## Obrigatórias sequenciais para fechar Marco C
-2. recovery operacional — RECOVERY-1 ✅ concluído (ver seção 28.3); RECOVERY-2 ✅ concluído (ver seção 28.4); RECOVERY-3 ← próxima frente obrigatória; RECOVERY-4 pendente
+2. recovery operacional — RECOVERY-1 ✅ concluído (ver seção 28.3); RECOVERY-2 ✅ concluído (ver seção 28.4); RECOVERY-3 ✅ concluído (ver seção 28.5); RECOVERY-4 ← próxima frente obrigatória
 3. observabilidade mínima
 
 ## P1 operação / pós-RC1
@@ -1994,6 +2050,7 @@ O Método Ori já possui:
 - acessibilidade essencial concluída (MASTER-006, MASTER-007, MASTER-008, MASTER-009) — onboarding com `radio` nativo, escala 1–5 associada à pergunta via `role="group"`/`aria-labelledby`, feedback de obrigatoriedade acessível no onboarding e no pós-leitura, idioma `pt-BR` global;
 - RECOVERY-1 concluído — backup lógico real do Supabase (roles/schema/data), criptografado e com cópia off-site íntegra, com teste real de restore em projeto isolado validando paridade total de dados com a produção (ver seção 28.3);
 - RECOVERY-2 concluído — reconciliação administrativa segura de pagamento aprovado no Mercado Pago sem entitlement consistente, implementada, revisada, mergeada e validada em produção (ver seção 28.4);
+- RECOVERY-3 concluído — rollback operacional de frontend (Cloudflare Pages) e backend (Render) auditado, primitivas nativas comprovadas nos projetos reais e fallback `git revert -m 1` validado em clone isolado, sem executar rollback real de produção (ver seção 28.5);
 - auditoria UX/UI completa;
 - backlog priorizado;
 - infraestrutura Cloudflare + Render + Supabase em produção;
@@ -2010,7 +2067,7 @@ P2, P3 e Bundle continuam fora do checkout nesta release.
 O release gate de pagamentos, o focus trap do paywall, o fechamento gratuito, o P0 de gating pós-quiz e o MASTER-005 foram encerrados. O trabalho crítico agora é cirúrgico:
 
 1. acessibilidade essencial — ✅ concluída (MASTER-006, MASTER-007, MASTER-008, MASTER-009);
-2. fortalecer recovery operacional — RECOVERY-1 (backup/restore Supabase) ✅ concluído; RECOVERY-2 (reconciliação pagamento → entitlement) ✅ concluído; RECOVERY-3 (rollback Cloudflare/Render) é a próxima frente obrigatória; RECOVERY-4 (runbook consolidado) pendente;
+2. fortalecer recovery operacional — RECOVERY-1 (backup/restore Supabase) ✅ concluído; RECOVERY-2 (reconciliação pagamento → entitlement) ✅ concluído; RECOVERY-3 (rollback Cloudflare/Render) ✅ concluído; RECOVERY-4 (runbook consolidado) é a próxima frente obrigatória;
 3. fortalecer observabilidade mínima;
 4. consolidar o P1 com clientes;
 5. revisar a arquitetura de IA com a especialista;
