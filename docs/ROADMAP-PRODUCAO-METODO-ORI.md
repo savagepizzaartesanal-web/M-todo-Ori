@@ -1479,6 +1479,8 @@ Antes de implementar:
 - [ ] PAYMENT-TECH-002 — notificações legacy Mercado Pago
 - [ ] setTimeout de avanço automático (360ms) em `QuizProduto1.jsx` sem cancelamento explícito — risco de timer concorrente/obsoleto em interações rápidas; identificado durante a auditoria do MASTER-007; não é defeito de acessibilidade e não bloqueou o MASTER-007
 - [ ] `CREATE TABLE public.clientes` ausente dos scripts versionados (`metodo-ori/supabase-*.sql`) — a tabela existe de fato em produção (confirmado durante o RECOVERY-1) e por isso não bloqueia backup/restore, mas os scripts sozinhos não reconstroem o schema do zero; identificado durante a auditoria de recovery operacional, não corrigido no Git
+- [ ] resposta 2xx do Mercado Pago com corpo não-JSON não é tratada estruturalmente em `MercadoPagoClient.get_payment_for_reconciliation` — hoje resultaria em erro não controlado; identificado durante o RECOVERY-2, não corrigido, endpoint segue exclusivamente admin-only
+- [ ] `PaymentReconcileResponse.result` tipado como `str` livre, não `Literal` dos valores possíveis (`reconciled`, `already_entitled`, `rejected`, `inconsistency_requires_manual_review`, `technical_error`) — identificado durante o RECOVERY-2 (fase B1.2), não corrigido para não expandir escopo da correção
 - [ ] documentação histórica
 
 ---
@@ -1572,7 +1574,7 @@ O `auth-state.json` é sensível.
 - [x] MASTER-001 mínimo
 - [x] MASTER-005 recomendado
 - [x] acessibilidade essencial (MASTER-006, MASTER-007, MASTER-008, MASTER-009)
-- [ ] recovery operacional (RECOVERY-1 concluído; RECOVERY-2/3/4 pendentes — ver seção 28.3)
+- [ ] recovery operacional (RECOVERY-1 concluído, RECOVERY-2 concluído; RECOVERY-3/4 pendentes — ver seção 28.4)
 - [ ] observabilidade mínima
 
 ## Marco D — P1 consolidado
@@ -1621,7 +1623,7 @@ demais ondas
 Marco C permanece aberto até concluir a sequência:
 
 1. acessibilidade essencial; ✅ concluída — ver seção 28.2
-2. recovery operacional; RECOVERY-1 (backup/restore) ✅ concluído, RECOVERY-2/3/4 pendentes — ver seção 28.3
+2. recovery operacional; RECOVERY-1 (backup/restore) ✅ concluído, RECOVERY-2 (reconciliação pagamento → entitlement) ✅ concluído, RECOVERY-3/4 pendentes — ver seção 28.4
 3. observabilidade mínima.
 
 Mudanças pequenas, uma por vez.
@@ -1637,6 +1639,8 @@ Histórico recente concluído:
 - MASTER-007 ✅
 - MASTER-008 ✅
 - MASTER-009 ✅
+- RECOVERY-1 ✅ (backup + restore Supabase — ver seção 28.3)
+- RECOVERY-2 ✅ (reconciliação segura de pagamento → entitlement — ver seção 28.4)
 
 ---
 
@@ -1818,6 +1822,55 @@ RECOVERY-1 deixa de bloquear a sequência. **RECOVERY-2 — Reconciliação segu
 
 ---
 
+# 28.4 GATE ROADMAP — RECOVERY-2 CONCLUÍDO (RECONCILIAÇÃO PAGAMENTO → ENTITLEMENT)
+
+**Data operacional:** 08/08/2026
+**Objetivo:** registrar a conclusão validada e implantada em produção do RECOVERY-2 — reconciliação administrativa segura de pagamento aprovado no Mercado Pago sem entitlement consistente (`produto_1_completo_liberado`) — segunda etapa da sequência de recovery operacional aberta na seção 28.3.
+
+## Status
+
+**RECOVERY-2 — Reconciliação pagamento → entitlement: ✅ CONCLUÍDO / PASS (implementado, revisado, mergeado e validado em produção).**
+
+Isso **não** encerra o bloco de recovery operacional como um todo — RECOVERY-3 e RECOVERY-4 continuam pendentes (ver "Próxima ação" abaixo).
+
+## Implementação
+
+Endpoint administrativo novo, sensível e restrito a admin: `POST /api/admin/payments/reconcile`, protegido por autenticação (`get_current_user`) e checagem de admin (`ensure_admin`, na camada de serviço), herdando automaticamente o tier de rate limit "sensível" já aplicado a todo `/api/admin/*` (nenhuma alteração no middleware). Request restrito a `payment_id` (schema com `extra="forbid"`) — nenhum outro campo é aceito ou necessário.
+
+Novo método `MercadoPagoClient.get_payment_for_reconciliation`, aditivo, sem alterar o `get_payment` já usado pelo fluxo de webhook: distingue explicitamente pagamento inexistente (404 real) de indisponibilidade/erro técnico do provider (5xx, timeout, erro de rede → sempre 502), nunca confundindo os dois casos.
+
+## Máquina de estados
+
+Reconciliação totalmente aditiva ao fluxo existente de validação (reaproveita `validate_provider_payment`/`validate_product_for_checkout`, sem duplicar nem enfraquecer regras). Sequência: busca do pagamento no Mercado Pago → resolução do pedido por `external_reference` → validação completa (produto, valor, moeda, conta recebedora, status) → sincronização **incondicional** de `payment_orders` (status + `provider_payment_id` + `approved_at`, preservando `approved` já existente) sempre antes de checar entitlement, garantindo convergência mesmo após falha parcial anterior → concessão do entitlement somente se ainda não concedido. Resultados possíveis: `reconciled`, `already_entitled`, `rejected` (com motivo específico), `inconsistency_requires_manual_review`, `technical_error` (nunca mascarado como 200 — erros de sincronização de pedido ou de concessão de entitlement são auditados e propagados como 502).
+
+Escopo minimamente restrito a `produto_1_completo` nesta primeira versão — qualquer outro `product_code` é rejeitado (`product_not_supported`).
+
+## Auditoria
+
+Dupla trilha de auditoria, sem migração de schema: quando o pedido/cliente é resolvido, registro completo em `admin_cliente_eventos` (evento "tentativa" gravado **antes** de qualquer mutação, sempre atualizado ao final com o resultado real e com `order_status_before`/`order_status_after` preservados); quando o pedido não pode ser resolvido (payment_id inexistente, `external_reference` ausente, pedido não encontrado), registro em `payment_webhook_events` com `provider="internal_reconciliation"`, reaproveitando colunas já existentes.
+
+## Testes
+
+Suíte de testes local: 79 pré-existentes → 108 no total (+29 novos), cobrindo os 26 cenários especificados (autenticação, autorização, validação de payload, todos os ramos da máquina de estados, falhas parciais simuladas em cada mutação, testes diretos de `get_payment_for_reconciliation`). Execução completa da suíte confirmada com sucesso (`OK`) em múltiplos pontos do processo, incluindo revalidação no commit congelado do PR antes do merge.
+
+## Versionamento e produção
+
+Implementado, revisado (diff humano completo + revisão direta de código crítico + correções de duas falhas encontradas em revisão antes do merge) e versionado via PR #16 (`feat: adiciona reconciliação segura de pagamentos`), auditado no estado congelado antes de autorizar o merge, e mergeado via merge commit real (dois pais) em `origin/main`. Deploy validado em produção via evidência pública e não-mutante: `/health` OK, `/openapi.json` confirmando a existência da rota e do schema de request restrito a `payment_id`, e uma única chamada não autenticada ao endpoint confirmando a barreira de autenticação (401).
+
+## Ressalva de evidência
+
+A validação de produção não teve acesso direto ao painel/API/logs do Render (sem credenciais disponíveis, nenhuma solicitada) — a confirmação de que o commit correto foi implantado se apoiou em evidência pública indireta (comportamento observável do endpoint e do schema exposto), não em confirmação direta da plataforma de deploy. Isso é uma limitação residual, não bloqueante, e já estava documentada como tal na fase B4.
+
+## Bloqueantes agora
+
+RECOVERY-2 deixa de bloquear a sequência. **RECOVERY-3 — validação/documentação de rollback Cloudflare + Render** passa a ser a próxima frente obrigatória. Depois: RECOVERY-4 (runbook consolidado de recuperação). Só depois desses dois, observabilidade mínima, e só então o Marco C pode ser reavaliado para fechamento.
+
+## Próxima ação permitida
+
+**RECOVERY-3 — validação/documentação de rollback Cloudflare + Render.**
+
+---
+
 # 29. TOP PRIORIDADES
 
 ## P0
@@ -1827,7 +1880,7 @@ RECOVERY-1 deixa de bloquear a sequência. **RECOVERY-2 — Reconciliação segu
 1. acessibilidade essencial ✅ concluída (MASTER-006, MASTER-007, MASTER-008, MASTER-009 — ver seção 28.2)
 
 ## Obrigatórias sequenciais para fechar Marco C
-2. recovery operacional — RECOVERY-1 ✅ concluído (ver seção 28.3); RECOVERY-2 ← próxima frente obrigatória; RECOVERY-3/4 pendentes
+2. recovery operacional — RECOVERY-1 ✅ concluído (ver seção 28.3); RECOVERY-2 ✅ concluído (ver seção 28.4); RECOVERY-3 ← próxima frente obrigatória; RECOVERY-4 pendente
 3. observabilidade mínima
 
 ## P1 operação / pós-RC1
@@ -1940,6 +1993,7 @@ O Método Ori já possui:
 - MASTER-001, P0-GATING-001 e MASTER-003 preservados após MASTER-005;
 - acessibilidade essencial concluída (MASTER-006, MASTER-007, MASTER-008, MASTER-009) — onboarding com `radio` nativo, escala 1–5 associada à pergunta via `role="group"`/`aria-labelledby`, feedback de obrigatoriedade acessível no onboarding e no pós-leitura, idioma `pt-BR` global;
 - RECOVERY-1 concluído — backup lógico real do Supabase (roles/schema/data), criptografado e com cópia off-site íntegra, com teste real de restore em projeto isolado validando paridade total de dados com a produção (ver seção 28.3);
+- RECOVERY-2 concluído — reconciliação administrativa segura de pagamento aprovado no Mercado Pago sem entitlement consistente, implementada, revisada, mergeada e validada em produção (ver seção 28.4);
 - auditoria UX/UI completa;
 - backlog priorizado;
 - infraestrutura Cloudflare + Render + Supabase em produção;
@@ -1956,7 +2010,7 @@ P2, P3 e Bundle continuam fora do checkout nesta release.
 O release gate de pagamentos, o focus trap do paywall, o fechamento gratuito, o P0 de gating pós-quiz e o MASTER-005 foram encerrados. O trabalho crítico agora é cirúrgico:
 
 1. acessibilidade essencial — ✅ concluída (MASTER-006, MASTER-007, MASTER-008, MASTER-009);
-2. fortalecer recovery operacional — RECOVERY-1 (backup/restore Supabase) ✅ concluído; RECOVERY-2 (reconciliação pagamento → entitlement) é a próxima frente obrigatória; RECOVERY-3 (rollback Cloudflare/Render) e RECOVERY-4 (runbook consolidado) pendentes;
+2. fortalecer recovery operacional — RECOVERY-1 (backup/restore Supabase) ✅ concluído; RECOVERY-2 (reconciliação pagamento → entitlement) ✅ concluído; RECOVERY-3 (rollback Cloudflare/Render) é a próxima frente obrigatória; RECOVERY-4 (runbook consolidado) pendente;
 3. fortalecer observabilidade mínima;
 4. consolidar o P1 com clientes;
 5. revisar a arquitetura de IA com a especialista;
