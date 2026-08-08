@@ -9,6 +9,7 @@ from fastapi.responses import JSONResponse
 
 from app.routes import (
     admin,
+    admin_payments,
     auth,
     feedback,
     health,
@@ -104,6 +105,7 @@ app.add_middleware(
 app.include_router(health.router)
 app.include_router(auth.router)
 app.include_router(admin.router)
+app.include_router(admin_payments.router)
 app.include_router(feedback.router)
 app.include_router(jornada.router)
 app.include_router(mapa_vivo.router)

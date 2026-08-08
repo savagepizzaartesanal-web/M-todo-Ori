@@ -12,8 +12,10 @@ from app.schemas.payments import (
     PaymentCatalogResponse,
     PaymentCheckoutResponse,
     PaymentListResponse,
+    PaymentReconcileResponse,
     PaymentStatusResponse,
 )
+from app.services.admin_service import ensure_admin as ensure_admin_default
 from app.services.mercado_pago_service import (
     MercadoPagoClient,
     decimal_amount_to_cents,
@@ -59,6 +61,27 @@ PRODUTO2_DONE_STATUSES = {
     journey_status.CODIGO_FINAL_EM_ANALISE,
     journey_status.CODIGO_FINAL_PUBLICADO,
     journey_status.JORNADA_FINALIZADA,
+}
+
+# RECOVERY-2 — reconciliação administrativa de pagamento aprovado sem
+# entitlement consistente. Escopo mínimo: somente produto_1_completo.
+RECONCILIATION_ALLOWED_PRODUCT_CODE = "produto_1_completo"
+RECONCILIATION_PROVIDER = "internal_reconciliation"
+RECONCILIATION_EVENT_TYPE = "payment_entitlement_reconciliation_attempt"
+ADMIN_EVENT_TYPE_RECONCILIATION = "payment_entitlement_reconciliation"
+
+# Mapeia as mensagens já existentes de validate_provider_payment para os
+# reasons estáveis da reconciliação, sem duplicar nenhuma validação.
+_VALIDATION_ERROR_REASONS = {
+    "Pagamento sem identificador do provider.": "payment_not_found",
+    "Referência externa divergente.": "external_reference_mismatch",
+    "Pagamento divergente para o pedido.": "external_reference_mismatch",
+    "Pedido divergente nos metadados do pagamento.": "external_reference_mismatch",
+    "Produto divergente nos metadados do pagamento.": "product_mismatch",
+    "Valor de pagamento divergente.": "amount_mismatch",
+    "Moeda de pagamento divergente.": "currency_mismatch",
+    "Produto divergente para o pedido.": "product_mismatch",
+    "Conta recebedora divergente.": "collector_mismatch",
 }
 
 
@@ -652,3 +675,240 @@ async def process_mercado_pago_webhook(
                 },
             )
         raise
+
+
+def _reconciliation_provider_event_id(payment_id: str) -> str:
+    return f"reconcile:{payment_id}:{uuid4()}"
+
+
+def _reason_from_validation_error(error: HTTPException) -> str:
+    return _VALIDATION_ERROR_REASONS.get(str(error.detail), "payment_not_approved")
+
+
+async def _audit_reconciliation_without_client(
+    repository: Any,
+    *,
+    admin_user_id: str,
+    payment_id: str,
+    result: str,
+    reason: str | None,
+) -> None:
+    """Registra uma tentativa de reconciliação para a qual não foi possível
+    resolver cliente/order com confiança (payment não encontrado, sem
+    external_reference, ou sem payment_order local correspondente).
+
+    Usa payment_webhook_events com um discriminador que nunca colide com
+    eventos reais do Mercado Pago: provider distinto de "mercado_pago" e um
+    provider_event_id sintético. Falha ao auditar não deve mascarar o
+    resultado de negócio já decidido — é melhor esforço.
+    """
+    try:
+        await repository.create_webhook_event(
+            {
+                "provider": RECONCILIATION_PROVIDER,
+                "provider_event_id": _reconciliation_provider_event_id(payment_id),
+                "event_type": RECONCILIATION_EVENT_TYPE,
+                "provider_payment_id": payment_id,
+                "payload_sanitized": {
+                    "admin_user_id": admin_user_id,
+                    "payment_id": payment_id,
+                    "result": result,
+                    "reason": reason,
+                },
+                "processed": True,
+                "processing_error": reason,
+                "processed_at": datetime.now(UTC).isoformat(),
+            }
+        )
+    except HTTPException:
+        pass
+
+
+async def reconcile_payment_by_admin(
+    *,
+    payment_id: str,
+    current_user: CurrentUser,
+    repository: Any | None = None,
+    mercado_pago: Any | None = None,
+    ensure_admin: Any | None = None,
+) -> PaymentReconcileResponse:
+    """RECOVERY-2: reconciliação administrativa de um pagamento aprovado no
+    Mercado Pago cujo entitlement local não ficou consistente.
+
+    O operador informa somente `payment_id`. Cliente/order/produto são
+    sempre derivados de evidência server-side (Mercado Pago + payment_orders
+    local) — nunca aceitos como afirmação do operador.
+    """
+    ensure_admin = ensure_admin or ensure_admin_default
+    await ensure_admin(current_user)
+
+    repository = repository or get_payment_repository()
+    mercado_pago = mercado_pago or get_mercado_pago_client()
+
+    try:
+        payment = await mercado_pago.get_payment_for_reconciliation(payment_id)
+    except HTTPException as error:
+        if error.status_code == status.HTTP_404_NOT_FOUND:
+            await _audit_reconciliation_without_client(
+                repository,
+                admin_user_id=current_user.user_id,
+                payment_id=payment_id,
+                result="rejected",
+                reason="payment_not_found",
+            )
+            return PaymentReconcileResponse(result="rejected", reason="payment_not_found")
+
+        # Erro técnico/indisponibilidade — NÃO é payment_not_found. Registra
+        # melhor esforço e propaga o erro técnico original (normalmente 502),
+        # sem nenhuma mutação de order/entitlement.
+        await _audit_reconciliation_without_client(
+            repository,
+            admin_user_id=current_user.user_id,
+            payment_id=payment_id,
+            result="technical_error",
+            reason="provider_unavailable",
+        )
+        raise
+
+    external_reference = str(payment.get("external_reference") or "").strip()
+    if not external_reference:
+        await _audit_reconciliation_without_client(
+            repository,
+            admin_user_id=current_user.user_id,
+            payment_id=payment_id,
+            result="rejected",
+            reason="external_reference_missing",
+        )
+        return PaymentReconcileResponse(result="rejected", reason="external_reference_missing")
+
+    order = await repository.fetch_order_by_external_reference(external_reference)
+    if not order:
+        await _audit_reconciliation_without_client(
+            repository,
+            admin_user_id=current_user.user_id,
+            payment_id=payment_id,
+            result="inconsistency_requires_manual_review",
+            reason="order_not_found",
+        )
+        return PaymentReconcileResponse(
+            result="inconsistency_requires_manual_review",
+            reason="order_not_found",
+        )
+
+    # Cliente resolvido a partir daqui — auditoria "rica" antes de qualquer
+    # mutação (obrigatória; se falhar, aborta sem conceder nada). Captura o
+    # status original ANTES de qualquer sincronização, para que o registro
+    # final (sucesso ou falha) sempre preserve o "antes", não só o "depois".
+    order_status_before = order.get("status")
+    attempt_event = await repository.create_admin_event(
+        {
+            "cliente_id": order["cliente_id"],
+            "admin_user_id": current_user.user_id,
+            "event_type": ADMIN_EVENT_TYPE_RECONCILIATION,
+            "label": "Tentativa de reconciliação de pagamento",
+            "details": {
+                "result": "attempted",
+                "payment_id": payment_id,
+                "product_code": order.get("product_code"),
+                "order_status_before": order_status_before,
+            },
+        }
+    )
+    attempt_event_id = attempt_event.get("id")
+
+    async def _finalize(
+        result: str,
+        reason: str | None = None,
+        **extra_details: Any,
+    ) -> PaymentReconcileResponse:
+        if attempt_event_id:
+            try:
+                await repository.update_admin_event(
+                    attempt_event_id,
+                    {
+                        "details": {
+                            "result": result,
+                            "reason": reason,
+                            "payment_id": payment_id,
+                            "product_code": order.get("product_code"),
+                            "order_status_before": order_status_before,
+                            **extra_details,
+                        },
+                    },
+                )
+            except HTTPException:
+                # Não mascarar o resultado de negócio já decidido; falha na
+                # auditoria final não desfaz nem esconde o efeito real.
+                pass
+
+        return PaymentReconcileResponse(
+            result=result,
+            reason=reason,
+            order_id=order.get("id"),
+            product_code=order.get("product_code"),
+        )
+
+    if order.get("product_code") != RECONCILIATION_ALLOWED_PRODUCT_CODE:
+        return await _finalize("rejected", "product_not_supported")
+
+    product = await repository.fetch_product(order["product_code"])
+    try:
+        product = validate_product_for_checkout(product, order["product_code"])
+    except HTTPException:
+        return await _finalize("rejected", "product_not_supported")
+
+    try:
+        new_status = validate_provider_payment(payment, order, product)
+    except HTTPException as error:
+        return await _finalize("rejected", _reason_from_validation_error(error))
+
+    if new_status != "approved":
+        return await _finalize("rejected", "payment_not_approved")
+
+    # Sincronização INCONDICIONAL da payment_order, sempre antes de checar
+    # entitlement — garante convergência mesmo após falha parcial anterior.
+    order_updates = {
+        "provider_payment_id": str(payment["id"]),
+        "status": order["status"]
+        if should_preserve_approved(order.get("status"), new_status)
+        else new_status,
+    }
+    if new_status == "approved" and order.get("approved_at") is None:
+        order_updates["approved_at"] = datetime.now(UTC).isoformat()
+
+    try:
+        updated_order = await repository.update_order(order["id"], order_updates)
+    except HTTPException:
+        await _finalize("technical_error", "order_sync_failed")
+        raise
+
+    order = {**order, **updated_order, **order_updates}
+
+    cliente = await repository.fetch_cliente_by_id(order["cliente_id"])
+    if not cliente:
+        return await _finalize("inconsistency_requires_manual_review", "order_not_found")
+
+    entitlement_key = entitlement_key_for_product(order["product_code"])
+    already_entitled = bool(cliente.get(entitlement_key))
+
+    if already_entitled:
+        return await _finalize(
+            "already_entitled",
+            None,
+            order_status_after=order.get("status"),
+        )
+
+    try:
+        await repository.grant_entitlement(
+            cliente_id=order["cliente_id"],
+            entitlement_key=entitlement_key,
+        )
+    except HTTPException:
+        await _finalize(
+            "technical_error",
+            "entitlement_grant_failed",
+            order_status_after=order.get("status"),
+        )
+        raise
+
+    return await _finalize("reconciled", None, order_status_after=order.get("status"))

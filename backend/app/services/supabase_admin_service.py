@@ -388,3 +388,19 @@ class SupabaseAdminRepository:
             )
         rows = response.json()
         return rows[0] if rows else {}
+
+    async def update_admin_event(self, event_id: str, payload: dict) -> dict:
+        response = await self._request(
+            "PATCH",
+            ADMIN_EVENTS_TABLE,
+            params={"id": f"eq.{event_id}"},
+            json=payload,
+            prefer="return=representation",
+        )
+        if response.status_code >= 400:
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail="Não foi possível atualizar o histórico administrativo.",
+            )
+        rows = response.json()
+        return rows[0] if rows else {}

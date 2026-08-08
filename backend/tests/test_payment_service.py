@@ -11,6 +11,7 @@ from app.routes.webhooks import router as webhooks_router
 from app.schemas.auth import CurrentUser
 from app.services.auth_service import get_current_user
 from app.services.mercado_pago_service import (
+    MercadoPagoClient,
     build_preference_payload,
     validate_mercado_pago_signature,
 )
@@ -20,7 +21,9 @@ from app.services.payment_service import (
     get_payment_status,
     map_mercado_pago_status,
     process_mercado_pago_webhook,
+    reconcile_payment_by_admin,
 )
+from app.schemas.payments import PaymentReconcileRequest
 
 
 SECRET = "webhook-secret"
@@ -83,9 +86,10 @@ def signed_headers(data_id: str, request_id: str = "req-1") -> dict[str, str]:
 
 
 class FakeMercadoPago:
-    def __init__(self, *, payment: dict | None = None) -> None:
+    def __init__(self, *, payment: dict | None = None, not_found: bool = False) -> None:
         self.payment = payment or {}
         self.preferences = []
+        self.not_found = not_found
 
     async def create_preference(self, *, order: dict, product: dict) -> dict:
         self.preferences.append({"order": order, "product": product})
@@ -97,9 +101,20 @@ class FakeMercadoPago:
     async def get_payment(self, payment_id: str) -> dict:
         return {**self.payment, "id": self.payment.get("id", payment_id)}
 
+    async def get_payment_for_reconciliation(self, payment_id: str) -> dict:
+        if self.not_found:
+            raise HTTPException(
+                status_code=404,
+                detail="Pagamento não encontrado no Mercado Pago.",
+            )
+        return await self.get_payment(payment_id)
+
 
 class FailingMercadoPago:
     async def get_payment(self, payment_id: str) -> dict:
+        raise HTTPException(status_code=502, detail="provider unavailable")
+
+    async def get_payment_for_reconciliation(self, payment_id: str) -> dict:
         raise HTTPException(status_code=502, detail="provider unavailable")
 
 
@@ -108,6 +123,10 @@ class NonCallingMercadoPago:
         self.called = False
 
     async def get_payment(self, payment_id: str) -> dict:
+        self.called = True
+        raise AssertionError("Payment provider should not be called")
+
+    async def get_payment_for_reconciliation(self, payment_id: str) -> dict:
         self.called = True
         raise AssertionError("Payment provider should not be called")
 
@@ -167,6 +186,11 @@ class FakeRepository:
         self.admin_events = []
         self.next_order_id = 1
         self.next_event_id = 1
+        self.next_admin_event_id = 1
+        self.fail_create_admin_event = False
+        self.fail_update_order = False
+        self.fail_update_admin_event = False
+        self.fail_grant_entitlement = False
 
     async def fetch_current_cliente(self, *, user_id: str, email: str | None):
         for cliente in self.clientes.values():
@@ -216,6 +240,8 @@ class FakeRepository:
         return order
 
     async def update_order(self, order_id: str, payload: dict):
+        if self.fail_update_order:
+            raise HTTPException(status_code=502, detail="update_order failed")
         self.orders[order_id].update(payload)
         return self.orders[order_id]
 
@@ -253,12 +279,27 @@ class FakeRepository:
         return {}
 
     async def grant_entitlement(self, *, cliente_id: str, entitlement_key: str):
+        if self.fail_grant_entitlement:
+            raise HTTPException(status_code=502, detail="grant_entitlement failed")
         self.clientes[cliente_id][entitlement_key] = True
         return self.clientes[cliente_id]
 
     async def create_admin_event(self, payload: dict):
-        self.admin_events.append(payload)
-        return payload
+        if self.fail_create_admin_event:
+            raise HTTPException(status_code=502, detail="create_admin_event failed")
+        event = {**payload, "id": f"admin-event-{self.next_admin_event_id}"}
+        self.next_admin_event_id += 1
+        self.admin_events.append(event)
+        return event
+
+    async def update_admin_event(self, event_id: str, payload: dict):
+        if self.fail_update_admin_event:
+            raise HTTPException(status_code=502, detail="update_admin_event failed")
+        for event in self.admin_events:
+            if event["id"] == event_id:
+                event.update(payload)
+                return event
+        return {}
 
 
 class PaymentRouteTest(unittest.TestCase):
@@ -1216,6 +1257,589 @@ class PaymentServiceTest(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(set(serialized), {"order_id", "status", "checkout_url"})
         self.assertNotIn("token", str(serialized).lower())
         self.assertNotIn("secret", str(serialized).lower())
+
+
+class PaymentReconcileSchemaTest(unittest.TestCase):
+    def test_schema_rejects_extra_fields(self):
+        from pydantic import ValidationError
+
+        with self.assertRaises(ValidationError):
+            PaymentReconcileRequest(payment_id="pay-1", user_id="user-1")
+
+    def test_schema_rejects_empty_payment_id(self):
+        from pydantic import ValidationError
+
+        with self.assertRaises(ValidationError):
+            PaymentReconcileRequest(payment_id="")
+
+
+async def fake_ensure_admin(current_user: CurrentUser) -> None:
+    return None
+
+
+async def fake_ensure_admin_forbidden(current_user: CurrentUser) -> None:
+    raise HTTPException(
+        status_code=403,
+        detail="Acesso administrativo necessário.",
+    )
+
+
+class ReconcilePaymentServiceTest(unittest.IsolatedAsyncioTestCase):
+    def setUp(self):
+        self.repo = FakeRepository()
+        self.admin_user = CurrentUser(
+            user_id="admin-1",
+            email="admin@example.com",
+            access_token="admin-token",
+        )
+
+    async def create_order_for_reconcile(self, **overrides):
+        product_code = overrides.get("product_code", "produto_1_completo")
+        product = self.repo.products[product_code]
+        payload = {
+            "cliente_id": "cliente-1",
+            "user_id": "user-1",
+            "email": "cliente@example.com",
+            "product_code": product_code,
+            "grants_product": product["grants_product"],
+            "provider": "mercado_pago",
+            "status": "pending",
+            "external_reference": "ref-reconcile-1",
+            "amount_cents": product["amount_cents"],
+            "currency": product["currency"],
+        }
+        payload.update(overrides)
+        return await self.repo.create_order(payload)
+
+    async def reconcile(self, *, payment_id="pay-1", mercado_pago=None, ensure_admin=None):
+        return await reconcile_payment_by_admin(
+            payment_id=payment_id,
+            current_user=self.admin_user,
+            repository=self.repo,
+            mercado_pago=mercado_pago or FakeMercadoPago(),
+            ensure_admin=ensure_admin or fake_ensure_admin,
+        )
+
+    # 1. valid approved + entitlement false -> reconciled
+    async def test_reconcile_approved_without_entitlement_grants_and_reconciles(self):
+        order = await self.create_order_for_reconcile()
+        payment = {
+            "id": "pay-1",
+            "external_reference": order["external_reference"],
+            "transaction_amount": 99,
+            "currency_id": "BRL",
+            "status": "approved",
+        }
+
+        response = await self.reconcile(mercado_pago=FakeMercadoPago(payment=payment))
+
+        self.assertEqual(response.result, "reconciled")
+        self.assertIsNone(response.reason)
+        self.assertTrue(self.repo.clientes["cliente-1"]["produto_1_completo_liberado"])
+        self.assertEqual(self.repo.orders[order["id"]]["status"], "approved")
+        self.assertEqual(len(self.repo.admin_events), 1)
+        self.assertEqual(self.repo.admin_events[0]["details"]["result"], "reconciled")
+        self.assertEqual(self.repo.admin_events[0]["admin_user_id"], "admin-1")
+
+    # 2. approved + entitlement true + order stale -> order reparada, already_entitled, sem grant
+    async def test_reconcile_already_entitled_repairs_stale_order(self):
+        order = await self.create_order_for_reconcile(status="pending")
+        self.repo.clientes["cliente-1"]["produto_1_completo_liberado"] = True
+        payment = {
+            "id": "pay-1",
+            "external_reference": order["external_reference"],
+            "transaction_amount": 99,
+            "currency_id": "BRL",
+            "status": "approved",
+        }
+
+        response = await self.reconcile(mercado_pago=FakeMercadoPago(payment=payment))
+
+        self.assertEqual(response.result, "already_entitled")
+        self.assertEqual(self.repo.orders[order["id"]]["status"], "approved")
+        self.assertEqual(self.repo.admin_events[0]["details"]["result"], "already_entitled")
+
+    # 3. retry após falha entre update_order e entitlement -> converge
+    async def test_reconcile_retry_converges_when_order_approved_but_entitlement_missing(self):
+        order = await self.create_order_for_reconcile(
+            status="approved",
+            approved_at="2026-08-07T00:00:00+00:00",
+        )
+        payment = {
+            "id": "pay-1",
+            "external_reference": order["external_reference"],
+            "transaction_amount": 99,
+            "currency_id": "BRL",
+            "status": "approved",
+        }
+
+        response = await self.reconcile(mercado_pago=FakeMercadoPago(payment=payment))
+
+        self.assertEqual(response.result, "reconciled")
+        self.assertTrue(self.repo.clientes["cliente-1"]["produto_1_completo_liberado"])
+
+    # 4. payment_not_found
+    async def test_reconcile_payment_not_found(self):
+        response = await self.reconcile(mercado_pago=FakeMercadoPago(not_found=True))
+
+        self.assertEqual(response.result, "rejected")
+        self.assertEqual(response.reason, "payment_not_found")
+        events = list(self.repo.webhook_events.values())
+        self.assertEqual(len(events), 1)
+        self.assertEqual(events[0]["provider"], "internal_reconciliation")
+        self.assertEqual(
+            events[0]["event_type"], "payment_entitlement_reconciliation_attempt"
+        )
+
+    # 5. provider timeout/5xx -> NÃO vira payment_not_found -> erro técnico/502 -> nenhuma mutação
+    async def test_reconcile_provider_technical_error_is_not_payment_not_found(self):
+        order = await self.create_order_for_reconcile()
+
+        with self.assertRaises(HTTPException) as error:
+            await self.reconcile(mercado_pago=FailingMercadoPago())
+
+        self.assertEqual(error.exception.status_code, 502)
+        events = list(self.repo.webhook_events.values())
+        self.assertEqual(len(events), 1)
+        self.assertEqual(events[0]["payload_sanitized"]["result"], "technical_error")
+        self.assertEqual(events[0]["payload_sanitized"]["reason"], "provider_unavailable")
+        self.assertEqual(self.repo.orders[order["id"]]["status"], "pending")
+        self.assertFalse(self.repo.clientes["cliente-1"]["produto_1_completo_liberado"])
+
+    # 6. payment_not_approved
+    async def test_reconcile_rejects_payment_not_approved(self):
+        order = await self.create_order_for_reconcile()
+        payment = {
+            "id": "pay-1",
+            "external_reference": order["external_reference"],
+            "transaction_amount": 99,
+            "currency_id": "BRL",
+            "status": "pending",
+        }
+
+        response = await self.reconcile(mercado_pago=FakeMercadoPago(payment=payment))
+
+        self.assertEqual(response.result, "rejected")
+        self.assertEqual(response.reason, "payment_not_approved")
+        self.assertFalse(self.repo.clientes["cliente-1"]["produto_1_completo_liberado"])
+
+    # 7. amount_mismatch
+    async def test_reconcile_rejects_amount_mismatch(self):
+        order = await self.create_order_for_reconcile()
+        payment = {
+            "id": "pay-1",
+            "external_reference": order["external_reference"],
+            "transaction_amount": 999,
+            "currency_id": "BRL",
+            "status": "approved",
+        }
+
+        response = await self.reconcile(mercado_pago=FakeMercadoPago(payment=payment))
+
+        self.assertEqual(response.result, "rejected")
+        self.assertEqual(response.reason, "amount_mismatch")
+        self.assertFalse(self.repo.clientes["cliente-1"]["produto_1_completo_liberado"])
+
+    # 8. currency_mismatch
+    async def test_reconcile_rejects_currency_mismatch(self):
+        order = await self.create_order_for_reconcile()
+        payment = {
+            "id": "pay-1",
+            "external_reference": order["external_reference"],
+            "transaction_amount": 99,
+            "currency_id": "USD",
+            "status": "approved",
+        }
+
+        response = await self.reconcile(mercado_pago=FakeMercadoPago(payment=payment))
+
+        self.assertEqual(response.result, "rejected")
+        self.assertEqual(response.reason, "currency_mismatch")
+
+    # 9. product_mismatch
+    async def test_reconcile_rejects_product_mismatch(self):
+        order = await self.create_order_for_reconcile()
+        payment = {
+            "id": "pay-1",
+            "external_reference": order["external_reference"],
+            "transaction_amount": 99,
+            "currency_id": "BRL",
+            "status": "approved",
+            "metadata": {"order_id": order["id"], "product_code": "produto_2"},
+        }
+
+        response = await self.reconcile(mercado_pago=FakeMercadoPago(payment=payment))
+
+        self.assertEqual(response.result, "rejected")
+        self.assertEqual(response.reason, "product_mismatch")
+
+    # 10. collector_mismatch
+    async def test_reconcile_rejects_collector_mismatch(self):
+        order = await self.create_order_for_reconcile()
+        self.repo.products["produto_1_completo"]["collector_id"] = "collector-expected"
+        payment = {
+            "id": "pay-1",
+            "external_reference": order["external_reference"],
+            "transaction_amount": 99,
+            "currency_id": "BRL",
+            "status": "approved",
+            "collector_id": "collector-other",
+        }
+
+        response = await self.reconcile(mercado_pago=FakeMercadoPago(payment=payment))
+
+        self.assertEqual(response.result, "rejected")
+        self.assertEqual(response.reason, "collector_mismatch")
+
+    # 11. external_reference_mismatch (via provider_payment_id já vinculado a outro pagamento)
+    async def test_reconcile_rejects_external_reference_mismatch(self):
+        order = await self.create_order_for_reconcile()
+        self.repo.orders[order["id"]]["provider_payment_id"] = "pay-original"
+        payment = {
+            "id": "pay-other",
+            "external_reference": order["external_reference"],
+            "transaction_amount": 99,
+            "currency_id": "BRL",
+            "status": "approved",
+        }
+
+        response = await self.reconcile(mercado_pago=FakeMercadoPago(payment=payment))
+
+        self.assertEqual(response.result, "rejected")
+        self.assertEqual(response.reason, "external_reference_mismatch")
+
+    # 12. product_not_supported (fora do escopo mínimo: só produto_1_completo)
+    async def test_reconcile_rejects_product_not_supported(self):
+        order = await self.create_order_for_reconcile(
+            product_code="produto_2",
+            external_reference="ref-p2",
+        )
+        payment = {
+            "id": "pay-1",
+            "external_reference": order["external_reference"],
+            "transaction_amount": 199,
+            "currency_id": "BRL",
+            "status": "approved",
+        }
+
+        response = await self.reconcile(mercado_pago=FakeMercadoPago(payment=payment))
+
+        self.assertEqual(response.result, "rejected")
+        self.assertEqual(response.reason, "product_not_supported")
+        self.assertFalse(self.repo.clientes["cliente-1"]["produto_2_liberado"])
+
+    # 13. external_reference ausente
+    async def test_reconcile_rejects_missing_external_reference(self):
+        payment = {
+            "id": "pay-1",
+            "transaction_amount": 99,
+            "currency_id": "BRL",
+            "status": "approved",
+        }
+
+        response = await self.reconcile(mercado_pago=FakeMercadoPago(payment=payment))
+
+        self.assertEqual(response.result, "rejected")
+        self.assertEqual(response.reason, "external_reference_missing")
+
+    # 14. external_reference vazio
+    async def test_reconcile_rejects_empty_external_reference(self):
+        payment = {
+            "id": "pay-1",
+            "external_reference": "",
+            "transaction_amount": 99,
+            "currency_id": "BRL",
+            "status": "approved",
+        }
+
+        response = await self.reconcile(mercado_pago=FakeMercadoPago(payment=payment))
+
+        self.assertEqual(response.result, "rejected")
+        self.assertEqual(response.reason, "external_reference_missing")
+
+    # 15. external_reference presente mas sem order -> inconsistency_requires_manual_review
+    async def test_reconcile_reports_manual_review_when_order_not_found(self):
+        payment = {
+            "id": "pay-1",
+            "external_reference": "ref-inexistente",
+            "transaction_amount": 99,
+            "currency_id": "BRL",
+            "status": "approved",
+        }
+
+        response = await self.reconcile(mercado_pago=FakeMercadoPago(payment=payment))
+
+        self.assertEqual(response.result, "inconsistency_requires_manual_review")
+        self.assertEqual(response.reason, "order_not_found")
+
+    # 16. external_reference em formato incomum -> não causa 500
+    async def test_reconcile_unusual_external_reference_format_does_not_500(self):
+        payment = {
+            "id": "pay-1",
+            "external_reference": "!!!weird///format???",
+            "transaction_amount": 99,
+            "currency_id": "BRL",
+            "status": "approved",
+        }
+
+        response = await self.reconcile(mercado_pago=FakeMercadoPago(payment=payment))
+
+        self.assertEqual(response.result, "inconsistency_requires_manual_review")
+        self.assertEqual(response.reason, "order_not_found")
+
+    # 17. tentativa sem order grava discriminador correto, sem PII/valor
+    async def test_reconcile_without_order_audits_with_discriminator_and_no_pii(self):
+        payment = {
+            "id": "pay-1",
+            "external_reference": "ref-inexistente",
+            "transaction_amount": 99,
+            "currency_id": "BRL",
+            "status": "approved",
+        }
+
+        await self.reconcile(mercado_pago=FakeMercadoPago(payment=payment))
+
+        events = list(self.repo.webhook_events.values())
+        self.assertEqual(len(events), 1)
+        event = events[0]
+        self.assertEqual(event["provider"], "internal_reconciliation")
+        self.assertEqual(
+            event["event_type"], "payment_entitlement_reconciliation_attempt"
+        )
+        self.assertEqual(event["payload_sanitized"]["admin_user_id"], "admin-1")
+        self.assertEqual(event["payload_sanitized"]["payment_id"], "pay-1")
+        self.assertEqual(
+            event["payload_sanitized"]["result"], "inconsistency_requires_manual_review"
+        )
+        self.assertEqual(event["payload_sanitized"]["reason"], "order_not_found")
+        serialized = str(event["payload_sanitized"]).lower()
+        self.assertNotIn("email", serialized)
+        self.assertNotIn("cliente@example.com", serialized)
+        self.assertNotIn("transaction_amount", serialized)
+
+    # 18. falha na criação da auditoria inicial -> nenhuma mutação
+    async def test_reconcile_aborts_when_initial_audit_fails(self):
+        order = await self.create_order_for_reconcile()
+        self.repo.fail_create_admin_event = True
+        payment = {
+            "id": "pay-1",
+            "external_reference": order["external_reference"],
+            "transaction_amount": 99,
+            "currency_id": "BRL",
+            "status": "approved",
+        }
+
+        with self.assertRaises(HTTPException):
+            await self.reconcile(mercado_pago=FakeMercadoPago(payment=payment))
+
+        self.assertEqual(self.repo.orders[order["id"]]["status"], "pending")
+        self.assertFalse(self.repo.clientes["cliente-1"]["produto_1_completo_liberado"])
+
+    # 19. falha em update_order -> nenhum grant
+    async def test_reconcile_no_grant_when_update_order_fails(self):
+        order = await self.create_order_for_reconcile()
+        self.repo.fail_update_order = True
+        payment = {
+            "id": "pay-1",
+            "external_reference": order["external_reference"],
+            "transaction_amount": 99,
+            "currency_id": "BRL",
+            "status": "approved",
+        }
+
+        with self.assertRaises(HTTPException):
+            await self.reconcile(mercado_pago=FakeMercadoPago(payment=payment))
+
+        self.assertFalse(self.repo.clientes["cliente-1"]["produto_1_completo_liberado"])
+        self.assertEqual(len(self.repo.admin_events), 1)
+
+    # 20. auditoria final falha depois do grant -> entitlement não é revertido
+    async def test_reconcile_keeps_entitlement_when_final_audit_update_fails(self):
+        order = await self.create_order_for_reconcile()
+        self.repo.fail_update_admin_event = True
+        payment = {
+            "id": "pay-1",
+            "external_reference": order["external_reference"],
+            "transaction_amount": 99,
+            "currency_id": "BRL",
+            "status": "approved",
+        }
+
+        response = await self.reconcile(mercado_pago=FakeMercadoPago(payment=payment))
+
+        self.assertEqual(response.result, "reconciled")
+        self.assertTrue(self.repo.clientes["cliente-1"]["produto_1_completo_liberado"])
+
+    # 21. repetição após reconciled -> already_entitled, order sincronizada
+    async def test_reconcile_repeat_after_reconciled_returns_already_entitled(self):
+        order = await self.create_order_for_reconcile()
+        payment = {
+            "id": "pay-1",
+            "external_reference": order["external_reference"],
+            "transaction_amount": 99,
+            "currency_id": "BRL",
+            "status": "approved",
+        }
+
+        first = await self.reconcile(mercado_pago=FakeMercadoPago(payment=payment))
+        second = await self.reconcile(mercado_pago=FakeMercadoPago(payment=payment))
+
+        self.assertEqual(first.result, "reconciled")
+        self.assertEqual(second.result, "already_entitled")
+        self.assertEqual(self.repo.orders[order["id"]]["status"], "approved")
+
+    # 22. duas chamadas concorrentes -> efeito de negócio único/idempotente
+    async def test_reconcile_concurrent_calls_stay_business_safe(self):
+        import asyncio
+
+        order = await self.create_order_for_reconcile()
+        payment = {
+            "id": "pay-1",
+            "external_reference": order["external_reference"],
+            "transaction_amount": 99,
+            "currency_id": "BRL",
+            "status": "approved",
+        }
+
+        results = await asyncio.gather(
+            self.reconcile(mercado_pago=FakeMercadoPago(payment=payment)),
+            self.reconcile(mercado_pago=FakeMercadoPago(payment=payment)),
+        )
+
+        self.assertTrue(self.repo.clientes["cliente-1"]["produto_1_completo_liberado"])
+        results_set = {response.result for response in results}
+        self.assertTrue(results_set.issubset({"reconciled", "already_entitled"}))
+        self.assertGreaterEqual(len(self.repo.admin_events), 1)
+
+    # 24. usuário autenticado não-admin -> 403, nenhuma operação de pagamento
+    async def test_reconcile_rejects_non_admin_without_touching_payment(self):
+        await self.create_order_for_reconcile()
+        mercado_pago = NonCallingMercadoPago()
+
+        with self.assertRaises(HTTPException) as error:
+            await self.reconcile(
+                mercado_pago=mercado_pago,
+                ensure_admin=fake_ensure_admin_forbidden,
+            )
+
+        self.assertEqual(error.exception.status_code, 403)
+        self.assertFalse(mercado_pago.called)
+
+    # Correção B1.3-1: order_status_before preservado + order_status_after
+    # correto na auditoria final (pending -> approved).
+    async def test_reconcile_final_audit_preserves_before_and_after_status(self):
+        order = await self.create_order_for_reconcile(status="pending")
+        payment = {
+            "id": "pay-1",
+            "external_reference": order["external_reference"],
+            "transaction_amount": 99,
+            "currency_id": "BRL",
+            "status": "approved",
+        }
+
+        response = await self.reconcile(mercado_pago=FakeMercadoPago(payment=payment))
+
+        self.assertEqual(response.result, "reconciled")
+        final_details = self.repo.admin_events[0]["details"]
+        self.assertEqual(final_details["order_status_before"], "pending")
+        self.assertEqual(final_details["order_status_after"], "approved")
+
+    # Correção B1.3-2: falha em grant_entitlement é auditada como erro
+    # técnico, propagada (não vira 200), e retry posterior converge.
+    async def test_reconcile_audits_and_propagates_grant_entitlement_failure(self):
+        order = await self.create_order_for_reconcile(status="pending")
+        self.repo.fail_grant_entitlement = True
+        payment = {
+            "id": "pay-1",
+            "external_reference": order["external_reference"],
+            "transaction_amount": 99,
+            "currency_id": "BRL",
+            "status": "approved",
+        }
+
+        with self.assertRaises(HTTPException) as error:
+            await self.reconcile(mercado_pago=FakeMercadoPago(payment=payment))
+
+        self.assertEqual(error.exception.status_code, 502)
+        # order já sincronizada, apesar do grant ter falhado
+        self.assertEqual(self.repo.orders[order["id"]]["status"], "approved")
+        # entitlement continua false
+        self.assertFalse(self.repo.clientes["cliente-1"]["produto_1_completo_liberado"])
+        # auditoria final registra o erro técnico específico
+        final_details = self.repo.admin_events[0]["details"]
+        self.assertEqual(final_details["result"], "technical_error")
+        self.assertEqual(final_details["reason"], "entitlement_grant_failed")
+        self.assertEqual(final_details["order_status_before"], "pending")
+        self.assertEqual(final_details["order_status_after"], "approved")
+
+        # retry posterior (sem a falha simulada) converge normalmente
+        self.repo.fail_grant_entitlement = False
+        retry_response = await self.reconcile(mercado_pago=FakeMercadoPago(payment=payment))
+
+        self.assertEqual(retry_response.result, "reconciled")
+        self.assertTrue(self.repo.clientes["cliente-1"]["produto_1_completo_liberado"])
+
+
+class FakeHttpResponse:
+    """Simula uma resposta httpx (status_code + json()) sem nenhuma rede
+    real — usada para testar get_payment_for_reconciliation mockando só o
+    transporte HTTP."""
+
+    def __init__(self, status_code: int, payload: dict) -> None:
+        self.status_code = status_code
+        self._payload = payload
+
+    def json(self) -> dict:
+        return self._payload
+
+
+class MercadoPagoGetPaymentForReconciliationTest(unittest.IsolatedAsyncioTestCase):
+    """Testes diretos e unitários do método real
+    MercadoPagoClient.get_payment_for_reconciliation, mockando somente o
+    transporte HTTP (httpx.AsyncClient.get) — nunca chama o Mercado Pago
+    real."""
+
+    def setUp(self):
+        self.client = MercadoPagoClient(access_token="test-token")
+
+    async def test_returns_json_on_success(self):
+        async def fake_get(self, url, headers=None, **kwargs):
+            return FakeHttpResponse(200, {"id": "pay-1", "status": "approved"})
+
+        with patch.object(httpx.AsyncClient, "get", fake_get):
+            payment = await self.client.get_payment_for_reconciliation("pay-1")
+
+        self.assertEqual(payment, {"id": "pay-1", "status": "approved"})
+
+    async def test_raises_404_when_payment_not_found(self):
+        async def fake_get(self, url, headers=None, **kwargs):
+            return FakeHttpResponse(404, {"error": "not_found"})
+
+        with patch.object(httpx.AsyncClient, "get", fake_get):
+            with self.assertRaises(HTTPException) as error:
+                await self.client.get_payment_for_reconciliation("pay-inexistente")
+
+        self.assertEqual(error.exception.status_code, 404)
+
+    async def test_server_error_becomes_502_not_404(self):
+        async def fake_get(self, url, headers=None, **kwargs):
+            return FakeHttpResponse(500, {"error": "internal"})
+
+        with patch.object(httpx.AsyncClient, "get", fake_get):
+            with self.assertRaises(HTTPException) as error:
+                await self.client.get_payment_for_reconciliation("pay-1")
+
+        self.assertEqual(error.exception.status_code, 502)
+
+    async def test_network_error_becomes_502_not_404(self):
+        async def fake_get(self, url, headers=None, **kwargs):
+            raise httpx.ConnectTimeout("timeout simulado")
+
+        with patch.object(httpx.AsyncClient, "get", fake_get):
+            with self.assertRaises(HTTPException) as error:
+                await self.client.get_payment_for_reconciliation("pay-1")
+
+        self.assertEqual(error.exception.status_code, 502)
 
 
 if __name__ == "__main__":

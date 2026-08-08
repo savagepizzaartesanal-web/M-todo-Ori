@@ -46,6 +46,19 @@ class MercadoPagoWebhookResponse(BaseModel):
     event_id: str | None = None
 
 
+class PaymentReconcileRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    payment_id: str = Field(min_length=1, max_length=120)
+
+
+class PaymentReconcileResponse(BaseModel):
+    result: str
+    reason: str | None = None
+    order_id: str | None = None
+    product_code: str | None = None
+
+
 class PaymentProduct(BaseModel):
     model_config = ConfigDict(extra="allow")
 
