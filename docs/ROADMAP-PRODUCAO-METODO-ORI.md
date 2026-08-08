@@ -1213,8 +1213,8 @@ Medir:
 - [ ] checklist pós-deploy
 - [ ] smoke tests
 - [ ] rollback
-- [ ] backup
-- [ ] restore
+- [x] backup — RECOVERY-1 concluído, ver seção 28.3
+- [x] restore — RECOVERY-1 concluído, ver seção 28.3
 - [ ] migrations
 - [ ] test/prod
 - [ ] dependências externas
@@ -1478,6 +1478,7 @@ Antes de implementar:
 - [ ] PAYMENT-TECH-001 — TTL/expiração de `payment_orders`
 - [ ] PAYMENT-TECH-002 — notificações legacy Mercado Pago
 - [ ] setTimeout de avanço automático (360ms) em `QuizProduto1.jsx` sem cancelamento explícito — risco de timer concorrente/obsoleto em interações rápidas; identificado durante a auditoria do MASTER-007; não é defeito de acessibilidade e não bloqueou o MASTER-007
+- [ ] `CREATE TABLE public.clientes` ausente dos scripts versionados (`metodo-ori/supabase-*.sql`) — a tabela existe de fato em produção (confirmado durante o RECOVERY-1) e por isso não bloqueia backup/restore, mas os scripts sozinhos não reconstroem o schema do zero; identificado durante a auditoria de recovery operacional, não corrigido no Git
 - [ ] documentação histórica
 
 ---
@@ -1571,7 +1572,7 @@ O `auth-state.json` é sensível.
 - [x] MASTER-001 mínimo
 - [x] MASTER-005 recomendado
 - [x] acessibilidade essencial (MASTER-006, MASTER-007, MASTER-008, MASTER-009)
-- [ ] recovery operacional
+- [ ] recovery operacional (RECOVERY-1 concluído; RECOVERY-2/3/4 pendentes — ver seção 28.3)
 - [ ] observabilidade mínima
 
 ## Marco D — P1 consolidado
@@ -1620,7 +1621,7 @@ demais ondas
 Marco C permanece aberto até concluir a sequência:
 
 1. acessibilidade essencial; ✅ concluída — ver seção 28.2
-2. recovery operacional;
+2. recovery operacional; RECOVERY-1 (backup/restore) ✅ concluído, RECOVERY-2/3/4 pendentes — ver seção 28.3
 3. observabilidade mínima.
 
 Mudanças pequenas, uma por vez.
@@ -1764,6 +1765,59 @@ Durante a auditoria do MASTER-007 foi identificado, em `QuizProduto1.jsx`, um `s
 
 ---
 
+# 28.3 GATE ROADMAP — RECOVERY-1 CONCLUÍDO (BACKUP + RESTORE SUPABASE)
+
+**Data operacional:** 07/08/2026
+**Objetivo:** registrar a conclusão validada operacionalmente do RECOVERY-1 — backup lógico e teste real de restore do Supabase (plano Free) — primeira etapa da sequência de recovery operacional aberta na seção 28.2.
+
+## Status
+
+**RECOVERY-1 — Backup + restore Supabase: ✅ CONCLUÍDO / PASS (validado operacionalmente).**
+
+Isso **não** encerra o bloco de recovery operacional como um todo — RECOVERY-2, RECOVERY-3 e RECOVERY-4 continuam pendentes (ver "Próxima ação" abaixo).
+
+## Evidência de conclusão
+
+**Backup:**
+- projeto Supabase de produção está no plano Free (sem backup gerenciado nativo);
+- backup lógico real executado via Supabase CLI `2.110.0`;
+- conexão usada: Supavisor Session Pooler, porta 5432;
+- artefatos gerados: `roles.sql`, `schema.sql`, `data.sql`;
+- o schema real confirmou a existência de `CREATE TABLE public.clientes` — isso fecha, **apenas para fins de backup/restore**, o gap identificado anteriormente; a dívida de versionamento/migrations dessa tabela no Git **continua em aberto e não foi corrigida** (ver seção 24).
+
+**Proteção do backup:**
+- pacote empacotado e criptografado simetricamente com GPG/AES-256;
+- passphrase exclusiva, armazenada separadamente em gerenciador de senhas;
+- checksum SHA-256 gerado e validado;
+- plaintext temporário removido após validação;
+- backup criptografado preservado localmente: `metodo-ori-supabase-20260807-201224.tar.gpg` + `.sha256`;
+- cópia off-site enviada ao Google Drive, baixada novamente e com SHA-256 idêntico ao original — integridade off-site: PASS.
+
+**Teste real de restore (ambiente isolado, produção não tocada):**
+- projeto Supabase temporário e isolado `metodo-ori-recovery-test`, região equivalente à produção (us-east-1 / North Virginia);
+- 1ª tentativa (`--single-transaction`, `ON_ERROR_STOP=1`) falhou em `ALTER ROLE "supabase_admin"` (role reservada da plataforma, não pode ser modificada pelo usuário hospedado); transação abortada; validação pós-falha confirmou `public_tables=0` e `auth_users=0` — rollback transacional: PASS, nenhuma alteração parcial ficou no laboratório;
+- tratamento do role reservado: `roles.sql` oficial preservado intocado; auditoria mostrou só os roles de plataforma (`anon`, `authenticated`, `authenticator`, `supabase_admin`), nenhum role customizado do Método Ori; `schema.sql` com 0 ocorrências de `OWNER TO "supabase_admin"`; foi criada, somente para o restore, uma cópia derivada `roles.restore.sql` ignorando exatamente a operação `ALTER ROLE "supabase_admin"` — tratado como **instrução operacional de restore**, sem alterar o backup oficial;
+- 2ª tentativa (`roles.restore.sql` + `schema.sql` + `data.sql`): PASS, `psql` exit 0.
+
+**Paridade de dados (recovery-test vs. produção, contagens idênticas):**
+- `auth.users`: 23 = 23; `auth.identities`: 23 = 23;
+- `admin_cliente_eventos`: 8 = 8; `clientes`: 23 = 23; `oraculo_cartas_diarias`: 11 = 11; `payment_orders`: 7 = 7; `payment_products`: 3 = 3; `payment_webhook_events`: 4 = 4; `produto_1_feedbacks`: 8 = 8; `produto_1_respostas`: 18 = 18; `produto_2_dossies`: 2 = 2; `produto_3_codigos_finais`: 1 = 1;
+- paridade global de contagens: PASS.
+
+**Preflight/extensões:** `pgcrypto`, `pg_stat_statements`, `supabase_vault`, `uuid-ossp` instaladas no projeto de recovery. Em produção: nenhum indício de Database Webhooks, 0 Vault secrets, nenhum indício de column encryption.
+
+**Limpeza pós-validação:** diretório plaintext de teste removido; pacote criptografado oficial preservado; checksum preservado; projeto `metodo-ori-recovery-test` excluído.
+
+## Bloqueantes agora
+
+RECOVERY-1 deixa de bloquear a sequência. **RECOVERY-2 — Reconciliação segura de pagamento → entitlement** passa a ser a próxima frente obrigatória: resolver de forma segura o cenário em que o Mercado Pago confirma pagamento válido, mas `produto_1_completo_liberado`/entitlement não fica consistente. Depois, na mesma sequência: RECOVERY-3 (validação/documentação de rollback Cloudflare + Render) e RECOVERY-4 (runbook consolidado de recuperação). Só depois desses três, observabilidade mínima, e só então o Marco C pode ser reavaliado para fechamento.
+
+## Próxima ação permitida
+
+**RECOVERY-2 — Reconciliação segura de pagamento → entitlement.**
+
+---
+
 # 29. TOP PRIORIDADES
 
 ## P0
@@ -1773,7 +1827,7 @@ Durante a auditoria do MASTER-007 foi identificado, em `QuizProduto1.jsx`, um `s
 1. acessibilidade essencial ✅ concluída (MASTER-006, MASTER-007, MASTER-008, MASTER-009 — ver seção 28.2)
 
 ## Obrigatórias sequenciais para fechar Marco C
-2. recovery operacional ← próxima frente obrigatória
+2. recovery operacional — RECOVERY-1 ✅ concluído (ver seção 28.3); RECOVERY-2 ← próxima frente obrigatória; RECOVERY-3/4 pendentes
 3. observabilidade mínima
 
 ## P1 operação / pós-RC1
@@ -1885,6 +1939,7 @@ O Método Ori já possui:
 - `completeProduto1` aguarda a fila de saves;
 - MASTER-001, P0-GATING-001 e MASTER-003 preservados após MASTER-005;
 - acessibilidade essencial concluída (MASTER-006, MASTER-007, MASTER-008, MASTER-009) — onboarding com `radio` nativo, escala 1–5 associada à pergunta via `role="group"`/`aria-labelledby`, feedback de obrigatoriedade acessível no onboarding e no pós-leitura, idioma `pt-BR` global;
+- RECOVERY-1 concluído — backup lógico real do Supabase (roles/schema/data), criptografado e com cópia off-site íntegra, com teste real de restore em projeto isolado validando paridade total de dados com a produção (ver seção 28.3);
 - auditoria UX/UI completa;
 - backlog priorizado;
 - infraestrutura Cloudflare + Render + Supabase em produção;
@@ -1901,7 +1956,7 @@ P2, P3 e Bundle continuam fora do checkout nesta release.
 O release gate de pagamentos, o focus trap do paywall, o fechamento gratuito, o P0 de gating pós-quiz e o MASTER-005 foram encerrados. O trabalho crítico agora é cirúrgico:
 
 1. acessibilidade essencial — ✅ concluída (MASTER-006, MASTER-007, MASTER-008, MASTER-009);
-2. fortalecer recovery operacional — próxima frente obrigatória;
+2. fortalecer recovery operacional — RECOVERY-1 (backup/restore Supabase) ✅ concluído; RECOVERY-2 (reconciliação pagamento → entitlement) é a próxima frente obrigatória; RECOVERY-3 (rollback Cloudflare/Render) e RECOVERY-4 (runbook consolidado) pendentes;
 3. fortalecer observabilidade mínima;
 4. consolidar o P1 com clientes;
 5. revisar a arquitetura de IA com a especialista;
