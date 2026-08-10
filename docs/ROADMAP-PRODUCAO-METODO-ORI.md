@@ -1575,7 +1575,7 @@ O `auth-state.json` é sensível.
 - [x] MASTER-001 mínimo
 - [x] MASTER-005 recomendado
 - [x] acessibilidade essencial (MASTER-006, MASTER-007, MASTER-008, MASTER-009)
-- [ ] recovery operacional (RECOVERY-1 concluído, RECOVERY-2 concluído, RECOVERY-3 concluído; RECOVERY-4 pendente — ver seção 28.5)
+- [x] recovery operacional (RECOVERY-1 ✅, RECOVERY-2 ✅, RECOVERY-3 ✅, RECOVERY-4 ✅ concluído — runbooks técnicos + manual operacional integrados via PR #20 — ver seção 28.6)
 - [ ] observabilidade mínima
 
 ## Marco D — P1 consolidado
@@ -1624,8 +1624,8 @@ demais ondas
 Marco C permanece aberto até concluir a sequência:
 
 1. acessibilidade essencial; ✅ concluída — ver seção 28.2
-2. recovery operacional; RECOVERY-1 (backup/restore) ✅ concluído, RECOVERY-2 (reconciliação pagamento → entitlement) ✅ concluído, RECOVERY-3 (rollback Cloudflare/Render) ✅ concluído, RECOVERY-4 pendente — ver seção 28.5
-3. observabilidade mínima.
+2. recovery operacional; RECOVERY-1 (backup/restore) ✅ concluído, RECOVERY-2 (reconciliação pagamento → entitlement) ✅ concluído, RECOVERY-3 (rollback Cloudflare/Render) ✅ concluído, RECOVERY-4 (runbook consolidado de recuperação) ✅ concluído — ver seção 28.6
+3. observabilidade mínima ← PRÓXIMA FRENTE OBRIGATÓRIA.
 
 Mudanças pequenas, uma por vez.
 
@@ -1643,6 +1643,7 @@ Histórico recente concluído:
 - RECOVERY-1 ✅ (backup + restore Supabase — ver seção 28.3)
 - RECOVERY-2 ✅ (reconciliação segura de pagamento → entitlement — ver seção 28.4)
 - RECOVERY-3 ✅ (rollback Cloudflare + Render, primitivas nativas confirmadas e fallback Git validado — ver seção 28.5)
+- RECOVERY-4 ✅ (runbook consolidado de recuperação — ver seção 28.6)
 
 ---
 
@@ -1919,11 +1920,72 @@ Evidências técnicas consolidadas em `docs/infraestrutura-producao.md`, via PR 
 
 ## Bloqueantes agora
 
-RECOVERY-3 deixa de bloquear a sequência. **RECOVERY-4 — runbook consolidado de recuperação** passa a ser a próxima frente obrigatória. Só depois dele, observabilidade mínima, e só então o Marco C pode ser reavaliado para fechamento.
+RECOVERY-3 deixa de bloquear a sequência. RECOVERY-4 (runbook consolidado de recuperação) foi concluído em seguida — ver seção 28.6. **Observabilidade mínima** permanece pendente antes do fechamento do Marco C.
 
 ## Próxima ação permitida
 
-**RECOVERY-4 — runbook consolidado de recuperação.**
+**Observabilidade mínima.**
+
+---
+
+# 28.6 GATE ROADMAP — RECOVERY-4 CONCLUÍDO (RUNBOOK CONSOLIDADO DE RECUPERAÇÃO)
+
+**Data operacional:** 10/08/2026
+**Objetivo:** registrar a conclusão validada do RECOVERY-4 — consolidação e validação do procedimento operacional de recuperação do Método Ori — quarta e última etapa da sequência de recovery operacional aberta na seção 28.5.
+
+## Status
+
+**RECOVERY-4 — Runbook consolidado de recuperação: ✅ CONCLUÍDO / PASS (documentação técnica e humana criada, validada empiricamente em laboratório isolado e integrada à `main`).**
+
+Isso encerra o bloco de recovery operacional como um todo (RECOVERY-1, RECOVERY-2, RECOVERY-3 e RECOVERY-4 concluídos). Isso **não** encerra o Marco C — observabilidade mínima continua pendente (ver "Bloqueantes agora" abaixo).
+
+## Resultado
+
+- runbook operacional global criado (`docs/RUNBOOK-RECOVERY-OPERACIONAL.md`);
+- runbook de recovery lógico Supabase criado (`docs/RUNBOOK-RECOVERY-DADOS-SUPABASE.md`);
+- manual humano de recovery em Markdown criado (`docs/MANUAL-RECOVERY-METODO-ORI.md`);
+- manual visual offline single-file criado (`docs/manual-recovery-metodo-ori.html`);
+- documentação integrada à `main` via PR #20;
+- merge commit: `9db98a61f5bfbcee1970e252c878154ca8ca58b5`.
+
+## Validação empírica resumida
+
+Executada exclusivamente contra projetos Supabase de laboratório, descartáveis, sem nenhum vínculo com produção:
+
+- dump lógico (`roles`/`schema`/`data`) com Supabase CLI `2.113.0`, mecanismo `--linked` passwordless;
+- rollback transacional comprovado (falha trivial e falha real de privilégio);
+- restore com dumps reais contra TARGET isolado;
+- incompatibilidade real de `roles.sql` (`GRANT SET ON PARAMETER "log_min_messages"`) reproduzida e analisada;
+- derivado controlado (`roles.restore.sql`) criado apenas após compreensão e autorização, com diff auditado;
+- restore não vazio SOURCE → TARGET com paridade de fixture validada;
+- checksum SHA-256 (formato GNU) verificado em todas as etapas;
+- GnuPG `2.4.4`, criptografia simétrica AES-256, roundtrip validado.
+
+Detalhes completos, comandos exatos e evidência integral: ver os runbooks técnicos listados acima — não repetidos aqui.
+
+## Limitações conhecidas / fronteiras
+
+- Auth integral não validado por este procedimento;
+- Storage bytes permanecem fora do escopo do backup lógico PostgreSQL;
+- os três dumps são comandos separados e não constituem snapshot atômico comprovado entre si.
+
+Essas são fronteiras documentadas do procedimento atual e **não invalidam** o fechamento do RECOVERY-4.
+
+## Produção
+
+Nenhum restore de produção foi executado durante o RECOVERY-4.
+
+## Hard Gate
+
+Restore de produção continua dependendo de decisão humana coordenada e dos gates definidos nos runbooks (`docs/RUNBOOK-RECOVERY-DADOS-SUPABASE.md`, seção 15) — nada neste gate autoriza restore automático.
+
+## Bloqueantes agora
+
+RECOVERY-4 deixa de bloquear a sequência. **Observabilidade mínima** passa a ser a próxima frente obrigatória. Só depois dela o Marco C pode ser reavaliado para fechamento.
+
+## Próxima ação permitida
+
+**Observabilidade mínima.**
 
 ---
 
@@ -1936,8 +1998,8 @@ RECOVERY-3 deixa de bloquear a sequência. **RECOVERY-4 — runbook consolidado 
 1. acessibilidade essencial ✅ concluída (MASTER-006, MASTER-007, MASTER-008, MASTER-009 — ver seção 28.2)
 
 ## Obrigatórias sequenciais para fechar Marco C
-2. recovery operacional — RECOVERY-1 ✅ concluído (ver seção 28.3); RECOVERY-2 ✅ concluído (ver seção 28.4); RECOVERY-3 ✅ concluído (ver seção 28.5); RECOVERY-4 ← próxima frente obrigatória
-3. observabilidade mínima
+2. recovery operacional — RECOVERY-1 ✅ concluído (ver seção 28.3); RECOVERY-2 ✅ concluído (ver seção 28.4); RECOVERY-3 ✅ concluído (ver seção 28.5); RECOVERY-4 ✅ concluído (ver seção 28.6)
+3. observabilidade mínima ← próxima frente obrigatória
 
 ## P1 operação / pós-RC1
 4. segurança/LGPD
@@ -2051,6 +2113,7 @@ O Método Ori já possui:
 - RECOVERY-1 concluído — backup lógico real do Supabase (roles/schema/data), criptografado e com cópia off-site íntegra, com teste real de restore em projeto isolado validando paridade total de dados com a produção (ver seção 28.3);
 - RECOVERY-2 concluído — reconciliação administrativa segura de pagamento aprovado no Mercado Pago sem entitlement consistente, implementada, revisada, mergeada e validada em produção (ver seção 28.4);
 - RECOVERY-3 concluído — rollback operacional de frontend (Cloudflare Pages) e backend (Render) auditado, primitivas nativas comprovadas nos projetos reais e fallback `git revert -m 1` validado em clone isolado, sem executar rollback real de produção (ver seção 28.5);
+- RECOVERY-4 concluído — runbook operacional, runbook de recovery de dados e manual operacional (Markdown + HTML offline) integrados à main via PR #20; validação controlada em laboratório, com limitações explicitamente documentadas (Auth integral, Storage bytes e ausência de snapshot atômico entre os dumps separados) (ver seção 28.6);
 - auditoria UX/UI completa;
 - backlog priorizado;
 - infraestrutura Cloudflare + Render + Supabase em produção;
@@ -2067,13 +2130,13 @@ P2, P3 e Bundle continuam fora do checkout nesta release.
 O release gate de pagamentos, o focus trap do paywall, o fechamento gratuito, o P0 de gating pós-quiz e o MASTER-005 foram encerrados. O trabalho crítico agora é cirúrgico:
 
 1. acessibilidade essencial — ✅ concluída (MASTER-006, MASTER-007, MASTER-008, MASTER-009);
-2. fortalecer recovery operacional — RECOVERY-1 (backup/restore Supabase) ✅ concluído; RECOVERY-2 (reconciliação pagamento → entitlement) ✅ concluído; RECOVERY-3 (rollback Cloudflare/Render) ✅ concluído; RECOVERY-4 (runbook consolidado) é a próxima frente obrigatória;
-3. fortalecer observabilidade mínima;
+2. recovery operacional — ✅ concluído: RECOVERY-1 (backup/restore Supabase), RECOVERY-2 (reconciliação pagamento → entitlement), RECOVERY-3 (rollback Cloudflare/Render) e RECOVERY-4 (runbook consolidado) todos concluídos (ver seções 28.3–28.6);
+3. fortalecer observabilidade mínima ← próxima frente obrigatória;
 4. consolidar o P1 com clientes;
 5. revisar a arquitetura de IA com a especialista;
 6. avançar para RC2 / Produto 2.
 
-Recovery operacional e observabilidade mínima não bloqueiam iniciar acessibilidade, mas seguem como pendências obrigatórias sequenciais para fechar Marco C.
+Observabilidade mínima não bloqueia iniciar acessibilidade (já concluída), mas segue como pendência obrigatória sequencial para fechar Marco C.
 
 ## Pendências pós-RC1 que não bloqueiam vendas nem o início da acessibilidade
 
