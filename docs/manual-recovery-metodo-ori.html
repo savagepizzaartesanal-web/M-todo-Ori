@@ -1,0 +1,1429 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; font-src 'none'; connect-src 'none'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none';" />
+<title>Manual de Recovery — Método Ori</title>
+<style>
+  :root{
+    --noite: #100B07;
+    --noite-2: #17120C;
+    --painel: #1C160E;
+    --painel-2: #14100A;
+    --pergaminho: #EFE3D3;
+    --dourado: #E9B46A;
+    --dourado-claro: #F6D6A2;
+    --cobre: #C07C3C;
+    --texto: #F3E9D8;
+    --muted: #B7A98C;
+    --safe: #4C8A63;
+    --safe-bg: #10201A;
+    --safe-border: rgba(76,138,99,.55);
+    --warn: #D9A441;
+    --warn-bg: #241C0C;
+    --warn-border: rgba(217,164,65,.5);
+    --crit: #C56A62;
+    --crit-bg: #2A1210;
+    --crit-border: rgba(197,106,98,.55);
+    --border-gold: rgba(233,180,106,.28);
+    --border-cobre: rgba(192,124,60,.4);
+    --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    --radius: 21px;
+  }
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+    *{ animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+  }
+  body{
+    margin: 0;
+    background: var(--noite);
+    color: var(--texto);
+    font-family: var(--sans);
+    line-height: 1.6;
+    position: relative;
+  }
+  /* cosmoancestral backdrop */
+  body::before{
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 88% 6%, rgba(233,180,106,.16), transparent 42%),
+      radial-gradient(circle at 4% 92%, rgba(192,124,60,.13), transparent 40%),
+      radial-gradient(circle at 50% 45%, rgba(233,180,106,.04), transparent 60%),
+      radial-gradient(rgba(255,255,255,.06) 1px, transparent 1.4px) 0 0/3px 3px,
+      var(--noite);
+    opacity: .9;
+  }
+  a{ color: var(--dourado-claro); }
+  a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible{
+    outline: 3px solid var(--dourado);
+    outline-offset: 2px;
+  }
+  button{ font-family: inherit; cursor: pointer; }
+  code{
+    background: rgba(233,180,106,.1);
+    color: var(--dourado-claro);
+    padding: .12rem .4rem;
+    border-radius: 5px;
+    font-family: var(--mono);
+    font-size: .87em;
+  }
+  pre{
+    background: var(--painel-2);
+    border: 1px solid var(--border-gold);
+    color: var(--dourado-claro);
+    padding: .95rem 1.1rem;
+    border-radius: 12px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: .82rem;
+  }
+
+  /* ---------- topbar + progress ---------- */
+  .topbar{
+    position: sticky; top: 0; z-index: 40;
+    background: rgba(16,11,7,.92);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--border-gold);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .7rem 1.1rem;
+    gap: 1rem;
+  }
+  .topbar .brand{
+    font-size: .82rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--dourado);
+    white-space: nowrap;
+  }
+  .topbar .current-section{
+    flex: 1;
+    text-align: center;
+    font-size: .82rem;
+    color: var(--muted);
+    letter-spacing: .04em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .topbar .index-btn{
+    background: transparent;
+    border: 1px solid var(--border-gold);
+    color: var(--dourado-claro);
+    border-radius: 999px;
+    padding: .4rem .9rem;
+    font-size: .78rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .topbar .index-btn:hover{ background: rgba(233,180,106,.1); }
+  .progress-track{
+    position: sticky; top: 48px; z-index: 39;
+    height: 3px;
+    background: rgba(233,180,106,.08);
+  }
+  .progress-bar{
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--cobre), var(--dourado));
+    transition: width .12s linear;
+  }
+
+  .emergency-indicator{
+    position: fixed;
+    left: 50%;
+    bottom: 1rem;
+    transform: translateX(-50%);
+    z-index: 60;
+    background: var(--crit-bg);
+    border: 1px solid var(--crit-border);
+    color: var(--dourado-claro);
+    padding: .5rem 1rem;
+    border-radius: 999px;
+    font-size: .8rem;
+    display: none;
+    align-items: center;
+    gap: .7rem;
+    box-shadow: 0 6px 18px rgba(0,0,0,.5);
+  }
+  .emergency-indicator.show{ display: flex; }
+  .emergency-indicator button{
+    background: transparent;
+    border: 1px solid var(--dourado);
+    color: var(--dourado-claro);
+    border-radius: 999px;
+    padding: .2rem .7rem;
+    font-size: .74rem;
+  }
+
+  /* ---------- layout shell ---------- */
+  .shell{
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    max-width: 1500px;
+    margin: 0 auto;
+  }
+  @media (max-width: 1200px){
+    .shell{ grid-template-columns: 1fr; }
+    .rail{ display: none !important; }
+  }
+
+  .rail{
+    background: linear-gradient(180deg, var(--noite-2), var(--noite));
+    border-right: 1px solid var(--border-gold);
+    padding: 1.4rem 1.1rem 2rem;
+    position: sticky;
+    top: 52px;
+    height: calc(100vh - 52px);
+    overflow-y: auto;
+  }
+  .rail-title{ font-size: 1.05rem; color: var(--pergaminho); margin: 0 0 .1rem; letter-spacing: .02em; }
+  .rail-sub{ font-size: .74rem; color: var(--dourado); text-transform: uppercase; letter-spacing: .08em; margin: 0 0 1.1rem; }
+
+  .search-wrap{ margin-bottom: 1.1rem; }
+  .search-wrap label{ font-size: .72rem; color: var(--muted); display: block; margin-bottom: .3rem; text-transform: uppercase; letter-spacing: .05em; }
+  .search-wrap input[type="search"]{
+    width: 100%;
+    padding: .55rem .65rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-gold);
+    background: rgba(255,255,255,.04);
+    color: var(--texto);
+    font-size: .87rem;
+  }
+  .search-wrap input::placeholder{ color: var(--muted); }
+  .search-clear{
+    margin-top: .4rem;
+    background: transparent;
+    border: 1px solid var(--border-gold);
+    color: var(--muted);
+    border-radius: 6px;
+    padding: .3rem .6rem;
+    font-size: .74rem;
+  }
+  .search-status{ font-size: .74rem; color: var(--muted); margin-top: .3rem; min-height: 1em; }
+
+  .emergency-btn{
+    display: block;
+    width: 100%;
+    margin: 0 0 1.2rem;
+    background: var(--crit-bg);
+    border: 1px solid var(--crit-border);
+    color: var(--dourado-claro);
+    border-radius: 10px;
+    padding: .65rem .6rem;
+    font-weight: 700;
+    font-size: .88rem;
+    letter-spacing: .02em;
+  }
+  .emergency-btn.active{ background: var(--crit); color: #1c0d0b; }
+
+  .nav-group{ margin-bottom: 1.1rem; }
+  .nav-group-title{
+    font-size: .68rem;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--cobre);
+    margin: 0 0 .4rem .3rem;
+    font-weight: 700;
+  }
+  .nav-list{ list-style: none; margin: 0; padding: 0; }
+  .nav-list li{ margin-bottom: .1rem; }
+  .nav-list a{
+    display: flex;
+    gap: .55rem;
+    align-items: baseline;
+    color: var(--muted);
+    text-decoration: none;
+    padding: .42rem .5rem;
+    border-radius: 8px;
+    font-size: .87rem;
+  }
+  .nav-list a .num{ font-family: var(--mono); font-size: .72rem; color: var(--cobre); flex-shrink: 0; }
+  .nav-list a:hover, .nav-list a:focus-visible{ background: rgba(233,180,106,.08); color: var(--texto); }
+  .nav-list a.active{ background: rgba(233,180,106,.13); color: var(--dourado-claro); font-weight: 600; }
+  .nav-list a.active .num{ color: var(--dourado); }
+
+  .rail-footer{
+    margin-top: 1.4rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-gold);
+    font-size: .78rem;
+  }
+  .rail-footer a{ color: var(--dourado); display: block; margin-bottom: .4rem; text-decoration: none; }
+  .rail-footer a:hover{ text-decoration: underline; }
+
+  /* ---------- index overlay ---------- */
+  .index-overlay{
+    position: fixed; inset: 0; z-index: 70;
+    background: rgba(8,6,4,.94);
+    backdrop-filter: blur(4px);
+    display: none;
+    padding: 3rem 1.2rem;
+    overflow-y: auto;
+  }
+  .index-overlay.open{ display: block; }
+  .index-overlay-inner{ max-width: 900px; margin: 0 auto; }
+  .index-overlay-head{ display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.6rem; }
+  .index-overlay-head h2{ font-size: 1.3rem; color: var(--pergaminho); margin: 0; }
+  .index-close{
+    background: transparent; border: 1px solid var(--border-gold); color: var(--dourado-claro);
+    border-radius: 999px; padding: .4rem .9rem; font-size: .8rem;
+  }
+  .index-grid{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.6rem; }
+  .index-grid .nav-group-title{ color: var(--cobre); }
+  .index-grid a{
+    display: block; padding: .5rem .2rem; color: var(--muted); text-decoration: none; font-size: .95rem;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+  .index-grid a:hover, .index-grid a:focus-visible{ color: var(--dourado-claro); }
+  .index-grid a .num{ font-family: var(--mono); color: var(--cobre); margin-right: .5rem; font-size: .8rem; }
+
+  /* mobile top bar variant */
+  .mobile-note{ display: none; }
+
+  main{
+    padding: 2.4rem clamp(1rem, 4vw, 3.4rem) 5rem;
+    max-width: 900px;
+  }
+
+  /* ---------- hero / capa ---------- */
+  .hero{
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(circle at 82% 20%, rgba(233,180,106,.14), transparent 55%), linear-gradient(160deg, var(--painel), var(--painel-2));
+    border: 1px solid var(--border-gold);
+    border-radius: var(--radius);
+    padding: 2.4rem 2rem;
+    margin-bottom: 2.6rem;
+  }
+  .hero::after{
+    content: "";
+    position: absolute;
+    right: -60px; top: -60px;
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    border: 1px solid var(--border-gold);
+    opacity: .5;
+  }
+  .hero::before{
+    content: "";
+    position: absolute;
+    right: -20px; top: 40px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    border: 1px solid var(--border-cobre);
+    opacity: .4;
+  }
+  .eyebrow{
+    font-size: .74rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--dourado);
+    font-weight: 700;
+    margin: 0 0 .7rem;
+  }
+  .hero h1{
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: clamp(2rem, 5vw, 2.9rem);
+    letter-spacing: -.01em;
+    margin: 0 0 .3rem;
+    color: var(--pergaminho);
+  }
+  .hero .lead{ margin: 0 0 1.1rem; color: var(--muted); font-size: 1.02rem; max-width: 46ch; }
+  .badges{ display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1rem; position: relative; z-index: 1; }
+  .badge{
+    display: inline-block;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: .32rem .65rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid var(--border-gold);
+    color: var(--dourado-claro);
+  }
+  .badge.gold{ background: var(--dourado); color: #1c1300; border-color: var(--dourado); }
+  .note-box{
+    position: relative; z-index: 1;
+    background: rgba(233,180,106,.07);
+    border-left: 3px solid var(--dourado);
+    padding: .75rem .95rem;
+    border-radius: 8px;
+    font-size: .92rem;
+    color: var(--pergaminho);
+  }
+
+  /* ---------- editorial sections ---------- */
+  .secao{ margin-bottom: 2.4rem; scroll-margin-top: 4.5rem; opacity: 0; transform: translateY(10px); animation: reveal .5s ease forwards; }
+  .secao:nth-of-type(n){ animation-delay: 0s; }
+  @keyframes reveal{ to{ opacity: 1; transform: translateY(0); } }
+  body.emergency-mode .secao{ opacity: 1; transform: none; animation: none; }
+
+  .secao .interno{
+    background: linear-gradient(165deg, var(--painel), var(--painel-2));
+    border: 1px solid var(--border-gold);
+    border-radius: var(--radius);
+    padding: 1.8rem 1.9rem;
+    box-shadow: 0 18px 40px rgba(0,0,0,.35);
+  }
+  .secao .sec-eyebrow{
+    font-size: .68rem; text-transform: uppercase; letter-spacing: .14em; color: var(--cobre); font-weight: 700; margin: 0 0 .3rem;
+  }
+  .secao h2{
+    font-family: var(--sans);
+    color: var(--pergaminho);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 1.1rem;
+    padding-bottom: .6rem;
+    border-bottom: 1px solid var(--border-gold);
+  }
+  .secao h3{ font-size: 1.02rem; color: var(--dourado-claro); }
+  .secao p, .secao li{ color: var(--pergaminho); }
+  .secao .storage-note, .secao .storage-tip{ color: var(--muted); }
+
+  .card{
+    background: rgba(255,255,255,.025);
+    border: 1px solid var(--border-gold);
+    border-radius: 14px;
+    padding: 1.1rem 1.2rem;
+    margin-bottom: 1rem;
+  }
+  .card.critical{ background: var(--crit-bg); border-color: var(--crit-border); }
+  .card.warn{ background: var(--warn-bg); border-color: var(--warn-border); }
+  .card.safe{ background: var(--safe-bg); border-color: var(--safe-border); }
+  .card h3{ margin-top: 0; }
+  .card-title-crit{ color: var(--crit); font-weight: 800; }
+  .card-title-warn{ color: var(--warn); font-weight: 800; }
+  .card-title-safe{ color: var(--safe); font-weight: 800; }
+
+  .grid3{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .grid2{ display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  @media (max-width: 760px){ .grid3, .grid2{ grid-template-columns: 1fr; } }
+
+  .scenario-btn{
+    text-align: left;
+    width: 100%;
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--border-gold);
+    border-radius: 12px;
+    padding: .9rem 1rem;
+    font-size: .96rem;
+    font-weight: 600;
+    color: var(--pergaminho);
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+  }
+  .scenario-btn[aria-pressed="true"]{
+    border-color: var(--dourado);
+    background: rgba(233,180,106,.09);
+    box-shadow: 0 0 0 1px var(--border-gold), 0 0 24px rgba(233,180,106,.12);
+  }
+  .scenario-panel{ display: none; margin-top: .6rem; }
+  .scenario-panel.open{ display: block; }
+
+  .checklist{ list-style: none; padding: 0; margin: 0; }
+  .checklist li{
+    display: flex; align-items: flex-start; gap: .55rem;
+    padding: .48rem 0;
+    border-bottom: 1px dashed var(--border-gold);
+    font-size: .95rem;
+  }
+  .checklist li:last-child{ border-bottom: none; }
+  .checklist input[type="checkbox"]{
+    width: 1.15rem; height: 1.15rem; margin-top: .15rem;
+    accent-color: var(--dourado);
+    flex-shrink: 0;
+  }
+  .checklist label{ cursor: pointer; }
+  .clear-btn{
+    margin-top: .7rem;
+    background: transparent;
+    border: 1px solid var(--muted);
+    color: var(--muted);
+    border-radius: 8px;
+    padding: .4rem .8rem;
+    font-size: .82rem;
+  }
+
+  /* pipeline / cadeia */
+  .cadeia{ display: flex; flex-wrap: wrap; gap: .6rem; align-items: stretch; }
+  .cadeia .elo{
+    flex: 1 1 130px;
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--border-gold);
+    border-radius: 12px;
+    padding: .8rem .7rem;
+    font-size: .84rem;
+    text-align: center;
+    color: var(--muted);
+  }
+  .cadeia .elo strong{ display: block; color: var(--dourado-claro); margin-bottom: .3rem; font-family: var(--mono); font-size: .78rem; letter-spacing: .04em; }
+  .cadeia .seta{ align-self: center; color: var(--cobre); font-size: 1.3rem; }
+  .cadeia .elo.producao{ border-color: var(--crit-border); background: var(--crit-bg); }
+  .cadeia .elo.producao strong{ color: var(--crit); }
+  @media (max-width: 760px){
+    .cadeia{ flex-direction: column; }
+    .cadeia .seta{ transform: rotate(90deg); }
+  }
+
+  .lista--num{ list-style: none; counter-reset: rs; padding: 0; margin: 0; }
+  .lista--num li{
+    counter-increment: rs;
+    position: relative;
+    padding: .55rem 0 .55rem 2.3rem;
+    border-bottom: 1px dashed var(--border-gold);
+    font-size: .95rem;
+  }
+  .lista--num li:last-child{ border-bottom: none; }
+  .lista--num li::before{
+    content: counter(rs);
+    position: absolute; left: 0; top: .45rem;
+    width: 1.6rem; height: 1.6rem;
+    border-radius: 50%;
+    background: linear-gradient(160deg, var(--cobre), #8f5a2c);
+    color: #1c0d02;
+    font-family: var(--mono);
+    font-size: .8rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  table.secrets{ width: 100%; border-collapse: collapse; font-size: .87rem; }
+  table.secrets th, table.secrets td{
+    border: 1px solid var(--border-gold);
+    padding: .55rem .65rem;
+    text-align: left;
+    color: var(--pergaminho);
+  }
+  table.secrets th{ background: rgba(233,180,106,.1); color: var(--dourado-claro); font-family: var(--mono); font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; }
+  table.secrets td.no{ color: var(--crit); font-weight: 700; }
+  table.secrets td.yes{ color: var(--safe); font-weight: 700; }
+  .table-scroll{ overflow-x: auto; }
+
+  .validated-grid{ display: grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap: .9rem; }
+  .validated-card{
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--border-gold);
+    border-radius: 12px;
+    padding: .85rem .9rem;
+  }
+  .validated-card .v-title{ font-weight: 700; color: var(--pergaminho); }
+  .validated-card .v-version{ font-family: var(--mono); color: var(--dourado); font-size: .82rem; margin: .2rem 0; }
+  .validated-card .v-badge{
+    display: inline-block; margin-top: .4rem;
+    font-size: .64rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+    background: rgba(76,138,99,.18); color: var(--safe); border: 1px solid var(--safe-border);
+    padding: .22rem .55rem; border-radius: 999px;
+  }
+
+  .accordion-item{ border: 1px solid var(--border-gold); border-radius: 10px; margin-bottom: .5rem; overflow: hidden; background: rgba(255,255,255,.02); }
+  .accordion-item summary{
+    padding: .65rem .85rem;
+    font-weight: 600;
+    color: var(--pergaminho);
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .accordion-item summary::-webkit-details-marker{ display:none; }
+  .accordion-item summary::after{ content: "+"; font-weight: 700; color: var(--dourado); }
+  .accordion-item[open] summary::after{ content: "–"; }
+  .accordion-item .acc-body{ padding: 0 .95rem .85rem; color: var(--muted); font-size: .92rem; }
+
+  .escalation-card{
+    background: linear-gradient(160deg, var(--warn-bg), var(--painel-2));
+    border: 1px solid var(--warn-border);
+    border-radius: 16px;
+    padding: 1.3rem 1.4rem;
+  }
+  .escalation-card .sec-eyebrow{ color: var(--warn); }
+  .escalation-card .name{ font-size: 1.2rem; font-weight: 700; color: var(--dourado-claro); margin: .2rem 0; }
+  .escalation-card .role{ color: var(--muted); font-size: .9rem; margin-bottom: .8rem; }
+  .escalation-card .channel-row{ display: flex; gap: 1.5rem; flex-wrap: wrap; font-size: .88rem; }
+  .escalation-card .channel-row strong{ display: block; color: var(--dourado); font-family: var(--mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; margin-bottom: .2rem; }
+
+  .quick-sheet{
+    background: linear-gradient(160deg, var(--crit-bg), var(--painel-2));
+    border: 1px solid var(--crit-border);
+    border-radius: var(--radius);
+    padding: 1.4rem 1.5rem;
+  }
+  .quick-sheet h3{ color: var(--dourado-claro); }
+  .quick-sheet ol{ padding-left: 1.2rem; color: var(--pergaminho); }
+  .quick-sheet li{ margin-bottom: .55rem; }
+  .print-buttons{ display: flex; gap: .6rem; flex-wrap: wrap; margin-top: 1.1rem; }
+  .print-buttons button{
+    background: var(--dourado); color: #1c1300; border: none; border-radius: 999px;
+    padding: .5rem .95rem; font-size: .85rem; font-weight: 700;
+  }
+
+  footer.site-footer{
+    border-top: 1px solid var(--border-gold);
+    margin-top: 3rem;
+    padding-top: 1.2rem;
+    font-size: .82rem;
+    color: var(--muted);
+  }
+  footer.site-footer p{ margin: .25rem 0; }
+  footer.site-footer code{ background: rgba(255,255,255,.05); color: var(--muted); }
+
+  .back-to-top{
+    position: fixed; right: 1.2rem; bottom: 1.2rem; z-index: 30;
+    background: var(--dourado); color: #1c1300;
+    border: none; border-radius: 999px;
+    width: 3rem; height: 3rem; font-size: 1.2rem;
+    display: none; align-items: center; justify-content: center;
+    box-shadow: 0 6px 16px rgba(0,0,0,.5);
+  }
+  .back-to-top.show{ display: flex; }
+
+  mark.search-hit{ background: var(--dourado); color: #1c1300; border-radius: 3px; padding: 0 .1em; }
+
+  /* emergency mode */
+  body.emergency-mode .hide-in-emergency{ display: none !important; }
+  body.emergency-mode section.emergency-keep{ display: block !important; }
+  body.emergency-mode main{ max-width: 760px; }
+  body.emergency-mode .rail .nav-group:not(.eg-keep){ opacity: .35; }
+  body.emergency-mode .hero::after, body.emergency-mode .hero::before{ display: none; }
+
+  /* mobile */
+  @media (max-width: 1200px){
+    main{ padding: 2rem 1.1rem 4rem; }
+  }
+  @media (max-width: 640px){
+    .topbar{ padding: .6rem .8rem; }
+    .topbar .current-section{ display: none; }
+    .hero{ padding: 1.6rem 1.3rem; }
+  }
+
+  /* print */
+  @media print{
+    body::before{ display: none !important; }
+    .rail, .topbar, .progress-track, .back-to-top, .print-buttons, .search-wrap, .emergency-btn, .index-overlay, .emergency-indicator{ display: none !important; }
+    .shell{ display: block; max-width: 100%; }
+    main{ max-width: 100%; padding: 0; }
+    body{ background: #fff; color: #111; }
+    body::after{ content: none; }
+    .secao{ opacity: 1 !important; transform: none !important; }
+    .secao .interno, .card, .hero, .quick-sheet, .escalation-card, .validated-card, .accordion-item{
+      background: #fff !important; color: #111 !important; border: 1px solid #999 !important; box-shadow: none !important;
+    }
+    .secao h2, .secao h3, .hero h1, p, li, .name{ color: #111 !important; }
+    .secao{ page-break-inside: avoid; }
+    a[href]::after{ content: " (" attr(href) ")"; font-size: .75em; color: #555; }
+    body.print-quick-only section:not(#folha-rapida){ display: none !important; }
+    body.print-quick-only .hero{ display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<a href="#conteudo-principal" style="position:absolute;left:-9999px;top:0;">Pular para o conteúdo</a>
+
+<div class="topbar">
+  <span class="brand">Método Ori · Manual de Recovery</span>
+  <span class="current-section" id="currentSectionLabel" aria-live="polite">Emergência</span>
+  <button class="index-btn" id="indexOpenBtn" aria-haspopup="dialog" aria-controls="indexOverlay">Índice</button>
+</div>
+<div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+
+<div class="shell">
+  <nav class="rail" aria-label="Navegação do manual">
+    <p class="rail-title">Método Ori</p>
+    <p class="rail-sub">Manual de Recovery</p>
+
+    <div class="search-wrap">
+      <label for="searchInput">Buscar no manual</label>
+      <input type="search" id="searchInput" placeholder="ex.: checksum, roles.sql, escalonamento" />
+      <button class="search-clear" id="searchClear" type="button">Limpar busca</button>
+      <div class="search-status" id="searchStatus" aria-live="polite"></div>
+    </div>
+
+    <button class="emergency-btn" id="emergencyToggle" aria-pressed="false">🚨 Modo Emergência</button>
+
+    <div class="nav-group eg-keep">
+      <p class="nav-group-title">Emergência</p>
+      <ul class="nav-list">
+        <li><a href="#emergencia" data-target="emergencia"><span class="num">01</span> Comece aqui</a></li>
+        <li><a href="#o-que-aconteceu" data-target="o-que-aconteceu"><span class="num">02</span> O que aconteceu</a></li>
+        <li><a href="#niveis-de-acao" data-target="niveis-de-acao"><span class="num">03</span> Níveis de ação</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-group">
+      <p class="nav-group-title">Recovery</p>
+      <ul class="nav-list">
+        <li><a href="#recovery-dados" data-target="recovery-dados"><span class="num">04</span> Recovery de dados</a></li>
+        <li><a href="#antes-restore" data-target="antes-restore"><span class="num">05</span> Antes do restore</a></li>
+        <li><a href="#depois-restore" data-target="depois-restore"><span class="num">06</span> Depois do restore</a></li>
+        <li><a href="#roles-sql" data-target="roles-sql"><span class="num">07</span> Roles.sql</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-group eg-keep">
+      <p class="nav-group-title">Segurança</p>
+      <ul class="nav-list">
+        <li><a href="#segredos" data-target="segredos"><span class="num">08</span> Segredos</a></li>
+        <li><a href="#auth-storage" data-target="auth-storage"><span class="num">09</span> Auth &amp; Storage</a></li>
+        <li><a href="#escalonamento" data-target="escalonamento"><span class="num">10</span> Escalonamento</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-group eg-keep">
+      <p class="nav-group-title">Referência</p>
+      <ul class="nav-list">
+        <li><a href="#validacao-empirica" data-target="validacao-empirica"><span class="num">11</span> Validação empírica</a></li>
+        <li><a href="#glossario" data-target="glossario"><span class="num">12</span> Glossário</a></li>
+        <li><a href="#folha-rapida" data-target="folha-rapida"><span class="num">13</span> Folha rápida</a></li>
+      </ul>
+    </div>
+
+    <div class="rail-footer">
+      <a href="./RUNBOOK-RECOVERY-OPERACIONAL.md">📄 Runbook Operacional</a>
+      <a href="./RUNBOOK-RECOVERY-DADOS-SUPABASE.md">📄 Runbook de Dados Supabase</a>
+    </div>
+  </nav>
+
+  <main id="conteudo-principal">
+
+    <header class="hero">
+      <p class="eyebrow">Método Ori · Recovery-4</p>
+      <h1>Manual de Recovery</h1>
+      <p class="lead">Guia operacional para incidentes, rollback e recuperação</p>
+      <div class="badges">
+        <span class="badge">OFFLINE</span>
+        <span class="badge gold">PROCEDIMENTO VALIDADO</span>
+        <span class="badge">RECOVERY-4</span>
+      </div>
+      <div class="note-box">
+        Este guia não executa recovery. Ele orienta a decisão e aponta para os
+        runbooks técnicos (<code>RUNBOOK-RECOVERY-OPERACIONAL.md</code> e
+        <code>RUNBOOK-RECOVERY-DADOS-SUPABASE.md</code>).
+      </div>
+    </header>
+
+    <!-- 01. EMERGÊNCIA -->
+    <section id="emergencia" class="secao emergency-keep">
+      <div class="interno">
+        <p class="sec-eyebrow">01 · Emergência</p>
+        <h2>Comece aqui</h2>
+        <div class="card critical">
+          <h3 class="card-title-crit">🔴 PARE</h3>
+          <ul class="checklist" style="border:none;">
+            <li>— Não execute restore em produção por impulso.</li>
+            <li>— Não delete banco/projeto.</li>
+            <li>— Não faça cleanup (não apague nada "para limpar depois").</li>
+            <li>— Não altere o backup original.</li>
+            <li>— Não cole senha/token em ChatGPT, Claude, issue ou qualquer documento.</li>
+            <li>— Preserve evidências (prints, logs, horários). Você vai precisar depois.</li>
+          </ul>
+        </div>
+        <div class="note-box">
+          Se você não consegue identificar com certeza <strong>SOURCE</strong>,
+          <strong>TARGET</strong> ou o ambiente envolvido: <strong>PARE e escale</strong>
+          (seção <a href="#escalonamento">Escalonamento</a>).
+        </div>
+        <p>Nada neste manual pede para você agir sozinha em produção. O objetivo é
+        <strong>entender o que aconteceu e conter o impacto</strong> — não corrigir tudo de uma vez.</p>
+
+        <h3>Primeiros 5 minutos</h3>
+        <p>Marque conforme for respondendo (fica salvo só neste navegador):</p>
+        <ul class="checklist" data-storage-group="first5">
+          <li><input type="checkbox" id="f5-1" data-key="f5-1"><label for="f5-1">O que quebrou, exatamente?</label></li>
+          <li><input type="checkbox" id="f5-2" data-key="f5-2"><label for="f5-2">Quando começou (hora aproximada)?</label></li>
+          <li><input type="checkbox" id="f5-3" data-key="f5-3"><label for="f5-3">Produção está acessível?</label></li>
+          <li><input type="checkbox" id="f5-4" data-key="f5-4"><label for="f5-4">Houve deploy/mudança recente?</label></li>
+          <li><input type="checkbox" id="f5-5" data-key="f5-5"><label for="f5-5">Dados parecem incorretos ou ausentes?</label></li>
+          <li><input type="checkbox" id="f5-6" data-key="f5-6"><label for="f5-6">Pagamentos/entitlements divergem?</label></li>
+          <li><input type="checkbox" id="f5-7" data-key="f5-7"><label for="f5-7">Existe backup conhecido?</label></li>
+          <li><input type="checkbox" id="f5-8" data-key="f5-8"><label for="f5-8">Qual foi a última ação antes do problema?</label></li>
+        </ul>
+        <button class="clear-btn" data-clear-group="first5" type="button">Limpar checklists</button>
+        <p class="storage-note">Marcações ficam apenas neste navegador (nenhum texto ou segredo é salvo — só sim/não).</p>
+      </div>
+    </section>
+
+    <!-- 02. O QUE ACONTECEU -->
+    <section id="o-que-aconteceu" class="secao emergency-keep">
+      <div class="interno">
+        <p class="sec-eyebrow">02 · Diagnóstico</p>
+        <h2>"O que aconteceu?"</h2>
+        <p>Escolha o card que mais se parece com o que você está vendo.</p>
+
+        <div class="grid2" role="group" aria-label="Cenários de incidente">
+          <button class="scenario-btn hide-in-emergency" data-scenario="a" aria-pressed="false">🌐 A. Site / frontend fora do ar</button>
+          <button class="scenario-btn hide-in-emergency" data-scenario="b" aria-pressed="false">⚙️ B. Backend / API fora do ar</button>
+          <button class="scenario-btn" data-scenario="c" aria-pressed="false">💾 C. Dados errados, perdidos ou corrompidos</button>
+          <button class="scenario-btn hide-in-emergency" data-scenario="d" aria-pressed="false">💳 D. Pagamento correto, acesso/entitlement errado</button>
+          <button class="scenario-btn hide-in-emergency" data-scenario="e" aria-pressed="false">🚀 E. Deploy recente quebrou algo</button>
+          <button class="scenario-btn" data-scenario="f" aria-pressed="false">🆘 F. Não sei / recovery completo</button>
+        </div>
+
+        <div class="scenario-panel" data-panel="a">
+          <div class="card">
+            <p><strong>Diagnóstico inicial:</strong> a página não abre, ou abre em branco.</p>
+            <p><strong>Nível de ação:</strong> 🟡 precisa de validação técnica (rollback de deployment tem impacto real).</p>
+            <p><strong>O que NÃO fazer:</strong> não presuma que é DNS sem checar; não faça rollback sem confirmar o deployment-alvo.</p>
+            <p><strong>Próximo passo:</strong> <a href="./RUNBOOK-RECOVERY-OPERACIONAL.md#7-frontend--cloudflare-pages">Runbook Operacional, seção 7 (Frontend/Cloudflare)</a>.</p>
+          </div>
+        </div>
+        <div class="scenario-panel" data-panel="b">
+          <div class="card">
+            <p><strong>Diagnóstico inicial:</strong> o site abre, mas login/compra/consulta falha.</p>
+            <p><strong>Nível de ação:</strong> 🟡 precisa de validação técnica.</p>
+            <p><strong>O que NÃO fazer:</strong> não reiniciar/redeployar repetidamente sem entender a causa.</p>
+            <p><strong>Próximo passo:</strong> <a href="./RUNBOOK-RECOVERY-OPERACIONAL.md#8-backend--render">Runbook Operacional, seção 8 (Backend/Render)</a>.</p>
+          </div>
+        </div>
+        <div class="scenario-panel" data-panel="c">
+          <div class="card critical">
+            <p><strong>Diagnóstico inicial:</strong> algo que devia estar lá não está, ou está diferente do esperado.</p>
+            <p><strong>Nível de ação:</strong> 🔴 pare antes de mexer em código.</p>
+            <p><strong>O que NÃO fazer:</strong> não reverter código automaticamente — pode criar incompatibilidade entre código e dados.</p>
+            <p><strong>Próximo passo:</strong> <a href="./RUNBOOK-RECOVERY-OPERACIONAL.md#10-banco--supabase">Runbook Operacional, seção 10</a> + <a href="./RUNBOOK-RECOVERY-DADOS-SUPABASE.md">Runbook de Dados Supabase</a> completo.</p>
+          </div>
+        </div>
+        <div class="scenario-panel" data-panel="d">
+          <div class="card">
+            <p><strong>Diagnóstico inicial:</strong> pagamento aprovado, acesso liberado errado ou ausente.</p>
+            <p><strong>Nível de ação:</strong> 🟡 confirmar no Mercado Pago antes de qualquer correção manual.</p>
+            <p><strong>O que NÃO fazer:</strong> nunca corrigir manualmente no banco.</p>
+            <p><strong>Próximo passo:</strong> <a href="./RUNBOOK-RECOVERY-OPERACIONAL.md#11-pagamento-e-entitlement">Runbook Operacional, seção 11 (Pagamento e entitlement)</a>.</p>
+          </div>
+        </div>
+        <div class="scenario-panel" data-panel="e">
+          <div class="card">
+            <p><strong>Diagnóstico inicial:</strong> um deploy recente parece ter quebrado algo.</p>
+            <p><strong>Nível de ação:</strong> 🟡 contenção pode ser necessária antes da remediação permanente.</p>
+            <p><strong>O que NÃO fazer:</strong> não pular direto para revert sem avaliar contenção primeiro.</p>
+            <p><strong>Próximo passo:</strong> <a href="./RUNBOOK-RECOVERY-OPERACIONAL.md#9-fallback-git">Runbook Operacional, seção 9 (Fallback Git) e seção 18</a>.</p>
+          </div>
+        </div>
+        <div class="scenario-panel" data-panel="f">
+          <div class="card warn">
+            <p><strong>Diagnóstico inicial:</strong> situação desconhecida ou recovery completo necessário.</p>
+            <p><strong>Nível de ação:</strong> 🟡/🔴 dependendo do que a árvore de decisão revelar.</p>
+            <p><strong>O que NÃO fazer:</strong> não improvisar um procedimento novo.</p>
+            <p><strong>Próximo passo:</strong> <a href="./RUNBOOK-RECOVERY-OPERACIONAL.md#6-arvore-de-decisao">Árvore de decisão completa, Runbook Operacional seção 6</a>.</p>
+          </div>
+        </div>
+
+        <div class="note-box hide-in-emergency">
+          Em qualquer caminho: se envolver dados/banco em algum ponto, pare e siga
+          a seção 10 do runbook operacional antes de qualquer rollback de código.
+        </div>
+      </div>
+    </section>
+
+    <!-- 03. NÍVEIS DE AÇÃO -->
+    <section id="niveis-de-acao" class="secao emergency-keep">
+      <div class="interno">
+        <p class="sec-eyebrow">03 · Critério</p>
+        <h2>Níveis de ação</h2>
+        <p>Nenhum nível é autorização geral — cada ação específica precisa estar descrita
+        no runbook técnico correspondente para valer.</p>
+        <div class="grid3">
+          <div class="card safe">
+            <h3 class="card-title-safe">🟢 POSSO FAZER</h3>
+            <p>Inspeção, coleta de evidência e ações já explicitamente autorizadas — <strong>só
+            quando o procedimento correspondente disser que é seguro</strong>.</p>
+          </div>
+          <div class="card warn">
+            <h3 class="card-title-warn">🟡 PRECISA DE VALIDAÇÃO TÉCNICA</h3>
+            <p>Mudança remota, risco operacional ou decisão que precisa ser revisada
+            com acompanhamento técnico antes de continuar.</p>
+          </div>
+          <div class="card critical">
+            <h3 class="card-title-crit">🔴 PARE / NÃO CONTINUE</h3>
+            <p>Restore em produção sem Hard Gate, ação destrutiva, checksum/paridade
+            falhando, ambiente incerto, ou segredo exposto.</p>
+          </div>
+        </div>
+        <div class="note-box">Se não tiver certeza em qual nível uma ação se encaixa: trate como 🔴 e escale.</div>
+      </div>
+    </section>
+
+    <!-- 04. RECOVERY DE DADOS -->
+    <section id="recovery-dados" class="secao hide-in-emergency">
+      <div class="interno">
+        <p class="sec-eyebrow">04 · Recovery</p>
+        <h2>Recovery de dados — resumo humano</h2>
+        <p>Procedimento técnico completo: <a href="./RUNBOOK-RECOVERY-DADOS-SUPABASE.md">RUNBOOK-RECOVERY-DADOS-SUPABASE.md</a>.
+        Aqui vai só o conceito.</p>
+        <div class="cadeia">
+          <div class="elo"><strong>BACKUP</strong>cópia dos dados (papéis, estrutura, conteúdo)</div>
+          <div class="seta">→</div>
+          <div class="elo"><strong>SHA-256</strong>"impressão digital" pra provar integridade</div>
+          <div class="seta">→</div>
+          <div class="elo"><strong>CRIPTOGRAFIA</strong>protegido com passphrase própria</div>
+          <div class="seta">→</div>
+          <div class="elo"><strong>RESTORE ISOLADO</strong>testado em lugar descartável, nunca direto em produção</div>
+          <div class="seta">→</div>
+          <div class="elo"><strong>PARIDADE</strong>compara resultado com o esperado</div>
+          <div class="seta">→</div>
+          <div class="elo"><strong>DECISÃO HUMANA</strong>uma pessoa decide, não um script sozinho</div>
+          <div class="seta">→</div>
+          <div class="elo producao"><strong>PRODUÇÃO</strong>HARD GATE — não atravessar automaticamente</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05. HARD GATE -->
+    <section id="antes-restore" class="secao emergency-keep">
+      <div class="interno">
+        <p class="sec-eyebrow">05 · Hard Gate</p>
+        <h2>Antes de qualquer restore</h2>
+        <div class="card critical">
+          <h3 class="card-title-crit">🔴 Antes de qualquer restore em produção</h3>
+          <ul class="checklist" data-storage-group="hardgate">
+            <li><input type="checkbox" id="hg-1" data-key="hg-1"><label for="hg-1">incidente identificado</label></li>
+            <li><input type="checkbox" id="hg-2" data-key="hg-2"><label for="hg-2">escopo conhecido</label></li>
+            <li><input type="checkbox" id="hg-3" data-key="hg-3"><label for="hg-3">backup conhecido</label></li>
+            <li><input type="checkbox" id="hg-4" data-key="hg-4"><label for="hg-4">checksum válido</label></li>
+            <li><input type="checkbox" id="hg-5" data-key="hg-5"><label for="hg-5">restore isolado/rehearsal PASS quando aplicável</label></li>
+            <li><input type="checkbox" id="hg-6" data-key="hg-6"><label for="hg-6">impacto conhecido</label></li>
+            <li><input type="checkbox" id="hg-7" data-key="hg-7"><label for="hg-7">plano de rollback</label></li>
+            <li><input type="checkbox" id="hg-8" data-key="hg-8"><label for="hg-8">decisão humana coordenada/autorizada</label></li>
+          </ul>
+          <button class="clear-btn" data-clear-group="hardgate" type="button">Limpar checklist</button>
+          <p style="margin-top:.6rem;"><strong>Se UM item não estiver confirmado, o restore em produção não está autorizado.</strong></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06. DEPOIS DO RESTORE -->
+    <section id="depois-restore" class="secao hide-in-emergency">
+      <div class="interno">
+        <p class="sec-eyebrow">06 · Verificação</p>
+        <h2>Checklist depois do restore</h2>
+        <div class="card">
+          <ul class="checklist" data-storage-group="postrestore">
+            <li><input type="checkbox" id="pr-1" data-key="pr-1"><label for="pr-1">serviço responde</label></li>
+            <li><input type="checkbox" id="pr-2" data-key="pr-2"><label for="pr-2">frontend funcional</label></li>
+            <li><input type="checkbox" id="pr-3" data-key="pr-3"><label for="pr-3">backend/API funcional</label></li>
+            <li><input type="checkbox" id="pr-4" data-key="pr-4"><label for="pr-4">schema esperado</label></li>
+            <li><input type="checkbox" id="pr-5" data-key="pr-5"><label for="pr-5">dados esperados</label></li>
+            <li><input type="checkbox" id="pr-6" data-key="pr-6"><label for="pr-6">autenticação verificada separadamente</label></li>
+            <li><input type="checkbox" id="pr-7" data-key="pr-7"><label for="pr-7">entitlement consistente</label></li>
+            <li><input type="checkbox" id="pr-8" data-key="pr-8"><label for="pr-8">pagamentos reconciliados</label></li>
+            <li><input type="checkbox" id="pr-9" data-key="pr-9"><label for="pr-9">logs revisados</label></li>
+            <li><input type="checkbox" id="pr-10" data-key="pr-10"><label for="pr-10">nenhuma credencial exposta</label></li>
+            <li><input type="checkbox" id="pr-11" data-key="pr-11"><label for="pr-11">evidências preservadas</label></li>
+            <li><input type="checkbox" id="pr-12" data-key="pr-12"><label for="pr-12">incidente registrado</label></li>
+          </ul>
+          <button class="clear-btn" data-clear-group="postrestore" type="button">Limpar checklist</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07. ROLES.SQL -->
+    <section id="roles-sql" class="secao hide-in-emergency">
+      <div class="interno">
+        <p class="sec-eyebrow">07 · Papéis do banco</p>
+        <h2>roles.sql — em linguagem humana</h2>
+        <p>Durante um restore, o primeiro arquivo aplicado é sempre o <code>roles.sql</code> —
+        papéis/usuários internos do banco. Às vezes contém uma instrução que o ambiente
+        de destino gerenciado não aceita.</p>
+
+        <ol class="lista--num">
+          <li><strong>roles.sql ORIGINAL — NÃO EDITAR</strong> — sempre usar primeiro.</li>
+          <li>Falhou? <strong>PARE.</strong> Não insista, não repita automaticamente.</li>
+          <li>Verificar o rollback (confirmar mesmo que o mecanismo já garanta).</li>
+          <li>Compreender exatamente a instrução que causou o problema.</li>
+          <li>Autorização humana explícita para aquela execução específica.</li>
+          <li>Somente então: possível criar <strong>roles.restore.sql — DERIVADO CONTROLADO</strong>, omitindo apenas aquela linha. O original nunca é editado.</li>
+        </ol>
+
+        <div class="card warn" style="margin-top:1.1rem;">
+          <h3 class="card-title-warn">Caso real observado em laboratório</h3>
+          <pre>GRANT SET ON PARAMETER "log_min_messages"
+TO "supabase_realtime_admin";</pre>
+          <ul>
+            <li>Foi uma incompatibilidade real observada em teste de laboratório.</li>
+            <li><strong>Não é regra universal.</strong></li>
+            <li><strong>Não remover automaticamente</strong> em execuções futuras.</li>
+            <li><strong>Não é</strong> uma instrução <code>ALTER ROLE</code> — é <code>GRANT SET ON PARAMETER</code>, gramática diferente.</li>
+          </ul>
+        </div>
+        <p>Detalhes técnicos completos: <a href="./RUNBOOK-RECOVERY-DADOS-SUPABASE.md">RUNBOOK-RECOVERY-DADOS-SUPABASE.md</a>, seção 12.</p>
+      </div>
+    </section>
+
+    <!-- 08. SEGREDOS -->
+    <section id="segredos" class="secao emergency-keep">
+      <div class="interno">
+        <p class="sec-eyebrow">08 · Credenciais</p>
+        <h2>Segredos</h2>
+        <div class="table-scroll">
+          <table class="secrets">
+            <thead>
+              <tr><th>Credencial</th><th>Documento</th><th>Chat</th><th>Arquivo temporário</th><th>Prompt seguro</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>DB password</td><td class="no">NÃO</td><td class="no">NÃO</td><td class="no">NÃO</td><td class="yes">SIM, quando o procedimento exigir</td></tr>
+              <tr><td>PAT (Personal Access Token)</td><td class="no">NÃO</td><td class="no">NÃO</td><td class="no">NÃO</td><td>Apenas mecanismo explicitamente autorizado</td></tr>
+              <tr><td>service_role key</td><td class="no">NÃO</td><td class="no">NÃO</td><td class="no">NÃO</td><td class="no">NÃO salvo no manual</td></tr>
+              <tr><td>JWT</td><td class="no">NÃO</td><td class="no">NÃO</td><td class="no">NÃO</td><td class="no">NÃO salvo no manual</td></tr>
+              <tr><td>GPG passphrase</td><td class="no">NÃO</td><td class="no">NÃO</td><td class="no">NÃO</td><td class="yes">SIM, no prompt seguro</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card critical" style="margin-top:1rem;">
+          <h3 class="card-title-crit">🔐 Regra de ouro</h3>
+          <p>Se o guia, chat ou issue estiver pedindo para você colar uma credencial, <strong>PARE</strong> e revise o procedimento.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 09. AUTH & STORAGE -->
+    <section id="auth-storage" class="secao hide-in-emergency">
+      <div class="interno">
+        <p class="sec-eyebrow">09 · Limitação de escopo</p>
+        <h2>Auth e Storage</h2>
+        <div class="card warn">
+          <p><strong>Este recovery lógico PostgreSQL validado NÃO comprova recuperação integral de Auth ou dos bytes do Storage.</strong></p>
+          <p class="storage-tip">Isso é uma fronteira de escopo conhecida e documentada, não um esquecimento. Se um incidente envolver especificamente Auth ou Storage de forma que o recovery padrão de banco não resolva, é caso de avaliação técnica separada — escale.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. ESCALONAMENTO -->
+    <section id="escalonamento" class="secao emergency-keep">
+      <div class="interno">
+        <p class="sec-eyebrow">10 · Quem acionar</p>
+        <h2>Escalonamento técnico</h2>
+        <div class="escalation-card">
+          <p class="sec-eyebrow">Escalonamento técnico</p>
+          <p class="name">Filipe de Oliveira</p>
+          <p class="role">Responsável técnico vigente pelo desenvolvimento e infraestrutura do Método Ori</p>
+          <div class="channel-row">
+            <div><strong>Canal</strong>WhatsApp</div>
+            <div><strong>Contato direto</strong>Consultar cadastro interno de contatos do Método Ori</div>
+          </div>
+        </div>
+        <h3 style="margin-top:1.3rem;">Acione Filipe quando:</h3>
+        <ul>
+          <li>suspeita de perda ou corrupção de dados;</li>
+          <li>restore em produção está sendo considerado;</li>
+          <li>um rollback falhou;</li>
+          <li>um checksum não bateu;</li>
+          <li>a paridade (origem vs. destino de um restore) falhou;</li>
+          <li>não é possível identificar com certeza o ambiente de origem/destino;</li>
+          <li>alguma credencial pode ter sido exposta;</li>
+          <li>é necessária uma alteração destrutiva no banco;</li>
+          <li>há inconsistência financeira/de acesso com impacto relevante;</li>
+          <li>você chegou a um ponto 🟡 ou 🔴 e não tem certeza de como prosseguir.</li>
+        </ul>
+        <div class="note-box">Escalar não substitui o Hard Gate e não autoriza automaticamente restore em produção.</div>
+      </div>
+    </section>
+
+    <!-- 11. VALIDAÇÃO EMPÍRICA -->
+    <section id="validacao-empirica" class="secao hide-in-emergency">
+      <div class="interno">
+        <p class="sec-eyebrow">11 · Evidência</p>
+        <h2>O que realmente foi testado</h2>
+        <div class="validated-grid">
+          <div class="validated-card">
+            <div class="v-title">Supabase CLI</div>
+            <div class="v-version">2.113.0</div>
+            <div>Dump <code>--linked</code> passwordless</div>
+            <span class="v-badge">Validado em lab</span>
+          </div>
+          <div class="validated-card">
+            <div class="v-title">PostgreSQL / psql</div>
+            <div class="v-version">17.6</div>
+            <div>Restore + rollback transacional</div>
+            <span class="v-badge">Validado em lab</span>
+          </div>
+          <div class="validated-card">
+            <div class="v-title">SHA-256</div>
+            <div class="v-version">formato GNU</div>
+            <div>Manifesto + verificação</div>
+            <span class="v-badge">Validado</span>
+          </div>
+          <div class="validated-card">
+            <div class="v-title">GnuPG</div>
+            <div class="v-version">2.4.4</div>
+            <div>AES-256 roundtrip</div>
+            <span class="v-badge">Validado</span>
+          </div>
+          <div class="validated-card">
+            <div class="v-title">Restore não vazio</div>
+            <div class="v-version">SOURCE → TARGET</div>
+            <div>Paridade validada</div>
+            <span class="v-badge">Validado em lab</span>
+          </div>
+        </div>
+        <p class="storage-note">Toda a validação acima foi feita em projetos Supabase de laboratório, descartáveis, sem nenhum vínculo com produção — não é teste de produção.</p>
+
+        <div class="card warn" style="margin-top:1.2rem;">
+          <h3 class="card-title-warn">⚠️ Este procedimento não prova tudo</h3>
+          <ul>
+            <li><strong>AUTH</strong> — recuperação integral não validada por este trio lógico de dumps.</li>
+            <li><strong>STORAGE METADATA</strong> — não confundir com arquivos/bytes.</li>
+            <li><strong>STORAGE BYTES</strong> — fora do escopo do backup lógico PostgreSQL.</li>
+            <li><strong>SNAPSHOT ATÔMICO</strong> — os três dumps (roles/schema/data) foram comandos separados.</li>
+          </ul>
+          <p>Para backup crítico de produção, exigir quiescência ou um modelo de consistência explicitamente aceito.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12. GLOSSÁRIO -->
+    <section id="glossario" class="secao hide-in-emergency">
+      <div class="interno">
+        <p class="sec-eyebrow">12 · Termos</p>
+        <h2>Glossário</h2>
+
+        <details class="accordion-item"><summary>SOURCE</summary><div class="acc-body">Origem dos dados/backup usado numa operação.</div></details>
+        <details class="accordion-item"><summary>TARGET</summary><div class="acc-body">Destino de uma operação (ex. onde um restore de teste é aplicado). Nunca deve ser produção durante um teste isolado.</div></details>
+        <details class="accordion-item"><summary>dump</summary><div class="acc-body">Cópia lógica dos dados do banco, gerada em arquivos (<code>roles.sql</code>, <code>schema.sql</code>, <code>data.sql</code>).</div></details>
+        <details class="accordion-item"><summary>restore</summary><div class="acc-body">Processo de aplicar um dump de volta em um banco.</div></details>
+        <details class="accordion-item"><summary>rollback</summary><div class="acc-body">Desfazer uma mudança e voltar a um estado anterior conhecido.</div></details>
+        <details class="accordion-item"><summary>baseline</summary><div class="acc-body">Um "retrato" de referência dos dados, usado para comparar depois se um restore trouxe exatamente o que devia.</div></details>
+        <details class="accordion-item"><summary>paridade</summary><div class="acc-body">Quando o resultado de um restore bate exatamente com o baseline esperado.</div></details>
+        <details class="accordion-item"><summary>checksum / SHA-256</summary><div class="acc-body">Uma "impressão digital" de um arquivo, usada para provar que ele não foi alterado nem corrompido.</div></details>
+        <details class="accordion-item"><summary>GPG</summary><div class="acc-body">Ferramenta usada para criptografar (proteger com senha) o backup antes de guardá-lo.</div></details>
+        <details class="accordion-item"><summary>roles.sql</summary><div class="acc-body">Arquivo com a definição dos papéis/usuários internos do banco, aplicado primeiro em qualquer restore.</div></details>
+        <details class="accordion-item"><summary>roles.restore.sql</summary><div class="acc-body">Versão derivada do <code>roles.sql</code>, criada apenas quando necessário e autorizado, omitindo uma instrução específica incompatível com o ambiente de destino.</div></details>
+        <details class="accordion-item"><summary>Hard Gate</summary><div class="acc-body">Lista obrigatória de condições que todas precisam estar atendidas antes de um restore real em produção.</div></details>
+        <details class="accordion-item"><summary>entitlement</summary><div class="acc-body">O acesso que um cliente recebe depois de um pagamento aprovado.</div></details>
+      </div>
+    </section>
+
+    <!-- 13. FOLHA RÁPIDA -->
+    <section id="folha-rapida" class="secao emergency-keep">
+      <div class="interno">
+        <p class="sec-eyebrow">13 · Cartão de emergência</p>
+        <h2>Folha rápida de emergência</h2>
+        <div class="quick-sheet">
+          <h3>⚡ SE O MÉTODO ORI QUEBRAR AGORA</h3>
+          <ol>
+            <li><strong>Pare.</strong> Não execute nada por impulso.</li>
+            <li>Anote o que quebrou, quando começou, e o que mudou recentemente.</li>
+            <li>Confirme se envolve <strong>dados/banco</strong> — se sim, não mexa em código ainda.</li>
+            <li>Vá para "O que aconteceu?" e escolha o caminho correspondente.</li>
+            <li>Confirme o nível de ação (🟢🟡🔴).</li>
+            <li>Se for 🟡 ou 🔴: acione Filipe de Oliveira (WhatsApp) antes de agir.</li>
+            <li>Siga o runbook técnico indicado — não invente um atalho.</li>
+            <li>Depois da ação: rode o smoke/checklist de verificação.</li>
+            <li>Registre tudo (evidência) — mesmo que pareça resolvido.</li>
+            <li>Só depois de tudo validado: considere o incidente encerrado, e atualize os documentos se aprendeu algo novo.</li>
+          </ol>
+          <p><strong>Nunca:</strong> restaurar produção sozinha, apagar algo "para testar", compartilhar senha/token em qualquer chat ou documento, pular o Hard Gate porque "está com pressa".</p>
+          <div class="print-buttons hide-in-emergency">
+            <button id="printQuick" type="button">🖨️ Imprimir folha rápida</button>
+            <button id="printFull" type="button">🖨️ Imprimir manual completo</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-footer hide-in-emergency">
+      <p><strong>Método Ori</strong> — Manual de Recovery</p>
+      <p>Fonte operacional: <code>MANUAL-RECOVERY-METODO-ORI.md</code></p>
+      <p>Procedimentos técnicos: <code>RUNBOOK-RECOVERY-OPERACIONAL.md</code>, <code>RUNBOOK-RECOVERY-DADOS-SUPABASE.md</code></p>
+      <p>Este documento orienta recovery. Não executa ações automaticamente.</p>
+    </footer>
+
+  </main>
+</div>
+
+<button class="back-to-top hide-in-emergency" id="backToTop" aria-label="Voltar ao topo">↑</button>
+
+<div class="emergency-indicator" id="emergencyIndicator">
+  <span>MODO EMERGÊNCIA ATIVO</span>
+  <button id="emergencyIndicatorExit" type="button">SAIR</button>
+</div>
+
+<div class="index-overlay" id="indexOverlay" role="dialog" aria-modal="true" aria-label="Índice do manual">
+  <div class="index-overlay-inner">
+    <div class="index-overlay-head">
+      <h2>Índice</h2>
+      <button class="index-close" id="indexCloseBtn" type="button">Fechar ✕</button>
+    </div>
+    <div class="index-grid">
+      <div>
+        <p class="nav-group-title">Emergência</p>
+        <a href="#emergencia" data-target="emergencia"><span class="num">01</span>Comece aqui</a>
+        <a href="#o-que-aconteceu" data-target="o-que-aconteceu"><span class="num">02</span>O que aconteceu</a>
+        <a href="#niveis-de-acao" data-target="niveis-de-acao"><span class="num">03</span>Níveis de ação</a>
+      </div>
+      <div>
+        <p class="nav-group-title">Recovery</p>
+        <a href="#recovery-dados" data-target="recovery-dados"><span class="num">04</span>Recovery de dados</a>
+        <a href="#antes-restore" data-target="antes-restore"><span class="num">05</span>Antes do restore</a>
+        <a href="#depois-restore" data-target="depois-restore"><span class="num">06</span>Depois do restore</a>
+        <a href="#roles-sql" data-target="roles-sql"><span class="num">07</span>Roles.sql</a>
+      </div>
+      <div>
+        <p class="nav-group-title">Segurança</p>
+        <a href="#segredos" data-target="segredos"><span class="num">08</span>Segredos</a>
+        <a href="#auth-storage" data-target="auth-storage"><span class="num">09</span>Auth &amp; Storage</a>
+        <a href="#escalonamento" data-target="escalonamento"><span class="num">10</span>Escalonamento</a>
+      </div>
+      <div>
+        <p class="nav-group-title">Referência</p>
+        <a href="#validacao-empirica" data-target="validacao-empirica"><span class="num">11</span>Validação empírica</a>
+        <a href="#glossario" data-target="glossario"><span class="num">12</span>Glossário</a>
+        <a href="#folha-rapida" data-target="folha-rapida"><span class="num">13</span>Folha rápida</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var sectionLabels = {
+    "emergencia": "Comece aqui",
+    "o-que-aconteceu": "O que aconteceu",
+    "niveis-de-acao": "Níveis de ação",
+    "recovery-dados": "Recovery de dados",
+    "antes-restore": "Antes do restore",
+    "depois-restore": "Depois do restore",
+    "roles-sql": "Roles.sql",
+    "segredos": "Segredos",
+    "auth-storage": "Auth & Storage",
+    "escalonamento": "Escalonamento",
+    "validacao-empirica": "Validação empírica",
+    "glossario": "Glossário",
+    "folha-rapida": "Folha rápida"
+  };
+
+  // ---------- index overlay ----------
+  var indexOverlay = document.getElementById('indexOverlay');
+  var indexOpenBtn = document.getElementById('indexOpenBtn');
+  var indexCloseBtn = document.getElementById('indexCloseBtn');
+  function openIndex(){
+    indexOverlay.classList.add('open');
+    indexCloseBtn.focus();
+  }
+  function closeIndex(){
+    indexOverlay.classList.remove('open');
+    indexOpenBtn.focus();
+  }
+  indexOpenBtn.addEventListener('click', openIndex);
+  indexCloseBtn.addEventListener('click', closeIndex);
+  indexOverlay.addEventListener('click', function(e){
+    if (e.target === indexOverlay) closeIndex();
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && indexOverlay.classList.contains('open')) closeIndex();
+  });
+  indexOverlay.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){ closeIndex(); });
+  });
+
+  // ---------- emergency mode ----------
+  var emergencyBtn = document.getElementById('emergencyToggle');
+  var emergencyIndicator = document.getElementById('emergencyIndicator');
+  var emergencyIndicatorExit = document.getElementById('emergencyIndicatorExit');
+  var STORAGE_KEY_EMERGENCY = 'metodoOriRecovery.emergencyMode';
+  function setEmergency(on){
+    document.body.classList.toggle('emergency-mode', on);
+    emergencyBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    emergencyBtn.textContent = on ? '✅ Sair do modo emergência' : '🚨 Modo Emergência';
+    emergencyBtn.classList.toggle('active', on);
+    emergencyIndicator.classList.toggle('show', on);
+    try { sessionStorage.setItem(STORAGE_KEY_EMERGENCY, on ? '1' : '0'); } catch(e){}
+  }
+  emergencyBtn.addEventListener('click', function(){
+    setEmergency(!document.body.classList.contains('emergency-mode'));
+  });
+  emergencyIndicatorExit.addEventListener('click', function(){ setEmergency(false); });
+  try {
+    if (sessionStorage.getItem(STORAGE_KEY_EMERGENCY) === '1') setEmergency(true);
+  } catch(e){}
+
+  // ---------- scenario cards ----------
+  var scenarioButtons = document.querySelectorAll('.scenario-btn');
+  scenarioButtons.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var key = btn.getAttribute('data-scenario');
+      var panel = document.querySelector('.scenario-panel[data-panel="' + key + '"]');
+      var isOpen = panel.classList.contains('open');
+      document.querySelectorAll('.scenario-panel').forEach(function(p){ p.classList.remove('open'); });
+      scenarioButtons.forEach(function(b){ b.setAttribute('aria-pressed', 'false'); });
+      if (!isOpen) {
+        panel.classList.add('open');
+        btn.setAttribute('aria-pressed', 'true');
+        panel.scrollIntoView({block:'nearest'});
+      }
+    });
+  });
+
+  // ---------- checklist localStorage (booleans only, namespaced) ----------
+  var NS = 'metodoOriRecovery.';
+  function bindChecklist(){
+    document.querySelectorAll('.checklist input[type="checkbox"][data-key]').forEach(function(cb){
+      var key = NS + cb.getAttribute('data-key');
+      try { cb.checked = localStorage.getItem(key) === '1'; } catch(e){}
+      cb.addEventListener('change', function(){
+        try { localStorage.setItem(key, cb.checked ? '1' : '0'); } catch(e){}
+      });
+    });
+    document.querySelectorAll('[data-clear-group]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var group = btn.getAttribute('data-clear-group');
+        document.querySelectorAll('[data-storage-group="' + group + '"] input[type="checkbox"]').forEach(function(cb){
+          cb.checked = false;
+          try { localStorage.removeItem(NS + cb.getAttribute('data-key')); } catch(e){}
+        });
+      });
+    });
+  }
+  bindChecklist();
+
+  // ---------- search (offline, local) ----------
+  var searchInput = document.getElementById('searchInput');
+  var searchClear = document.getElementById('searchClear');
+  var searchStatus = document.getElementById('searchStatus');
+  var sections = Array.prototype.slice.call(document.querySelectorAll('main section'));
+  var originalHTML = {};
+  sections.forEach(function(s, i){ originalHTML[i] = s.innerHTML; });
+
+  function clearHighlights(){
+    sections.forEach(function(s, i){ s.innerHTML = originalHTML[i]; });
+    rebindDynamic();
+  }
+
+  function rebindDynamic(){
+    bindChecklist();
+    document.querySelectorAll('.scenario-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var key = btn.getAttribute('data-scenario');
+        var panel = document.querySelector('.scenario-panel[data-panel="' + key + '"]');
+        var isOpen = panel.classList.contains('open');
+        document.querySelectorAll('.scenario-panel').forEach(function(p){ p.classList.remove('open'); });
+        document.querySelectorAll('.scenario-btn').forEach(function(b){ b.setAttribute('aria-pressed', 'false'); });
+        if (!isOpen) { panel.classList.add('open'); btn.setAttribute('aria-pressed', 'true'); }
+      });
+    });
+  }
+
+  function escapeRegExp(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+  function runSearch(term){
+    term = term.trim();
+    if (!term) { clearHighlights(); searchStatus.textContent = ''; sections.forEach(function(s){ s.style.opacity=''; }); return; }
+    clearHighlights();
+    var re = new RegExp('(' + escapeRegExp(term) + ')', 'gi');
+    var matches = 0;
+    sections.forEach(function(s){
+      var hasMatch = re.test(s.textContent);
+      re.lastIndex = 0;
+      s.style.opacity = hasMatch ? '1' : '.3';
+      if (hasMatch) { matches++; walkAndHighlight(s, re); }
+    });
+    searchStatus.textContent = matches + ' seção(ões) com resultado para "' + term + '".';
+  }
+
+  function walkAndHighlight(node, re){
+    var walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT, null, false);
+    var textNodes = [];
+    var n;
+    while ((n = walker.nextNode())) { textNodes.push(n); }
+    textNodes.forEach(function(tn){
+      if (!tn.nodeValue || !re.test(tn.nodeValue)) { re.lastIndex = 0; return; }
+      re.lastIndex = 0;
+      var span = document.createElement('span');
+      span.innerHTML = tn.nodeValue.replace(re, '<mark class="search-hit">$1</mark>');
+      tn.parentNode.replaceChild(span, tn);
+    });
+  }
+
+  var searchTimer;
+  searchInput.addEventListener('input', function(){
+    clearTimeout(searchTimer);
+    var val = searchInput.value;
+    searchTimer = setTimeout(function(){ runSearch(val); }, 150);
+  });
+  searchClear.addEventListener('click', function(){
+    searchInput.value = '';
+    clearHighlights();
+    searchStatus.textContent = '';
+    sections.forEach(function(s){ s.style.opacity = ''; });
+  });
+
+  // ---------- print buttons ----------
+  var printQuick = document.getElementById('printQuick');
+  var printFull = document.getElementById('printFull');
+  if (printQuick) {
+    printQuick.addEventListener('click', function(){
+      document.body.classList.add('print-quick-only');
+      window.print();
+      setTimeout(function(){ document.body.classList.remove('print-quick-only'); }, 300);
+    });
+  }
+  if (printFull) {
+    printFull.addEventListener('click', function(){ window.print(); });
+  }
+
+  // ---------- back to top ----------
+  var backToTop = document.getElementById('backToTop');
+  window.addEventListener('scroll', function(){
+    backToTop.classList.toggle('show', window.scrollY > 500);
+  });
+  backToTop.addEventListener('click', function(){
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // ---------- reading progress + scrollspy (rail active + topbar label) ----------
+  var progressBar = document.getElementById('progressBar');
+  var currentLabel = document.getElementById('currentSectionLabel');
+  var railLinks = document.querySelectorAll('.nav-list a[data-target]');
+  var sectionEls = Array.prototype.slice.call(document.querySelectorAll('main section[id]'));
+
+  function updateProgressAndSpy(){
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = docHeight > 0 ? Math.min(100, Math.max(0, (scrollTop / docHeight) * 100)) : 0;
+    progressBar.style.width = pct + '%';
+
+    var current = sectionEls[0];
+    var offset = 90;
+    for (var i = 0; i < sectionEls.length; i++) {
+      var rect = sectionEls[i].getBoundingClientRect();
+      if (rect.top - offset <= 0) current = sectionEls[i];
+    }
+    if (current) {
+      var id = current.id;
+      currentLabel.textContent = sectionLabels[id] || '';
+      railLinks.forEach(function(a){
+        a.classList.toggle('active', a.getAttribute('data-target') === id);
+      });
+    }
+  }
+  var ticking = false;
+  window.addEventListener('scroll', function(){
+    if (!ticking) {
+      window.requestAnimationFrame(function(){ updateProgressAndSpy(); ticking = false; });
+      ticking = true;
+    }
+  });
+  updateProgressAndSpy();
+})();
+</script>
+</body>
+</html>
