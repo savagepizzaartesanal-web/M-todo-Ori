@@ -1625,7 +1625,7 @@ Marco C permanece aberto até concluir a sequência:
 
 1. acessibilidade essencial; ✅ concluída — ver seção 28.2
 2. recovery operacional; RECOVERY-1 (backup/restore) ✅ concluído, RECOVERY-2 (reconciliação pagamento → entitlement) ✅ concluído, RECOVERY-3 (rollback Cloudflare/Render) ✅ concluído, RECOVERY-4 (runbook consolidado de recuperação) ✅ concluído — ver seção 28.6
-3. observabilidade mínima ← PRÓXIMA FRENTE OBRIGATÓRIA.
+3. observabilidade mínima ← PRÓXIMA FRENTE OBRIGATÓRIA. OBS-1 ✅ concluído — ver seção 28.7; OBS-2, OBS-3 e OBS-4 pendentes.
 
 Mudanças pequenas, uma por vez.
 
@@ -1644,6 +1644,7 @@ Histórico recente concluído:
 - RECOVERY-2 ✅ (reconciliação segura de pagamento → entitlement — ver seção 28.4)
 - RECOVERY-3 ✅ (rollback Cloudflare + Render, primitivas nativas confirmadas e fallback Git validado — ver seção 28.5)
 - RECOVERY-4 ✅ (runbook consolidado de recuperação — ver seção 28.6)
+- OBS-1 ✅ (logging seguro do fluxo crítico de pagamentos — ver seção 28.7)
 
 ---
 
@@ -1989,6 +1990,42 @@ RECOVERY-4 deixa de bloquear a sequência. **Observabilidade mínima** passa a s
 
 ---
 
+# 28.7 GATE ROADMAP — OBS-1 CONCLUÍDO (LOGGING SEGURO DE PAGAMENTOS)
+
+**Data operacional:** 12/08/2026
+**Objetivo:** registrar a conclusão validada do OBS-1 — logging seguro do fluxo crítico de pagamentos — primeira etapa da frente agregada de observabilidade mínima aberta na seção 28.6.
+
+## Status
+
+**OBS-1 — ✅ CONCLUÍDO / DEPLOYADO / HEALTHY**
+
+Isso **não** encerra a frente agregada de observabilidade mínima. OBS-2, OBS-3 e OBS-4 continuam pendentes (ver "Bloqueantes agora" abaixo). O Marco C continua ABERTO.
+
+## Resultado
+
+- logging seguro implementado nos pontos críticos do fluxo de pagamentos: checkout criado/falho; webhook recebido/processado/falho; reconciliação; falhas best-effort de auditoria agora visíveis;
+- sanitização de valores externos antes de ir a log;
+- proteção contra line forging;
+- proteção contra logfmt field injection;
+- duração registrada nos pontos críticos;
+- QA final aprovado, incluindo testes adversariais de line forging, logfmt field injection e preservação do comportamento funcional;
+- commit da feature: `fd95a054b0f84d9081433e7226bc9f58db4bef44`;
+- PR #23;
+- merge commit: `af03c6c7cabba2cc84021e64c4e62bfe9f19b0e5`;
+- deploy Render: `5870712059`;
+- produção: success;
+- `GET /health`: HTTP 200, `{"ok":true}`.
+
+## Bloqueantes agora
+
+OBS-1 deixa de bloquear a sequência. **OBS-2 (global FastAPI exception handler), OBS-3 (read-only admin timeline endpoint para rastreio de venda/pagamento) e OBS-4 (Mercado Pago check em `/health/dependencies`)** continuam pendentes. Só depois delas o Marco C pode ser reavaliado para fechamento.
+
+## Próxima ação permitida
+
+**OBS-2 — global FastAPI exception handler.**
+
+---
+
 # 29. TOP PRIORIDADES
 
 ## P0
@@ -1999,7 +2036,7 @@ RECOVERY-4 deixa de bloquear a sequência. **Observabilidade mínima** passa a s
 
 ## Obrigatórias sequenciais para fechar Marco C
 2. recovery operacional — RECOVERY-1 ✅ concluído (ver seção 28.3); RECOVERY-2 ✅ concluído (ver seção 28.4); RECOVERY-3 ✅ concluído (ver seção 28.5); RECOVERY-4 ✅ concluído (ver seção 28.6)
-3. observabilidade mínima ← próxima frente obrigatória
+3. observabilidade mínima ← próxima frente obrigatória. OBS-1 ✅ concluído (ver seção 28.7); OBS-2, OBS-3 e OBS-4 ← próxima frente obrigatória
 
 ## P1 operação / pós-RC1
 4. segurança/LGPD
@@ -2114,6 +2151,7 @@ O Método Ori já possui:
 - RECOVERY-2 concluído — reconciliação administrativa segura de pagamento aprovado no Mercado Pago sem entitlement consistente, implementada, revisada, mergeada e validada em produção (ver seção 28.4);
 - RECOVERY-3 concluído — rollback operacional de frontend (Cloudflare Pages) e backend (Render) auditado, primitivas nativas comprovadas nos projetos reais e fallback `git revert -m 1` validado em clone isolado, sem executar rollback real de produção (ver seção 28.5);
 - RECOVERY-4 concluído — runbook operacional, runbook de recovery de dados e manual operacional (Markdown + HTML offline) integrados à main via PR #20; validação controlada em laboratório, com limitações explicitamente documentadas (Auth integral, Storage bytes e ausência de snapshot atômico entre os dumps separados) (ver seção 28.6);
+- OBS-1 concluído — logging seguro e sanitizado do fluxo crítico de pagamentos (checkout, webhook, reconciliação, auditoria best-effort), com proteção contra line forging e logfmt field injection, mergeado via PR #23 e validado em produção com health check 200 (ver seção 28.7);
 - auditoria UX/UI completa;
 - backlog priorizado;
 - infraestrutura Cloudflare + Render + Supabase em produção;
@@ -2131,7 +2169,7 @@ O release gate de pagamentos, o focus trap do paywall, o fechamento gratuito, o 
 
 1. acessibilidade essencial — ✅ concluída (MASTER-006, MASTER-007, MASTER-008, MASTER-009);
 2. recovery operacional — ✅ concluído: RECOVERY-1 (backup/restore Supabase), RECOVERY-2 (reconciliação pagamento → entitlement), RECOVERY-3 (rollback Cloudflare/Render) e RECOVERY-4 (runbook consolidado) todos concluídos (ver seções 28.3–28.6);
-3. fortalecer observabilidade mínima ← próxima frente obrigatória;
+3. fortalecer observabilidade mínima ← próxima frente obrigatória. OBS-1 ✅ concluído (logging seguro do fluxo crítico de pagamentos, ver seção 28.7); OBS-2/OBS-3/OBS-4 ← próxima frente obrigatória;
 4. consolidar o P1 com clientes;
 5. revisar a arquitetura de IA com a especialista;
 6. avançar para RC2 / Produto 2.
