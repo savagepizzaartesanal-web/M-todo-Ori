@@ -22,6 +22,7 @@ from app.services.payment_service import (
     map_mercado_pago_status,
     process_mercado_pago_webhook,
     reconcile_payment_by_admin,
+    sanitize_log_value,
 )
 from app.schemas.payments import PaymentReconcileRequest
 
@@ -191,6 +192,7 @@ class FakeRepository:
         self.fail_update_order = False
         self.fail_update_admin_event = False
         self.fail_grant_entitlement = False
+        self.fail_create_webhook_event = False
 
     async def fetch_current_cliente(self, *, user_id: str, email: str | None):
         for cliente in self.clientes.values():
@@ -263,6 +265,8 @@ class FakeRepository:
         return self.webhook_events.get((provider, provider_event_id))
 
     async def create_webhook_event(self, payload: dict):
+        if self.fail_create_webhook_event:
+            raise HTTPException(status_code=502, detail="create_webhook_event failed")
         key = (payload["provider"], payload["provider_event_id"])
         if key in self.webhook_events:
             return self.webhook_events[key]
@@ -500,6 +504,120 @@ class MercadoPagoStatusMappingTest(unittest.TestCase):
         self.assertEqual(map_mercado_pago_status("refunded"), "refunded")
         self.assertEqual(map_mercado_pago_status("charged_back"), "refunded")
         self.assertEqual(map_mercado_pago_status("unexpected"), "error")
+
+
+class SanitizeLogValueTest(unittest.TestCase):
+    # OBS-1.1 — Finding 1: sanitização de valores externos usados em logging.
+    def test_neutralizes_newline(self):
+        result = sanitize_log_value("payment\nevent=fake.injected")
+
+        self.assertNotIn("\n", result)
+        self.assertNotIn("\r", result)
+
+    def test_neutralizes_carriage_return(self):
+        result = sanitize_log_value("payment\revent=fake.injected")
+
+        self.assertNotIn("\r", result)
+
+    def test_neutralizes_control_characters(self):
+        result = sanitize_log_value("payment\x00\x1b[31mred")
+
+        self.assertNotIn("\x00", result)
+        self.assertNotIn("\x1b", result)
+
+    def test_truncates_excessively_large_value(self):
+        huge_value = "a" * 5000
+
+        result = sanitize_log_value(huge_value)
+
+        self.assertLess(len(result), 5000)
+        self.assertLessEqual(len(result), 200)
+        self.assertTrue(result.endswith('...[truncated]"'))
+
+    def test_preserves_normal_value_readable(self):
+        self.assertEqual(sanitize_log_value("payment"), '"payment"')
+        self.assertEqual(sanitize_log_value("pay-123"), '"pay-123"')
+
+    def test_does_not_raise_on_none(self):
+        self.assertEqual(sanitize_log_value(None), '"None"')
+
+    def test_does_not_raise_on_unexpected_dict_or_list(self):
+        self.assertEqual(sanitize_log_value({"a": "b"}), "[unsupported_log_value_type]")
+        self.assertEqual(sanitize_log_value([1, 2, 3]), "[unsupported_log_value_type]")
+
+    # OBS-1.2 — Finding 1 (remediação): valores externos não podem produzir
+    # novos pares key=value logfmt interpretáveis, mesmo por leitura visual
+    # humana ou por um parser/grep ingênuo baseado em "chave=valor".
+    def _assert_no_injectable_fields(self, result: str, forbidden_tokens: list[str]) -> None:
+        for token in forbidden_tokens:
+            self.assertNotIn(
+                token,
+                result,
+                msg=f"token {token!r} apareceu de forma interpretável em {result!r}",
+            )
+        # "=" só pode aparecer escapado (\x3d) dentro do escalar citado —
+        # nunca como um separador chave=valor literal.
+        content = result[1:-1] if result.startswith('"') and result.endswith('"') else result
+        content_without_escaped_equals = content.replace("\\x3d", "")
+        self.assertNotIn("=", content_without_escaped_equals)
+
+    def test_field_injection_attempt_event_and_order_id(self):
+        malicious = "payment event=payment.webhook.processed order_id=fake"
+
+        result = sanitize_log_value(malicious)
+
+        self._assert_no_injectable_fields(
+            result,
+            ["event=payment.webhook.processed", "order_id=fake"],
+        )
+
+    def test_field_injection_attempt_status_and_level(self):
+        malicious = "payment status=approved level=ERROR"
+
+        result = sanitize_log_value(malicious)
+
+        self._assert_no_injectable_fields(result, ["status=approved", "level=ERROR"])
+
+    def test_field_injection_attempt_generic_key_value_pairs(self):
+        malicious = "foo=bar another=value"
+
+        result = sanitize_log_value(malicious)
+
+        self._assert_no_injectable_fields(result, ["foo=bar", "another=value"])
+
+    def test_field_injection_attempt_with_extra_whitespace(self):
+        malicious = "payment   event=fake   order_id=fake"
+
+        result = sanitize_log_value(malicious)
+
+        self._assert_no_injectable_fields(result, ["event=fake", "order_id=fake"])
+
+    def test_lone_equals_sign_is_neutralized(self):
+        result = sanitize_log_value("=")
+
+        self.assertNotIn("=", result.replace("\\x3d", ""))
+
+    def test_double_quotes_are_escaped_and_do_not_break_the_scalar(self):
+        result = sanitize_log_value('"aspas"')
+
+        # O resultado deve começar e terminar com as aspas que delimitam o
+        # escalar de log — quaisquer aspas do valor original vêm escapadas
+        # no meio, não abrindo/fechando prematuramente o campo de log.
+        self.assertTrue(result.startswith('"'))
+        self.assertTrue(result.endswith('"'))
+        self.assertIn('\\"aspas\\"', result)
+
+    def test_backslash_is_escaped(self):
+        result = sanitize_log_value("back\\slash")
+
+        self.assertIn("back\\\\slash", result)
+
+    def test_tabs_and_control_characters_are_escaped_not_raw(self):
+        result = sanitize_log_value("payment\tvalue\x01\x1f")
+
+        self.assertNotIn("\t", result)
+        self.assertNotIn("\x01", result)
+        self.assertNotIn("\x1f", result)
 
 
 class PaymentServiceTest(unittest.IsolatedAsyncioTestCase):
@@ -1243,6 +1361,155 @@ class PaymentServiceTest(unittest.IsolatedAsyncioTestCase):
 
         self.assertTrue(self.repo.clientes["cliente-1"]["produto_3_liberado"])
 
+    async def test_checkout_creation_logs_event_without_secrets(self):
+        mercado_pago = FakeMercadoPago()
+
+        with self.assertLogs("app.services.payment_service", level="INFO") as logs:
+            await create_checkout(
+                payload_product_code="produto_1_completo",
+                current_user=self.user,
+                repository=self.repo,
+                mercado_pago=mercado_pago,
+            )
+
+        joined = "\n".join(logs.output)
+        self.assertIn("payment.checkout.created", joined)
+        self.assertIn("order-1", joined)
+        self.assertNotIn("token", joined.lower())
+        self.assertNotIn("secret", joined.lower())
+        self.assertNotIn(self.user.email, joined)
+
+    async def test_webhook_logs_received_and_processed_events_without_secrets(self):
+        order = await self.create_pending_order()
+
+        with self.assertLogs("app.services.payment_service", level="INFO") as logs:
+            result = await self.process_payment_webhook(
+                order,
+                {
+                    "id": "pay-1",
+                    "external_reference": order["external_reference"],
+                    "transaction_amount": 99,
+                    "currency_id": "BRL",
+                    "status": "approved",
+                },
+            )
+
+        self.assertEqual(result["status"], "processed")
+        joined = "\n".join(logs.output)
+        self.assertIn("payment.webhook.received", joined)
+        self.assertIn("payment.webhook.processed", joined)
+        self.assertNotIn("token", joined.lower())
+        self.assertNotIn("secret", joined.lower())
+        self.assertNotIn("cliente@example.com", joined)
+
+    # OBS-1.1 — Finding 1: event_type malicioso (webhook body) não consegue
+    # quebrar a linha de log nem forjar uma entrada aparentando ser real.
+    async def test_webhook_malicious_event_type_does_not_forge_log_line(self):
+        malicious_event_type = "payment\nevent=payment.webhook.processed order_id=fake"
+        data_id = "pay-1"
+
+        with patch.dict("os.environ", {"MERCADO_PAGO_WEBHOOK_SECRET": SECRET}):
+            with self.assertLogs("app.services.payment_service", level="INFO") as logs:
+                result = await process_mercado_pago_webhook(
+                    headers=signed_headers(data_id),
+                    query_params={"data.id": data_id},
+                    payload={
+                        "id": "event-malicious-type",
+                        "type": malicious_event_type,
+                        "data": {"id": data_id},
+                    },
+                    repository=self.repo,
+                    mercado_pago=FakeMercadoPago(),
+                )
+
+        # Comportamento funcional preservado: tipo não reconhecido é ignorado
+        # normalmente, como qualquer evento fora de PAYMENT_EVENT_TYPES.
+        self.assertEqual(result["status"], "ignored")
+
+        received_records = [
+            record
+            for record in logs.records
+            if "payment.webhook.received" in record.getMessage()
+        ]
+        self.assertEqual(len(received_records), 1)
+
+        for record in logs.records:
+            message = record.getMessage()
+            # Núcleo do Finding 1: nenhuma quebra de linha real chega ao
+            # formatter — impede que o valor externo crie uma segunda
+            # "linha" de log que pareça um evento genuíno independente.
+            self.assertNotIn("\n", message)
+            self.assertNotIn("\r", message)
+            # OBS-1.2 — Finding 1 (remediação): o valor externo também não
+            # pode surgir como novos campos logfmt interpretáveis
+            # (`event=`/`order_id=`) dentro da mesma linha.
+            self.assertNotIn("event=payment.webhook.processed", message)
+            self.assertNotIn("order_id=fake", message)
+
+    # OBS-1.1 — Finding 1: data_id malicioso (query param) também não
+    # consegue quebrar a linha de log nem forjar entradas.
+    async def test_webhook_malicious_data_id_does_not_forge_log_line(self):
+        malicious_data_id = "pay-1\r\nevent=payment.webhook.processed order_id=fake"
+
+        with patch.dict("os.environ", {"MERCADO_PAGO_WEBHOOK_SECRET": SECRET}):
+            with self.assertLogs("app.services.payment_service", level="INFO") as logs:
+                result = await process_mercado_pago_webhook(
+                    headers=signed_headers(malicious_data_id),
+                    query_params={"data.id": malicious_data_id},
+                    payload={
+                        "id": "event-malicious-data-id",
+                        "type": "merchant_order",
+                        "data": {"id": malicious_data_id},
+                    },
+                    repository=self.repo,
+                    mercado_pago=FakeMercadoPago(),
+                )
+
+        self.assertEqual(result["status"], "ignored")
+
+        received_records = [
+            record
+            for record in logs.records
+            if "payment.webhook.received" in record.getMessage()
+        ]
+        self.assertEqual(len(received_records), 1)
+
+        for record in logs.records:
+            message = record.getMessage()
+            self.assertNotIn("\n", message)
+            self.assertNotIn("\r", message)
+            # OBS-1.2 — Finding 1 (remediação): idem para data_id malicioso.
+            self.assertNotIn("event=payment.webhook.processed", message)
+            self.assertNotIn("order_id=fake", message)
+
+    # OBS-1.1 — Finding 1: valor externo excessivamente grande é truncado
+    # antes de entrar na linha de log.
+    async def test_webhook_oversized_event_type_is_truncated_in_log(self):
+        oversized_event_type = "payment" + ("x" * 5000)
+        data_id = "pay-1"
+
+        with patch.dict("os.environ", {"MERCADO_PAGO_WEBHOOK_SECRET": SECRET}):
+            with self.assertLogs("app.services.payment_service", level="INFO") as logs:
+                await process_mercado_pago_webhook(
+                    headers=signed_headers(data_id),
+                    query_params={"data.id": data_id},
+                    payload={
+                        "id": "event-oversized",
+                        "type": oversized_event_type,
+                        "data": {"id": data_id},
+                    },
+                    repository=self.repo,
+                    mercado_pago=FakeMercadoPago(),
+                )
+
+        received_records = [
+            record
+            for record in logs.records
+            if "payment.webhook.received" in record.getMessage()
+        ]
+        self.assertEqual(len(received_records), 1)
+        self.assertLess(len(received_records[0].getMessage()), 5000)
+
     async def test_responses_do_not_expose_secrets(self):
         mercado_pago = FakeMercadoPago()
 
@@ -1670,6 +1937,40 @@ class ReconcilePaymentServiceTest(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response.result, "reconciled")
         self.assertTrue(self.repo.clientes["cliente-1"]["produto_1_completo_liberado"])
 
+    # OBS-1.1 — Finding 3: falha na atualização final da auditoria gera log
+    # seguro (payment.reconciliation.final_audit_failed) e continua best-
+    # effort — não quebra a reconciliação, não altera entitlement/order.
+    async def test_reconcile_final_audit_failure_logs_safely_without_breaking_flow(self):
+        order = await self.create_order_for_reconcile()
+        self.repo.fail_update_admin_event = True
+        payment = {
+            "id": "pay-1",
+            "external_reference": order["external_reference"],
+            "transaction_amount": 99,
+            "currency_id": "BRL",
+            "status": "approved",
+        }
+
+        with self.assertLogs("app.services.payment_service", level="WARNING") as logs:
+            response = await self.reconcile(mercado_pago=FakeMercadoPago(payment=payment))
+
+        self.assertEqual(response.result, "reconciled")
+        self.assertEqual(response.order_id, order["id"])
+        self.assertTrue(self.repo.clientes["cliente-1"]["produto_1_completo_liberado"])
+        self.assertEqual(self.repo.orders[order["id"]]["status"], "approved")
+
+        joined = "\n".join(logs.output)
+        self.assertIn("payment.reconciliation.final_audit_failed", joined)
+        self.assertIn(f"order_id={order['id']}", joined)
+        self.assertIn("result=reconciled", joined)
+        self.assertIn("status_code=502", joined)
+        self.assertIn("exception_type=HTTPException", joined)
+        self.assertNotIn("update_admin_event failed", joined)
+        self.assertNotIn("token", joined.lower())
+        self.assertNotIn("secret", joined.lower())
+        self.assertNotIn("admin@example.com", joined)
+        self.assertNotIn("cliente@example.com", joined)
+
     # 21. repetição após reconciled -> already_entitled, order sincronizada
     async def test_reconcile_repeat_after_reconciled_returns_already_entitled(self):
         order = await self.create_order_for_reconcile()
@@ -1710,6 +2011,29 @@ class ReconcilePaymentServiceTest(unittest.IsolatedAsyncioTestCase):
         results_set = {response.result for response in results}
         self.assertTrue(results_set.issubset({"reconciled", "already_entitled"}))
         self.assertGreaterEqual(len(self.repo.admin_events), 1)
+
+    # OBS-1: falha da auditoria best-effort (sem client resolvido) não
+    # mascara o resultado de negócio, mas gera log seguro de aviso.
+    async def test_reconcile_audit_failure_is_logged_without_breaking_flow(self):
+        self.repo.fail_create_webhook_event = True
+        payment = {
+            "id": "pay-1",
+            "external_reference": "ref-inexistente",
+            "transaction_amount": 99,
+            "currency_id": "BRL",
+            "status": "approved",
+        }
+
+        with self.assertLogs("app.services.payment_service", level="WARNING") as logs:
+            response = await self.reconcile(mercado_pago=FakeMercadoPago(payment=payment))
+
+        self.assertEqual(response.result, "inconsistency_requires_manual_review")
+        self.assertEqual(response.reason, "order_not_found")
+        joined = "\n".join(logs.output)
+        self.assertIn("payment.reconciliation.audit_failed", joined)
+        self.assertNotIn("token", joined.lower())
+        self.assertNotIn("secret", joined.lower())
+        self.assertNotIn("admin@example.com", joined)
 
     # 24. usuário autenticado não-admin -> 403, nenhuma operação de pagamento
     async def test_reconcile_rejects_non_admin_without_touching_payment(self):

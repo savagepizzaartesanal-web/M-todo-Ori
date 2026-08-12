@@ -1,4 +1,7 @@
+import json
+import logging
 import os
+import time
 from datetime import UTC, datetime
 from typing import Any
 from uuid import uuid4
@@ -22,6 +25,57 @@ from app.services.mercado_pago_service import (
     validate_mercado_pago_signature,
 )
 from app.services.supabase_admin_service import SupabaseAdminRepository
+
+logger = logging.getLogger(__name__)
+
+# OBS-1.1 — limite de comprimento aplicado a valores externos antes de
+# entrarem em uma linha de log. Não afeta o valor de negócio, somente a
+# representação usada em logging.
+_LOG_VALUE_MAX_LENGTH = 200
+
+
+def sanitize_log_value(value: Any) -> str:
+    """Converte um valor potencialmente externo (ex.: campos de webhook) em
+    uma representação segura e inequívoca para logging no formato logfmt
+    (`event=... key=value key=value`).
+
+    Nunca deve ser usado para decisão de negócio, comparação de IDs,
+    persistência de payload ou validação de assinatura — somente para a
+    string que entra na chamada de logger.*(...).
+
+    A saída é sempre um único escalar citado (quoted), gerado via
+    `json.dumps`, que escapa aspas, backslashes, quebras de linha/retorno de
+    carro e demais caracteres de controle — o que impede tanto "line
+    forging" (injeção de novas linhas de log) quanto quebra da linha por
+    aspas/backslash não escapados. Além disso, todo caractere `=` contido no
+    valor é neutralizado (`\\x3d`) para que conteúdo externo nunca possa ser
+    lido, por humano ou por parser simples, como um novo par `key=value`
+    dentro do formato logfmt (prevenção de "logfmt field injection"). O
+    resultado final é truncado para nunca ultrapassar
+    `_LOG_VALUE_MAX_LENGTH` caracteres, e a função nunca lança exceção,
+    mesmo para tipos inesperados (dict/list/None/objetos).
+    """
+    if isinstance(value, dict | list):
+        return "[unsupported_log_value_type]"
+
+    try:
+        text = str(value)
+    except Exception:
+        return "[unloggable_value]"
+
+    quoted = json.dumps(text)
+    # Neutraliza "=" dentro do escalar citado para que tokens externos
+    # (ex.: "event=payment.webhook.processed order_id=fake") nunca sejam
+    # interpretáveis como novos campos logfmt reais.
+    quoted = quoted.replace("=", "\\x3d")
+
+    if len(quoted) > _LOG_VALUE_MAX_LENGTH:
+        marker = '...[truncated]"'
+        keep = max(_LOG_VALUE_MAX_LENGTH - len(marker), 1)
+        quoted = quoted[:keep] + marker
+
+    return quoted
+
 
 PAYMENT_PROVIDER = "mercado_pago"
 PAYMENT_EVENT_TYPES = {"payment"}
@@ -327,11 +381,20 @@ async def create_checkout(
             "metadata": {},
         }
     )
+    checkout_started_at = time.monotonic()
     preference = await mercado_pago.create_preference(order=order, product=product)
     checkout_url = preference.get("init_point") or preference.get("sandbox_init_point")
+    duration_ms = round((time.monotonic() - checkout_started_at) * 1000, 1)
 
     if not preference.get("id") or not checkout_url:
         await repository.update_order(order["id"], {"status": "error"})
+        logger.error(
+            "event=payment.checkout.create_failed order_id=%s product_code=%s "
+            "status=error duration_ms=%s",
+            order["id"],
+            product["product_code"],
+            duration_ms,
+        )
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
             detail="Checkout não confirmou a URL de pagamento.",
@@ -344,6 +407,15 @@ async def create_checkout(
             "checkout_url": checkout_url,
             "status": "pending",
         },
+    )
+
+    logger.info(
+        "event=payment.checkout.created order_id=%s product_code=%s "
+        "status=%s duration_ms=%s",
+        updated_order.get("id") or order["id"],
+        product["product_code"],
+        updated_order.get("status") or "pending",
+        duration_ms,
     )
 
     return PaymentCheckoutResponse(
@@ -572,7 +644,14 @@ async def process_mercado_pago_webhook(
 
     assert x_request_id is not None
     assert data_id is not None
+    webhook_started_at = time.monotonic()
     provider_event_id = get_provider_event_id(payload, x_request_id, data_id)
+    event_type = payload.get("type") or payload.get("action")
+    logger.info(
+        "event=payment.webhook.received provider_payment_id=%s event_type=%s",
+        sanitize_log_value(data_id),
+        sanitize_log_value(event_type),
+    )
     event = await repository.create_webhook_event(
         {
             "provider": PAYMENT_PROVIDER,
@@ -659,9 +738,27 @@ async def process_mercado_pago_webhook(
                 "processed_at": datetime.now(UTC).isoformat(),
             },
         )
+        duration_ms = round((time.monotonic() - webhook_started_at) * 1000, 1)
+        logger.info(
+            "event=payment.webhook.processed order_id=%s provider_payment_id=%s "
+            "status=%s duration_ms=%s",
+            final_order["id"],
+            sanitize_log_value(data_id),
+            new_status,
+            duration_ms,
+        )
         return {"status": "processed", "event_id": event.get("id")}
 
     except HTTPException as error:
+        duration_ms = round((time.monotonic() - webhook_started_at) * 1000, 1)
+        logger.warning(
+            "event=payment.webhook.failed provider_payment_id=%s "
+            "status_code=%s duration_ms=%s exception_type=%s",
+            sanitize_log_value(data_id),
+            error.status_code,
+            duration_ms,
+            type(error).__name__,
+        )
         if event.get("id"):
             should_retry = error.status_code >= 500
             await repository.update_webhook_event(
@@ -720,8 +817,18 @@ async def _audit_reconciliation_without_client(
                 "processed_at": datetime.now(UTC).isoformat(),
             }
         )
-    except HTTPException:
-        pass
+    except HTTPException as error:
+        # Melhor esforço: a falha de auditoria não deve mascarar o resultado
+        # de negócio já decidido, mas precisa ficar visível em log seguro.
+        logger.warning(
+            "event=payment.reconciliation.audit_failed provider_payment_id=%s "
+            "result=%s reason=%s status_code=%s exception_type=%s",
+            sanitize_log_value(payment_id),
+            result,
+            reason,
+            error.status_code,
+            type(error).__name__,
+        )
 
 
 async def reconcile_payment_by_admin(
@@ -836,10 +943,26 @@ async def reconcile_payment_by_admin(
                         },
                     },
                 )
-            except HTTPException:
+            except HTTPException as error:
                 # Não mascarar o resultado de negócio já decidido; falha na
-                # auditoria final não desfaz nem esconde o efeito real.
-                pass
+                # auditoria final não desfaz nem esconde o efeito real,
+                # apenas fica visível em log seguro (best-effort).
+                logger.warning(
+                    "event=payment.reconciliation.final_audit_failed order_id=%s "
+                    "result=%s reason=%s status_code=%s exception_type=%s",
+                    order.get("id"),
+                    result,
+                    reason,
+                    error.status_code,
+                    type(error).__name__,
+                )
+
+        logger.info(
+            "event=payment.reconciliation.completed order_id=%s result=%s reason=%s",
+            order.get("id"),
+            result,
+            reason,
+        )
 
         return PaymentReconcileResponse(
             result=result,
