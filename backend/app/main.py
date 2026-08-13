@@ -7,6 +7,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from app.error_handling import SafeExceptionMiddleware
 from app.routes import (
     admin,
     admin_payments,
@@ -92,6 +93,8 @@ async def rate_limit_requests(request: Request, call_next):
     window.append(now)
     return await call_next(request)
 
+
+app.add_middleware(SafeExceptionMiddleware)
 
 app.add_middleware(
     CORSMiddleware,
