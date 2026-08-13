@@ -705,6 +705,73 @@ do snapshot:
 A evidência observada sempre prevalece sobre o snapshot para o fato
 operacional correspondente.
 
+### 22.1 Exceção — SELF_UPDATE_EQUIVALENT
+
+Quando `origin/main` observado diverge do `verified_sha` do
+snapshot, a regra padrão acima se aplica — a divergência tende a
+rebaixar a freshness para `PARTIALLY_STALE`/`STALE`. Existe uma
+exceção objetiva, restrita ao caso em que a única mudança entre
+`verified_sha` e `origin/main` é a própria atualização do arquivo
+`docs/project-state-metodo-ori.md` — situação em que nenhum commit
+pode conter o próprio SHA que o descreve, o que tornaria essa
+divergência específica um falso positivo estrutural.
+
+Nessa exceção, `verified_sha` continua significando exatamente o que
+já significa (o SHA factual contra o qual o snapshot foi
+verificado); a exceção não altera essa definição.
+
+Procedimento, sempre read-only e delegado (o `ori-orchestrator` não
+possui `Bash`/`Git`; a checagem deve ser delegada tipicamente ao
+`auditor-arquiteto`):
+
+1. Verificar que `verified_sha` é ancestral de `origin/main`
+   observado.
+2. Obter o conjunto de paths de arquivo alterados entre
+   `verified_sha..origin/main` (diff de nomes de arquivo, não de
+   conteúdo/linha).
+3. Se, e somente se, esse conjunto de paths for **exatamente**
+   `{docs/project-state-metodo-ori.md}` — nenhum path a mais, nenhum
+   a menos — classificar essa divergência de SHA como
+   `SELF_UPDATE_EQUIVALENT`.
+
+`SELF_UPDATE_EQUIVALENT` é uma classificação auxiliar do **tipo de
+divergência de SHA**, não uma quarta categoria de freshness: o
+output da seção 22 continua sendo sempre uma de `CURRENT`,
+`PARTIALLY_STALE` ou `STALE`.
+
+Quando a divergência é `SELF_UPDATE_EQUIVALENT`, essa divergência,
+sozinha, **não** rebaixa a freshness para `PARTIALLY_STALE`/`STALE`.
+A freshness pode permanecer `CURRENT`, mas somente se, além disso,
+nenhuma outra evidência operacional relevante divergir do snapshot —
+`SELF_UPDATE_EQUIVALENT` é condição necessária, não suficiente, para
+`CURRENT`, conforme a definição de `CURRENT` já dada acima.
+
+**Limites da exceção (fail-closed).** A exceção vale somente quando
+o conjunto de paths alterados for exatamente
+`docs/project-state-metodo-ori.md`. Qualquer outro path alterado no
+mesmo intervalo — mesmo um único arquivo adicional — invalida a
+exceção, e a regra normal desta seção (divergência de SHA →
+`PARTIALLY_STALE`/`STALE`, conforme já definido) volta a valer
+integralmente. Exemplos que **não** qualificam para a exceção:
+
+- `project-state-metodo-ori.md` + `ROADMAP-PRODUCAO-METODO-ORI.md`;
+- `project-state-metodo-ori.md` + `ORCHESTRATOR.md`;
+- `project-state-metodo-ori.md` + qualquer adapter
+  (`.claude/agents/*.md`);
+- `project-state-metodo-ori.md` + qualquer arquivo de código;
+- `project-state-metodo-ori.md` + qualquer arquivo de infra;
+- `project-state-metodo-ori.md` + qualquer outro documento.
+
+Esta exceção não autoriza, em nenhuma hipótese: edição automática do
+próprio snapshot, Git write, edição de roadmap, mutação de runtime,
+ou qualquer correção automática. Continuam valendo, sem exceção, as
+restrições já listadas nesta seção 22 (não corrigir automaticamente,
+não atualizar Git, não editar roadmap, não tocar runtime, não
+atualizar `project-state-metodo-ori.md` automaticamente, reportar a
+divergência no `HUMAN_HANDOFF_PACKET`). A checagem de paths alterados
+é sempre read-only e feita por delegação a um agente especialista —
+nunca executada diretamente pelo `ori-orchestrator`.
+
 ---
 
 ## 23. PROJECT-STATE UPDATE POLICY
@@ -742,6 +809,17 @@ existente na state machine (seção 3), o `ori-orchestrator` deve:
 
 Atualizar `project-state-metodo-ori.md` nunca carrega autorização
 automática para commit, push, PR ou merge.
+
+### 23.1 Isolamento do commit para elegibilidade a SELF_UPDATE_EQUIVALENT
+
+Para que uma atualização futura de `docs/project-state-metodo-ori.md`
+possa se qualificar como `SELF_UPDATE_EQUIVALENT` (seção 22.1) depois
+de mergeada, o commit/PR que a introduz deve ser **isolado** de
+qualquer outra mudança versionada — não deve tocar nenhum outro
+arquivo no mesmo commit/merge. Uma atualização do snapshot misturada
+com outras mudanças de arquivo no mesmo commit/merge **não** recebe
+essa equivalência automaticamente; nesse caso, a divergência de SHA
+resultante segue a regra normal da seção 22.
 
 ---
 
