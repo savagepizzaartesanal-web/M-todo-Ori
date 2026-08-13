@@ -2,9 +2,9 @@
 
 document_role: derived_operational_snapshot  
 authoritative: false  
-last_verified_at: `2026-08-12T15:36:20-03:00`  
+last_verified_at: `2026-08-13T10:20:00-03:00`  
 verified_against: `origin/main`  
-verified_sha: `b39aebc370a4a9ea45042b7d80309b11a47a3c7c`  
+verified_sha: `4f9c75f720f894271d3a56c5828f88c83698bf2d`  
 escopo: fontes versionadas no repo isolado `/tmp/metodo-ori-project-sources`
 
 Aviso de revalidação temporal: este é um save game operacional curto, não um
@@ -72,7 +72,9 @@ Fontes prioritárias lidas nesta execução:
 - código de health/pagamentos em `backend/app/routes/health.py`,
   `backend/app/main.py`, `backend/app/routes/payments.py`,
   `backend/app/services/payment_service.py` e
-  `backend/app/services/mercado_pago_service.py`.
+  `backend/app/services/mercado_pago_service.py`;
+- `docs/agent-system/ORCHESTRATOR.md`;
+- PR #25 e PR #26 (observados como MERGED em `origin/main`).
 
 ## Estado Operacional Atual
 
@@ -184,14 +186,40 @@ Pagamentos:
 - `/health/dependencies` existe no código, mas OBS-4 Mercado Pago check em
   `/health/dependencies` segue pendente; o endpoint atual checa Supabase e IA,
   não Mercado Pago.
-- AGENTS-2 / `ori-orchestrator`: não há evidência versionada no SHA verificado
-  de implementação desse item. Existem `.agents`, `.claude/agents` e
-  `.codex/agents`, mas nenhum arquivo/registro `ori-orchestrator` encontrado.
-- `INFRA-RENDER-1`: rótulo literal não encontrado nas fontes checadas. Há,
-  porém, dívida/registro sobre Render, Gemini, Auto-Deploy, rollback e
-  necessidade de verificar estado do Auto-Deploy após rollback.
+- AGENTS-2 / `ori-orchestrator`: COMPLETE. `ori-orchestrator` V1 está
+  INTEGRATED IN MAIN via PR #25 (MERGED) e PR #26 (MERGED).
+- `INFRA-RENDER-1`: OPEN. Merges em main, inclusive docs-only, têm disparado
+  deployment Render, o que diverge do comportamento esperado a partir do
+  `buildFilter` versionado (`backend/**`). Configuração LIVE exata do Render
+  permanece NOT_VERIFIED. Divergência observada de identidade/URL dos
+  serviços Render permanece não resolvida.
 - P2/P3 têm código e entitlements, mas isso não equivale a checkout público ou
   disponibilidade comercial na RC1.
+
+## AGENTS-2 / ori-orchestrator
+
+- AGENTS-2: COMPLETE.
+- ori-orchestrator V1: INTEGRATED IN MAIN.
+- PR #25: MERGED.
+- PR #26: MERGED.
+
+### Continuity Semantics
+
+- SELF_UPDATE_EQUIVALENT: INTEGRATED.
+- Contrato canônico: `docs/agent-system/ORCHESTRATOR.md`.
+- Resumo: a equivalência se aplica quando o único path versionado alterado
+  entre `verified_sha` e `origin/main` é exatamente
+  `docs/project-state-metodo-ori.md`.
+
+### Runtime Validation
+
+- AGENTS-2 runtime validation: COMPLETE.
+- Automatic Render deployment: OBSERVED.
+- deployment id: `5880227229`.
+- deployment SHA: `4f9c75f720f894271d3a56c5828f88c83698bf2d`.
+- production_environment: true.
+- final state: success.
+- health: HTTP 200, `{"ok":true}`.
 
 ## Regras Para Próxima Sessão
 
@@ -212,5 +240,5 @@ Pagamentos:
   `render.yaml`, `.env.example` e fallbacks antes de qualquer mudança de IA.
 - Confirmar, quando OBS-4 for autorizado, o desenho exato do Mercado Pago check
   em `/health/dependencies` sem expor secrets nem criar mutação externa.
-- Se AGENTS-2 / `ori-orchestrator` for retomado, exigir evidência versionada ou
-  ticket fonte antes de registrar como implementado.
+- Investigar `INFRA-RENDER-1`: comportamento observado de deployment Render em
+  merges docs-only diverge do `buildFilter` versionado.
