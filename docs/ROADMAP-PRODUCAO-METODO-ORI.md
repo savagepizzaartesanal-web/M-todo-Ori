@@ -1625,7 +1625,7 @@ Marco C permanece aberto até concluir a sequência:
 
 1. acessibilidade essencial; ✅ concluída — ver seção 28.2
 2. recovery operacional; RECOVERY-1 (backup/restore) ✅ concluído, RECOVERY-2 (reconciliação pagamento → entitlement) ✅ concluído, RECOVERY-3 (rollback Cloudflare/Render) ✅ concluído, RECOVERY-4 (runbook consolidado de recuperação) ✅ concluído — ver seção 28.6
-3. observabilidade mínima ← PRÓXIMA FRENTE OBRIGATÓRIA. OBS-1 ✅ concluído — ver seção 28.7; OBS-2, OBS-3 e OBS-4 pendentes.
+3. observabilidade mínima ← PRÓXIMA FRENTE OBRIGATÓRIA. OBS-1 ✅ concluído — ver seção 28.7; OBS-2 ✅ concluído — ver seção 28.8; OBS-3 e OBS-4 pendentes.
 
 Mudanças pequenas, uma por vez.
 
@@ -2026,6 +2026,42 @@ OBS-1 deixa de bloquear a sequência. **OBS-2 (global FastAPI exception handler)
 
 ---
 
+# 28.8 GATE ROADMAP — OBS-2 CONCLUÍDO (GLOBAL FASTAPI EXCEPTION HANDLER)
+
+**Data operacional:** 13/08/2026
+**Objetivo:** registrar a conclusão validada do OBS-2 — tratamento global seguro de exceções no FastAPI — segunda etapa da frente agregada de observabilidade mínima aberta na seção 28.6.
+
+## Status
+
+**OBS-2 — ✅ CONCLUÍDO / DEPLOYADO / HEALTHY**
+
+Isso **não** encerra a frente agregada de observabilidade mínima. OBS-3 e OBS-4 continuam pendentes (ver "Bloqueantes agora" abaixo). O Marco C continua ABERTO.
+
+## Resultado
+
+- tratamento global seguro de exceções implementado no FastAPI;
+- exceção inesperada ocorrida antes do envio da resposta retorna 500 público genérico ao cliente;
+- mensagens internas e traceback não são expostos na resposta ao cliente;
+- logging seguro da exceção validado;
+- comportamento de `HTTPException` e `RequestValidationError` preservado sem regressão;
+- cabeçalhos CORS preservados na resposta safe 500;
+- exceção ocorrida após o início do envio da resposta (late-response exception) permanece limitação conhecida, não bloqueante no backend atual;
+- QA final aprovado: testes direcionados ao OBS-2 12/12 PASS; suíte completa do backend 149/149 PASS; validação de integração em runtime PASS;
+- PR #28;
+- merge commit: `6acc1c0da131fcccb46750c7addaabd4f6752019`;
+- produção: deployada e saudável;
+- `GET /health`: HTTP 200, `{"ok":true}`.
+
+## Bloqueantes agora
+
+OBS-2 deixa de bloquear a sequência. **OBS-3 (read-only admin timeline endpoint para rastreio de venda/pagamento) e OBS-4 (Mercado Pago check em `/health/dependencies`)** continuam pendentes. Só depois delas o Marco C pode ser reavaliado para fechamento.
+
+## Próxima ação permitida
+
+**OBS-3 — read-only admin timeline endpoint para rastreio de venda/pagamento.**
+
+---
+
 # 29. TOP PRIORIDADES
 
 ## P0
@@ -2036,7 +2072,7 @@ OBS-1 deixa de bloquear a sequência. **OBS-2 (global FastAPI exception handler)
 
 ## Obrigatórias sequenciais para fechar Marco C
 2. recovery operacional — RECOVERY-1 ✅ concluído (ver seção 28.3); RECOVERY-2 ✅ concluído (ver seção 28.4); RECOVERY-3 ✅ concluído (ver seção 28.5); RECOVERY-4 ✅ concluído (ver seção 28.6)
-3. observabilidade mínima ← próxima frente obrigatória. OBS-1 ✅ concluído (ver seção 28.7); OBS-2, OBS-3 e OBS-4 ← próxima frente obrigatória
+3. observabilidade mínima ← próxima frente obrigatória. OBS-1 ✅ concluído (ver seção 28.7); OBS-2 ✅ concluído (ver seção 28.8); OBS-3 e OBS-4 ← próxima frente obrigatória
 
 ## P1 operação / pós-RC1
 4. segurança/LGPD
@@ -2152,6 +2188,7 @@ O Método Ori já possui:
 - RECOVERY-3 concluído — rollback operacional de frontend (Cloudflare Pages) e backend (Render) auditado, primitivas nativas comprovadas nos projetos reais e fallback `git revert -m 1` validado em clone isolado, sem executar rollback real de produção (ver seção 28.5);
 - RECOVERY-4 concluído — runbook operacional, runbook de recovery de dados e manual operacional (Markdown + HTML offline) integrados à main via PR #20; validação controlada em laboratório, com limitações explicitamente documentadas (Auth integral, Storage bytes e ausência de snapshot atômico entre os dumps separados) (ver seção 28.6);
 - OBS-1 concluído — logging seguro e sanitizado do fluxo crítico de pagamentos (checkout, webhook, reconciliação, auditoria best-effort), com proteção contra line forging e logfmt field injection, mergeado via PR #23 e validado em produção com health check 200 (ver seção 28.7);
+- OBS-2 concluído — tratamento global seguro de exceções no FastAPI (global safe exception handling), mergeado via PR #28, commit `6acc1c0da131fcccb46750c7addaabd4f6752019`, deployado e saudável em produção (ver seção 28.8);
 - auditoria UX/UI completa;
 - backlog priorizado;
 - infraestrutura Cloudflare + Render + Supabase em produção;
@@ -2169,7 +2206,7 @@ O release gate de pagamentos, o focus trap do paywall, o fechamento gratuito, o 
 
 1. acessibilidade essencial — ✅ concluída (MASTER-006, MASTER-007, MASTER-008, MASTER-009);
 2. recovery operacional — ✅ concluído: RECOVERY-1 (backup/restore Supabase), RECOVERY-2 (reconciliação pagamento → entitlement), RECOVERY-3 (rollback Cloudflare/Render) e RECOVERY-4 (runbook consolidado) todos concluídos (ver seções 28.3–28.6);
-3. fortalecer observabilidade mínima ← próxima frente obrigatória. OBS-1 ✅ concluído (logging seguro do fluxo crítico de pagamentos, ver seção 28.7); OBS-2/OBS-3/OBS-4 ← próxima frente obrigatória;
+3. fortalecer observabilidade mínima ← próxima frente obrigatória. OBS-1 ✅ concluído (logging seguro do fluxo crítico de pagamentos, ver seção 28.7); OBS-2 ✅ concluído (global FastAPI exception handler, ver seção 28.8); OBS-3/OBS-4 ← próxima frente obrigatória;
 4. consolidar o P1 com clientes;
 5. revisar a arquitetura de IA com a especialista;
 6. avançar para RC2 / Produto 2.
