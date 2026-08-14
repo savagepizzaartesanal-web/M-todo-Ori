@@ -2,9 +2,9 @@
 
 document_role: derived_operational_snapshot  
 authoritative: false  
-last_verified_at: `2026-08-13T10:20:00-03:00`  
+last_verified_at: `2026-08-14T12:33:20-03:00`  
 verified_against: `origin/main`  
-verified_sha: `4f9c75f720f894271d3a56c5828f88c83698bf2d`  
+verified_sha: `74072b659bf8815e8c4ba5ffa459837eee732b7d`  
 escopo: fontes versionadas no repo isolado `/tmp/metodo-ori-project-sources`
 
 Aviso de revalidação temporal: este é um save game operacional curto, não um
@@ -130,16 +130,37 @@ Concluído antes deste save:
 Observabilidade mínima ainda não fecha Marco C:
 
 - OBS-1: concluído / deployado / healthy segundo roadmap;
-- OBS-2: pendente;
-- OBS-3: pendente;
+- OBS-2: CONCLUÍDO / DEPLOYADO / HEALTHY (ver seção "OBS-2 — Global FastAPI
+  Exception Handler" abaixo);
+- OBS-3: pendente — próxima ação obrigatória;
 - OBS-4: pendente.
 
 Próxima ação recomendada pelo roadmap:
 
-**OBS-2 — global FastAPI exception handler.**
+**OBS-3 — read-only admin timeline endpoint para rastreio de venda/pagamento.**
 
-Só depois de OBS-2, OBS-3 e OBS-4 o Marco C pode ser reavaliado para
-fechamento.
+OBS-2 deixa de bloquear a sequência. OBS-3 e OBS-4 continuam pendentes. Só
+depois delas o Marco C pode ser reavaliado para fechamento. Marco C permanece
+ABERTO.
+
+## OBS-2 — Global FastAPI Exception Handler
+
+- Status: COMPLETE.
+- Global FastAPI exception handling: IMPLEMENTED / MERGED / DEPLOYED /
+  HEALTHY.
+- PR #28: MERGED.
+- OBS-2 merge SHA: `6acc1c0da131fcccb46750c7addaabd4f6752019`.
+- QA: PASS.
+- Testes direcionados: 12/12 PASS.
+- Suíte backend completa: 149/149 PASS.
+- Integração em runtime: PASS.
+- Health de produção: PASS.
+
+## Roadmap Operacional Durável
+
+- Seção 28.8 do roadmap operacional registra o closeout de OBS-2.
+- Roadmap closeout PR: #29.
+- Roadmap merge SHA / baseline corrente: `74072b659bf8815e8c4ba5ffa459837eee732b7d`.
 
 ## Infraestrutura Verificada
 
