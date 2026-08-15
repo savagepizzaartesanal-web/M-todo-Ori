@@ -1482,6 +1482,7 @@ Antes de implementar:
 - [ ] resposta 2xx do Mercado Pago com corpo não-JSON não é tratada estruturalmente em `MercadoPagoClient.get_payment_for_reconciliation` — hoje resultaria em erro não controlado; identificado durante o RECOVERY-2, não corrigido, endpoint segue exclusivamente admin-only
 - [ ] `PaymentReconcileResponse.result` tipado como `str` livre, não `Literal` dos valores possíveis (`reconciled`, `already_entitled`, `rejected`, `inconsistency_requires_manual_review`, `technical_error`) — identificado durante o RECOVERY-2 (fase B1.2), não corrigido para não expandir escopo da correção
 - [ ] aviso de manutenção do GitHub Actions sobre depreciação futura de actions em Node.js 20 em favor de Node.js 24 no workflow `.github/workflows/deploy-metodo-ori.yml` — identificado durante o RECOVERY-3, não corrigido, não bloqueia deploys atuais
+- [ ] robustez do endpoint admin de timeline frente a timestamps persistidos malformados — cenário adversarial identificado durante o QA do OBS-3; permanece FOLLOW_UP / NON_BLOCKING; não houve evidência de ocorrência em produção e não foi corrigido no OBS-3 para não expandir o escopo
 - [ ] documentação histórica
 
 ---
@@ -1625,7 +1626,7 @@ Marco C permanece aberto até concluir a sequência:
 
 1. acessibilidade essencial; ✅ concluída — ver seção 28.2
 2. recovery operacional; RECOVERY-1 (backup/restore) ✅ concluído, RECOVERY-2 (reconciliação pagamento → entitlement) ✅ concluído, RECOVERY-3 (rollback Cloudflare/Render) ✅ concluído, RECOVERY-4 (runbook consolidado de recuperação) ✅ concluído — ver seção 28.6
-3. observabilidade mínima ← PRÓXIMA FRENTE OBRIGATÓRIA. OBS-1 ✅ concluído — ver seção 28.7; OBS-2 ✅ concluído — ver seção 28.8; OBS-3 e OBS-4 pendentes.
+3. observabilidade mínima ← PRÓXIMA FRENTE OBRIGATÓRIA. OBS-1 ✅ concluído — ver seção 28.7; OBS-2 ✅ concluído — ver seção 28.8; OBS-3 ✅ concluído — ver seção 28.9; OBS-4 pendente.
 
 Mudanças pequenas, uma por vez.
 
@@ -2062,6 +2063,72 @@ OBS-2 deixa de bloquear a sequência. **OBS-3 (read-only admin timeline endpoint
 
 ---
 
+# 28.9 GATE ROADMAP — OBS-3 CONCLUÍDO (ADMIN PAYMENT TIMELINE READ-ONLY)
+
+**Data operacional:** 15/08/2026
+**Objetivo:** registrar a conclusão validada do OBS-3 — endpoint administrativo read-only para diagnóstico/rastreio factual de venda/pagamento — terceira etapa da frente agregada de observabilidade mínima aberta na seção 28.6.
+
+## Status
+
+**OBS-3 — ✅ CONCLUÍDO / DEPLOYADO / HEALTHY**
+
+Isso **não** encerra a frente agregada de observabilidade mínima. OBS-4 continua pendente (ver "Bloqueantes agora" abaixo). O Marco C continua ABERTO.
+
+## Resultado
+
+- novo endpoint administrativo: `GET /api/admin/payments/{order_id}/timeline`;
+- autenticação administrativa existente: `get_current_user` + `ensure_admin`;
+- lookup primário por `payment_orders.id`;
+- endpoint READ-ONLY por design;
+- timeline factual limitada a: `ORDER_CREATED`, `PAYMENT_APPROVED` quando `approved_at` existe, `WEBHOOK_RECEIVED`, `WEBHOOK_PROCESSED` quando `processed_at` existe;
+- estado atual de pagamento e entitlement separado da timeline;
+- entitlement histórico não inventado;
+- reconciliation não apresentada como evento por order devido a linkage não determinístico;
+- unknown/legacy `product_code` degrada graciosamente com limitation explícita em vez de quebrar o endpoint;
+- response sem email, CPF, raw webhook payload, tokens ou secrets;
+- nenhuma chamada a Mercado Pago no endpoint;
+- nenhuma mutação DB;
+- nenhuma reconciliation;
+- nenhum entitlement grant.
+
+## Testes / QA
+
+- targeted OBS-3: 26/26 PASS;
+- related: 116/116 PASS;
+- backend full: 175/175 PASS;
+- adversarial privacy: PASS;
+- no-write guarantee: PASS;
+- remote CI: NO_AUTOMATED_CHECK_SIGNAL.
+
+## Versionamento
+
+- feature commit: `262e6c3bc7d083f72fb3c5bb7afd6750daaa92ac`;
+- PR #31;
+- merge commit: `51299b373332df246efe17f44e1a9027112243d4`.
+
+## Produção / runtime
+
+- merge SHA observado em dois deployments automáticos distintos;
+- ambos terminaram SUCCESS;
+- ambos responderam `GET /health`: HTTP 200, `{"ok":true}`;
+- smoke sem autenticação no endpoint novo retornou HTTP 401 em ambos, confirmando rota registrada e protegida;
+- deployment IDs: `5920776820`, `5920776802`;
+- URLs observadas: `https://metodo-ori-api-3o22.onrender.com`, `https://metodo-ori-api.onrender.com`.
+
+## Limitação / follow-up
+
+Tratamento de timestamps persistidos malformados permanece follow-up não bloqueante (ver seção 24). Não há evidência de ocorrência real em produção.
+
+## Bloqueantes agora
+
+OBS-3 deixa de bloquear a sequência. **OBS-4 (Mercado Pago check em `/health/dependencies`)** continua pendente. Só depois dela o Marco C pode ser reavaliado para fechamento.
+
+## Próxima ação permitida
+
+**OBS-4 — Mercado Pago check em `/health/dependencies`.**
+
+---
+
 # 29. TOP PRIORIDADES
 
 ## P0
@@ -2072,7 +2139,7 @@ OBS-2 deixa de bloquear a sequência. **OBS-3 (read-only admin timeline endpoint
 
 ## Obrigatórias sequenciais para fechar Marco C
 2. recovery operacional — RECOVERY-1 ✅ concluído (ver seção 28.3); RECOVERY-2 ✅ concluído (ver seção 28.4); RECOVERY-3 ✅ concluído (ver seção 28.5); RECOVERY-4 ✅ concluído (ver seção 28.6)
-3. observabilidade mínima ← próxima frente obrigatória. OBS-1 ✅ concluído (ver seção 28.7); OBS-2 ✅ concluído (ver seção 28.8); OBS-3 e OBS-4 ← próxima frente obrigatória
+3. observabilidade mínima ← próxima frente obrigatória. OBS-1 ✅ concluído (ver seção 28.7); OBS-2 ✅ concluído (ver seção 28.8); OBS-3 ✅ concluído (ver seção 28.9); OBS-4 ← próxima frente obrigatória
 
 ## P1 operação / pós-RC1
 4. segurança/LGPD
@@ -2189,6 +2256,7 @@ O Método Ori já possui:
 - RECOVERY-4 concluído — runbook operacional, runbook de recovery de dados e manual operacional (Markdown + HTML offline) integrados à main via PR #20; validação controlada em laboratório, com limitações explicitamente documentadas (Auth integral, Storage bytes e ausência de snapshot atômico entre os dumps separados) (ver seção 28.6);
 - OBS-1 concluído — logging seguro e sanitizado do fluxo crítico de pagamentos (checkout, webhook, reconciliação, auditoria best-effort), com proteção contra line forging e logfmt field injection, mergeado via PR #23 e validado em produção com health check 200 (ver seção 28.7);
 - OBS-2 concluído — tratamento global seguro de exceções no FastAPI (global safe exception handling), mergeado via PR #28, commit `6acc1c0da131fcccb46750c7addaabd4f6752019`, deployado e saudável em produção (ver seção 28.8);
+- OBS-3 concluído — timeline administrativa read-only de pagamentos integrada à `main`, validada por QA adversarial e em runtime, com health 200 e barreira de autenticação 401 observada nos deployments automáticos do merge;
 - auditoria UX/UI completa;
 - backlog priorizado;
 - infraestrutura Cloudflare + Render + Supabase em produção;
@@ -2206,7 +2274,7 @@ O release gate de pagamentos, o focus trap do paywall, o fechamento gratuito, o 
 
 1. acessibilidade essencial — ✅ concluída (MASTER-006, MASTER-007, MASTER-008, MASTER-009);
 2. recovery operacional — ✅ concluído: RECOVERY-1 (backup/restore Supabase), RECOVERY-2 (reconciliação pagamento → entitlement), RECOVERY-3 (rollback Cloudflare/Render) e RECOVERY-4 (runbook consolidado) todos concluídos (ver seções 28.3–28.6);
-3. fortalecer observabilidade mínima ← próxima frente obrigatória. OBS-1 ✅ concluído (logging seguro do fluxo crítico de pagamentos, ver seção 28.7); OBS-2 ✅ concluído (global FastAPI exception handler, ver seção 28.8); OBS-3/OBS-4 ← próxima frente obrigatória;
+3. fortalecer observabilidade mínima ← próxima frente obrigatória. OBS-1 ✅ concluído (logging seguro do fluxo crítico de pagamentos, ver seção 28.7); OBS-2 ✅ concluído (global FastAPI exception handler, ver seção 28.8); OBS-3 ✅ concluído (admin payment timeline read-only, ver seção 28.9); OBS-4 ← próxima frente obrigatória;
 4. consolidar o P1 com clientes;
 5. revisar a arquitetura de IA com a especialista;
 6. avançar para RC2 / Produto 2.
