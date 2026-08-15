@@ -374,6 +374,27 @@ class SupabaseAdminRepository:
         rows = response.json()
         return rows[0] if rows else {}
 
+    async def list_webhook_events_for_order(self, payment_order_id: str) -> list[dict]:
+        """OBS-3 — leitura estritamente read-only (GET) dos eventos de
+        webhook ligados a uma payment_order, para a timeline administrativa.
+        Seleção restrita a colunas mínimas: nunca traz payload_sanitized nem
+        qualquer outro campo sensível/arbitrário."""
+        response = await self._request(
+            "GET",
+            PAYMENT_WEBHOOK_EVENTS_TABLE,
+            params={
+                "select": "id,created_at,processed_at,payment_order_id",
+                "payment_order_id": f"eq.{payment_order_id}",
+                "order": "created_at.asc",
+            },
+        )
+        if response.status_code >= 400:
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail="Não foi possível consultar eventos de pagamento.",
+            )
+        return response.json()
+
     async def create_admin_event(self, payload: dict) -> dict:
         response = await self._request(
             "POST",

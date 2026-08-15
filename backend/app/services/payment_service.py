@@ -17,6 +17,10 @@ from app.schemas.payments import (
     PaymentListResponse,
     PaymentReconcileResponse,
     PaymentStatusResponse,
+    PaymentTimelineResponse,
+    TimelineCurrentState,
+    TimelineEvent,
+    TimelineOrderSummary,
 )
 from app.services.admin_service import ensure_admin as ensure_admin_default
 from app.services.mercado_pago_service import (
@@ -123,6 +127,30 @@ RECONCILIATION_ALLOWED_PRODUCT_CODE = "produto_1_completo"
 RECONCILIATION_PROVIDER = "internal_reconciliation"
 RECONCILIATION_EVENT_TYPE = "payment_entitlement_reconciliation_attempt"
 ADMIN_EVENT_TYPE_RECONCILIATION = "payment_entitlement_reconciliation"
+
+# OBS-3 — taxonomia V1, congelada, da timeline administrativa read-only de
+# uma payment_order. Somente estes 4 eventos, cada um sustentado por um
+# timestamp factual já persistido — nunca uma transição inferida.
+TIMELINE_EVENT_ORDER_CREATED = "ORDER_CREATED"
+TIMELINE_EVENT_PAYMENT_APPROVED = "PAYMENT_APPROVED"
+TIMELINE_EVENT_WEBHOOK_RECEIVED = "WEBHOOK_RECEIVED"
+TIMELINE_EVENT_WEBHOOK_PROCESSED = "WEBHOOK_PROCESSED"
+# Tie-breaker estável de ordenação quando dois eventos compartilham o mesmo
+# occurred_at — garante que a mesma entrada de dados sempre produza a mesma
+# sequência.
+_TIMELINE_EVENT_PRIORITY = {
+    TIMELINE_EVENT_ORDER_CREATED: 0,
+    TIMELINE_EVENT_PAYMENT_APPROVED: 1,
+    TIMELINE_EVENT_WEBHOOK_RECEIVED: 2,
+    TIMELINE_EVENT_WEBHOOK_PROCESSED: 3,
+}
+TIMELINE_LIMITATION_ENTITLEMENT_HISTORY_UNAVAILABLE = "entitlement_history_unavailable"
+TIMELINE_LIMITATION_RECONCILIATION_NOT_LINKED = (
+    "reconciliation_not_deterministically_linked_to_order"
+)
+TIMELINE_LIMITATION_ENTITLEMENT_MAPPING_UNKNOWN_FOR_PRODUCT_CODE = (
+    "entitlement_mapping_unknown_for_product_code"
+)
 
 # Mapeia as mensagens já existentes de validate_provider_payment para os
 # reasons estáveis da reconciliação, sem duplicar nenhuma validação.
@@ -1035,3 +1063,127 @@ async def reconcile_payment_by_admin(
         raise
 
     return await _finalize("reconciled", None, order_status_after=order.get("status"))
+
+
+def _timeline_sort_key(event: TimelineEvent) -> tuple:
+    return (
+        event.occurred_at,
+        _TIMELINE_EVENT_PRIORITY.get(event.event, 99),
+        event.webhook_event_id or "",
+    )
+
+
+async def get_payment_timeline(
+    *,
+    order_id: str,
+    current_user: CurrentUser,
+    repository: Any | None = None,
+    ensure_admin: Any | None = None,
+) -> PaymentTimelineResponse:
+    """OBS-3 — timeline administrativa estritamente read-only de uma
+    payment_order. Reconstrói somente fatos sustentados por timestamps já
+    persistidos (payment_orders/payment_webhook_events); nunca infere
+    histórico ausente (ex.: entitlement ou reconciliação) como evento de
+    timeline. O caminho inteiro é leitura: nenhuma chamada a reconciliação,
+    concessão de entitlement, atualização de order/webhook ou Mercado Pago.
+    """
+    ensure_admin = ensure_admin or ensure_admin_default
+    await ensure_admin(current_user)
+
+    repository = repository or get_payment_repository()
+
+    order = await repository.fetch_order_by_id(order_id)
+    if not order:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Pedido não encontrado.",
+        )
+
+    webhook_events = await repository.list_webhook_events_for_order(order_id)
+
+    events: list[TimelineEvent] = []
+
+    if order.get("created_at"):
+        events.append(
+            TimelineEvent(
+                event=TIMELINE_EVENT_ORDER_CREATED,
+                occurred_at=order["created_at"],
+                source="payment_orders",
+            )
+        )
+
+    if order.get("approved_at"):
+        events.append(
+            TimelineEvent(
+                event=TIMELINE_EVENT_PAYMENT_APPROVED,
+                occurred_at=order["approved_at"],
+                source="payment_orders",
+            )
+        )
+
+    for webhook_event in webhook_events:
+        webhook_event_id = webhook_event.get("id")
+
+        if webhook_event.get("created_at"):
+            events.append(
+                TimelineEvent(
+                    event=TIMELINE_EVENT_WEBHOOK_RECEIVED,
+                    occurred_at=webhook_event["created_at"],
+                    source="payment_webhook_events",
+                    webhook_event_id=webhook_event_id,
+                )
+            )
+
+        if webhook_event.get("processed_at"):
+            events.append(
+                TimelineEvent(
+                    event=TIMELINE_EVENT_WEBHOOK_PROCESSED,
+                    occurred_at=webhook_event["processed_at"],
+                    source="payment_webhook_events",
+                    webhook_event_id=webhook_event_id,
+                )
+            )
+
+    events.sort(key=_timeline_sort_key)
+
+    cliente = await repository.fetch_cliente_by_id(order["cliente_id"])
+    timeline_limitations = [
+        TIMELINE_LIMITATION_ENTITLEMENT_HISTORY_UNAVAILABLE,
+        TIMELINE_LIMITATION_RECONCILIATION_NOT_LINKED,
+    ]
+
+    # Lookup tolerante — ao contrário de entitlement_key_for_product (usada
+    # no fluxo de checkout), este caminho é read-only e não pode falhar com
+    # HTTPException por causa de um product_code legado/desconhecido. Uma
+    # order já persistida é válida para inspeção mesmo quando seu
+    # product_code não está (mais) no mapping de entitlements conhecido.
+    entitlement_key = ALLOWED_PRODUCT_ENTITLEMENTS.get(order["product_code"])
+    if entitlement_key is None:
+        entitlement_granted = False
+        timeline_limitations.append(
+            TIMELINE_LIMITATION_ENTITLEMENT_MAPPING_UNKNOWN_FOR_PRODUCT_CODE
+        )
+    else:
+        entitlement_granted = bool(cliente.get(entitlement_key)) if cliente else False
+
+    order_summary = TimelineOrderSummary(
+        id=order["id"],
+        cliente_id=order["cliente_id"],
+        product_code=order["product_code"],
+        provider_payment_id=order.get("provider_payment_id"),
+        status=order["status"],
+        created_at=order.get("created_at"),
+        approved_at=order.get("approved_at"),
+    )
+
+    current_state = TimelineCurrentState(
+        payment_status=order["status"],
+        entitlement_granted=entitlement_granted,
+    )
+
+    return PaymentTimelineResponse(
+        order=order_summary,
+        timeline=events,
+        current_state=current_state,
+        limitations=timeline_limitations,
+    )
