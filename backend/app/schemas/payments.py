@@ -59,6 +59,40 @@ class PaymentReconcileResponse(BaseModel):
     product_code: str | None = None
 
 
+# OBS-3 — timeline administrativa read-only de uma payment_order. Schemas
+# explícitos, com whitelist de campos, para nunca vazar colunas futuras de
+# payment_orders/payment_webhook_events/clientes através de dict genérico.
+
+
+class TimelineOrderSummary(BaseModel):
+    id: str
+    cliente_id: str
+    product_code: str
+    provider_payment_id: str | None = None
+    status: str
+    created_at: datetime | None = None
+    approved_at: datetime | None = None
+
+
+class TimelineEvent(BaseModel):
+    event: str
+    occurred_at: datetime
+    source: str
+    webhook_event_id: str | None = None
+
+
+class TimelineCurrentState(BaseModel):
+    payment_status: str
+    entitlement_granted: bool
+
+
+class PaymentTimelineResponse(BaseModel):
+    order: TimelineOrderSummary
+    timeline: list[TimelineEvent]
+    current_state: TimelineCurrentState
+    limitations: list[str]
+
+
 class PaymentProduct(BaseModel):
     model_config = ConfigDict(extra="allow")
 
