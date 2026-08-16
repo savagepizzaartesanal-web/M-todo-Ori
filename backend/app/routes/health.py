@@ -4,6 +4,7 @@ import httpx
 from fastapi import APIRouter
 
 from app.services.leitura_service import ai_reading_enabled
+from app.services.mercado_pago_service import check_mercado_pago_health
 
 router = APIRouter(tags=["health"])
 
@@ -36,6 +37,8 @@ async def dependencies_health_check():
         except httpx.HTTPError:
             supabase_reachable = False
 
+    mercado_pago_health = await check_mercado_pago_health()
+
     return {
         "ok": supabase_reachable,
         "supabase": {
@@ -46,5 +49,9 @@ async def dependencies_health_check():
             "provider": ai_provider,
             "configured": bool(ai_key),
             "reading_enabled": ai_reading_enabled(),
+        },
+        "mercado_pago": {
+            "configured": mercado_pago_health["configured"],
+            "reachable": mercado_pago_health["reachable"],
         },
     }
