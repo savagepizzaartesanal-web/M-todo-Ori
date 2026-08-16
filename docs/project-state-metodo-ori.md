@@ -2,9 +2,9 @@
 
 document_role: derived_operational_snapshot  
 authoritative: false  
-last_verified_at: `2026-08-14T12:33:20-03:00`  
+last_verified_at: `2026-08-15T16:52:09-03:00`  
 verified_against: `origin/main`  
-verified_sha: `74072b659bf8815e8c4ba5ffa459837eee732b7d`  
+verified_sha: `b4d9cce7079f02a45e4618833b103feebf0d3f4f`  
 escopo: fontes versionadas no repo isolado `/tmp/metodo-ori-project-sources`
 
 Aviso de revalidação temporal: este é um save game operacional curto, não um
@@ -132,15 +132,16 @@ Observabilidade mínima ainda não fecha Marco C:
 - OBS-1: concluído / deployado / healthy segundo roadmap;
 - OBS-2: CONCLUÍDO / DEPLOYADO / HEALTHY (ver seção "OBS-2 — Global FastAPI
   Exception Handler" abaixo);
-- OBS-3: pendente — próxima ação obrigatória;
-- OBS-4: pendente.
+- OBS-3: CONCLUÍDO / DEPLOYADO / HEALTHY (ver seção "OBS-3 — Admin Payment
+  Timeline Read-Only" abaixo);
+- OBS-4: pendente — próxima frente obrigatória.
 
 Próxima ação recomendada pelo roadmap:
 
-**OBS-3 — read-only admin timeline endpoint para rastreio de venda/pagamento.**
+**OBS-4 — Mercado Pago check em `/health/dependencies`.**
 
-OBS-2 deixa de bloquear a sequência. OBS-3 e OBS-4 continuam pendentes. Só
-depois delas o Marco C pode ser reavaliado para fechamento. Marco C permanece
+OBS-2 e OBS-3 deixam de bloquear a sequência. OBS-4 continua pendente. Só
+depois dela o Marco C pode ser reavaliado para fechamento. Marco C permanece
 ABERTO.
 
 ## OBS-2 — Global FastAPI Exception Handler
@@ -156,11 +157,34 @@ ABERTO.
 - Integração em runtime: PASS.
 - Health de produção: PASS.
 
+## OBS-3 — Admin Payment Timeline Read-Only
+
+- Status: COMPLETE / DEPLOYED / HEALTHY.
+- Endpoint: `GET /api/admin/payments/{order_id}/timeline`.
+- Natureza: admin-only, read-only por design; lookup primário por
+  `order_id`.
+- Timeline factual suportada: `ORDER_CREATED`, `PAYMENT_APPROVED`,
+  `WEBHOOK_RECEIVED`, `WEBHOOK_PROCESSED`; eventos condicionais continuam
+  condicionais aos timestamps/fatos existentes.
+- Payment status atual e entitlement atual são separados da timeline.
+- Entitlement history não disponível deterministicamente.
+- Reconciliation não é apresentada como evento por order — a ligação
+  histórica não é deterministicamente 1:1.
+- Endpoint não realiza DB writes, não chama reconciliation, não concede
+  entitlement e não consulta Mercado Pago; response não expõe email, CPF,
+  raw webhook payload, tokens ou secrets.
+- PR #31: MERGED.
+- Implementation merge SHA: `51299b373332df246efe17f44e1a9027112243d4`.
+- Runtime integração: PASS.
+- Health de produção: PASS.
+
 ## Roadmap Operacional Durável
 
 - Seção 28.8 do roadmap operacional registra o closeout de OBS-2.
-- Roadmap closeout PR: #29.
-- Roadmap merge SHA / baseline corrente: `74072b659bf8815e8c4ba5ffa459837eee732b7d`.
+- Seção 28.9 do roadmap operacional registra o closeout de OBS-3.
+- Roadmap closeout PR (OBS-2): #29.
+- Roadmap closeout PR (OBS-3): #32.
+- Roadmap merge SHA / baseline corrente: `b4d9cce7079f02a45e4618833b103feebf0d3f4f`.
 
 ## Infraestrutura Verificada
 
