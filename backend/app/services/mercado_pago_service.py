@@ -1,6 +1,7 @@
 import hashlib
 import hmac
 import os
+import time
 from decimal import Decimal, InvalidOperation
 from typing import Any
 from urllib.parse import urlparse
@@ -9,6 +10,13 @@ import httpx
 from fastapi import HTTPException, status
 
 MERCADO_PAGO_API_URL = "https://api.mercadopago.com"
+
+# OBS-4 — /health/dependencies Mercado Pago probe.
+# Process-local, best-effort, in-memory cache. Stores only the minimal
+# semantic result (configured/reachable) plus a monotonic timestamp — never
+# the access token or any provider response content.
+_HEALTH_CACHE_TTL_SECONDS = 30.0
+_health_cache: dict[str, Any] | None = None
 
 
 def get_mercado_pago_access_token() -> str:
@@ -19,6 +27,57 @@ def get_mercado_pago_access_token() -> str:
             detail="Pagamentos indisponíveis no momento.",
         )
     return token
+
+
+def _read_access_token_for_health_probe() -> str | None:
+    """Non-throwing read of the Mercado Pago access token, used only by the
+    /health/dependencies probe below. Deliberately does not reuse
+    ``get_mercado_pago_access_token`` (which raises HTTPException 500 when
+    the token is missing) so a missing token can be reported as a degraded
+    health status instead of failing the health check itself. Does not
+    change behavior for any existing caller (create_preference, get_payment,
+    etc.)."""
+    return os.getenv("MERCADO_PAGO_ACCESS_TOKEN") or None
+
+
+async def check_mercado_pago_health() -> dict[str, bool]:
+    """Best-effort Mercado Pago reachability probe for /health/dependencies.
+
+    No business entity is used and no mutation occurs: it performs a single
+    GET to /v1/payment_methods (an unauthenticated-safe, read-only,
+    account-agnostic endpoint) with an explicit 2.0s timeout. Any HTTP 2xx
+    is treated as reachable; any non-2xx, timeout, or network error is
+    treated as unreachable. Results are cached in-memory (process-local)
+    for up to 30 seconds to avoid hammering the provider on every health
+    check call.
+    """
+    global _health_cache
+
+    now = time.monotonic()
+    if _health_cache is not None and (now - _health_cache["checked_at"]) < _HEALTH_CACHE_TTL_SECONDS:
+        return {
+            "configured": _health_cache["configured"],
+            "reachable": _health_cache["reachable"],
+        }
+
+    token = _read_access_token_for_health_probe()
+    if not token:
+        result = {"configured": False, "reachable": False}
+    else:
+        reachable = False
+        try:
+            async with httpx.AsyncClient(timeout=2.0) as client:
+                response = await client.get(
+                    f"{MERCADO_PAGO_API_URL}/v1/payment_methods",
+                    headers={"Authorization": f"Bearer {token}"},
+                )
+            reachable = 200 <= response.status_code < 300
+        except httpx.HTTPError:
+            reachable = False
+        result = {"configured": True, "reachable": reachable}
+
+    _health_cache = {**result, "checked_at": now}
+    return result
 
 
 def get_mercado_pago_webhook_secret() -> str:
