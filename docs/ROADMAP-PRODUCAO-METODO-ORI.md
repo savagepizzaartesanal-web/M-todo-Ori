@@ -1577,7 +1577,7 @@ O `auth-state.json` é sensível.
 - [x] MASTER-005 recomendado
 - [x] acessibilidade essencial (MASTER-006, MASTER-007, MASTER-008, MASTER-009)
 - [x] recovery operacional (RECOVERY-1 ✅, RECOVERY-2 ✅, RECOVERY-3 ✅, RECOVERY-4 ✅ concluído — runbooks técnicos + manual operacional integrados via PR #20 — ver seção 28.6)
-- [ ] observabilidade mínima (OBS-1 ✅, OBS-2 ✅, OBS-3 ✅, OBS-4 ✅ concluído tecnicamente/runtime aceito — ver seção 28.10; project-state refresh e auditoria final de continuidade pendentes; Marco C ainda não reavaliado)
+- [x] observabilidade mínima (OBS-1–4 completos; auditoria final PASS — ver seção 28.11; Marco C permanece ABERTO — aguarda reavaliação humana explícita)
 
 ## Marco D — P1 consolidado
 - [ ] jornada comercial
@@ -1626,7 +1626,7 @@ Marco C permanece aberto até concluir a sequência:
 
 1. acessibilidade essencial; ✅ concluída — ver seção 28.2
 2. recovery operacional; RECOVERY-1 (backup/restore) ✅ concluído, RECOVERY-2 (reconciliação pagamento → entitlement) ✅ concluído, RECOVERY-3 (rollback Cloudflare/Render) ✅ concluído, RECOVERY-4 (runbook consolidado de recuperação) ✅ concluído — ver seção 28.6
-3. observabilidade mínima. OBS-1 ✅ concluído — ver seção 28.7; OBS-2 ✅ concluído — ver seção 28.8; OBS-3 ✅ concluído — ver seção 28.9; OBS-4 ✅ concluído tecnicamente/runtime aceito — ver seção 28.10. Fechamento documental agregado ← PRÓXIMA FRENTE OBRIGATÓRIA (auditoria final de continuidade de observabilidade).
+3. observabilidade mínima. OBS-1 ✅ concluído — ver seção 28.7; OBS-2 ✅ concluído — ver seção 28.8; OBS-3 ✅ concluído — ver seção 28.9; OBS-4 ✅ concluído tecnicamente/runtime aceito — ver seção 28.10; auditoria final concluída, PASS — ver seção 28.11. PRÓXIMA AÇÃO OBRIGATÓRIA: reavaliação humana do Marco C.
 
 Mudanças pequenas, uma por vez.
 
@@ -2186,6 +2186,54 @@ Atualização isolada do project-state pós-OBS-4, seguida da auditoria final de
 
 ---
 
+# 28.11 GATE ROADMAP — AUDITORIA FINAL DE OBSERVABILIDADE / FECHAMENTO DE OBSERVABILIDADE MÍNIMA (FINAL OBSERVABILITY AUDIT / MINIMUM OBSERVABILITY CLOSEOUT)
+
+**Objetivo:** registrar que a auditoria final consolidada da frente mínima de observabilidade (OBS-1–4) foi concluída e aceita.
+
+## Status
+
+- OBS-1 = COMPLETE (ver seção 28.7);
+- OBS-2 = COMPLETE (ver seção 28.8);
+- OBS-3 = COMPLETE (ver seção 28.9);
+- OBS-4 = COMPLETE (ver seção 28.10);
+- FINAL OBSERVABILITY AUDIT = PASS;
+- MINIMUM OBSERVABILITY = COMPLETE;
+- MARCO C = OPEN;
+- MARCO C REEVALUATION = READY.
+
+## Evidência aceita (handoff OBS-4.30)
+
+- Final audit: PASS;
+- Acceptance A–H: PASS;
+- Auditor result: PASS;
+- QA adversarial result: PASS;
+- Live regression: 196/196 PASS;
+- Canonical health: HTTP 200;
+- Dependency health: HTTP 200;
+- Mercado Pago visibility: configured, reachable;
+- Secrets exposed: NO.
+
+**Nota factual:** o intake OBS-4.31 não reverificou independentemente cada número acima naquela sessão específica; isso é uma limitação conhecida e aceita, não constitui finding bloqueante nesta seção.
+
+## Resultado
+
+`OBSERVABILITY_MINIMUM_CLOSEOUT = COMPLETE` — a frente mínima obrigatória de observabilidade foi satisfeita: OBS-1/2/3/4 concluídos; auditoria final concluída; regressão validada; health validado; dependency health validado; visibilidade de Mercado Pago validada; privacidade/secrets preservados.
+
+## Marco C
+
+Marco C permanece ABERTO. O fechamento da observabilidade mínima NÃO fecha Marco C — apenas satisfaz um pré-requisito técnico (`OBSERVABILITY_PREREQUISITE_COMPLETE = YES`, `MARCO_C_CLOSED = NO`). Próxima ação obrigatória: reavaliação humana do Marco C.
+
+## Dívida técnica referenciada (sem duplicação)
+
+- Malformed timestamp debt (OBS-3): permanece dívida não bloqueante já documentada em §24; não duplicada aqui, não promovida a blocker.
+- Service B: o segundo serviço Render observado não é o runtime canônico, não bloqueia, permanece dívida de infraestrutura separada não remediada (ver seção 28.10).
+
+## Próxima ação obrigatória
+
+Reavaliação humana do Marco C.
+
+---
+
 # 29. TOP PRIORIDADES
 
 ## P0
@@ -2196,7 +2244,7 @@ Atualização isolada do project-state pós-OBS-4, seguida da auditoria final de
 
 ## Obrigatórias sequenciais para fechar Marco C
 2. recovery operacional — RECOVERY-1 ✅ concluído (ver seção 28.3); RECOVERY-2 ✅ concluído (ver seção 28.4); RECOVERY-3 ✅ concluído (ver seção 28.5); RECOVERY-4 ✅ concluído (ver seção 28.6)
-3. observabilidade mínima. OBS-1 ✅ concluído (ver seção 28.7); OBS-2 ✅ concluído (ver seção 28.8); OBS-3 ✅ concluído (ver seção 28.9); OBS-4 ✅ concluído (ver seção 28.10) ← next: atualização isolada do project-state → auditoria final de continuidade de observabilidade → reavaliação do Marco C
+3. observabilidade mínima. OBS-1 ✅ concluído (ver seção 28.7); OBS-2 ✅ concluído (ver seção 28.8); OBS-3 ✅ concluído (ver seção 28.9); OBS-4 ✅ concluído (ver seção 28.10); auditoria final concluída, PASS (ver seção 28.11) ← next: reavaliação humana do Marco C
 
 ## P1 operação / pós-RC1
 4. segurança/LGPD
@@ -2314,7 +2362,7 @@ O Método Ori já possui:
 - OBS-1 concluído — logging seguro e sanitizado do fluxo crítico de pagamentos (checkout, webhook, reconciliação, auditoria best-effort), com proteção contra line forging e logfmt field injection, mergeado via PR #23 e validado em produção com health check 200 (ver seção 28.7);
 - OBS-2 concluído — tratamento global seguro de exceções no FastAPI (global safe exception handling), mergeado via PR #28, commit `6acc1c0da131fcccb46750c7addaabd4f6752019`, deployado e saudável em produção (ver seção 28.8);
 - OBS-3 concluído — timeline administrativa read-only de pagamentos integrada à `main`, validada por QA adversarial e em runtime, com health 200 e barreira de autenticação 401 observada nos deployments automáticos do merge;
-- OBS-4 concluído — health de dependências passou a incluir Mercado Pago, com runtime canônico validado e saudável; fechamento agregado de observabilidade permanece pendente apenas de continuidade documental/auditoria final (ver seção 28.10);
+- OBS-4 concluído — health de dependências passou a incluir Mercado Pago, com runtime canônico validado e saudável (ver seção 28.10); auditoria final de observabilidade concluída, PASS — observabilidade mínima tecnicamente completa; Marco C permanece ABERTO, aguardando reavaliação humana explícita (ver seção 28.11);
 - auditoria UX/UI completa;
 - backlog priorizado;
 - infraestrutura Cloudflare + Render + Supabase em produção;
@@ -2332,7 +2380,7 @@ O release gate de pagamentos, o focus trap do paywall, o fechamento gratuito, o 
 
 1. acessibilidade essencial — ✅ concluída (MASTER-006, MASTER-007, MASTER-008, MASTER-009);
 2. recovery operacional — ✅ concluído: RECOVERY-1 (backup/restore Supabase), RECOVERY-2 (reconciliação pagamento → entitlement), RECOVERY-3 (rollback Cloudflare/Render) e RECOVERY-4 (runbook consolidado) todos concluídos (ver seções 28.3–28.6);
-3. fortalecer observabilidade mínima. OBS-1 ✅ concluído (logging seguro do fluxo crítico de pagamentos, ver seção 28.7); OBS-2 ✅ concluído (global FastAPI exception handler, ver seção 28.8); OBS-3 ✅ concluído (admin payment timeline read-only, ver seção 28.9); OBS-4 ✅ concluído (Mercado Pago check em `/health/dependencies`, ver seção 28.10) ← próxima frente obrigatória: auditoria final de continuidade de observabilidade;
+3. fortalecer observabilidade mínima. OBS-1 ✅ concluído (logging seguro do fluxo crítico de pagamentos, ver seção 28.7); OBS-2 ✅ concluído (global FastAPI exception handler, ver seção 28.8); OBS-3 ✅ concluído (admin payment timeline read-only, ver seção 28.9); OBS-4 ✅ concluído (Mercado Pago check em `/health/dependencies`, ver seção 28.10); auditoria final concluída, PASS — observabilidade mínima tecnicamente completa (ver seção 28.11) ← próxima ação obrigatória: reavaliação humana do Marco C;
 4. consolidar o P1 com clientes;
 5. revisar a arquitetura de IA com a especialista;
 6. avançar para RC2 / Produto 2.
