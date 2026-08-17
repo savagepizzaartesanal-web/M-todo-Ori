@@ -1577,7 +1577,7 @@ O `auth-state.json` é sensível.
 - [x] MASTER-005 recomendado
 - [x] acessibilidade essencial (MASTER-006, MASTER-007, MASTER-008, MASTER-009)
 - [x] recovery operacional (RECOVERY-1 ✅, RECOVERY-2 ✅, RECOVERY-3 ✅, RECOVERY-4 ✅ concluído — runbooks técnicos + manual operacional integrados via PR #20 — ver seção 28.6)
-- [ ] observabilidade mínima
+- [ ] observabilidade mínima (OBS-1 ✅, OBS-2 ✅, OBS-3 ✅, OBS-4 ✅ concluído tecnicamente/runtime aceito — ver seção 28.10; project-state refresh e auditoria final de continuidade pendentes; Marco C ainda não reavaliado)
 
 ## Marco D — P1 consolidado
 - [ ] jornada comercial
@@ -1626,7 +1626,7 @@ Marco C permanece aberto até concluir a sequência:
 
 1. acessibilidade essencial; ✅ concluída — ver seção 28.2
 2. recovery operacional; RECOVERY-1 (backup/restore) ✅ concluído, RECOVERY-2 (reconciliação pagamento → entitlement) ✅ concluído, RECOVERY-3 (rollback Cloudflare/Render) ✅ concluído, RECOVERY-4 (runbook consolidado de recuperação) ✅ concluído — ver seção 28.6
-3. observabilidade mínima ← PRÓXIMA FRENTE OBRIGATÓRIA. OBS-1 ✅ concluído — ver seção 28.7; OBS-2 ✅ concluído — ver seção 28.8; OBS-3 ✅ concluído — ver seção 28.9; OBS-4 pendente.
+3. observabilidade mínima. OBS-1 ✅ concluído — ver seção 28.7; OBS-2 ✅ concluído — ver seção 28.8; OBS-3 ✅ concluído — ver seção 28.9; OBS-4 ✅ concluído tecnicamente/runtime aceito — ver seção 28.10. Fechamento documental agregado ← PRÓXIMA FRENTE OBRIGATÓRIA (auditoria final de continuidade de observabilidade).
 
 Mudanças pequenas, uma por vez.
 
@@ -2129,6 +2129,63 @@ OBS-3 deixa de bloquear a sequência. **OBS-4 (Mercado Pago check em `/health/de
 
 ---
 
+# 28.10 GATE ROADMAP — OBS-4 CONCLUÍDO (MERCADO PAGO CHECK EM /health/dependencies)
+
+**Data operacional:** 17/08/2026
+**Objetivo:** registrar a conclusão validada do OBS-4 — inclusão do Mercado Pago em `/health/dependencies` — quarta e última etapa técnica da frente agregada de observabilidade mínima aberta na seção 28.6.
+
+## Status
+
+**OBS-4 — ✅ CONCLUÍDO / DEPLOYADO / HEALTHY**
+
+Implementação mergeada; canonical runtime validado; canonical deployment saudável; nenhuma correção de código/runtime adicional necessária para OBS-4.
+
+## Resultado
+
+- `GET /health` permanece preservado, HTTP 200, `{"ok":true}`;
+- `GET /health/dependencies`: HTTP 200;
+- blocos existentes `supabase` e `ai` permanecem preservados;
+- novo bloco `mercado_pago` incluído em `/health/dependencies`;
+- no runtime canônico: `mercado_pago.configured=true`, `mercado_pago.reachable=true`;
+- contrato de privacidade PASS: sem access token, webhook secret, raw provider payload, dados de Authorization ou PII expostos.
+
+## Testes / QA
+
+- implementation QA: PASS;
+- runtime acceptance: PASS;
+- canonical runtime: PASS;
+- remote CI: NO_AUTOMATED_CHECK_SIGNAL.
+
+## Versionamento
+
+- PR #34;
+- merge SHA: `394dce5f3a3f3a1620cf5d58e9f517d71310ac5a`.
+
+## Runtime canônico
+
+- service ID `srv-d9nnvjtaeets73cc0u5g`;
+- hostname `metodo-ori-api-3o22.onrender.com`;
+- canonical runtime deployment `5936692781`, deployment SHA `394dce5f3a3f3a1620cf5d58e9f517d71310ac5a`, deployment state SUCCESS;
+- canonical runtime acceptance: PASS.
+
+## Service B / infraestrutura
+
+O segundo serviço Render observado não é o runtime canônico e não bloqueia o fechamento técnico do OBS-4; qualquer saneamento do duplicado legado permanece dívida de infraestrutura separada e não foi executado neste gate.
+
+## Observabilidade mínima
+
+OBS-1 ✅ concluído (ver seção 28.7); OBS-2 ✅ concluído (ver seção 28.8); OBS-3 ✅ concluído (ver seção 28.9); OBS-4 ✅ concluído tecnicamente / runtime aceito (este gate). O fechamento documental agregado da observabilidade mínima permanece PENDENTE de auditoria final de continuidade.
+
+## Marco C
+
+Marco C permanece ABERTO. O checkbox de observabilidade mínima permanece não marcado.
+
+## Próxima ação obrigatória
+
+Atualização isolada do project-state pós-OBS-4, seguida da auditoria final de continuidade de observabilidade (OBS-1–4); somente após essa auditoria o Marco C pode ser reavaliado para fechamento.
+
+---
+
 # 29. TOP PRIORIDADES
 
 ## P0
@@ -2139,7 +2196,7 @@ OBS-3 deixa de bloquear a sequência. **OBS-4 (Mercado Pago check em `/health/de
 
 ## Obrigatórias sequenciais para fechar Marco C
 2. recovery operacional — RECOVERY-1 ✅ concluído (ver seção 28.3); RECOVERY-2 ✅ concluído (ver seção 28.4); RECOVERY-3 ✅ concluído (ver seção 28.5); RECOVERY-4 ✅ concluído (ver seção 28.6)
-3. observabilidade mínima ← próxima frente obrigatória. OBS-1 ✅ concluído (ver seção 28.7); OBS-2 ✅ concluído (ver seção 28.8); OBS-3 ✅ concluído (ver seção 28.9); OBS-4 ← próxima frente obrigatória
+3. observabilidade mínima. OBS-1 ✅ concluído (ver seção 28.7); OBS-2 ✅ concluído (ver seção 28.8); OBS-3 ✅ concluído (ver seção 28.9); OBS-4 ✅ concluído (ver seção 28.10) ← next: atualização isolada do project-state → auditoria final de continuidade de observabilidade → reavaliação do Marco C
 
 ## P1 operação / pós-RC1
 4. segurança/LGPD
@@ -2257,6 +2314,7 @@ O Método Ori já possui:
 - OBS-1 concluído — logging seguro e sanitizado do fluxo crítico de pagamentos (checkout, webhook, reconciliação, auditoria best-effort), com proteção contra line forging e logfmt field injection, mergeado via PR #23 e validado em produção com health check 200 (ver seção 28.7);
 - OBS-2 concluído — tratamento global seguro de exceções no FastAPI (global safe exception handling), mergeado via PR #28, commit `6acc1c0da131fcccb46750c7addaabd4f6752019`, deployado e saudável em produção (ver seção 28.8);
 - OBS-3 concluído — timeline administrativa read-only de pagamentos integrada à `main`, validada por QA adversarial e em runtime, com health 200 e barreira de autenticação 401 observada nos deployments automáticos do merge;
+- OBS-4 concluído — health de dependências passou a incluir Mercado Pago, com runtime canônico validado e saudável; fechamento agregado de observabilidade permanece pendente apenas de continuidade documental/auditoria final (ver seção 28.10);
 - auditoria UX/UI completa;
 - backlog priorizado;
 - infraestrutura Cloudflare + Render + Supabase em produção;
@@ -2274,7 +2332,7 @@ O release gate de pagamentos, o focus trap do paywall, o fechamento gratuito, o 
 
 1. acessibilidade essencial — ✅ concluída (MASTER-006, MASTER-007, MASTER-008, MASTER-009);
 2. recovery operacional — ✅ concluído: RECOVERY-1 (backup/restore Supabase), RECOVERY-2 (reconciliação pagamento → entitlement), RECOVERY-3 (rollback Cloudflare/Render) e RECOVERY-4 (runbook consolidado) todos concluídos (ver seções 28.3–28.6);
-3. fortalecer observabilidade mínima ← próxima frente obrigatória. OBS-1 ✅ concluído (logging seguro do fluxo crítico de pagamentos, ver seção 28.7); OBS-2 ✅ concluído (global FastAPI exception handler, ver seção 28.8); OBS-3 ✅ concluído (admin payment timeline read-only, ver seção 28.9); OBS-4 ← próxima frente obrigatória;
+3. fortalecer observabilidade mínima. OBS-1 ✅ concluído (logging seguro do fluxo crítico de pagamentos, ver seção 28.7); OBS-2 ✅ concluído (global FastAPI exception handler, ver seção 28.8); OBS-3 ✅ concluído (admin payment timeline read-only, ver seção 28.9); OBS-4 ✅ concluído (Mercado Pago check em `/health/dependencies`, ver seção 28.10) ← próxima frente obrigatória: auditoria final de continuidade de observabilidade;
 4. consolidar o P1 com clientes;
 5. revisar a arquitetura de IA com a especialista;
 6. avançar para RC2 / Produto 2.
