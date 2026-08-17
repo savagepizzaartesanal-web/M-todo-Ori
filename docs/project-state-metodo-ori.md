@@ -2,9 +2,9 @@
 
 document_role: derived_operational_snapshot  
 authoritative: false  
-last_verified_at: `2026-08-17T14:02:07-03:00`  
+last_verified_at: `2026-08-17T18:20:42-03:00`  
 verified_against: `origin/main`  
-verified_sha: `269db3125efa5b942458b6f64c5d8e988026ece7`  
+verified_sha: `569327db8726c3ea5a772a64152e60c267f2264e`  
 escopo: fontes versionadas no repo isolado `/tmp/metodo-ori-project-sources`
 
 Aviso de revalidação temporal: este é um save game operacional curto, não um
@@ -138,18 +138,42 @@ Observabilidade mínima ainda não fecha Marco C:
 - OBS-4: COMPLETE / RUNTIME ACEITO / ROADMAP CLOSEOUT MERGED (ver seção
   "OBS-4 — Mercado Pago Check Em `/health/dependencies`" abaixo).
 
-OBS-1, OBS-2, OBS-3 e OBS-4 estão individualmente concluídos. Isso não fecha,
-por si só, a frente agregada de observabilidade mínima:
-MINIMUM_OBSERVABILITY_AGGREGATE = PENDING FINAL CONTINUITY AUDIT.
-FINAL OBSERVABILITY CONTINUITY AUDIT = PENDING. Esta atualização de
-project-state (Phase B) não constitui essa auditoria, não a autoriza e não
-pré-declara seu resultado.
+OBS-1, OBS-2, OBS-3 e OBS-4 estão individualmente concluídos. A auditoria final
+de continuidade da frente agregada de observabilidade mínima já foi executada
+e aceita:
+MINIMUM_OBSERVABILITY_AGGREGATE = COMPLETE.
+FINAL OBSERVABILITY CONTINUITY AUDIT = PASS. Fechamento formal registrado em
+`docs/ROADMAP-PRODUCAO-METODO-ORI.md` §28.11, PR #37, merge SHA
+`569327db8726c3ea5a772a64152e60c267f2264e`. Essa auditoria e seu resultado não
+fecham, por si só, o Marco C — ver bloco de status abaixo.
+
+Evidência sintética da auditoria final (ver §28.11 do roadmap para o gate
+completo):
+
+- Final observability continuity audit: PASS.
+- auditor-arquiteto: PASS.
+- qa-revisor adversarial: PASS.
+- Critérios de aceitação A–H: PASS.
+- Regressão live: 196/196 PASS.
+- `/health` canônico: PASS / HTTP 200.
+- `/health/dependencies` canônico: PASS / HTTP 200.
+- Mercado Pago: configured/reachable.
+- Roadmap closeout: §28.11, PR #37, merge SHA
+  `569327db8726c3ea5a772a64152e60c267f2264e`.
+
+Status de Marco C após a auditoria final:
+
+- Marco C = OPEN.
+- OBSERVABILITY_PREREQUISITE_COMPLETE = YES.
+- MARCO_C_CLOSED = NO.
+- Next mandatory action = HUMAN RE-EVALUATION OF MARCO C.
 
 Próxima ação recomendada pelo roadmap:
 
-**Auditoria final de continuidade de observabilidade (OBS-1–4), seguida da
-reavaliação do Marco C.** Project-state Phase B (esta atualização) não
-substitui essa auditoria.
+**A auditoria final de continuidade de observabilidade (OBS-1–4) já foi
+executada e aceita (PASS). A próxima ação obrigatória é a reavaliação humana
+do Marco C.** Project-state Phase B (esta atualização) não substitui nem
+antecipa essa reavaliação.
 
 Marco C permanece ABERTO.
 
@@ -312,8 +336,9 @@ Pagamentos:
 
 - Revalidar divergência `GEMINI_MODEL` entre produção real, roadmap,
   `render.yaml`, `.env.example` e fallbacks antes de qualquer mudança de IA.
-- Executar auditoria final de continuidade de observabilidade (OBS-1–4) e, em
-  seguida, reavaliar Marco C.
+- Auditoria final de continuidade de observabilidade (OBS-1–4): já executada
+  e aceita (PASS, §28.11). Item pendente restante: reavaliar Marco C
+  (HUMAN RE-EVALUATION OF MARCO C).
 - Investigar `INFRA-RENDER-1`: comportamento observado de deployment Render em
   merges docs-only diverge do `buildFilter` versionado; inclui a disposição
   final pendente do Service B (`srv-d8bqgsel51nc73cjleg0`).
