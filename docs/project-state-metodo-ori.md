@@ -2,9 +2,9 @@
 
 document_role: derived_operational_snapshot  
 authoritative: false  
-last_verified_at: `2026-08-15T16:52:09-03:00`  
+last_verified_at: `2026-08-17T14:02:07-03:00`  
 verified_against: `origin/main`  
-verified_sha: `b4d9cce7079f02a45e4618833b103feebf0d3f4f`  
+verified_sha: `269db3125efa5b942458b6f64c5d8e988026ece7`  
 escopo: fontes versionadas no repo isolado `/tmp/metodo-ori-project-sources`
 
 Aviso de revalidação temporal: este é um save game operacional curto, não um
@@ -74,7 +74,8 @@ Fontes prioritárias lidas nesta execução:
   `backend/app/services/payment_service.py` e
   `backend/app/services/mercado_pago_service.py`;
 - `docs/agent-system/ORCHESTRATOR.md`;
-- PR #25 e PR #26 (observados como MERGED em `origin/main`).
+- PR #25 e PR #26 (observados como MERGED em `origin/main`);
+- PR #34 e PR #35 (observados como MERGED em `origin/main`).
 
 ## Estado Operacional Atual
 
@@ -134,15 +135,23 @@ Observabilidade mínima ainda não fecha Marco C:
   Exception Handler" abaixo);
 - OBS-3: CONCLUÍDO / DEPLOYADO / HEALTHY (ver seção "OBS-3 — Admin Payment
   Timeline Read-Only" abaixo);
-- OBS-4: pendente — próxima frente obrigatória.
+- OBS-4: COMPLETE / RUNTIME ACEITO / ROADMAP CLOSEOUT MERGED (ver seção
+  "OBS-4 — Mercado Pago Check Em `/health/dependencies`" abaixo).
+
+OBS-1, OBS-2, OBS-3 e OBS-4 estão individualmente concluídos. Isso não fecha,
+por si só, a frente agregada de observabilidade mínima:
+MINIMUM_OBSERVABILITY_AGGREGATE = PENDING FINAL CONTINUITY AUDIT.
+FINAL OBSERVABILITY CONTINUITY AUDIT = PENDING. Esta atualização de
+project-state (Phase B) não constitui essa auditoria, não a autoriza e não
+pré-declara seu resultado.
 
 Próxima ação recomendada pelo roadmap:
 
-**OBS-4 — Mercado Pago check em `/health/dependencies`.**
+**Auditoria final de continuidade de observabilidade (OBS-1–4), seguida da
+reavaliação do Marco C.** Project-state Phase B (esta atualização) não
+substitui essa auditoria.
 
-OBS-2 e OBS-3 deixam de bloquear a sequência. OBS-4 continua pendente. Só
-depois dela o Marco C pode ser reavaliado para fechamento. Marco C permanece
-ABERTO.
+Marco C permanece ABERTO.
 
 ## OBS-2 — Global FastAPI Exception Handler
 
@@ -178,13 +187,29 @@ ABERTO.
 - Runtime integração: PASS.
 - Health de produção: PASS.
 
+## OBS-4 — Mercado Pago Check Em `/health/dependencies`
+
+- Status: COMPLETE.
+- Implementation: PR #34, merge SHA
+  `394dce5f3a3f3a1620cf5d58e9f517d71310ac5a`.
+- Runtime: VALIDATED / HEALTHY.
+- Canonical runtime acceptance: PASS.
+- Canonical runtime: Service A, service ID `srv-d9nnvjtaeets73cc0u5g`,
+  hostname `metodo-ori-api-3o22.onrender.com`.
+- Roadmap closeout: MERGED, PR #35, merge SHA
+  `269db3125efa5b942458b6f64c5d8e988026ece7`.
+- Ver seção 28.10 do roadmap operacional para o gate completo.
+
 ## Roadmap Operacional Durável
 
 - Seção 28.8 do roadmap operacional registra o closeout de OBS-2.
 - Seção 28.9 do roadmap operacional registra o closeout de OBS-3.
+- Seção 28.10 do roadmap operacional registra o closeout técnico/runtime do
+  OBS-4.
 - Roadmap closeout PR (OBS-2): #29.
 - Roadmap closeout PR (OBS-3): #32.
-- Roadmap merge SHA / baseline corrente: `b4d9cce7079f02a45e4618833b103feebf0d3f4f`.
+- Roadmap closeout PR (OBS-4): #35.
+- Roadmap merge SHA / baseline corrente: `269db3125efa5b942458b6f64c5d8e988026ece7`.
 
 ## Infraestrutura Verificada
 
@@ -201,7 +226,7 @@ Backend:
 - `render.yaml` com `buildFilter.paths: backend/**`;
 - health check declarado: `/health`;
 - `/health` no código retorna `{"ok": true}`;
-- `/health/dependencies` existe no código e checa Supabase e IA, mas não
+- `/health/dependencies` existe no código e checa Supabase, IA e, desde OBS-4,
   Mercado Pago.
 
 IA:
@@ -228,16 +253,20 @@ Pagamentos:
 - Gemini produção diverge entre roadmap e `render.yaml`: roadmap registra
   `gemini-3.1-flash-lite`; `render.yaml` versionado registra
   `gemini-2.5-flash-lite`.
-- `/health/dependencies` existe no código, mas OBS-4 Mercado Pago check em
-  `/health/dependencies` segue pendente; o endpoint atual checa Supabase e IA,
-  não Mercado Pago.
 - AGENTS-2 / `ori-orchestrator`: COMPLETE. `ori-orchestrator` V1 está
   INTEGRATED IN MAIN via PR #25 (MERGED) e PR #26 (MERGED).
 - `INFRA-RENDER-1`: OPEN. Merges em main, inclusive docs-only, têm disparado
   deployment Render, o que diverge do comportamento esperado a partir do
   `buildFilter` versionado (`backend/**`). Configuração LIVE exata do Render
   permanece NOT_VERIFIED. Divergência observada de identidade/URL dos
-  serviços Render permanece não resolvida.
+  serviços Render permanece não resolvida. Durante a validação do OBS-4 foi
+  confirmada a existência de um segundo serviço Render (Service B, service ID
+  `srv-d8bqgsel51nc73cjleg0`, hostname `metodo-ori-api.onrender.com`),
+  classificado como NON_CANONICAL_LEGACY_DUPLICATE_CANDIDATE; a canonicidade
+  foi estabelecida em Service A e Service B não bloqueou o aceite de runtime
+  canônico do OBS-4. Nenhuma remediação ou mutação de provider foi executada;
+  a disposição final do Service B permanece indecidida e continua sob
+  `INFRA-RENDER-1`.
 - P2/P3 têm código e entitlements, mas isso não equivale a checkout público ou
   disponibilidade comercial na RC1.
 
@@ -283,7 +312,8 @@ Pagamentos:
 
 - Revalidar divergência `GEMINI_MODEL` entre produção real, roadmap,
   `render.yaml`, `.env.example` e fallbacks antes de qualquer mudança de IA.
-- Confirmar, quando OBS-4 for autorizado, o desenho exato do Mercado Pago check
-  em `/health/dependencies` sem expor secrets nem criar mutação externa.
+- Executar auditoria final de continuidade de observabilidade (OBS-1–4) e, em
+  seguida, reavaliar Marco C.
 - Investigar `INFRA-RENDER-1`: comportamento observado de deployment Render em
-  merges docs-only diverge do `buildFilter` versionado.
+  merges docs-only diverge do `buildFilter` versionado; inclui a disposição
+  final pendente do Service B (`srv-d8bqgsel51nc73cjleg0`).
