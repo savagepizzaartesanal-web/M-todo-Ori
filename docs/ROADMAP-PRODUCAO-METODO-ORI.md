@@ -985,20 +985,21 @@ Onda 0 ✅ concluída
 ↓
 MASTER-005 ✅ concluído
 ↓
-acessibilidade essencial
+acessibilidade essencial ✅ concluída
 ↓
-recovery operacional
+recovery operacional ✅ concluído
 ↓
-observabilidade mínima
+observabilidade mínima ✅ concluído
+↓
+Marco C ✅ fechado — ver seção 28.12
 ↓
 demais ondas
 ```
 
 Neste fluxo:
 
-- acessibilidade essencial bloqueia a próxima frente agora;
-- recovery operacional não bloqueia iniciar acessibilidade, mas é etapa obrigatória sequencial antes de fechar Marco C;
-- observabilidade mínima não bloqueia iniciar acessibilidade, mas é etapa obrigatória sequencial antes de fechar Marco C.
+- acessibilidade essencial, recovery operacional e observabilidade mínima foram concluídos, nessa ordem;
+- Marco C foi fechado por reavaliação humana explícita (ver seção 28.12); a próxima macrofrente após o Marco C não está explicitamente definida neste roadmap.
 
 ---
 
@@ -1577,7 +1578,7 @@ O `auth-state.json` é sensível.
 - [x] MASTER-005 recomendado
 - [x] acessibilidade essencial (MASTER-006, MASTER-007, MASTER-008, MASTER-009)
 - [x] recovery operacional (RECOVERY-1 ✅, RECOVERY-2 ✅, RECOVERY-3 ✅, RECOVERY-4 ✅ concluído — runbooks técnicos + manual operacional integrados via PR #20 — ver seção 28.6)
-- [x] observabilidade mínima (OBS-1–4 completos; auditoria final PASS — ver seção 28.11; Marco C permanece ABERTO — aguarda reavaliação humana explícita)
+- [x] observabilidade mínima (OBS-1–4 completos; auditoria final PASS — ver seção 28.11; Marco C fechado por reavaliação humana explícita — ver seção 28.12)
 
 ## Marco D — P1 consolidado
 - [ ] jornada comercial
@@ -1622,11 +1623,11 @@ observabilidade mínima
 demais ondas
 ```
 
-Marco C permanece aberto até concluir a sequência:
+Marco C foi fechado por reavaliação humana explícita (ver seção 28.12) após concluir a sequência:
 
 1. acessibilidade essencial; ✅ concluída — ver seção 28.2
 2. recovery operacional; RECOVERY-1 (backup/restore) ✅ concluído, RECOVERY-2 (reconciliação pagamento → entitlement) ✅ concluído, RECOVERY-3 (rollback Cloudflare/Render) ✅ concluído, RECOVERY-4 (runbook consolidado de recuperação) ✅ concluído — ver seção 28.6
-3. observabilidade mínima. OBS-1 ✅ concluído — ver seção 28.7; OBS-2 ✅ concluído — ver seção 28.8; OBS-3 ✅ concluído — ver seção 28.9; OBS-4 ✅ concluído tecnicamente/runtime aceito — ver seção 28.10; auditoria final concluída, PASS — ver seção 28.11. PRÓXIMA AÇÃO OBRIGATÓRIA: reavaliação humana do Marco C.
+3. observabilidade mínima. OBS-1 ✅ concluído — ver seção 28.7; OBS-2 ✅ concluído — ver seção 28.8; OBS-3 ✅ concluído — ver seção 28.9; OBS-4 ✅ concluído tecnicamente/runtime aceito — ver seção 28.10; auditoria final concluída, PASS — ver seção 28.11. Reavaliação humana do Marco C concluída — Marco C fechado — ver seção 28.12.
 
 Mudanças pequenas, uma por vez.
 
@@ -2234,6 +2235,57 @@ Reavaliação humana do Marco C.
 
 ---
 
+# 28.12 GATE ROADMAP — REAVALIAÇÃO HUMANA EXPLÍCITA E FECHAMENTO DO MARCO C (MARCO C EXPLICIT HUMAN REEVALUATION AND CLOSEOUT)
+
+**Data operacional:** 2026-08-17T21:15:22-03:00
+**Objetivo:** registrar a reavaliação humana explícita do Marco C — Consolidação UX/robustez da RC1 — e seu fechamento formal, com base na matriz de critérios C1–C8 abaixo.
+
+## Matriz de fechamento do Marco C (C1–C8)
+
+- C1 — MASTER-002 — SATISFIED
+- C2 — MASTER-003 — SATISFIED
+- C3 — MASTER-001 mínimo — SATISFIED
+- C4 — MASTER-005 recomendado — SATISFIED
+- C5 — Acessibilidade essencial (MASTER-006/007/008/009) — SATISFIED
+- C6 — Recovery operacional (RECOVERY-1/2/3/4) — SATISFIED
+- C7 — Observabilidade mínima (OBS-1–4 + auditoria final PASS) — SATISFIED
+- C8 — Reavaliação humana explícita do Marco C — SATISFIED BY EXPLICIT HUMAN DECISION
+
+Nota de leitura: C1–C7 são critérios técnicos satisfeitos por evidência já registrada nas seções deste roadmap (ver seções 27, 28, 28.1–28.11). C7 não fecha o Marco C por si só — é pré-requisito técnico, não gatilho automático de fechamento. C8 não é um critério técnico: representa uma decisão humana explícita e distinta de qualquer conclusão de agente, e é o único critério que efetivamente fecha o Marco C.
+
+## Status
+
+- C1 = SATISFIED;
+- C2 = SATISFIED;
+- C3 = SATISFIED;
+- C4 = SATISFIED;
+- C5 = SATISFIED;
+- C6 = SATISFIED;
+- C7 = SATISFIED;
+- C8 = SATISFIED BY EXPLICIT HUMAN DECISION;
+- `MARCO_C_CLOSED = YES`;
+- `MARCO_C_REEVALUATION_PENDING = NO`;
+- `MUTATION_SCOPE = DOCUMENTAL_ONLY`.
+
+## Resultado
+
+`MARCO_C_CLOSEOUT = COMPLETE` — o Marco C (Consolidação UX/robustez da RC1) está formalmente fechado. Nenhuma dívida técnica nova foi criada por este fechamento. O fechamento é estritamente documental: nenhuma mudança de código, infraestrutura ou runtime foi realizada ou é implicada por esta seção.
+
+## Dívida técnica referenciada (sem duplicação)
+
+- Malformed timestamp debt (OBS-3): permanece dívida não bloqueante já documentada em §24; não duplicada aqui, não promovida a blocker, e o fechamento do Marco C não a remedia nem a reclassifica.
+- Service B (segundo serviço Render não-canônico, candidato a duplicata legada não-canônica): permanece dívida de infraestrutura separada, não remediada, não bloqueante; o fechamento do Marco C não a remedia nem a reclassifica.
+
+## Próxima macrofrente
+
+`NEXT_MACROFRONT_AFTER_MARCO_C = NOT_EXPLICITLY_DEFINED`. Este roadmap lista estruturalmente o Marco D — P1 consolidado (ver seção 27) como próximo marco na sequência declarada, mas nenhuma decisão humana explícita iniciou ou definiu o Marco D, ou qualquer outra macrofrente, como próxima ação obrigatória. Nenhuma macrofrente nova é considerada iniciada por este gate.
+
+## Próxima ação obrigatória
+
+Sincronização documental isolada do project-state (Phase B, separada e futura), refletindo o fechamento do Marco C registrado nesta seção. Somente após essa sincronização, com prova de atualização equivalente a self-update e freshness = CURRENT confirmado, poderá haver um novo gate de intake para descobrir e iniciar a próxima macrofrente.
+
+---
+
 # 29. TOP PRIORIDADES
 
 ## P0
@@ -2242,9 +2294,9 @@ Reavaliação humana do Marco C.
 ## P1 RC1 crítico
 1. acessibilidade essencial ✅ concluída (MASTER-006, MASTER-007, MASTER-008, MASTER-009 — ver seção 28.2)
 
-## Obrigatórias sequenciais para fechar Marco C
+## Concluídas — pré-requisitos do fechamento do Marco C
 2. recovery operacional — RECOVERY-1 ✅ concluído (ver seção 28.3); RECOVERY-2 ✅ concluído (ver seção 28.4); RECOVERY-3 ✅ concluído (ver seção 28.5); RECOVERY-4 ✅ concluído (ver seção 28.6)
-3. observabilidade mínima. OBS-1 ✅ concluído (ver seção 28.7); OBS-2 ✅ concluído (ver seção 28.8); OBS-3 ✅ concluído (ver seção 28.9); OBS-4 ✅ concluído (ver seção 28.10); auditoria final concluída, PASS (ver seção 28.11) ← next: reavaliação humana do Marco C
+3. observabilidade mínima. OBS-1 ✅ concluído (ver seção 28.7); OBS-2 ✅ concluído (ver seção 28.8); OBS-3 ✅ concluído (ver seção 28.9); OBS-4 ✅ concluído (ver seção 28.10); auditoria final concluída, PASS (ver seção 28.11); Marco C fechado por reavaliação humana explícita (ver seção 28.12)
 
 ## P1 operação / pós-RC1
 4. segurança/LGPD
@@ -2362,7 +2414,7 @@ O Método Ori já possui:
 - OBS-1 concluído — logging seguro e sanitizado do fluxo crítico de pagamentos (checkout, webhook, reconciliação, auditoria best-effort), com proteção contra line forging e logfmt field injection, mergeado via PR #23 e validado em produção com health check 200 (ver seção 28.7);
 - OBS-2 concluído — tratamento global seguro de exceções no FastAPI (global safe exception handling), mergeado via PR #28, commit `6acc1c0da131fcccb46750c7addaabd4f6752019`, deployado e saudável em produção (ver seção 28.8);
 - OBS-3 concluído — timeline administrativa read-only de pagamentos integrada à `main`, validada por QA adversarial e em runtime, com health 200 e barreira de autenticação 401 observada nos deployments automáticos do merge;
-- OBS-4 concluído — health de dependências passou a incluir Mercado Pago, com runtime canônico validado e saudável (ver seção 28.10); auditoria final de observabilidade concluída, PASS — observabilidade mínima tecnicamente completa; Marco C permanece ABERTO, aguardando reavaliação humana explícita (ver seção 28.11);
+- OBS-4 concluído — health de dependências passou a incluir Mercado Pago, com runtime canônico validado e saudável (ver seção 28.10); auditoria final de observabilidade concluída, PASS — observabilidade mínima tecnicamente completa; Marco C fechado por reavaliação humana explícita (ver seção 28.12);
 - auditoria UX/UI completa;
 - backlog priorizado;
 - infraestrutura Cloudflare + Render + Supabase em produção;
@@ -2380,12 +2432,12 @@ O release gate de pagamentos, o focus trap do paywall, o fechamento gratuito, o 
 
 1. acessibilidade essencial — ✅ concluída (MASTER-006, MASTER-007, MASTER-008, MASTER-009);
 2. recovery operacional — ✅ concluído: RECOVERY-1 (backup/restore Supabase), RECOVERY-2 (reconciliação pagamento → entitlement), RECOVERY-3 (rollback Cloudflare/Render) e RECOVERY-4 (runbook consolidado) todos concluídos (ver seções 28.3–28.6);
-3. fortalecer observabilidade mínima. OBS-1 ✅ concluído (logging seguro do fluxo crítico de pagamentos, ver seção 28.7); OBS-2 ✅ concluído (global FastAPI exception handler, ver seção 28.8); OBS-3 ✅ concluído (admin payment timeline read-only, ver seção 28.9); OBS-4 ✅ concluído (Mercado Pago check em `/health/dependencies`, ver seção 28.10); auditoria final concluída, PASS — observabilidade mínima tecnicamente completa (ver seção 28.11) ← próxima ação obrigatória: reavaliação humana do Marco C;
+3. observabilidade mínima. OBS-1 ✅ concluído (logging seguro do fluxo crítico de pagamentos, ver seção 28.7); OBS-2 ✅ concluído (global FastAPI exception handler, ver seção 28.8); OBS-3 ✅ concluído (admin payment timeline read-only, ver seção 28.9); OBS-4 ✅ concluído (Mercado Pago check em `/health/dependencies`, ver seção 28.10); auditoria final concluída, PASS — observabilidade mínima tecnicamente completa (ver seção 28.11); Marco C fechado por reavaliação humana explícita (ver seção 28.12);
 4. consolidar o P1 com clientes;
 5. revisar a arquitetura de IA com a especialista;
 6. avançar para RC2 / Produto 2.
 
-Observabilidade mínima não bloqueia iniciar acessibilidade (já concluída), mas segue como pendência obrigatória sequencial para fechar Marco C.
+Observabilidade mínima não bloqueou o início da acessibilidade (já concluída) e, junto às demais pré-condições, permitiu o fechamento do Marco C (ver seção 28.12).
 
 ## Pendências pós-RC1 que não bloqueiam vendas nem o início da acessibilidade
 
