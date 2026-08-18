@@ -2,9 +2,9 @@
 
 document_role: derived_operational_snapshot  
 authoritative: false  
-last_verified_at: `2026-08-17T18:20:42-03:00`  
+last_verified_at: `2026-08-18T09:22:50-03:00`  
 verified_against: `origin/main`  
-verified_sha: `569327db8726c3ea5a772a64152e60c267f2264e`  
+verified_sha: `880f6bf2130e8045a78faef8cf7aea04e639d68c`  
 escopo: fontes versionadas no repo isolado `/tmp/metodo-ori-project-sources`
 
 Aviso de revalidação temporal: este é um save game operacional curto, não um
@@ -114,7 +114,7 @@ Bundle/Jornada Completa:
 
 ## Marco C E Próxima Ação
 
-Marco C permanece ABERTO.
+Marco C está FECHADO — ver seção 28.12 do roadmap operacional.
 
 Concluído antes deste save:
 
@@ -161,21 +161,41 @@ completo):
 - Roadmap closeout: §28.11, PR #37, merge SHA
   `569327db8726c3ea5a772a64152e60c267f2264e`.
 
-Status de Marco C após a auditoria final:
+[HISTÓRICO — SUPERSEDIDO] Status de Marco C imediatamente após a auditoria
+final, antes da reavaliação humana explícita (válido apenas no intervalo
+entre §28.11 e §28.12 do roadmap; NÃO reflete o estado atual — ver bloco
+"[ESTADO ATUAL]" abaixo):
 
 - Marco C = OPEN.
 - OBSERVABILITY_PREREQUISITE_COMPLETE = YES.
 - MARCO_C_CLOSED = NO.
-- Next mandatory action = HUMAN RE-EVALUATION OF MARCO C.
+- Next mandatory action (naquele momento) = HUMAN RE-EVALUATION OF MARCO C.
 
-Próxima ação recomendada pelo roadmap:
+Este bloco é histórico e foi superado pelo bloco "[ESTADO ATUAL] Status de
+Marco C após a reavaliação humana explícita" logo abaixo. Não usar este
+bloco isoladamente para decisão operacional.
 
-**A auditoria final de continuidade de observabilidade (OBS-1–4) já foi
-executada e aceita (PASS). A próxima ação obrigatória é a reavaliação humana
-do Marco C.** Project-state Phase B (esta atualização) não substitui nem
-antecipa essa reavaliação.
+[ESTADO ATUAL] Status de Marco C após a reavaliação humana explícita (ver
+roadmap §28.12) — substitui o bloco histórico acima:
 
-Marco C permanece ABERTO.
+- Marco C = FECHADO.
+- OBSERVABILITY_PREREQUISITE_COMPLETE = YES.
+- MARCO_C_CLOSED = YES.
+- MARCO_C_CLOSEOUT = COMPLETE.
+- C8 (reavaliação humana explícita do Marco C) = SATISFIED BY EXPLICIT HUMAN
+  DECISION — decisão humana explícita, distinta de qualquer conclusão de
+  agente.
+- Roadmap closeout: §28.12, PR #39, merge commit
+  `880f6bf2130e8045a78faef8cf7aea04e639d68c` (mesclando em `origin/main` o
+  head/feature commit `af2d439df0ae989198e95f04d96387969b6eac58`, mensagem
+  "docs(roadmap): close Marco C").
+- NEXT_MACROFRONT_AFTER_MARCO_C = NOT_EXPLICITLY_DEFINED. Nenhuma macrofrente
+  nova foi iniciada por este fechamento.
+- Next mandatory action = HUMAN READ-ONLY INTAKE TO DETERMINE NEXT
+  MACROFRONT — gate humano futuro, ainda não realizado, distinto desta
+  sincronização de project-state (Phase B).
+
+Marco C está FECHADO.
 
 ## OBS-2 — Global FastAPI Exception Handler
 
@@ -337,8 +357,14 @@ Pagamentos:
 - Revalidar divergência `GEMINI_MODEL` entre produção real, roadmap,
   `render.yaml`, `.env.example` e fallbacks antes de qualquer mudança de IA.
 - Auditoria final de continuidade de observabilidade (OBS-1–4): já executada
-  e aceita (PASS, §28.11). Item pendente restante: reavaliar Marco C
-  (HUMAN RE-EVALUATION OF MARCO C).
+  e aceita (PASS, §28.11). Marco C foi fechado por reavaliação humana
+  explícita (ver seção 28.12 do roadmap operacional; C8 = SATISFIED BY
+  EXPLICIT HUMAN DECISION; PR #39, merge commit
+  `880f6bf2130e8045a78faef8cf7aea04e639d68c`, head/feature commit
+  `af2d439df0ae989198e95f04d96387969b6eac58`).
+  Item pendente restante: gate humano read-only futuro para determinar a
+  próxima macrofrente (NEXT_MACROFRONT_AFTER_MARCO_C = NOT_EXPLICITLY_DEFINED);
+  nenhuma macrofrente foi iniciada por este fechamento.
 - Investigar `INFRA-RENDER-1`: comportamento observado de deployment Render em
   merges docs-only diverge do `buildFilter` versionado; inclui a disposição
   final pendente do Service B (`srv-d8bqgsel51nc73cjleg0`).
