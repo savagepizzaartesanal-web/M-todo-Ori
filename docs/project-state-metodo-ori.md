@@ -2,9 +2,9 @@
 
 document_role: derived_operational_snapshot  
 authoritative: false  
-last_verified_at: `2026-08-18T09:22:50-03:00`  
+last_verified_at: `2026-08-21T10:35:05-03:00`  
 verified_against: `origin/main`  
-verified_sha: `880f6bf2130e8045a78faef8cf7aea04e639d68c`  
+verified_sha: `1561ecd960355dcd0522bee6c96ba240462579bb`  
 escopo: fontes versionadas no repo isolado `/tmp/metodo-ori-project-sources`
 
 Aviso de revalidação temporal: este é um save game operacional curto, não um
@@ -63,6 +63,7 @@ Fontes prioritárias lidas nesta execução:
 - `AGENTS.md`;
 - `CLAUDE.md`;
 - `docs/ROADMAP-PRODUCAO-METODO-ORI.md`;
+- `docs/project-state-metodo-ori.md`;
 - `docs/infraestrutura-producao.md`;
 - `docs/status-produtos.md`;
 - `docs/pagamentos-g1.md`;
@@ -75,7 +76,10 @@ Fontes prioritárias lidas nesta execução:
   `backend/app/services/mercado_pago_service.py`;
 - `docs/agent-system/ORCHESTRATOR.md`;
 - PR #25 e PR #26 (observados como MERGED em `origin/main`);
-- PR #34 e PR #35 (observados como MERGED em `origin/main`).
+- PR #34 e PR #35 (observados como MERGED em `origin/main`);
+- PR #37 e PR #39 (observados como MERGED em `origin/main`);
+- PR #41 (Phase A roadmap security reconciliation, observado como MERGED em
+  `origin/main`).
 
 ## Estado Operacional Atual
 
@@ -175,8 +179,9 @@ Este bloco é histórico e foi superado pelo bloco "[ESTADO ATUAL] Status de
 Marco C após a reavaliação humana explícita" logo abaixo. Não usar este
 bloco isoladamente para decisão operacional.
 
-[ESTADO ATUAL] Status de Marco C após a reavaliação humana explícita (ver
-roadmap §28.12) — substitui o bloco histórico acima:
+[ESTADO ATUAL] Status de Marco C após a reavaliação humana explícita e após a
+reconciliação documental de segurança P1-OPS.4 no roadmap (ver roadmap §28.12
+e §28.13):
 
 - Marco C = FECHADO.
 - OBSERVABILITY_PREREQUISITE_COMPLETE = YES.
@@ -185,17 +190,42 @@ roadmap §28.12) — substitui o bloco histórico acima:
 - C8 (reavaliação humana explícita do Marco C) = SATISFIED BY EXPLICIT HUMAN
   DECISION — decisão humana explícita, distinta de qualquer conclusão de
   agente.
-- Roadmap closeout: §28.12, PR #39, merge commit
+- Roadmap closeout do Marco C: §28.12, PR #39, merge commit
   `880f6bf2130e8045a78faef8cf7aea04e639d68c` (mesclando em `origin/main` o
   head/feature commit `af2d439df0ae989198e95f04d96387969b6eac58`, mensagem
   "docs(roadmap): close Marco C").
+- P1-OPS.4 security evidence closure registrado no roadmap: §28.13, PR #41,
+  merge commit `1561ecd960355dcd0522bee6c96ba240462579bb`.
+- SECURITY_ROADMAP_RECONCILIATION = COMPLETE.
+- PROJECT_STATE_PHASE_B = COMPLETE para a sincronização documental deste
+  snapshot com o merge real da Phase A do roadmap.
+- P1-OPS.4 =
+  SECURITY_EVIDENCE_CLOSURE_COMPLETE_READY_FOR_DOCUMENTARY_RECONCILIATION.
+- REAL_SECURITY_GAP = 0.
+- RLS = APPLIED_AND_VERIFIED.
+- FORCE RLS = 5/5 core tables.
+- payment tables = INTENTIONAL_ARCHITECTURE.
+- active trigger runtime version = UNVERIFIED.
+- TRIGGER_VERSION_DRIFT = UNKNOWN.
+- search_path = DEFENSE_IN_DEPTH_IMPROVEMENT.
+- leaked password protection = LEGITIMATE_HARDENING_CANDIDATE, currently
+  disabled.
+- least privilege = PARTIAL.
+- production incident = NO.
+- security headers = HARDENING CANDIDATES, NOT PROVEN VULNERABILITIES.
+- `pages.dev` = INTENTIONAL_OPERATIONAL_ADDITIONAL_SURFACE.
 - NEXT_MACROFRONT_AFTER_MARCO_C = NOT_EXPLICITLY_DEFINED. Nenhuma macrofrente
-  nova foi iniciada por este fechamento.
-- Next mandatory action = HUMAN READ-ONLY INTAKE TO DETERMINE NEXT
-  MACROFRONT — gate humano futuro, ainda não realizado, distinto desta
-  sincronização de project-state (Phase B).
+  nova foi iniciada por este fechamento ou pela reconciliação documental de
+  segurança.
+- NEXT_P1_OPS_SUBWORKSTREAM = REQUIRES_HUMAN_SELECTION. O roadmap lista
+  múltiplos itens P1 operação / pós-RC1 e não inicia automaticamente uma nova
+  subfrente apenas por numeração.
+- Next mandatory action = HUMAN READ-ONLY PRIORITIZATION / INTAKE TO DETERMINE
+  THE NEXT P1 OPERATIONAL SUB-WORKSTREAM.
 
-Marco C está FECHADO.
+Marco C está FECHADO. A reconciliação documental Phase A do roadmap está
+concluída. A Phase B deste project-state registra somente sincronização
+documental derivada, sem implementação técnica de segurança.
 
 ## OBS-2 — Global FastAPI Exception Handler
 
@@ -250,10 +280,17 @@ Marco C está FECHADO.
 - Seção 28.9 do roadmap operacional registra o closeout de OBS-3.
 - Seção 28.10 do roadmap operacional registra o closeout técnico/runtime do
   OBS-4.
+- Seção 28.11 registra a auditoria final de observabilidade mínima.
+- Seção 28.12 registra a reavaliação humana explícita e fechamento do Marco C.
+- Seção 28.13 registra o fechamento aceito de evidência de segurança P1-OPS.4
+  para transferência documental.
 - Roadmap closeout PR (OBS-2): #29.
 - Roadmap closeout PR (OBS-3): #32.
 - Roadmap closeout PR (OBS-4): #35.
-- Roadmap merge SHA / baseline corrente: `269db3125efa5b942458b6f64c5d8e988026ece7`.
+- Roadmap closeout PR (observabilidade mínima): #37.
+- Roadmap closeout PR (Marco C): #39.
+- Roadmap Phase A security reconciliation PR: #41.
+- Roadmap merge SHA / baseline corrente: `1561ecd960355dcd0522bee6c96ba240462579bb`.
 
 ## Infraestrutura Verificada
 
@@ -261,6 +298,9 @@ Frontend:
 
 - Cloudflare Pages;
 - domínio oficial `https://metodoori.teluricabeleza.com`;
+- `https://metodo-ori-telurica.pages.dev` permanece classificado como
+  superfície operacional adicional intencional no roadmap §28.13, não como
+  vulnerabilidade comprovada;
 - workflow GitHub Actions documentado para build/deploy do frontend.
 
 Backend:
@@ -277,8 +317,12 @@ IA:
 
 - provider ativo documentado: Gemini;
 - `AI_PROVIDER=gemini` em `render.yaml`;
-- roadmap afirma modelo de produção `gemini-3.1-flash-lite`;
-- `render.yaml` versionado ainda declara `GEMINI_MODEL=gemini-2.5-flash-lite`.
+- runtime Gemini observado por evidência humana: `gemini-3.1-flash-lite`;
+- configuração Gemini versionada no repositório: `gemini-2.5-flash-lite`;
+- classificação no roadmap §28.13:
+  `REPOSITORY_CONFIGURATION_DRIFT_RUNTIME_ALIGNED`;
+- atribuição da evidência runtime: `HUMAN_OBSERVED_PROVIDER_EVIDENCE`;
+- não há incidente de produção registrado para essa divergência.
 
 Pagamentos:
 
@@ -294,9 +338,13 @@ Pagamentos:
 - `docs/pagamentos-g1.md` é conceitual/histórico quando conflita com roadmap
   atual ou código versionado. Ele ainda descreve etapas como futuras que o
   roadmap registra como já implementadas/validadas para P1.
-- Gemini produção diverge entre roadmap e `render.yaml`: roadmap registra
-  `gemini-3.1-flash-lite`; `render.yaml` versionado registra
-  `gemini-2.5-flash-lite`.
+- Gemini produção/configuração permanece como drift documental: runtime
+  humano-observado `gemini-3.1-flash-lite`; configuração versionada
+  `gemini-2.5-flash-lite`; classificação do roadmap:
+  `REPOSITORY_CONFIGURATION_DRIFT_RUNTIME_ALIGNED`; sem incidente de produção.
+- HTTP security headers, `search_path`, leaked password protection e redução
+  opcional de superfície `pages.dev` permanecem candidatos de hardening, não
+  vulnerabilidades comprovadas nem remediações implementadas por esta Phase B.
 - AGENTS-2 / `ori-orchestrator`: COMPLETE. `ori-orchestrator` V1 está
   INTEGRATED IN MAIN via PR #25 (MERGED) e PR #26 (MERGED).
 - `INFRA-RENDER-1`: OPEN. Merges em main, inclusive docs-only, têm disparado
@@ -354,7 +402,7 @@ Pagamentos:
 
 ## FOLLOW_UP
 
-- Revalidar divergência `GEMINI_MODEL` entre produção real, roadmap,
+- Revalidar divergência `GEMINI_MODEL` entre runtime humano-observado, roadmap,
   `render.yaml`, `.env.example` e fallbacks antes de qualquer mudança de IA.
 - Auditoria final de continuidade de observabilidade (OBS-1–4): já executada
   e aceita (PASS, §28.11). Marco C foi fechado por reavaliação humana
@@ -362,9 +410,13 @@ Pagamentos:
   EXPLICIT HUMAN DECISION; PR #39, merge commit
   `880f6bf2130e8045a78faef8cf7aea04e639d68c`, head/feature commit
   `af2d439df0ae989198e95f04d96387969b6eac58`).
-  Item pendente restante: gate humano read-only futuro para determinar a
-  próxima macrofrente (NEXT_MACROFRONT_AFTER_MARCO_C = NOT_EXPLICITLY_DEFINED);
-  nenhuma macrofrente foi iniciada por este fechamento.
+- Reconciliação documental de segurança P1-OPS.4: Phase A do roadmap concluída
+  via PR #41, merge commit `1561ecd960355dcd0522bee6c96ba240462579bb`; Phase B
+  deste project-state concluída por esta sincronização derivada. Nenhuma
+  implementação técnica de segurança, provider ou runtime ocorreu nesta Phase B.
+- Próxima subfrente P1 operacional: requer seleção humana futura. O roadmap não
+  inicia automaticamente validação de produto, revisão de arquitetura de IA,
+  reconciliação Gemini ou hardening de segurança apenas por ordem numérica.
 - Investigar `INFRA-RENDER-1`: comportamento observado de deployment Render em
   merges docs-only diverge do `buildFilter` versionado; inclui a disposição
   final pendente do Service B (`srv-d8bqgsel51nc73cjleg0`).
