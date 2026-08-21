@@ -1189,7 +1189,7 @@ Medir:
 
 ## Segurança / LGPD
 
-- [ ] RLS
+- [x] RLS — P1-OPS.4: `APPLIED_AND_VERIFIED`; `FORCE RLS` em 5/5 tabelas core; grants anon/payment revogados conforme evidência aceita.
 - [ ] autenticação
 - [ ] storage
 - [ ] uploads
@@ -1198,7 +1198,7 @@ Medir:
 - [ ] retenção de respostas
 - [ ] consentimento
 - [ ] exportação/exclusão
-- [ ] privilégio mínimo
+- [ ] privilégio mínimo — P1-OPS.4: `PARTIAL`; não promover para `VERIFIED` sem nova evidência.
 - [ ] incident response
 
 ## Jurídico de assets
@@ -1474,8 +1474,11 @@ Antes de implementar:
 - [ ] memoizações após Profiler
 - [ ] requests do relatório
 - [ ] waterfalls finas
-- [ ] referências antigas Gemini
-- [ ] alinhar `GEMINI_MODEL` entre Render, código, `render.yaml`, `.env.example`, fallback e documentação
+- [ ] referências antigas Gemini — baixa urgência; P1-OPS.4 classificou o estado como `REPOSITORY_CONFIGURATION_DRIFT_RUNTIME_ALIGNED`, sem incidente de produção.
+- [ ] reconciliar decisão futura de `GEMINI_MODEL` entre runtime humano-observado (`gemini-3.1-flash-lite`) e configuração versionada (`gemini-2.5-flash-lite`), sem tratar a configuração do repositório como verdade runtime.
+- [ ] SECURITY-HEADERS-HARDENING — CSP, HSTS, frame protection e Permissions-Policy permanecem candidatos de hardening; ausência observada em P1-OPS.4 não foi classificada como vulnerabilidade comprovada.
+- [ ] SUPABASE-DEFENSE-IN-DEPTH — `search_path` mutável e leaked password protection desabilitado permanecem melhorias legítimas de defesa em profundidade; sem gap explorável comprovado.
+- [ ] OPTIONAL-SURFACE-REDUCTION — `https://metodo-ori-telurica.pages.dev` em `FRONTEND_ORIGINS` é superfície operacional adicional intencional; política futura `PRODUCTION_ONLY_OFFICIAL_DOMAIN` seria hardening opcional, não correção obrigatória.
 - [ ] PAYMENT-TECH-001 — TTL/expiração de `payment_orders`
 - [ ] PAYMENT-TECH-002 — notificações legacy Mercado Pago
 - [ ] setTimeout de avanço automático (360ms) em `QuizProduto1.jsx` sem cancelamento explícito — risco de timer concorrente/obsoleto em interações rápidas; identificado durante a auditoria do MASTER-007; não é defeito de acessibilidade e não bloqueou o MASTER-007
@@ -1703,7 +1706,7 @@ Onda 1 permanece aberta.
 
 - TTL/expiração de `payment_orders`;
 - notificações legacy Mercado Pago;
-- alinhamento de `GEMINI_MODEL` entre documentação/configuração/código;
+- reconciliação futura de `GEMINI_MODEL` entre runtime humano-observado, configuração versionada e documentação — baixa urgência, sem incidente de produção;
 - suíte permanente E2E no projeto;
 - design system, skill Ori Copy e refatorações.
 
@@ -2286,6 +2289,58 @@ Sincronização documental isolada do project-state (Phase B, separada e futura)
 
 ---
 
+# 28.13 GATE ROADMAP — P1-OPS.4 SECURITY EVIDENCE CLOSURE
+
+**Objetivo:** registrar o fechamento aceito de evidência de segurança do P1-OPS.4, sem implementar mudanças, sem remediar configuração e sem transformar candidatos de hardening em vulnerabilidades comprovadas.
+
+## Status
+
+- `P1-OPS.4 = SECURITY_EVIDENCE_CLOSURE_COMPLETE_READY_FOR_DOCUMENTARY_RECONCILIATION`;
+- `REAL_SECURITY_GAP = 0`;
+- `RLS = APPLIED_AND_VERIFIED`;
+- `FORCE_RLS_CORE_TABLES = 5/5`;
+- `PAYMENT_TABLES = INTENTIONAL_ARCHITECTURE`;
+- `ACTIVE_TRIGGER_RUNTIME_VERSION = UNVERIFIED`;
+- `TRIGGER_VERSION_DRIFT = UNKNOWN`;
+- `SEARCH_PATH = DEFENSE_IN_DEPTH_IMPROVEMENT`;
+- `LEAKED_PASSWORD_PROTECTION = LEGITIMATE_HARDENING_CANDIDATE_CURRENTLY_DISABLED`;
+- `LEAST_PRIVILEGE = PARTIAL`;
+- `PRODUCTION_INCIDENT = NO`;
+- `PHASE_B_PROJECT_STATE = DEFERRED_UNTIL_REAL_PHASE_A_ROADMAP_MERGE_IS_OBSERVED`.
+
+## Evidência aceita
+
+A evidência aceita do P1-OPS.4 conclui que não há lacuna real de segurança comprovada no estado avaliado. RLS está aplicado e verificado, FORCE RLS cobre 5/5 tabelas core, e as tabelas de pagamento sem FORCE RLS foram classificadas como arquitetura intencional, não como exposição comprovada.
+
+A versão runtime ativa da trigger permanece não verificada. Qualquer divergência entre versão documental, versão de repositório e runtime ativo permanece classificada como `TRIGGER_VERSION_DRIFT = UNKNOWN`, sem afirmar presença runtime verificada.
+
+`search_path` permanece melhoria de defesa em profundidade. Proteção contra senha vazada permanece candidata legítima de hardening, atualmente desabilitada, sem ser promovida a vulnerabilidade comprovada.
+
+Least privilege permanece parcial. Não há base aceita para registrar least privilege como verificado.
+
+## Gemini
+
+- runtime observado por evidência humana: `gemini-3.1-flash-lite`;
+- configuração no repositório: `gemini-2.5-flash-lite`;
+- classificação: `REPOSITORY_CONFIGURATION_DRIFT_RUNTIME_ALIGNED`;
+- atribuição da evidência runtime: `HUMAN_OBSERVED_PROVIDER_EVIDENCE`.
+
+A divergência Gemini é de configuração/documentação versus runtime observado, não incidente de produção.
+
+## Superfícies operacionais
+
+`pages.dev` permanece classificado como superfície operacional adicional intencional. Não foi classificado como vulnerabilidade comprovada.
+
+Headers de segurança permanecem candidatos de hardening conforme a evidência aceita do P1-OPS.4. Não foram provados como vulnerabilidades.
+
+## Limites semânticos
+
+Este gate encerra a evidência de segurança do P1-OPS.4 para transferência documental. Ele não fecha discovery futuro, não executa reconciliação documental por si só, não implementa mudanças, não altera runtime, não altera providers e não atualiza project-state.
+
+Phase B de project-state permanece adiada até que um merge real do roadmap de Phase A seja observado.
+
+---
+
 # 29. TOP PRIORIDADES
 
 ## P0
@@ -2299,10 +2354,10 @@ Sincronização documental isolada do project-state (Phase B, separada e futura)
 3. observabilidade mínima. OBS-1 ✅ concluído (ver seção 28.7); OBS-2 ✅ concluído (ver seção 28.8); OBS-3 ✅ concluído (ver seção 28.9); OBS-4 ✅ concluído (ver seção 28.10); auditoria final concluída, PASS (ver seção 28.11); Marco C fechado por reavaliação humana explícita (ver seção 28.12)
 
 ## P1 operação / pós-RC1
-4. segurança/LGPD
+4. segurança/LGPD — discovery P1-OPS.4 concluída; Phase A de reconciliação documental do roadmap pronta para gate humano; Phase B de project-state deferida para após merge real da Phase A. Status: `SECURITY_DOCUMENTARY_RECONCILIATION_WILL_CLOSE_DISCOVERY_ONLY`.
 5. validação de produto / abstração
 6. revisão de arquitetura de IA
-7. alinhamento da configuração Gemini
+7. reconciliação de configuração Gemini — baixa urgência; sem incidente de produção; runtime humano-observado e configuração versionada permanecem distintos até decisão explícita.
 
 ## P2
 8. jornada comercial completa
@@ -2443,7 +2498,8 @@ Observabilidade mínima não bloqueou o início da acessibilidade (já concluíd
 
 - TTL/expiração de `payment_orders`;
 - avaliação de notificações legacy do Mercado Pago;
-- alinhamento da configuração Gemini entre ambiente e repositório;
+- reconciliação futura da configuração Gemini entre runtime humano-observado e repositório — baixa urgência, sem incidente de produção;
+- hardenings de segurança não bloqueantes classificados em P1-OPS.4: HTTP security headers, `search_path`, leaked password protection e redução opcional de superfície `pages.dev`;
 - demais dívidas técnicas classificadas neste roadmap.
 
 A expansão futura continua:
