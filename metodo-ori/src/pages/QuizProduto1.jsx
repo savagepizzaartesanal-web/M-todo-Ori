@@ -2990,10 +2990,10 @@ function QuizProduto1() {
   const resetQuizDerivedState = () => {
     setResult(null);
     setResultReadingCompleted(false);
-    setFeedbackSubmitted(false);
-    setFeedbackResponse("");
-    setFeedbackComment("");
-    setFeedbackMessage("");
+    setMicroSurveyAnswers({});
+    setMicroSurveySubmitted(false);
+    setMicroSurveySaving(false);
+    setMicroSurveyMessage("");
   };
 
   const applyAnswerSnapshot = (nextAnswers) => {
@@ -3314,10 +3314,10 @@ function QuizProduto1() {
 
     setResult(null);
     setResultReadingCompleted(false);
-    setFeedbackSubmitted(false);
-    setFeedbackResponse("");
-    setFeedbackComment("");
-    setFeedbackMessage("");
+    setMicroSurveyAnswers({});
+    setMicroSurveySubmitted(false);
+    setMicroSurveySaving(false);
+    setMicroSurveyMessage("");
     setLoadingStep(0);
     setShowQuiz(false);
     setHasStarted(false);
@@ -3407,10 +3407,10 @@ function QuizProduto1() {
       setCompletedLayer(null);
       setPendingNextIndex(null);
       setResultReadingCompleted(false);
-      setFeedbackSubmitted(false);
-      setFeedbackResponse("");
-      setFeedbackComment("");
-      setFeedbackMessage("");
+      setMicroSurveyAnswers({});
+      setMicroSurveySubmitted(false);
+      setMicroSurveySaving(false);
+      setMicroSurveyMessage("");
 
       window.scrollTo({
         top: 0,
