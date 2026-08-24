@@ -3,10 +3,16 @@ from typing import Literal
 from fastapi import APIRouter, Depends
 
 from app.schemas.auth import CurrentUser
-from app.schemas.feedback import Produto1FeedbackRequest, Produto1FeedbackResponse
+from app.schemas.feedback import (
+    Produto1FeedbackRequest,
+    Produto1FeedbackResponse,
+    Produto1MicroSurveyRequest,
+    Produto1MicroSurveyResponse,
+)
 from app.services.auth_service import get_current_user
 from app.services.feedback_service import (
     get_produto1_feedback,
+    save_produto1_micro_survey,
     save_produto1_feedback,
 )
 
@@ -33,3 +39,11 @@ async def create_produto1_feedback(
         payload=payload,
         current_user=current_user,
     )
+
+
+@router.post(
+    "/produto-1/micro-survey",
+    response_model=Produto1MicroSurveyResponse,
+)
+async def create_produto1_micro_survey(payload: Produto1MicroSurveyRequest):
+    return await save_produto1_micro_survey(payload=payload)

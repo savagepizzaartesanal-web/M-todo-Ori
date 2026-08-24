@@ -35,3 +35,39 @@ class Produto1FeedbackResponse(BaseModel):
     payload: dict
     created_at: datetime
     updated_at: datetime
+
+
+class Produto1MicroSurveyRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    recognition: Literal["muito", "em_parte", "pouco"]
+    clarity_loss_location: Literal[
+        "reconhecimento",
+        "essencia_base_interna",
+        "dinamica",
+        "vida_real",
+        "imagem_na_pratica",
+        "sintese_final",
+        "relatorio_pdf",
+        "antes_da_leitura",
+        "transicao_dossie_ori",
+        "nao_sei",
+    ]
+    needed_help: Literal[
+        "exemplo_concreto",
+        "proximo_passo_simples",
+        "menos_linguagem_simbolica",
+        "mais_ligacao_com_minhas_respostas",
+        "explicacao_melhor_gratuita_completa",
+        "outro",
+    ]
+    expectation_fit: Literal["sim", "em_parte", "nao", "nao_sabia_o_que_esperar"]
+
+
+class Produto1MicroSurveyResponse(BaseModel):
+    id: str
+    recognition: str
+    clarity_loss_location: str
+    needed_help: str
+    expectation_fit: str
+    created_at: datetime

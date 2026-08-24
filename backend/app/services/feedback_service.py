@@ -1,14 +1,21 @@
 from datetime import UTC, datetime
+import os
 
 import httpx
 from fastapi import HTTPException, status
 
 from app.schemas.auth import CurrentUser
-from app.schemas.feedback import Produto1FeedbackRequest, Produto1FeedbackResponse
+from app.schemas.feedback import (
+    Produto1FeedbackRequest,
+    Produto1FeedbackResponse,
+    Produto1MicroSurveyRequest,
+    Produto1MicroSurveyResponse,
+)
 from app.services.auth_service import get_supabase_config
 from app.services.produto1_service import get_supabase_rest_headers
 
 TABLE_NAME = "produto_1_feedbacks"
+MICRO_SURVEY_TABLE_NAME = "produto_1_micro_surveys"
 
 
 def parse_datetime(value: str | None) -> datetime:
@@ -16,6 +23,35 @@ def parse_datetime(value: str | None) -> datetime:
         return datetime.now(UTC)
 
     return datetime.fromisoformat(value.replace("Z", "+00:00"))
+
+
+def get_micro_survey_supabase_url() -> str:
+    supabase_url = os.getenv("SUPABASE_URL")
+
+    if not supabase_url:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Micro-pesquisa indisponível no momento.",
+        )
+
+    return supabase_url.rstrip("/")
+
+
+def get_micro_survey_supabase_headers() -> dict[str, str]:
+    secret_key = os.getenv("SUPABASE_SECRET_KEY")
+
+    if not secret_key:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Micro-pesquisa indisponível no momento.",
+        )
+
+    return {
+        "apikey": secret_key,
+        "Authorization": f"Bearer {secret_key}",
+        "Content-Type": "application/json",
+        "Prefer": "return=representation",
+    }
 
 
 def row_to_response(row: dict, current_user: CurrentUser) -> Produto1FeedbackResponse:
@@ -29,6 +65,17 @@ def row_to_response(row: dict, current_user: CurrentUser) -> Produto1FeedbackRes
         payload=row.get("payload") or {},
         created_at=parse_datetime(row.get("created_at")),
         updated_at=parse_datetime(row.get("updated_at")),
+    )
+
+
+def row_to_micro_survey_response(row: dict) -> Produto1MicroSurveyResponse:
+    return Produto1MicroSurveyResponse(
+        id=str(row.get("id") or ""),
+        recognition=row.get("recognition") or "",
+        clarity_loss_location=row.get("clarity_loss_location") or "",
+        needed_help=row.get("needed_help") or "",
+        expectation_fit=row.get("expectation_fit") or "",
+        created_at=parse_datetime(row.get("created_at")),
     )
 
 
@@ -97,3 +144,27 @@ async def save_produto1_feedback(
 
     rows = response.json()
     return row_to_response(rows[0] if rows else row_payload, current_user)
+
+
+async def save_produto1_micro_survey(
+    *,
+    payload: Produto1MicroSurveyRequest,
+) -> Produto1MicroSurveyResponse:
+    supabase_url = get_micro_survey_supabase_url()
+    row_payload = payload.model_dump(mode="json")
+
+    async with httpx.AsyncClient(timeout=8) as client:
+        response = await client.post(
+            f"{supabase_url}/rest/v1/{MICRO_SURVEY_TABLE_NAME}",
+            json=row_payload,
+            headers=get_micro_survey_supabase_headers(),
+        )
+
+    if response.status_code >= 400:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail="Não foi possível salvar a micro-pesquisa da leitura.",
+        )
+
+    rows = response.json()
+    return row_to_micro_survey_response(rows[0] if rows else row_payload)

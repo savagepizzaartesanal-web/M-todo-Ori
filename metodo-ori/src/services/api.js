@@ -332,6 +332,13 @@ export function saveProduto1Feedback(feedbackData) {
   });
 }
 
+export function saveProduto1MicroSurvey(surveyData) {
+  return requestApi("/api/feedback/produto-1/micro-survey", {
+    method: "POST",
+    body: JSON.stringify(surveyData),
+  });
+}
+
 export function getAdminClientes() {
   return requestAuthenticatedApi("/api/admin/clientes");
 }
