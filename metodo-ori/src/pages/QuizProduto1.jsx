@@ -12,10 +12,9 @@ import {
   getPaymentCatalog,
   getProduto1Reading,
   getProduto1Answers,
-  getProduto1Feedback,
   resetProduto1,
   saveProduto1Answers,
-  saveProduto1Feedback,
+  saveProduto1MicroSurvey,
 } from "../services/api";
 import { enrichReportWithSignals } from "../services/analyzeReadingSignals";
 import { archetypeImages } from "../data/archetypeImages";
@@ -27,7 +26,7 @@ import Produto1Paywall from "../components/Produto1Paywall";
 import ResultHero from "../components/ResultHero";
 import NextStepCard from "../components/NextStepCard";
 import SyncNotice from "../components/SyncNotice";
-import { OriBadge, OriButton, OriField } from "../components/ui";
+import { OriBadge, OriButton } from "../components/ui";
 import { PRODUTO1_COMPLETE_PRODUCT_CODE } from "../content/produto1PaywallCopy";
 import {
   forgetProduto1CheckoutOrder,
@@ -57,23 +56,71 @@ const PRODUTO1_FREE_COMPLETION_LAYERS = [
   { id: "dinamica", label: "Dinâmica" },
 ];
 
-const FEEDBACK_OPTIONS = [
+const MICRO_SURVEY_QUESTIONS = [
   {
-    id: "me_senti_vista",
-    label: "Me senti vista",
-    text: "A leitura encontrou algo real em mim.",
+    key: "recognition",
+    question: "Quanto a leitura pareceu falar de você?",
+    options: [
+      { value: "muito", label: "Muito" },
+      { value: "em_parte", label: "Em parte" },
+      { value: "pouco", label: "Pouco" },
+    ],
   },
   {
-    id: "fez_sentido_mas_abstrato",
-    label: "Fez sentido, mas ficou abstrato",
-    text: "Entendi a direção, mas queria mais clareza prática.",
+    key: "clarity_loss_location",
+    question: "Onde a leitura perdeu clareza?",
+    options: [
+      { value: "reconhecimento", label: "Reconhecimento" },
+      { value: "essencia_base_interna", label: "Essência ou Base interna" },
+      { value: "dinamica", label: "Dinâmica" },
+      { value: "vida_real", label: "Vida real" },
+      { value: "imagem_na_pratica", label: "Imagem na prática" },
+      { value: "sintese_final", label: "Síntese final" },
+      { value: "relatorio_pdf", label: "Relatório ou PDF" },
+      { value: "antes_da_leitura", label: "Antes da leitura" },
+      { value: "transicao_dossie_ori", label: "Transição para Dossiê ORI" },
+      { value: "nao_sei", label: "Não sei" },
+    ],
   },
   {
-    id: "nao_me_reconheci",
-    label: "Não me reconheci muito",
-    text: "A leitura ainda não pareceu minha.",
+    key: "needed_help",
+    question: "O que teria ajudado mais?",
+    options: [
+      { value: "exemplo_concreto", label: "Exemplo concreto" },
+      { value: "proximo_passo_simples", label: "Próximo passo simples" },
+      {
+        value: "menos_linguagem_simbolica",
+        label: "Menos linguagem simbólica",
+      },
+      {
+        value: "mais_ligacao_com_minhas_respostas",
+        label: "Mais ligação com minhas respostas",
+      },
+      {
+        value: "explicacao_melhor_gratuita_completa",
+        label: "Explicação melhor da parte gratuita e completa",
+      },
+      { value: "outro", label: "Outro" },
+    ],
+  },
+  {
+    key: "expectation_fit",
+    question: "A leitura entregou o que você esperava neste momento?",
+    options: [
+      { value: "sim", label: "Sim" },
+      { value: "em_parte", label: "Em parte" },
+      { value: "nao", label: "Não" },
+      {
+        value: "nao_sabia_o_que_esperar",
+        label: "Eu não sabia bem o que esperar",
+      },
+    ],
   },
 ];
+
+const MICRO_SURVEY_REQUIRED_KEYS = MICRO_SURVEY_QUESTIONS.map(
+  (question) => question.key,
+);
 
 const readQuizFromStorage = (storageKey) => {
   try {
@@ -2768,12 +2815,10 @@ function QuizProduto1() {
   const [activeSinteseFinal, setActiveSinteseFinal] = useState("14");
   const [resultReadingCompleted, setResultReadingCompleted] = useState(false);
   const [freeCompletionResultKey, setFreeCompletionResultKey] = useState(null);
-  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
-  const [feedbackResponse, setFeedbackResponse] = useState("");
-  const [feedbackComment, setFeedbackComment] = useState("");
-  const [feedbackSaving, setFeedbackSaving] = useState(false);
-  const [feedbackMessage, setFeedbackMessage] = useState("");
-  const [feedbackValidationError, setFeedbackValidationError] = useState("");
+  const [microSurveyAnswers, setMicroSurveyAnswers] = useState({});
+  const [microSurveySubmitted, setMicroSurveySubmitted] = useState(false);
+  const [microSurveySaving, setMicroSurveySaving] = useState(false);
+  const [microSurveyMessage, setMicroSurveyMessage] = useState("");
   const [backendReading, setBackendReading] = useState(null);
   const [paymentCatalog, setPaymentCatalog] = useState(null);
   const [paymentCatalogLoading, setPaymentCatalogLoading] = useState(false);
@@ -2872,17 +2917,6 @@ function QuizProduto1() {
             });
         }
 
-        try {
-          const savedFeedback = await getProduto1Feedback(FEEDBACK_CONTEXT);
-
-          if (savedFeedback) {
-            setFeedbackResponse(savedFeedback.response || "");
-            setFeedbackComment(savedFeedback.comment || "");
-            setFeedbackSubmitted(true);
-          }
-        } catch (apiError) {
-          console.log("Feedback salvo indisponível no fluxo da leitura:", apiError);
-        }
       }
 
       if (user?.id && !savedResult && !hasSavedAnswers) {
@@ -2896,17 +2930,6 @@ function QuizProduto1() {
           setShowQuiz(false);
           setHasStarted(false);
 
-          try {
-            const savedFeedback = await getProduto1Feedback(FEEDBACK_CONTEXT);
-
-            if (savedFeedback) {
-              setFeedbackResponse(savedFeedback.response || "");
-              setFeedbackComment(savedFeedback.comment || "");
-              setFeedbackSubmitted(true);
-            }
-          } catch (apiError) {
-            console.log("Feedback salvo indisponível no fluxo da leitura:", apiError);
-          }
         }
       }
 
@@ -2967,10 +2990,10 @@ function QuizProduto1() {
   const resetQuizDerivedState = () => {
     setResult(null);
     setResultReadingCompleted(false);
-    setFeedbackSubmitted(false);
-    setFeedbackResponse("");
-    setFeedbackComment("");
-    setFeedbackMessage("");
+    setMicroSurveyAnswers({});
+    setMicroSurveySubmitted(false);
+    setMicroSurveySaving(false);
+    setMicroSurveyMessage("");
   };
 
   const applyAnswerSnapshot = (nextAnswers) => {
@@ -3291,10 +3314,10 @@ function QuizProduto1() {
 
     setResult(null);
     setResultReadingCompleted(false);
-    setFeedbackSubmitted(false);
-    setFeedbackResponse("");
-    setFeedbackComment("");
-    setFeedbackMessage("");
+    setMicroSurveyAnswers({});
+    setMicroSurveySubmitted(false);
+    setMicroSurveySaving(false);
+    setMicroSurveyMessage("");
     setLoadingStep(0);
     setShowQuiz(false);
     setHasStarted(false);
@@ -3384,10 +3407,10 @@ function QuizProduto1() {
       setCompletedLayer(null);
       setPendingNextIndex(null);
       setResultReadingCompleted(false);
-      setFeedbackSubmitted(false);
-      setFeedbackResponse("");
-      setFeedbackComment("");
-      setFeedbackMessage("");
+      setMicroSurveyAnswers({});
+      setMicroSurveySubmitted(false);
+      setMicroSurveySaving(false);
+      setMicroSurveyMessage("");
 
       window.scrollTo({
         top: 0,
@@ -4133,56 +4156,31 @@ function QuizProduto1() {
     }
   };
 
-  const handleSaveReadingFeedback = async (event) => {
-    event.preventDefault();
+  const handleMicroSurveySelect = async (questionKey, value) => {
+    const nextAnswers = {
+      ...microSurveyAnswers,
+      [questionKey]: value,
+    };
+    const isComplete = MICRO_SURVEY_REQUIRED_KEYS.every((key) => nextAnswers[key]);
 
-    if (!feedbackResponse) {
-      setFeedbackValidationError("Escolha uma opção para enviar e continuar.");
-      return;
-    }
+    setMicroSurveyAnswers(nextAnswers);
+    setMicroSurveyMessage("");
 
-    if (feedbackSaving || !result) return;
+    if (!isComplete || microSurveySaving || microSurveySubmitted) return;
 
-    setFeedbackValidationError("");
-    setFeedbackSaving(true);
-    setFeedbackMessage("");
+    setMicroSurveySaving(true);
 
     try {
-      await saveProduto1Feedback({
-        context: FEEDBACK_CONTEXT,
-        response: feedbackResponse,
-        comment: feedbackComment.trim() || null,
-        resultado: result.nomeComposto,
-        payload: {
-          page: "produto-1-leitura",
-          completedAt: new Date().toISOString(),
-        },
-      });
-
-      setFeedbackSubmitted(true);
-      setFeedbackMessage("Obrigada. Seu retorno foi registrado.");
-
-      window.setTimeout(() => {
-        nextStepRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      }, 180);
+      await saveProduto1MicroSurvey(nextAnswers);
+      setMicroSurveySubmitted(true);
+      setMicroSurveyMessage("Registrado. Obrigada por responder.");
     } catch (error) {
-      console.log("Erro ao salvar feedback da leitura:", error);
-      setFeedbackSubmitted(true);
-      setFeedbackMessage(
-        "Seu retorno não sincronizou agora, mas você pode seguir para a próxima etapa.",
+      console.log("Erro ao salvar micro-pesquisa da leitura:", error);
+      setMicroSurveyMessage(
+        "Não conseguimos registrar agora, mas você pode seguir.",
       );
-
-      window.setTimeout(() => {
-        nextStepRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      }, 180);
     } finally {
-      setFeedbackSaving(false);
+      setMicroSurveySaving(false);
     }
   };
 
@@ -4827,10 +4825,9 @@ function QuizProduto1() {
                     )}
                   </section>
 
-                  {resultReadingCompleted && !feedbackSubmitted && (
-                    <form
+                  {resultReadingCompleted && (
+                    <section
                       ref={feedbackRef}
-                      onSubmit={handleSaveReadingFeedback}
                       className="mt-3 scroll-mt-8 rounded-[18px] p-3 md:mt-4 md:rounded-[22px] md:p-4"
                       style={{
                         background:
@@ -4853,185 +4850,93 @@ function QuizProduto1() {
                             letterSpacing: "-0.045em",
                           }}
                         >
-                          Antes de seguir, me conta uma coisa.
+                          Antes de seguir, marque o que fizer sentido.
                         </h3>
                         <p
                           className="ori-mobile-preview-3 mt-1.5 text-[13px] leading-relaxed md:text-sm"
                           style={{ color: "rgba(255,245,235,0.58)" }}
                         >
-                          Como essa leitura chegou em você? Sua resposta ajuda o
-                          ORI a conduzir o próximo passo com mais cuidado.
+                          É opcional e leva poucos toques. Você pode continuar
+                          sem responder.
                         </p>
                       </div>
 
-                      <div className="mb-3 grid gap-2">
-                        {FEEDBACK_OPTIONS.map((option) => {
-                          const isSelected = feedbackResponse === option.id;
-
-                          return (
-                            <button
-                              key={option.id}
-                              type="button"
-                              onClick={() => {
-                                setFeedbackResponse(option.id);
-                                setFeedbackMessage("");
-                                setFeedbackValidationError("");
-                              }}
-                              aria-pressed={isSelected}
-                              className="group relative flex min-h-[46px] items-start gap-2.5 overflow-hidden rounded-[15px] border px-3 py-2.5 text-left transition duration-300 hover:-translate-y-0.5"
+                      <div className="grid gap-3">
+                        {MICRO_SURVEY_QUESTIONS.map((question) => (
+                          <fieldset key={question.key} className="min-w-0">
+                            <legend
+                              className="ori-type-reading-soft mb-2 text-sm"
                               style={{
-                                background: isSelected
-                                  ? "linear-gradient(135deg, rgba(242,185,104,0.125), rgba(210,135,70,0.050))"
-                                  : "linear-gradient(135deg, rgba(255,255,255,0.024), rgba(255,255,255,0.008))",
-                                borderColor: isSelected
-                                  ? "rgba(242,185,104,0.34)"
-                                  : "rgba(242,185,104,0.10)",
-                                color: isSelected
-                                  ? "rgba(247,234,216,0.96)"
-                                  : "rgba(255,245,235,0.72)",
-                                boxShadow: isSelected
-                                  ? "0 0 28px rgba(242,185,104,0.10), inset 0 0 18px rgba(242,185,104,0.030)"
-                                  : "inset 0 0 14px rgba(255,255,255,0.008)",
+                                color: "rgba(255,245,235,0.78)",
+                                fontWeight: 560,
                               }}
                             >
-                              <span
-                                className="absolute inset-x-4 top-0 h-px"
-                                style={{
-                                  background: isSelected
-                                    ? "linear-gradient(90deg, transparent, rgba(242,185,104,0.42), transparent)"
-                                    : "linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent)",
-                                }}
-                              />
-                              <span
-                                className="mt-0.5 grid h-[18px] w-[18px] shrink-0 place-items-center rounded-full border transition"
-                                style={{
-                                  borderColor: isSelected
-                                    ? "rgba(242,185,104,0.76)"
-                                    : "rgba(255,245,235,0.20)",
-                                  boxShadow: isSelected
-                                    ? "0 0 14px rgba(242,185,104,0.24)"
-                                    : "none",
-                                }}
-                              >
-                                <span
-                                  className="h-1.5 w-1.5 rounded-full transition"
-                                  style={{
-                                    background: isSelected
-                                      ? "rgba(242,185,104,0.95)"
-                                      : "transparent",
-                                  }}
-                                />
-                              </span>
-                              <span className="min-w-0">
-                                <span
-                                  className="ori-type-reading-soft block text-sm"
-                                  style={{
-                                    color: isSelected
-                                      ? "var(--gold-soft)"
-                                      : "rgba(255,245,235,0.74)",
-                                    fontWeight: 560,
-                                  }}
-                                >
-                                  {option.label}
-                                </span>
-                                <span
-                                  className="ori-type-reading-soft mt-0.5 block text-xs leading-relaxed"
-                                  style={{ color: "rgba(255,245,235,0.48)" }}
-                                >
-                                  {option.text}
-                                </span>
-                              </span>
-                            </button>
-                          );
-                        })}
+                              {question.question}
+                            </legend>
+                            <div className="flex flex-wrap gap-2">
+                              {question.options.map((option) => {
+                                const isSelected =
+                                  microSurveyAnswers[question.key] === option.value;
+
+                                return (
+                                  <button
+                                    key={option.value}
+                                    type="button"
+                                    onClick={() =>
+                                      handleMicroSurveySelect(
+                                        question.key,
+                                        option.value,
+                                      )
+                                    }
+                                    aria-pressed={isSelected}
+                                    className="rounded-full border px-3 py-2 text-xs transition duration-300 hover:-translate-y-0.5 md:text-sm"
+                                    style={{
+                                      background: isSelected
+                                        ? "linear-gradient(135deg, rgba(242,185,104,0.16), rgba(210,135,70,0.060))"
+                                        : "rgba(255,255,255,0.024)",
+                                      borderColor: isSelected
+                                        ? "rgba(242,185,104,0.38)"
+                                        : "rgba(242,185,104,0.12)",
+                                      color: isSelected
+                                        ? "var(--gold-soft)"
+                                        : "rgba(255,245,235,0.68)",
+                                      fontWeight: isSelected ? 650 : 520,
+                                    }}
+                                  >
+                                    {option.label}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </fieldset>
+                        ))}
                       </div>
 
-                      <OriField
-                        as="textarea"
-                        value={feedbackComment}
-                        onChange={(event) => setFeedbackComment(event.target.value)}
-                        rows={3}
-                        placeholder="Quer me contar onde tocou, confundiu ou ficou distante?"
-                        variant="review"
-                        className="ori-type-reading-soft mb-3 w-full resize-none rounded-[16px] px-3 py-3 text-sm outline-none"
-                        style={{
-                          background: "rgba(5,2,2,0.34)",
-                          color: "rgba(255,245,235,0.76)",
-                        }}
-                      />
-
-                      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                         <p
                           className="ori-type-reading-soft text-xs"
                           style={{ color: "rgba(255,245,235,0.46)" }}
                         >
-                          Não é uma avaliação. É só uma forma de seguir com mais
-                          cuidado.
+                          Sem texto livre. Só categorias para melhorar a clareza
+                          da leitura.
                         </p>
-                        <OriButton
-                          type="submit"
-                          aria-disabled={
-                            !feedbackResponse || feedbackSaving ? "true" : undefined
-                          }
-                          aria-describedby={
-                            feedbackValidationError
-                              ? "produto1-feedback-validation"
-                              : undefined
-                          }
-                          variant="gradient"
-                          className="justify-center px-5 py-2.5 text-sm aria-disabled:cursor-not-allowed aria-disabled:opacity-55"
-                          style={{
-                            background:
-                              "linear-gradient(90deg, var(--copper-primary), var(--gold-primary))",
-                            fontWeight: 700,
-                          }}
-                        >
-                          {feedbackSaving ? "Salvando..." : "Enviar e continuar"}
-                        </OriButton>
+                        {(microSurveySaving || microSurveyMessage) && (
+                          <p
+                            aria-live="polite"
+                            className="ori-type-reading-soft text-xs"
+                            style={{ color: "var(--gold-soft)" }}
+                          >
+                            {microSurveySaving
+                              ? "Registrando..."
+                              : microSurveyMessage}
+                          </p>
+                        )}
                       </div>
-
-                      <p
-                        id="produto1-feedback-validation"
-                        aria-live="polite"
-                        className={
-                          feedbackValidationError
-                            ? "ori-type-reading-soft mt-2 text-xs"
-                            : "sr-only"
-                        }
-                        style={
-                          feedbackValidationError
-                            ? { color: "var(--ori-danger-text, #f2b968)" }
-                            : undefined
-                        }
-                      >
-                        {feedbackValidationError}
-                      </p>
-
-                      {feedbackMessage && (
-                        <p
-                          className="ori-type-reading-soft mt-2 text-xs"
-                          style={{ color: "var(--gold-soft)" }}
-                        >
-                          {feedbackMessage}
-                        </p>
-                      )}
-                    </form>
+                    </section>
                   )}
 
-                  {resultReadingCompleted && feedbackSubmitted && (
+                  {resultReadingCompleted && (
                     <div ref={nextStepRef} className="mt-8 scroll-mt-8">
-                      {feedbackMessage && (
-                        <div
-                          className="mx-auto mb-8 w-fit max-w-full rounded-full px-5 py-2.5 text-center text-xs md:text-sm"
-                          style={{
-                            background: "rgba(242,185,104,0.08)",
-                            border: "1px solid rgba(242,185,104,0.14)",
-                            color: "var(--gold-soft)",
-                          }}
-                        >
-                          {feedbackMessage}
-                        </div>
-                      )}
                       <NextStepCard />
                     </div>
                   )}
