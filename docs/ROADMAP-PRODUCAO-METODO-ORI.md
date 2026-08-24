@@ -1119,6 +1119,26 @@ Investigar:
 
 ## Instrumentação e aprendizagem
 
+Status observado: o código do micro-survey anônimo do Produto 1 (4
+perguntas fechadas, sem identidade) foi implementado, testado e
+mesclado à branch principal — PR #43, merge
+`69188d65c99923ec499fe78647765fa08f48a69b`. Deploy automático de
+backend (Render) e frontend (Cloudflare Pages) confirmado com
+sucesso; a rota `POST /api/feedback/produto-1/micro-survey` está
+presente e aplicando corretamente as regras de validação do schema
+em produção.
+
+A migração SQL que cria a tabela `public.produto_1_micro_surveys`
+foi relatada como aplicada e verificada em produção (fonte externa);
+isso não foi reconfirmado de forma independente a partir deste
+ambiente. Nenhuma submissão válida foi exercida para evitar criar
+dado sintético de cliente, portanto a persistência real ponta-a-ponta
+não foi diretamente verificada.
+
+Não há coleta ou análise de respostas reais registrada até o
+momento. Portanto, os itens "abstração", "validação de produto /
+abstração" e "redução de abstração" permanecem em aberto.
+
 Funil:
 
 ```text
@@ -2355,7 +2375,11 @@ Phase B de project-state permanece adiada até que um merge real do roadmap de P
 
 ## P1 operação / pós-RC1
 4. segurança/LGPD — discovery P1-OPS.4 concluída; Phase A de reconciliação documental do roadmap pronta para gate humano; Phase B de project-state deferida para após merge real da Phase A. Status: `SECURITY_DOCUMENTARY_RECONCILIATION_WILL_CLOSE_DISCOVERY_ONLY`.
-5. validação de produto / abstração
+5. validação de produto / abstração — instrumento de coleta
+   implementado, mesclado (PR #43, merge `69188d6`) e deployado;
+   aplicação da migração de banco relatada, não reconfirmada de forma
+   independente neste repositório; coleta, análise e redução de
+   abstração ainda pendentes
 6. revisão de arquitetura de IA
 7. reconciliação de configuração Gemini — baixa urgência; sem incidente de produção; runtime humano-observado e configuração versionada permanecem distintos até decisão explícita.
 
