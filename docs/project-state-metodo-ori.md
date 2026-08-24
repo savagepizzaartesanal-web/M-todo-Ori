@@ -2,9 +2,9 @@
 
 document_role: derived_operational_snapshot  
 authoritative: false  
-last_verified_at: `2026-08-21T10:35:05-03:00`  
+last_verified_at: `2026-08-24T16:14:52-03:00`  
 verified_against: `origin/main`  
-verified_sha: `1561ecd960355dcd0522bee6c96ba240462579bb`  
+verified_sha: `8e44e0f997c651d184e73dfa0566cbf02130850f`  
 escopo: fontes versionadas no repo isolado `/tmp/metodo-ori-project-sources`
 
 Aviso de revalidação temporal: este é um save game operacional curto, não um
@@ -290,7 +290,11 @@ documental derivada, sem implementação técnica de segurança.
 - Roadmap closeout PR (observabilidade mínima): #37.
 - Roadmap closeout PR (Marco C): #39.
 - Roadmap Phase A security reconciliation PR: #41.
-- Roadmap merge SHA / baseline corrente: `1561ecd960355dcd0522bee6c96ba240462579bb`.
+- P1 micro-survey feature PR: #43 (MERGED, merge commit
+  `69188d65c99923ec499fe78647765fa08f48a69b`).
+- Roadmap Phase A micro-survey documentary reconciliation PR: #44 (MERGED,
+  merge commit `8e44e0f997c651d184e73dfa0566cbf02130850f`).
+- Roadmap merge SHA / baseline corrente: `8e44e0f997c651d184e73dfa0566cbf02130850f`.
 
 ## Infraestrutura Verificada
 
@@ -387,6 +391,57 @@ Pagamentos:
 - final state: success.
 - health: HTTP 200, `{"ok":true}`.
 
+## P1 — Micro-Survey Anônima De Abstração
+
+- Feature PR #43: MERGED, merge commit
+  `69188d65c99923ec499fe78647765fa08f48a69b`.
+- Frontend regression fix incluído no mesmo PR: commit
+  `2403940a2f35c8b35944920a470103fed133ee19`.
+- Escopo: endpoint anônimo `POST /api/feedback/produto-1/micro-survey`, 4
+  perguntas fechadas, sem identidade (`user_id`/`email`/`order_id`/
+  `session`/`resultado`), sem texto livre; feedback autenticado existente
+  preservado.
+- Backend: 208/208 testes da suíte completa, PASS; QA independente PASS.
+- Frontend: lint 0 erros, build PASS; sem infraestrutura de teste
+  automatizado dedicada (débito técnico conhecido, não bloqueante).
+
+### Runtime Validation (Micro-Survey)
+
+- Backend deployment (Render): OBSERVED, sucesso; `/health` HTTP 200
+  `{"ok":true}`; `/health/dependencies` com Supabase reachable.
+- Frontend deployment (Cloudflare Pages, GitHub Actions): OBSERVED,
+  sucesso.
+- Rota `/api/feedback/produto-1/micro-survey`: PRESENT (confirmada via
+  `/openapi.json` e via rejeição 422 de payload inválido, exigindo os 4
+  campos do schema).
+- Escrita sintética de produção: NÃO EXECUTADA (evitado deliberadamente
+  para não criar dado de cliente fabricado).
+- Migração SQL `metodo-ori/supabase-produto-1-micro-surveys.sql`
+  (tabela `public.produto_1_micro_surveys`, RLS + FORCE RLS, grants de
+  `anon`/`authenticated` revogados): relatada como aplicada e verificada
+  em produção via conector Supabase autenticado externo (projeto
+  "Método Ori by Telúrica", ref `flkmalulrmyhtwqnxqpf`). Esta aplicação
+  não foi reconfirmada de forma independente a partir desta sessão
+  (nenhuma ferramenta Supabase esteve disponível aqui); a validação
+  ponta-a-ponta com escrita real permanece NÃO VERIFICADA.
+
+### Continuity Semantics (Micro-Survey)
+
+- SELF_UPDATE_EQUIVALENT: aplica-se a esta própria atualização de
+  project-state quando o único path versionado alterado entre o
+  `verified_sha` anterior e `origin/main` corrente for exatamente
+  `docs/project-state-metodo-ori.md`.
+- Roadmap Phase A (instrumentação registrada, itens de validação mantidos
+  abertos): PR #44, merge commit
+  `8e44e0f997c651d184e73dfa0566cbf02130850f`.
+
+### Product-Learning Boundary
+
+- Instrumento de coleta implementado e deployado: SIM.
+- Coleta/análise de respostas reais: NÃO ESTABELECIDA.
+- Redução de percepção de abstração: NÃO DEMONSTRADA.
+- Validação de produto (item 5, TOP PRIORIDADES): permanece EM ABERTO.
+
 ## Regras Para Próxima Sessão
 
 - Não usar `docs/ROADMAP-MASTER-METODO-ORI.md` como fonte operacional sem gate
@@ -420,3 +475,7 @@ Pagamentos:
 - Investigar `INFRA-RENDER-1`: comportamento observado de deployment Render em
   merges docs-only diverge do `buildFilter` versionado; inclui a disposição
   final pendente do Service B (`srv-d8bqgsel51nc73cjleg0`).
+- P1 micro-survey (abstração): instrumento implementado, mesclado (PR #43) e
+  documentado no roadmap (PR #44). Coleta/análise de respostas reais e
+  redução de abstração continuam pendentes; não iniciar automaticamente a
+  próxima subfrente (ex.: P1-READING.1) sem seleção humana explícita.
